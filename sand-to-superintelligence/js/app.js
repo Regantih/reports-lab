@@ -568,7 +568,15 @@
         } else if (data && (data.reply || data.answer)) {
           answer = data.reply || data.answer;
         }
-        answer = (answer || '').trim() || 'Sorry, I couldn\'t generate a response. Try rephrasing the question.';
+        answer = (answer || '').trim();
+        if (!answer) {
+          // Empty content — retry silently up to 2 times before surfacing.
+          if (attemptIdx < ENDPOINTS.length - 1) {
+            return askTutor(question, placeholder, attemptIdx + 1);
+          }
+          renderError(placeholder, question, attemptIdx);
+          return;
+        }
         setBody(placeholder, answer);
         history.push({ role: 'assistant', content: answer });
       } catch (err) {
@@ -727,7 +735,15 @@
         } else if (data && (data.reply || data.answer)) {
           answer = data.reply || data.answer;
         }
-        answer = (answer || '').trim() || 'Sorry, I couldn\'t generate a response. Try rephrasing the question.';
+        answer = (answer || '').trim();
+        if (!answer) {
+          // Empty content — retry silently up to 2 times before surfacing.
+          if (attemptIdx < ENDPOINTS.length - 1) {
+            return askTutor(question, placeholder, attemptIdx + 1);
+          }
+          renderError(placeholder, question, attemptIdx);
+          return;
+        }
         setBody(placeholder, answer);
         history.push({ role: 'assistant', content: answer });
         // If we are in quiz mode, scan for a verdict line.
