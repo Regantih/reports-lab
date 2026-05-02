@@ -482,13 +482,24 @@
       el.innerHTML = '<span class="tutor__typing"><span></span><span></span><span></span></span>';
     };
 
-    const renderError = (el, question, attemptIdx) => {
+    const renderError = (el, question, attemptIdx, kind) => {
       const base = document.body.getAttribute('data-base') || '';
       const next = ENDPOINTS[(attemptIdx + 1) % ENDPOINTS.length];
       const wrap = document.createElement('div');
       wrap.className = 'tutor__error';
       const msg = document.createElement('em');
-      msg.textContent = 'The tutor service didn\u2019t respond. You can retry, or use ';
+      // Lead text varies by failure kind so the user knows whether to retry
+      // or rephrase. "empty" = service responded with no text; "refused" =
+      // content filter; "network" = timeout/5xx/abort.
+      let lead;
+      if (kind === 'refused') {
+        lead = 'The tutor declined to answer that. Try rephrasing, or use ';
+      } else if (kind === 'empty') {
+        lead = 'The tutor came back empty. Retry, edit your question, or use ';
+      } else {
+        lead = 'The tutor service didn\u2019t respond. You can retry, or use ';
+      }
+      msg.textContent = lead;
       const searchHint = document.createElement('strong');
       searchHint.textContent = 'search (\u2318/Ctrl + K)';
       const gloss = document.createElement('a');
@@ -561,8 +572,15 @@
         if (!res.ok) throw new Error('http ' + res.status);
         const data = await res.json();
         let answer = '';
-        if (data && data.choices && data.choices[0] && data.choices[0].message) {
-          answer = data.choices[0].message.content || '';
+        let finishReason = '';
+        if (data && data.choices && data.choices[0]) {
+          const choice = data.choices[0];
+          finishReason = choice.finish_reason || '';
+          if (choice.message) {
+            // Some Pollinations responses route output to reasoning_content
+            // and leave content empty. Fall back to it so the user sees text.
+            answer = choice.message.content || choice.message.reasoning_content || '';
+          }
         } else if (typeof data === 'string') {
           answer = data;
         } else if (data && (data.reply || data.answer)) {
@@ -572,15 +590,16 @@
         if (!answer) {
           // Empty content — retry silently up to 2 times before surfacing.
           if (attemptIdx < ENDPOINTS.length - 1) {
+            await new Promise(r => setTimeout(r, 600 * (attemptIdx + 1)));
             return askTutor(question, placeholder, attemptIdx + 1);
           }
-          renderError(placeholder, question, attemptIdx);
+          renderError(placeholder, question, attemptIdx, finishReason === 'content_filter' ? 'refused' : 'empty');
           return;
         }
         setBody(placeholder, answer);
         history.push({ role: 'assistant', content: answer });
       } catch (err) {
-        renderError(placeholder, question, attemptIdx);
+        renderError(placeholder, question, attemptIdx, 'network');
       }
     }
 
@@ -728,8 +747,13 @@
         if (!res.ok) throw new Error('http ' + res.status);
         const data = await res.json();
         let answer = '';
-        if (data && data.choices && data.choices[0] && data.choices[0].message) {
-          answer = data.choices[0].message.content || '';
+        let finishReason = '';
+        if (data && data.choices && data.choices[0]) {
+          const choice = data.choices[0];
+          finishReason = choice.finish_reason || '';
+          if (choice.message) {
+            answer = choice.message.content || choice.message.reasoning_content || '';
+          }
         } else if (typeof data === 'string') {
           answer = data;
         } else if (data && (data.reply || data.answer)) {
@@ -737,11 +761,11 @@
         }
         answer = (answer || '').trim();
         if (!answer) {
-          // Empty content — retry silently up to 2 times before surfacing.
           if (attemptIdx < ENDPOINTS.length - 1) {
+            await new Promise(r => setTimeout(r, 600 * (attemptIdx + 1)));
             return askTutor(question, placeholder, attemptIdx + 1);
           }
-          renderError(placeholder, question, attemptIdx);
+          renderError(placeholder, question, attemptIdx, finishReason === 'content_filter' ? 'refused' : 'empty');
           return;
         }
         setBody(placeholder, answer);
@@ -749,7 +773,7 @@
         // If we are in quiz mode, scan for a verdict line.
         if (quizSystemOverride) detectAndShowVerdict(answer);
       } catch (err) {
-        renderError(placeholder, question, attemptIdx);
+        renderError(placeholder, question, attemptIdx, 'network');
       }
     };
 
