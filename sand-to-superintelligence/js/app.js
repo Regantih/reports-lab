@@ -397,11 +397,19 @@
     const form = tutorEl.querySelector('[data-tutor-form]');
     const input = tutorEl.querySelector('[data-tutor-input]');
     const closeBtn = tutorEl.querySelector('[data-tutor-close]');
-    const apiUrl = tutorEl.getAttribute('data-api') || '/api/tutor';
+    const apiUrl = tutorEl.getAttribute('data-api') || 'https://text.pollinations.ai/openai';
     const chapterCtx = {
       chapterTitle: document.body.getAttribute('data-chapter-title') || '',
       chapterSlug: document.body.getAttribute('data-chapter-slug') || '',
     };
+    const SYSTEM_PROMPT = "You are the in-book tutor for 'From Sand to Superintelligence' " +
+      "— a long-form essay tracing computing from doped silicon up through transistors, logic, " +
+      "clocks, memory, ISAs, OSes, networks, the web, GPUs, neural nets, transformers, LLMs, " +
+      "agents, MCP/A2A, RAG, and the value chain of intelligence. Answer questions clearly and " +
+      "concisely (3-6 sentences unless the user asks for depth). Use plain language first, then " +
+      "add precision. Prefer concrete examples. If a question is outside the book's scope, still " +
+      "answer briefly but note the connection back to the book. Never refuse a reasonable " +
+      "technical question. Do not use markdown headers; short paragraphs are fine.";
     const open = () => { tutorEl.setAttribute('aria-hidden', 'false'); document.body.setAttribute('data-modal-open', 'true'); setTimeout(() => input && input.focus(), 50); };
     const close = () => { tutorEl.setAttribute('aria-hidden', 'true'); document.body.removeAttribute('data-modal-open'); };
     tutorBtn.addEventListener('click', open);
@@ -436,17 +444,32 @@
       const placeholder = append('assistant', '');
       placeholder.innerHTML = '<span class="tutor__typing"><span></span><span></span><span></span></span>';
       try {
+        const ctxNote = chapterCtx.chapterTitle
+          ? `The reader is currently on the chapter: "${chapterCtx.chapterTitle}". Lean on that context when relevant.`
+          : 'The reader is on the book index or front matter.';
+        const messages = [
+          { role: 'system', content: SYSTEM_PROMPT + '\n\n' + ctxNote },
+          ...history,
+        ];
         const res = await fetch(apiUrl, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ messages: history, context: chapterCtx })
+          body: JSON.stringify({ model: 'openai', messages, referrer: 'sand-to-superintelligence' })
         });
         if (!res.ok) throw new Error('http ' + res.status);
         const data = await res.json();
-        const answer = (data && (data.reply || data.answer)) || 'Sorry, no answer.';
+        let answer = '';
+        if (data && data.choices && data.choices[0] && data.choices[0].message) {
+          answer = data.choices[0].message.content || '';
+        } else if (typeof data === 'string') {
+          answer = data;
+        } else if (data && (data.reply || data.answer)) {
+          answer = data.reply || data.answer;
+        }
+        answer = (answer || '').trim() || 'Sorry, I couldn\'t generate a response. Try rephrasing the question.';
         placeholder.textContent = answer;
         history.push({ role: 'assistant', content: answer });
       } catch (err) {
-        placeholder.innerHTML = '<em>The live tutor isn\'t reachable from this static deployment. In the meantime, the in-page <strong>search</strong> (⌘/Ctrl + K) and the <a href="' + (document.body.getAttribute('data-base') || '') + 'glossary.html">glossary</a> can answer most quick questions about anything in the book.</em>';
+        placeholder.innerHTML = '<em>The tutor service is temporarily unreachable. Please try again in a moment. In the meantime, the in-page <strong>search</strong> (⌘/Ctrl + K) and the <a href="' + (document.body.getAttribute('data-base') || '') + 'glossary.html">glossary</a> can answer most quick questions about anything in the book.</em>';
       }
     });
   }

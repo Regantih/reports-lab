@@ -41,7 +41,26 @@
     <p class="ch-header__dek">Yield, the industry's most guarded secret</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">~600</div><div class="stat__label">tests per die at probe</div></div><div class="stat"><div class="stat__num">60–80<em>%</em></div><div class="stat__label">typical yield, leading-edge</div></div><div class="stat"><div class="stat__num">~$10,000</div><div class="stat__label">cost per known-good Rubin die</div></div></div>
     <div class="toolbar reveal">
-      <button class="toolbar__btn" data-audio-toggle type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
@@ -131,7 +150,7 @@
     </div>
   </div>
 </div>
-<div class="tutor-modal" data-tutor aria-hidden="true" data-api="../api/tutor">
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
   <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
     <div class="tutor__head">
       <div>

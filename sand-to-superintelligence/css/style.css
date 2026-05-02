@@ -887,6 +887,136 @@ a.lens-card:hover {
 .toolbar__btn[aria-pressed="true"] { background: var(--color-primary); color: white; border-color: var(--color-primary); }
 .toolbar__btn svg { flex-shrink: 0; }
 
+/* ---- Audio voice popover ---- */
+.toolbar__audio { position: relative; }
+.audio-popover {
+  position: absolute;
+  top: calc(100% + 8px); left: 0;
+  width: 320px; max-width: calc(100vw - 32px);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.08);
+  padding: 16px;
+  z-index: 30;
+  font-family: var(--font-body);
+}
+.audio-popover[hidden] { display: none; }
+.audio-popover__head {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 12px;
+}
+.audio-popover__title {
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+.audio-popover__close {
+  background: none; border: none; cursor: pointer;
+  font-size: 22px; line-height: 1;
+  color: var(--color-text-muted);
+  padding: 0 4px;
+}
+.audio-popover__close:hover { color: var(--color-text); }
+.audio-popover__group {
+  display: flex; flex-direction: column; gap: 4px;
+  margin-bottom: 14px;
+}
+.audio-voice {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  font-size: var(--text-sm);
+  text-align: left; width: 100%;
+  color: var(--color-text);
+  transition: background 140ms, border-color 140ms;
+}
+.audio-voice:hover { background: var(--color-surface-offset); }
+.audio-voice[aria-checked="true"] {
+  background: var(--color-surface-offset);
+  border-color: var(--color-accent-copper);
+}
+.audio-voice__dot {
+  width: 12px; height: 12px; border-radius: 50%;
+  border: 1.5px solid var(--color-text-muted);
+  flex: none;
+}
+.audio-voice[aria-checked="true"] .audio-voice__dot {
+  border-color: var(--color-accent-copper);
+  background: var(--color-accent-copper);
+  box-shadow: inset 0 0 0 2px var(--color-surface);
+}
+.audio-voice__label { flex: 1; }
+.audio-voice__name { display: block; font-weight: 500; }
+.audio-voice__detail {
+  display: block; font-size: 11px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+  font-family: var(--font-mono); letter-spacing: 0.04em;
+}
+.audio-popover__row {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 14px;
+}
+.audio-popover__label {
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--color-text-muted);
+  min-width: 48px;
+}
+.audio-popover__rate { flex: 1; accent-color: var(--color-accent-copper); }
+.audio-popover__rate-val {
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  color: var(--color-text-soft);
+  min-width: 50px; text-align: right;
+}
+.audio-popover__actions {
+  display: flex; gap: 8px;
+}
+.audio-popover__sample,
+.audio-popover__start {
+  flex: 1;
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-family: var(--font-mono); font-size: var(--text-xs);
+  letter-spacing: 0.06em; text-transform: uppercase;
+  cursor: pointer;
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
+  transition: background 140ms, border-color 140ms;
+}
+.audio-popover__sample:hover {
+  background: var(--color-surface-offset);
+}
+.audio-popover__start {
+  background: var(--color-accent-copper);
+  color: #fff;
+  border-color: var(--color-accent-copper);
+}
+.audio-popover__start:hover { filter: brightness(0.93); }
+.audio-popover__hint {
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--color-text-muted);
+  min-height: 14px;
+}
+.audio-popover__empty {
+  padding: 16px 4px;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  text-align: center;
+}
+@media (max-width: 480px) {
+  .audio-popover {
+    position: fixed;
+    top: auto; bottom: 16px; left: 16px; right: 16px;
+    width: auto; max-width: none;
+  }
+}
+
 /* ---- Sidenotes (inline tooltip) ---- */
 .sidenote {
   border-bottom: 1px dotted var(--color-text-muted);
