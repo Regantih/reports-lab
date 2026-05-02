@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>★ · The Case Atlas — The Agentic Enterprise</title>
+<meta name="description" content="Companion to chapter 21 — twenty-five enterprise agentic deployments, by industry, phase, and ROI tier">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+<style>
+.atlas-controls{margin:2rem 0 1rem;display:flex;flex-direction:column;gap:.6rem;padding:1rem 1.1rem;border:1px solid var(--color-border);border-radius:10px;background:var(--color-surface)}
+.atlas-controls__row{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem}
+.atlas-controls__label{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--color-text-muted);min-width:5.5rem}
+.atlas-chip{font:inherit;font-size:.78rem;padding:.32rem .7rem;border-radius:999px;border:1px solid var(--color-border);background:transparent;color:var(--color-text);cursor:pointer;transition:all .15s ease}
+.atlas-chip:hover{border-color:var(--color-text);color:var(--color-text)}
+.atlas-chip--active{background:var(--color-text);color:var(--color-bg);border-color:var(--color-text)}
+.atlas-grid{display:grid;grid-template-columns:1fr;gap:.9rem;margin:1.4rem 0 1rem}
+.atlas-card{display:flex;flex-direction:column;gap:.55rem;padding:1.05rem 1.15rem;border:1px solid var(--color-border);border-radius:10px;background:var(--color-surface);transition:border-color .15s ease,transform .15s ease}
+.atlas-card:hover{border-color:var(--color-text)}
+.atlas-card__head{display:flex;justify-content:space-between;align-items:flex-start;gap:.8rem;flex-wrap:wrap}
+.atlas-card__co-name{font-weight:600;color:var(--color-text);font-size:.98rem;line-height:1.3}
+.atlas-card__co-sub{font-size:.74rem;color:var(--color-text-muted);margin-top:.18rem;font-family:var(--font-mono);letter-spacing:.02em}
+.atlas-card__pills{display:flex;gap:.35rem;flex-wrap:wrap;flex-shrink:0}
+.atlas-card__title{font-family:var(--font-display),serif;font-style:italic;font-weight:500;font-size:1.04rem;line-height:1.35;color:var(--color-text);margin-top:.1rem}
+.atlas-card__meta{font-size:.74rem;color:var(--color-text-muted);font-family:var(--font-mono);letter-spacing:.03em}
+.atlas-card__metric{font-size:.86rem;line-height:1.55;color:var(--color-text);margin:.15rem 0 0}
+.atlas-card__metric-label{display:inline-block;font-family:var(--font-mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--color-text-muted);margin-right:.4rem;vertical-align:.05em}
+.atlas-card__foot{display:flex;justify-content:space-between;align-items:center;gap:.6rem;flex-wrap:wrap;margin-top:.2rem;padding-top:.65rem;border-top:1px dashed var(--color-border)}
+.atlas-card__src{font-size:.74rem;color:var(--color-text-muted);text-decoration:none;font-family:var(--font-mono);letter-spacing:.02em}
+.atlas-card__src:hover{color:var(--color-text)}
+.atlas-card__deep{font-size:.72rem;font-family:var(--font-mono);letter-spacing:.04em;color:#a04a1a;text-decoration:none}
+.atlas-card__deep:hover{text-decoration:underline}
+[data-theme="dark"] .atlas-card__deep{color:#d8a578}
+.atlas-pill{display:inline-block;font-family:var(--font-mono);font-size:.7rem;letter-spacing:.06em;padding:.18rem .55rem;border-radius:999px;border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-text);text-transform:uppercase;white-space:nowrap}
+.atlas-pill--primary{border-color:#1f4a6b;color:#1f4a6b;background:rgba(31,74,107,.08)}
+.atlas-pill--plasma{border-color:#6b3fa0;color:#6b3fa0;background:rgba(107,63,160,.08)}
+.atlas-pill--copper{border-color:#a04a1a;color:#a04a1a;background:rgba(160,74,26,.08)}
+.atlas-pill--quartz{border-color:#666;color:#666;background:rgba(0,0,0,.04)}
+[data-theme="dark"] .atlas-pill--primary{color:#7eb6d9;border-color:#7eb6d9;background:rgba(126,182,217,.12)}
+[data-theme="dark"] .atlas-pill--plasma{color:#b896d8;border-color:#b896d8;background:rgba(184,150,216,.12)}
+[data-theme="dark"] .atlas-pill--copper{color:#d8a578;border-color:#d8a578;background:rgba(216,165,120,.12)}
+[data-theme="dark"] .atlas-pill--quartz{color:#aaa;border-color:#888;background:rgba(255,255,255,.05)}
+.atlas-empty{text-align:center;padding:1.5rem;color:var(--color-text-muted);font-style:italic}
+.ch-end-mark{text-align:center;font-size:1.4rem;color:var(--color-text-muted);margin:3rem 0 1rem;letter-spacing:.4em}
+@media (max-width:780px){.atlas-controls__label{min-width:auto;width:100%}.atlas-card__head{flex-direction:column;align-items:flex-start}}
+</style>
+</head>
+<body data-chapter-slug="case-atlas" data-chapter-title="The Case Atlas" data-base="../">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-shift", "title": "The Shift", "subtitle": "From copilots to colleagues \u2014 what changes when software starts to act"}, {"num": "02", "slug": "02-anatomy-of-an-agent", "title": "Anatomy of an Agent", "subtitle": "Plan, act, observe, remember \u2014 the four moving parts"}, {"num": "03", "slug": "03-spectrum-of-autonomy", "title": "The Spectrum of Autonomy", "subtitle": "Five rungs from automation to autonomy, and where most enterprises actually live"}, {"num": "04", "slug": "04-from-models-to-systems", "title": "From Models to Systems", "subtitle": "Why agentic AI is a systems problem, not a model problem"}, {"num": "05", "slug": "05-tool-use-and-grounding", "title": "Tool Use and Grounding", "subtitle": "How an agent reaches into the world \u2014 APIs, retrieval, and the limits of context"}, {"num": "06", "slug": "06-multi-agent-and-swarm", "title": "Multi-Agent and Swarm", "subtitle": "When one mind isn't enough \u2014 coordination, delegation, and emergent failure modes"}, {"num": "07", "slug": "07-the-economics", "title": "The Economics of an Agent", "subtitle": "Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI"}, {"num": "08", "slug": "08-failure-modes", "title": "Failure Modes", "subtitle": "Hallucinated calls, prompt injection, runaway loops, and the cost of being wrong at scale"}, {"num": "09", "slug": "09-threat-landscape", "title": "The Threat Landscape", "subtitle": "OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do"}, {"num": "10", "slug": "10-regulatory-perimeter", "title": "The Regulatory Perimeter", "subtitle": "EU AI Act, US executive orders, sectoral rules \u2014 what bites and what doesn't"}, {"num": "11", "slug": "11-frameworks-landscape", "title": "The Frameworks Landscape", "subtitle": "NIST, ISO, OECD, OWASP, the analyst maturity models \u2014 ranked by what actually moves the needle"}, {"num": "12", "slug": "12-the-four-pillars", "title": "The Four Pillars", "subtitle": "A readiness model: governance, orchestration, use case identification, integration"}, {"num": "13", "slug": "13-governance-charter", "title": "The Governance Charter", "subtitle": "Pillar I \u2014 who owns the agents, who answers when they fail"}, {"num": "14", "slug": "14-policy-stack", "title": "The Policy Stack", "subtitle": "Acceptable use, model risk, data classification, third-party AI, incident response"}, {"num": "15", "slug": "15-nist-rmf-walk", "title": "Walking the NIST AI RMF", "subtitle": "Govern, Map, Measure, Manage \u2014 applied to a real agent program"}, {"num": "16", "slug": "16-iso-42001-and-eu", "title": "ISO/IEC 42001 and the EU AI Act", "subtitle": "Certification, conformity assessment, and the audit trail of an autonomous system"}, {"num": "17", "slug": "17-orchestration-stack", "title": "The Orchestration Stack", "subtitle": "Pillar II \u2014 frameworks, runtimes, and the plumbing of multi-step work"}, {"num": "18", "slug": "18-memory-and-state", "title": "Memory and State", "subtitle": "Short-term, long-term, episodic \u2014 what an agent needs to remember to be useful"}, {"num": "19", "slug": "19-evals-and-observability", "title": "Evals and Observability", "subtitle": "Traces, replays, scorecards \u2014 the dashboards that keep agents honest"}, {"num": "20", "slug": "20-guardrails-and-policy", "title": "Guardrails and Policy Engines", "subtitle": "From input filters to runtime policy \u2014 defense in depth for autonomous systems"}, {"num": "21", "slug": "21-use-case-portfolio", "title": "The Use Case Portfolio", "subtitle": "Pillar III \u2014 picking the right work for an agent to do"}, {"num": "★", "slug": "case-atlas", "title": "Case Atlas", "subtitle": "Twenty-five enterprise agentic deployments, by industry, phase, and ROI tier"}, {"num": "22", "slug": "22-value-and-feasibility", "title": "Value and Feasibility", "subtitle": "Scoring use cases on a 2\u00d72 \u2014 and the trap of doing the easy ones first"}, {"num": "23", "slug": "23-human-in-the-loop", "title": "Human in the Loop", "subtitle": "Where supervision belongs, where it doesn't, and how to design the handoff"}, {"num": "24", "slug": "24-pilot-to-production", "title": "From Pilot to Production", "subtitle": "The valley of death \u2014 and how a use case earns the right to scale"}, {"num": "25", "slug": "25-integration-spine", "title": "The Integration Spine", "subtitle": "Pillar IV \u2014 APIs, identity, data, and the enterprise systems an agent must touch"}, {"num": "26", "slug": "26-identity-for-agents", "title": "Identity for Agents", "subtitle": "Service accounts, scoped tokens, on-behalf-of \u2014 auth for non-human actors"}, {"num": "27", "slug": "27-data-readiness", "title": "Data Readiness", "subtitle": "Lineage, freshness, classification, and why your data lake is not a vector store"}, {"num": "28", "slug": "28-mcp-a2a-protocols", "title": "MCP, A2A, and the Interop Layer", "subtitle": "Model Context Protocol, Agent2Agent, and the protocols that let agents share work"}, {"num": "29", "slug": "29-the-maturity-model", "title": "The Maturity Model", "subtitle": "Five levels \u2014 Initial, Repeatable, Defined, Managed, Optimized \u2014 across all four pillars"}, {"num": "30", "slug": "30-the-scorecard-method", "title": "The Scorecard Method", "subtitle": "How to assess your organization in a half-day, with evidence"}, {"num": "\u2605", "slug": "scorecard", "title": "Interactive Scorecard", "subtitle": "Score yourself across four pillars \u00b7 five levels \u00b7 40 questions \u00b7 share your results"}, {"num": "31", "slug": "31-reading-the-radar", "title": "Reading the Radar", "subtitle": "What a four-pillar profile tells you about where to invest first"}, {"num": "32", "slug": "32-the-thirty-sixty-ninety", "title": "The 30/60/90", "subtitle": "What an enterprise can credibly accomplish in the first ninety days"}, {"num": "33", "slug": "33-the-twelve-month-roadmap", "title": "The Twelve-Month Roadmap", "subtitle": "From scattered pilots to a governed agent platform \u2014 by quarter"}, {"num": "34", "slug": "34-the-operating-model", "title": "The Operating Model", "subtitle": "Center of excellence, hub-and-spoke, federated \u2014 pick one and live with it"}, {"num": "35", "slug": "35-roles-and-careers", "title": "Roles and Careers", "subtitle": "AI product managers, agent engineers, evals leads \u2014 the jobs the org didn't have last year"}, {"num": "36", "slug": "36-procurement-and-vendors", "title": "Procurement and Vendors", "subtitle": "Buy, build, or rent \u2014 and the contract clauses you'll wish you had insisted on"}, {"num": "37", "slug": "37-change-management", "title": "Change Management", "subtitle": "How to roll agents into a workforce without losing the workforce"}, {"num": "38", "slug": "38-economics-at-scale", "title": "Economics at Scale", "subtitle": "Unit costs, gross margin, and the second-order effects of letting agents run your processes"}, {"num": "39", "slug": "39-the-failure-postmortem", "title": "The Failure Postmortem", "subtitle": "Three case studies of agentic deployments that broke \u2014 and what they teach"}, {"num": "40", "slug": "40-the-next-decade", "title": "The Next Decade", "subtitle": "What ready looks like in 2030, and how to recognize it from where you stand today"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>The Agentic Enterprise<span class="brand__sub"> — a readiness field guide</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/scorecard.html">Scorecard</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">The Agentic Enterprise</a> &nbsp;·&nbsp; Companion to Chapter 21</div>
+    <div class="ch-header__num">★</div>
+    <h1 class="ch-header__title">The Case Atlas</h1>
+    <p class="ch-header__dek">Twenty-five enterprise agentic deployments — sortable by industry, phase, and ROI tier</p>
+    <div class="stat-row">
+      <div class="stat"><div class="stat__num">25</div><div class="stat__label">deployments documented</div></div>
+      <div class="stat"><div class="stat__num">9</div><div class="stat__label">industries represented</div></div>
+      <div class="stat"><div class="stat__num">11</div><div class="stat__label">at enterprise scale today</div></div>
+    </div>
+    <div class="toolbar reveal">
+      <a class="toolbar__btn" href="https://www.perplexity.ai/computer/a/agentic-ai-enterprise-atlas-kfuEfdPjSLGvn3I_3wmTYg" target="_blank" rel="noopener" style="text-decoration:none;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 3h7v7"/><path d="M21 3l-9 9"/><path d="M21 14v5a2 2 0 0 1 -2 2H5a2 2 0 0 1 -2 -2V5a2 2 0 0 1 2 -2h5"/></svg>
+        <span>Open interactive dashboard</span>
+      </a>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc">
+      <div class="ch-toc__title">In this companion</div>
+      <ul>
+        <li><a href="#why-this-exists">Why this exists</a></li>
+        <li><a href="#how-to-read-it">How to read the atlas</a></li>
+        <li><a href="#the-atlas">The atlas</a></li>
+        <li><a href="#what-the-shape-tells-us">What the shape tells us</a></li>
+        <li><a href="#provenance">Provenance and limits</a></li>
+      </ul>
+    </aside>
+    <article class="prose">
+      <p class="lede">Chapter 21 argues that use case selection is a portfolio management problem, not an optimization problem. This companion makes the argument concrete. We catalog twenty-five enterprise agentic deployments — every one cited to a primary or near-primary source — across nine industries, three deployment phases, and four ROI tiers. The atlas is meant to be read sideways, not top-to-bottom: filter for your industry, your stage, or your tolerance for risk, and look at what comparable organizations are actually shipping.</p>
+
+      <h2 id="why-this-exists">Why this exists</h2>
+      <p>Most published agentic AI case lists are vendor-curated and optimistic. They feature pilots that were announced but never reached production, conflate copilots with autonomous agents, and report return-on-investment figures lifted from press releases without source attribution. Chapter 21 asks the reader to assemble a portfolio. We owe the reader the raw material to do that honestly.</p>
+      <p>The atlas is the raw material. Every entry names the deployer, the vendor or build path, the launch year, the deployment phase as we read it from public reporting, and the most defensible ROI metric we could find. Where the metric is a vendor claim, we say so. Where it is a deployer-confirmed number — JPMorgan's CTO citing 360,000 attorney-hours saved, Klarna's CEO disclosing the equivalent of 700 agents — we cite the disclosure.</p>
+
+      <h2 id="how-to-read-it">How to read the atlas</h2>
+      <p><strong>Three filters matter.</strong> Industry tells you whether anyone shaped like you has shipped this work. Deployment phase tells you whether the case is a real reference or an aspiration. ROI tier — Transformative, High, Medium — tells you what good looks like for your sector, not what is theoretically possible.</p>
+      <p><strong>Three traps to avoid.</strong> First, the atlas over-indexes on financial services and retail because those sectors disclose more aggressively, not because they are universally further ahead. Second, "Enterprise" phase means the system is in production at scale today; it does not mean the system has been running long enough to validate ROI claims. Third, deployer-named ROI metrics are themselves a published artifact — they have an audience and a purpose. Read them with the discount you would apply to any earnings-call number.</p>
+      <p><strong>Three companion chapters in Report №03 go deeper.</strong> The Klarna, JPMorgan, and McDonald's rows in the atlas link directly to chapters that examine each case in narrative depth — including, in the McDonald's case, what it means when a much-lauded pilot is rolled back.</p>
+
+      <h2 id="the-atlas">The atlas</h2>
+
+      <div class="atlas-controls" data-atlas-controls>
+        <div class="atlas-controls__row">
+          <label class="atlas-controls__label">Industry</label>
+          <button class="atlas-chip atlas-chip--active" data-filter-industry="all" type="button">All</button>
+          <button class="atlas-chip" data-filter-industry="Financial Services" type="button">Financial Services</button>
+          <button class="atlas-chip" data-filter-industry="Retail &amp; E-commerce" type="button">Retail &amp; E-commerce</button>
+          <button class="atlas-chip" data-filter-industry="Healthcare &amp; Pharma" type="button">Healthcare &amp; Pharma</button>
+          <button class="atlas-chip" data-filter-industry="Manufacturing &amp; Supply Chain" type="button">Manufacturing &amp; Supply Chain</button>
+          <button class="atlas-chip" data-filter-industry="Insurance" type="button">Insurance</button>
+          <button class="atlas-chip" data-filter-industry="Legal &amp; Professional Services" type="button">Legal &amp; Professional Services</button>
+          <button class="atlas-chip" data-filter-industry="Customer Service / BPO" type="button">Customer Service / BPO</button>
+          <button class="atlas-chip" data-filter-industry="IT Operations / Software Engineering" type="button">IT Operations / Software Engineering</button>
+          <button class="atlas-chip" data-filter-industry="HR / Talent" type="button">HR / Talent</button>
+        </div>
+        <div class="atlas-controls__row">
+          <label class="atlas-controls__label">Phase</label>
+          <button class="atlas-chip atlas-chip--active" data-filter-phase="all" type="button">All</button>
+          <button class="atlas-chip" data-filter-phase="Enterprise" type="button">Enterprise</button>
+          <button class="atlas-chip" data-filter-phase="Scaling" type="button">Scaling</button>
+          <button class="atlas-chip" data-filter-phase="Pilot" type="button">Pilot</button>
+        </div>
+        <div class="atlas-controls__row">
+          <label class="atlas-controls__label">ROI tier</label>
+          <button class="atlas-chip atlas-chip--active" data-filter-roi="all" type="button">All</button>
+          <button class="atlas-chip" data-filter-roi="Transformative" type="button">Transformative</button>
+          <button class="atlas-chip" data-filter-roi="High" type="button">High</button>
+          <button class="atlas-chip" data-filter-roi="Medium" type="button">Medium</button>
+        </div>
+      </div>
+
+      <div class="atlas-grid">
+        <article class="atlas-card" data-industry="Financial Services" data-phase="Enterprise" data-roi="Transformative">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">Bank of America</div>
+              <div class="atlas-card__co-sub">Internal (BofA AI/ML)</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--primary">Enterprise</span>
+              <span class="atlas-pill atlas-pill--primary">Transformative</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">Erica AI-Driven Virtual Financial Assistant</div>
+          <div class="atlas-card__meta">Financial Services · Customer Service / Retail Banking · launched 2018</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> 3 billion total client interactions since 2018; 50 million users; 58 million interactions/month as of Aug 2025 (Bank of America press release)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://newsroom.bankofamerica.com/content/newsroom/press-releases/2025/08/a-decade-of-ai-innovation--bofa-s-virtual-assistant-erica-surpas.html" target="_blank" rel="noopener">Bank of America Newsroom ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="Financial Services" data-phase="Scaling" data-roi="High">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">BlackRock</div>
+              <div class="atlas-card__co-sub">Internal + Microsoft Azure OpenAI (LangChain/LangGraph)</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--plasma">Scaling</span>
+              <span class="atlas-pill atlas-pill--plasma">High</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">Aladdin Copilot AI Agent Platform</div>
+          <div class="atlas-card__meta">Financial Services · Investment Management / Operations · launched 2024</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> Increased productivity and alpha generation for investment professionals across $11T AUM platform; democratizes expert Aladdin access to all users (per BlackRock engineering leads, LangChain 2025)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://blog.tmcnet.com/blog/rich-tehrani/ai/how-blackrock-orchestrates-11t-in-assets-with-production-ai-agents.html" target="_blank" rel="noopener">TMCnet / BlackRock Engineering Presentation ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="Financial Services" data-phase="Pilot" data-roi="High">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">Goldman Sachs</div>
+              <div class="atlas-card__co-sub">Cognition (Devin)</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--copper">Pilot</span>
+              <span class="atlas-pill atlas-pill--plasma">High</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">Devin Autonomous Software Engineer</div>
+          <div class="atlas-card__meta">Financial Services · IT / Software Engineering · launched 2025</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> Estimated 3–4x productivity improvement vs. earlier AI tools (per Goldman CIO Marco Argenti, CNBC July 2025); code migration tasks run 10x faster than human engineers</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://www.cnbc.com/2025/07/11/goldman-sachs-autonomous-coder-pilot-marks-major-ai-milestone.html" target="_blank" rel="noopener">CNBC ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="Financial Services" data-phase="Enterprise" data-roi="Transformative">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">JPMorgan Chase</div>
+              <div class="atlas-card__co-sub">Internal (JPMorgan AI/ML team)</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--primary">Enterprise</span>
+              <span class="atlas-pill atlas-pill--primary">Transformative</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">COIN Contract Intelligence Platform</div>
+          <div class="atlas-card__meta">Financial Services · Legal / Operations · launched 2017</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> 360,000 attorney-hours saved annually; loan service error rate reduced by ~90% vs. a decade prior (per JPMorgan CTO Sri Shivananda, Q3 2024)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://www.productmonk.io/p/meet-coin-jpmorgan-s-efficiency-wizard" target="_blank" rel="noopener">Product Monk / JPMorgan CTO Q3 2024 Earnings ↗</a>
+            <a class="atlas-card__deep" href="../../agentic-enterprise/chapters/16-jpmorgan.html">Companion · R№03 Ch 16 →</a>
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="Financial Services" data-phase="Enterprise" data-roi="High">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">Morgan Stanley Wealth Management</div>
+              <div class="atlas-card__co-sub">OpenAI</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--primary">Enterprise</span>
+              <span class="atlas-pill atlas-pill--plasma">High</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">AI @ Morgan Stanley Assistant &amp; Debrief</div>
+          <div class="atlas-card__meta">Financial Services · Finance / Client Advisory · launched 2023</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> 98% of Financial Advisor teams adopted the Assistant; significant reduction in post-meeting administrative time (per Morgan Stanley press release, June 2024)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://www.morganstanley.com/press-releases/ai-at-morgan-stanley-debrief-launch" target="_blank" rel="noopener">Morgan Stanley Press Release ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="Retail &amp; E-commerce" data-phase="Enterprise" data-roi="Transformative">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">Amazon</div>
+              <div class="atlas-card__co-sub">Internal (Amazon AI)</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--primary">Enterprise</span>
+              <span class="atlas-pill atlas-pill--primary">Transformative</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">Rufus AI Shopping Assistant</div>
+          <div class="atlas-card__meta">Retail &amp; E-commerce · Customer Service / Marketing · launched 2024</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> $10B+ in projected annualized incremental sales; customers using Rufus are 60% more likely to complete a purchase; 250M shoppers used it in 2025 with 140% YoY user growth (Amazon CEO Andy Jassy, Q3 2025 earnings)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://fortune.com/2025/11/02/amazon-rufus-ai-shopping-assistant-chatbot-10-billion-sales-monetization/" target="_blank" rel="noopener">Fortune ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="Retail &amp; E-commerce" data-phase="Scaling" data-roi="Medium">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">Shopify</div>
+              <div class="atlas-card__co-sub">Internal (Shopify Magic)</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--plasma">Scaling</span>
+              <span class="atlas-pill atlas-pill--copper">Medium</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">Sidekick AI Commerce Co-Pilot</div>
+          <div class="atlas-card__meta">Retail &amp; E-commerce · Operations / Marketing · launched 2024</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> Merchants use Sidekick to onboard seasonal staff 50% faster; automated Flow workflows deployed without coding; multi-step root-cause analysis delivered in seconds vs. hours of analyst work (Shopify Winter 2026 Edition)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://www.digitalcommerce360.com/2025/05/08/shopify-sidekick-ai-tool-ecommerce-platform-update/" target="_blank" rel="noopener">Digital Commerce 360 ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="Retail &amp; E-commerce" data-phase="Scaling" data-roi="High">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">Walmart</div>
+              <div class="atlas-card__co-sub">Pactum AI</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--plasma">Scaling</span>
+              <span class="atlas-pill atlas-pill--plasma">High</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">Autonomous Supplier Contract Negotiation Agent</div>
+          <div class="atlas-card__meta">Retail &amp; E-commerce · Supply Chain / Procurement · launched 2021</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> 3% average cost savings across negotiated contracts; 75% of suppliers preferred negotiating with the AI vs. humans; negotiations across 2,000 suppliers simultaneously (Fox Business / Pactum, 2023)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://www.foxbusiness.com/technology/walmart-using-ai-negotiate-cost-purchase-terms-vendors-shorter-timeframe" target="_blank" rel="noopener">Fox Business / Pactum AI ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="Retail &amp; E-commerce" data-phase="Scaling" data-roi="High">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">Walmart</div>
+              <div class="atlas-card__co-sub">Internal (Walmart AI, powered by Wallaby LLM)</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--plasma">Scaling</span>
+              <span class="atlas-pill atlas-pill--plasma">High</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">Sparky AI Shopping Agent</div>
+          <div class="atlas-card__meta">Retail &amp; E-commerce · Customer Service / Marketing · launched 2024</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> 35% higher average order value for Sparky users vs. non-Sparky customers; eliminated 30M unnecessary delivery miles via AI route optimization (Walmart AI Strategy 2025 / Constellation Research)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://www.constellationr.com/insights/news/walmarts-sparky-ai-agent-increases-order-value" target="_blank" rel="noopener">Constellation Research ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="Healthcare &amp; Pharma" data-phase="Scaling" data-roi="High">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">Bayer</div>
+              <div class="atlas-card__co-sub">Thoughtworks (co-developed with Bayer R&amp;D)</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--plasma">Scaling</span>
+              <span class="atlas-pill atlas-pill--plasma">High</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">PRINCE Multi-Agent Drug Discovery System</div>
+          <div class="atlas-card__meta">Healthcare &amp; Pharma · R&amp;D · launched 2024</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> 90% reduction in manual effort for legacy study report retrieval; regulatory document drafting reduced from weeks to minutes; Bayer targets 40% R&amp;D productivity increase by 2030 via AI (Bayer / Pistoia Alliance 2025)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://pistoiaalliance.org/eventdetails/accelerating-preclinical-drug-discovery-with-agentic-ai-inside-bayers-prince-multi-agent-system/" target="_blank" rel="noopener">Pistoia Alliance ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="Healthcare &amp; Pharma" data-phase="Scaling" data-roi="High">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">Epic Systems (deployed at 70+ health systems)</div>
+              <div class="atlas-card__co-sub">Epic + Microsoft Azure OpenAI</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--plasma">Scaling</span>
+              <span class="atlas-pill atlas-pill--plasma">High</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">Epic Agent Factory — Clinical Workflow AI Agents</div>
+          <div class="atlas-card__meta">Healthcare &amp; Pharma · Operations / Clinical · launched 2024</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> ~2/3 of Epic providers have used AI features; ambient documentation reduces clinical note time significantly; 100+ AI features live or in development across Epic&#x27;s EHR platform (MedCity News, March 2026)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://medcitynews.com/2026/03/epic-hospital-ai-agent/" target="_blank" rel="noopener">MedCity News ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="Healthcare &amp; Pharma" data-phase="Enterprise" data-roi="High">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">Moderna</div>
+              <div class="atlas-card__co-sub">OpenAI (ChatGPT Enterprise)</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--primary">Enterprise</span>
+              <span class="atlas-pill atlas-pill--plasma">High</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">mRNA Research &amp; Operations AI Agent Suite</div>
+          <div class="atlas-card__meta">Healthcare &amp; Pharma · R&amp;D / Operations / Legal · launched 2023</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> 750+ custom GPTs deployed in first 2 months; near-universal employee adoption within 6 months; Dose ID GPT reduces vaccine dose optimization from weeks to hours (OpenAI / Moderna case study 2024)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://openai.com/business/guides-and-resources/the-state-of-enterprise-ai-2025-report/" target="_blank" rel="noopener">OpenAI Enterprise AI Report 2025 ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="Healthcare &amp; Pharma" data-phase="Scaling" data-roi="High">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">Universal Health Services (UHS)</div>
+              <div class="atlas-card__co-sub">Hippocratic AI (Polaris platform)</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--plasma">Scaling</span>
+              <span class="atlas-pill atlas-pill--plasma">High</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">Post-Discharge Patient Follow-Up AI Agent</div>
+          <div class="atlas-card__meta">Healthcare &amp; Pharma · Operations / Patient Care · launched 2024</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> Average patient satisfaction rating of 9.0/10 for AI agent interactions; 115M+ total patient interactions across Hippocratic&#x27;s platform with no reported safety issues; $3.5B company valuation after 50+ enterprise health system deployments (Hippocratic AI / WellSpan, 2024–2025)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://www.wellspan.org/articles/2024/09/web---hippocratic-ai-launch" target="_blank" rel="noopener">WellSpan Health / Hippocratic AI ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="Manufacturing &amp; Supply Chain" data-phase="Enterprise" data-roi="High">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">Schneider Electric</div>
+              <div class="atlas-card__co-sub">Internal (Aveva software) + AI/ML</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--primary">Enterprise</span>
+              <span class="atlas-pill atlas-pill--plasma">High</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">AI-Driven Smart Factory &amp; Supply Chain Optimization</div>
+          <div class="atlas-card__meta">Manufacturing &amp; Supply Chain · Supply Chain / Operations · launched 2022</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> Hundreds of thousands of dollars in labor savings at Kentucky smart factory; eliminated conveyor chain-break downtime entirely via AI predictive maintenance; #1 Gartner Top 25 Supply Chain 2023, 2024, 2025 (Supply Chain Dive / SCMR)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://www.supplychaindive.com/news/schneider-electric-ai-machine-learning-improve-delivery-performance-cut-costs-manifest-vegas-2024/706926/" target="_blank" rel="noopener">Supply Chain Dive ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="Manufacturing &amp; Supply Chain" data-phase="Scaling" data-roi="High">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">Siemens (deployed at Schaeffler, thyssenkrupp, 100+ customers)</div>
+              <div class="atlas-card__co-sub">Siemens + Microsoft Azure OpenAI</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--plasma">Scaling</span>
+              <span class="atlas-pill atlas-pill--plasma">High</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">Siemens Industrial Copilot for Engineering &amp; Operations</div>
+          <div class="atlas-card__meta">Manufacturing &amp; Supply Chain · Operations / Engineering · launched 2024</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> Panel visualizations generated in 30 seconds vs. hours; generated code needs only 20% adaptation; 100+ companies actively using it; 120,000 engineers have access as of Oct 2024 (Siemens/Microsoft press release, Oct 2024)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://news.microsoft.com/source/2024/10/24/siemens-and-microsoft-scale-industrial-ai/" target="_blank" rel="noopener">Microsoft News (Siemens partnership) ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="Insurance" data-phase="Enterprise" data-roi="Transformative">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">Lemonade</div>
+              <div class="atlas-card__co-sub">Internal (Lemonade AI — Jim &amp; Maya)</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--primary">Enterprise</span>
+              <span class="atlas-pill atlas-pill--primary">Transformative</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">Jim AI Instant Claims Processing Agent</div>
+          <div class="atlas-card__meta">Insurance · Operations / Claims · launched 2017</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> 55% of claims processed fully autonomously (no human input); Loss Adjustment Expense ratio of 6% vs. ~9% industry average; pet insurance cost-per-claim reduced 68% from $44 to $14 (Lemonade Q4 2025 Shareholder Letter)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://www.lemonade.com/investor-relations-bo/wp-content/uploads/2025/04/LMND-Shareholder-Letter-Q4-2024.pdf" target="_blank" rel="noopener">Lemonade Q4 2024 Shareholder Letter ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="Insurance" data-phase="Scaling" data-roi="High">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">Zurich Insurance</div>
+              <div class="atlas-card__co-sub">Internal (Zurich AI team) + Expert AI</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--plasma">Scaling</span>
+              <span class="atlas-pill atlas-pill--plasma">High</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">CATIA Catastrophe Claims Intelligence Agent</div>
+          <div class="atlas-card__meta">Insurance · Operations / Claims · launched 2023</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> CATIA identified 500 additional catastrophe claims during its pilot (5 events), generating $1.4M in savings; Expert AI partnership achieved 58x reduction in claim review time, saving 8 hours/policy and ~$40M/year in underwriting leakage; real-time fraud detection equivalent to £260K suspicious claims identified daily in 2024 (Zurich / Klover.ai analysis)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://www.klover.ai/zurich-insurance-group-ai-strategy-analysis-of-dominance-in-insurance-ai/" target="_blank" rel="noopener">Klover.ai Zurich Insurance AI Strategy Analysis ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="Legal &amp; Professional Services" data-phase="Enterprise" data-roi="High">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">A&amp;O Shearman (Allen &amp; Overy)</div>
+              <div class="atlas-card__co-sub">Harvey (OpenAI GPT-4 + Azure)</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--primary">Enterprise</span>
+              <span class="atlas-pill atlas-pill--plasma">High</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">Harvey Agentic Legal Research &amp; ContractMatrix</div>
+          <div class="atlas-card__meta">Legal &amp; Professional Services · Legal · launched 2022</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> 30% reduction in contract review time; 7 hours saved per contract via ContractMatrix; staff save 2–3 hours/week on routine tasks; 40,000 queries processed by Harvey in first rollout phase (A&amp;O Shearman / Klover.ai, 2025)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://www.aoshearman.com/en/news/ao-shearman-and-harvey-to-roll-out-agentic-ai-agents-targeting-complex-legal-workflows" target="_blank" rel="noopener">A&amp;O Shearman Press Release ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="Legal &amp; Professional Services" data-phase="Pilot" data-roi="High">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">Deloitte (deployed internally + at HPE)</div>
+              <div class="atlas-card__co-sub">NVIDIA (Llama Nemotron models via Zora AI by Deloitte)</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--copper">Pilot</span>
+              <span class="atlas-pill atlas-pill--plasma">High</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">Zora AI Finance Agent — Expense &amp; Invoice Automation</div>
+          <div class="atlas-card__meta">Legal &amp; Professional Services · Finance / Procurement · launched 2025</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> Deloitte targets 25% cost reduction and 40% productivity increase in its own finance operations; HPE projects 50% reduction in reporting production time; Deloitte plans Zora deployment to thousands of internal users by end of 2025 (Deloitte press release, March 2025)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://www.deloitte.com/us/en/about/press-room/deloitte-unveils-zora-ai-agentic-ai-for-tomorrows-workforce.html" target="_blank" rel="noopener">Deloitte Press Release ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="Customer Service / BPO" data-phase="Enterprise" data-roi="Transformative">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">Klarna</div>
+              <div class="atlas-card__co-sub">OpenAI</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--primary">Enterprise</span>
+              <span class="atlas-pill atlas-pill--primary">Transformative</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">OpenAI-Powered Customer Service AI Agent</div>
+          <div class="atlas-card__meta">Customer Service / BPO · Customer Service · launched 2024</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> Equivalent of 700 FTE agents replaced; 2.3M conversations in month 1; handle time: 11 min → &lt;2 min; 25% drop in repeat inquiries; $40M estimated annual profit improvement (Klarna press release, Feb 2024)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://kaamfu.ai/blog/klarna-replaced-700-agents-with-ai-and-a-year-later-they-were-rehiring-humans/" target="_blank" rel="noopener">Kaamfu / Klarna Press Release (Feb 2024) ↗</a>
+            <a class="atlas-card__deep" href="../../agentic-enterprise/chapters/15-klarna.html">Companion · R№03 Ch 15 →</a>
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="Customer Service / BPO" data-phase="Enterprise" data-roi="High">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">Telstra</div>
+              <div class="atlas-card__co-sub">Microsoft (Azure OpenAI Service)</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--primary">Enterprise</span>
+              <span class="atlas-pill atlas-pill--plasma">High</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">Ask Telstra &amp; One Sentence Summary AI Agent Tools</div>
+          <div class="atlas-card__meta">Customer Service / BPO · Customer Service · launched 2024</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> 90% of agents using One Sentence Summary reported time savings and increased effectiveness; 20% reduction in follow-up contacts; 84% of agents said Ask Telstra positively impacted customer interactions (Microsoft case study / Telstra Annual Report 2024)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://www.microsoft.com/en/customers/story/1740058425924206437-telstra-telecommunications-azure-openai-service" target="_blank" rel="noopener">Microsoft Customer Story ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="Customer Service / BPO" data-phase="Scaling" data-roi="High">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">Wiley (John Wiley &amp; Sons)</div>
+              <div class="atlas-card__co-sub">Salesforce (Agentforce + Einstein AI)</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--plasma">Scaling</span>
+              <span class="atlas-pill atlas-pill--plasma">High</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">Agentforce Customer Service AI Agent</div>
+          <div class="atlas-card__meta">Customer Service / BPO · Customer Service · launched 2024</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> 213% ROI with $230K in savings; 40%+ improvement in case resolution vs. previous chatbot; onboarding of seasonal agents 50% faster (Salesforce customer story, 2024)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://www.salesforce.com/customer-stories/wiley/" target="_blank" rel="noopener">Salesforce Customer Stories ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="IT Operations / Software Engineering" data-phase="Scaling" data-roi="Medium">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">Cisco (internal + enterprise customers)</div>
+              <div class="atlas-card__co-sub">Internal (Cisco AI) + reasoning LLMs</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--plasma">Scaling</span>
+              <span class="atlas-pill atlas-pill--copper">Medium</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">Cisco AgenticOps — Autonomous Network Operations</div>
+          <div class="atlas-card__meta">IT Operations / Software Engineering · IT / Network Operations · launched 2025</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> Configuration automation and network monitoring automation address the top-two priorities for Cisco&#x27;s 69% of DevNet engineers; reduces MTTR for network incidents from hours to minutes (per Cisco AgenticOps announcement, Feb 2026)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://newsroom.cisco.com/c/r/newsroom/en/us/a/y2026/m02/cisco-expands-agenticops-innovations-across-portfolio.html" target="_blank" rel="noopener">Cisco Newsroom ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="IT Operations / Software Engineering" data-phase="Enterprise" data-roi="High">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">GitHub / Microsoft (77,000+ enterprise customers)</div>
+              <div class="atlas-card__co-sub">GitHub / Microsoft (OpenAI GPT-4 Turbo)</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--primary">Enterprise</span>
+              <span class="atlas-pill atlas-pill--plasma">High</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">GitHub Copilot Enterprise — AI Coding Agent</div>
+          <div class="atlas-card__meta">IT Operations / Software Engineering · IT / Software Engineering · launched 2023</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> 55% faster task completion (controlled study: 1h 11m vs. 2h 41m); 84% PR build success rate; 77,000 enterprise customers as of 2025; 20M+ users (GitHub/Gartner 2025 Magic Quadrant)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://www.companieshistory.com/github-copilot-statistics/" target="_blank" rel="noopener">GitHub Copilot Statistics 2026 (CompaniesHistory.com) ↗</a>
+            
+          </footer>
+        </article>
+        <article class="atlas-card" data-industry="HR / Talent" data-phase="Scaling" data-roi="High">
+          <header class="atlas-card__head">
+            <div class="atlas-card__co">
+              <div class="atlas-card__co-name">Workday (enterprise customers globally)</div>
+              <div class="atlas-card__co-sub">Internal (Workday Illuminate platform)</div>
+            </div>
+            <div class="atlas-card__pills">
+              <span class="atlas-pill atlas-pill--plasma">Scaling</span>
+              <span class="atlas-pill atlas-pill--plasma">High</span>
+            </div>
+          </header>
+          <div class="atlas-card__title">Workday Illuminate HR &amp; Finance AI Agents</div>
+          <div class="atlas-card__meta">HR / Talent · HR / Finance · launched 2024</div>
+          <p class="atlas-card__metric"><span class="atlas-card__metric-label">ROI</span> 65% reduction in contract execution time; 90% reduction in time spent on staffing changes; 900 hours/year saved by Financial Audit Agent in early access; Payroll compliance 4x faster (Workday Rising 2025 press release, Sept 2025)</p>
+          <footer class="atlas-card__foot">
+            <a class="atlas-card__src" href="https://newsroom.workday.com/2025-09-16-Workday-Illuminate-TM-Expands-with-New-AI-Agents-for-HR,-Finance,-and-Industry" target="_blank" rel="noopener">Workday Newsroom ↗</a>
+            
+          </footer>
+        </article>
+      </div>
+      <p class="atlas-empty" data-atlas-empty hidden>No cases match these filters. Reset to widen the view.</p>
+
+      <h2 id="what-the-shape-tells-us">What the shape tells us</h2>
+      <p><strong>Observation.</strong> Eleven of twenty-five deployments are at enterprise scale today; twelve are scaling but not yet enterprise; only two remain in pilot. Five qualify as Transformative on ROI evidence; eighteen qualify as High; two as Medium. Financial services, retail, and healthcare account for thirteen of the twenty-five.</p>
+      <p><strong>Interpretation.</strong> The "agents are still pilots" narrative is increasingly stale at the front of the curve. Where deployers have explicit governance, named owners, and the integration spine described in Pillar IV, agents are crossing into production at meaningful scale. The concentration in three industries is not a coincidence — they share three traits that Pillar III flagged as load-bearing: structured high-volume transactions, strong evals from regulatory pressure, and tolerance for human-in-the-loop on high-stakes outputs.</p>
+      <p><strong>Recommendation.</strong> Use the atlas as a calibration tool, not a copy-from-here menu. Find the three rows closest to your industry and stage. Read the source. Ask whether the deployer's preconditions — data readiness, identity model, governance maturity — match yours today. If they do not, the gap is the work; the use case is the reward.</p>
+
+      <h2 id="provenance">Provenance and limits</h2>
+      <p>Every row carries one source URL — the strongest public artifact we found at the time of writing. Where a primary source exists (annual report, earnings call, deployer-published case study), we cite it. Where the strongest public artifact is a vendor case study or a major-outlet news report, we cite that and accept the discount. Two specific limits apply:</p>
+      <ul>
+        <li><strong>Selection bias.</strong> The atlas reflects what is publicly disclosed. Many enterprise agent deployments are intentionally not disclosed, particularly in regulated sectors where competitive advantage and disclosure liability point in opposite directions. The atlas should not be read as a representative sample of all enterprise agentic activity.</li>
+        <li><strong>Time decay.</strong> Deployment phase and ROI tier are read at a point in time. Cases move. The McDonald's row in Report №03's narrative chapter is the canonical example: a much-cited pilot, then a rollback. The atlas will be re-tagged as deployers update their disclosures.</li>
+      </ul>
+      <p>For deeper treatment of three of the entries in this atlas, see Report №03 — chapter 15 (Klarna), chapter 16 (JPMorgan), chapter 17 (McDonald's). For the framework that this atlas instantiates, return to chapter 21.</p>
+
+      <p class="ch-end-mark">★</p>
+    </article>
+  </div>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters, the glossary, and the bibliography. Try <em>NIST</em>, <em>orchestration</em>, <em>guardrails</em>, or <em>EU AI Act</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does the NIST AI RMF apply to agentic AI?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">The Agentic Enterprise</strong><br>
+      A long-form readiness field guide for agentic AI in the enterprise.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script>
+(function(){
+  var state = {industry:'all', phase:'all', roi:'all'};
+  function apply(){
+    document.querySelectorAll('.atlas-card').forEach(function(card){
+      var ok = (state.industry==='all' || card.dataset.industry===state.industry) &&
+               (state.phase==='all' || card.dataset.phase===state.phase) &&
+               (state.roi==='all' || card.dataset.roi===state.roi);
+      card.style.display = ok ? '' : 'none';
+    });
+    var visible = document.querySelectorAll('.atlas-card').length - document.querySelectorAll('.atlas-card[style*="none"]').length;
+    var empty = document.querySelector('[data-atlas-empty]');
+    if (empty) empty.hidden = visible !== 0;
+  }
+  function bind(attr, key){
+    document.querySelectorAll('[data-filter-'+attr+']').forEach(function(b){
+      b.addEventListener('click', function(){
+        state[key] = b.getAttribute('data-filter-'+attr);
+        document.querySelectorAll('[data-filter-'+attr+']').forEach(function(x){x.classList.remove('atlas-chip--active');});
+        b.classList.add('atlas-chip--active');
+        apply();
+      });
+    });
+  }
+  bind('industry','industry');
+  bind('phase','phase');
+  bind('roi','roi');
+})();
+</script>
+</body></html>
