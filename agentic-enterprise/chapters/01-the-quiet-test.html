@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 01 · The Quiet Test — Building an Agentic Enterprise</title>
+<meta name="description" content="An honest opening: the gap between agentic AI on stage and agentic AI in production, and the small test that separates the two.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="01-the-quiet-test" data-chapter-title="The Quiet Test">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-quiet-test", "title": "The Quiet Test", "subtitle": "What 'agentic' actually means, and the failure rate nobody puts on the slide"}, {"num": "02", "slug": "02-workflow-to-agent", "title": "From Workflow to Agent", "subtitle": "A SIPOC canvas, repurposed: how to translate a business process into agent wiring"}, {"num": "03", "slug": "03-five-honest-questions", "title": "The Five Honest Questions", "subtitle": "A short test that kills bad agent projects before they consume budget"}, {"num": "04", "slug": "04-anatomy", "title": "Anatomy of an Agent", "subtitle": "Six parts you cannot leave out without the system pretending to work"}, {"num": "05", "slug": "05-reference-stack", "title": "The Reference Stack", "subtitle": "Six layers, named honestly: experience, orchestration, registry, memory, tools, evals"}, {"num": "06", "slug": "06-memory", "title": "Memory, in Plain English", "subtitle": "Four kinds, four jobs, and the failure modes specific to each"}, {"num": "07", "slug": "07-tools-protocols", "title": "Tools and Protocols", "subtitle": "Function calling, MCP, A2A — what each binds to what, and the parts that aren't standardised yet"}, {"num": "08", "slug": "08-governance-first", "title": "Why Governance Comes First", "subtitle": "The work that has to exist before the agent does"}, {"num": "09", "slug": "09-mapping-what-it-does", "title": "Mapping What an Agent Actually Does", "subtitle": "Context, authority, blast radius — the artefact your Map function produces"}, {"num": "10", "slug": "10-measure-evals", "title": "Measure: Evals That Actually Catch Things", "subtitle": "Golden sets, drift, the Measure function as a weekly habit"}, {"num": "11", "slug": "11-manage-incidents", "title": "Manage: Incidents, Rollback, the Off-Switch", "subtitle": "What you do when something goes wrong, written down before something goes wrong"}, {"num": "12", "slug": "12-agent-registry", "title": "The Agent Registry", "subtitle": "The inventory that turns governance from binder into infrastructure"}, {"num": "13", "slug": "13-risks-that-bite", "title": "The Risks That Bite", "subtitle": "OWASP LLM Top 10 (2025), MITRE ATLAS, and prompt injection as the central threat"}, {"num": "14", "slug": "14-human-in-the-loop", "title": "Human-in-the-Loop, Done Honestly", "subtitle": "Where humans actually belong, and where they pretend to belong"}, {"num": "15", "slug": "15-klarna", "title": "Klarna: The Most Honest Story on the Public Record", "subtitle": "What actually happened — fire, walkback, $60M, and the layered architecture that worked"}, {"num": "16", "slug": "16-jpmorgan", "title": "JPMorgan: LLM Suite and the Compliance-First Path", "subtitle": "What 230,000 internal users teaches about the right pace in a regulated firm"}, {"num": "17", "slug": "17-mcdonalds", "title": "McDonald's: How to Pull the Plug Without Embarrassment", "subtitle": "The drive-thru AI rollback that the press read as a failure was, in fact, a textbook pilot"}, {"num": "18", "slug": "18-platform-map", "title": "The Platform Map", "subtitle": "No-code, low-code, code-first — pick the lock-in you can live with"}, {"num": "19", "slug": "19-roi-honest", "title": "ROI: The Cost Stack and the Honest Arithmetic", "subtitle": "Why most ROI claims are wrong, and the small set of variables that actually move the answer"}, {"num": "20", "slug": "20-flywheel", "title": "The Flywheel", "subtitle": "Why some agent deployments compound and most don't"}, {"num": "21", "slug": "21-thirty-sixty-ninety", "title": "A 30-60-90 Plan", "subtitle": "What a real team does in the first quarter of an agent program"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="3" fill="currentColor" /><path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" /></svg>
+      <span>Building an Agentic Enterprise<span class="brand__sub"> — a practitioner's report</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">Building an Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 01 of 21</div>
+    <div class="ch-header__num">Chapter 01</div>
+    <h1 class="ch-header__title">The Quiet Test</h1>
+    <p class="ch-header__dek">What 'agentic' actually means, and the failure rate nobody puts on the slide</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">95<em>%</em></div><div class="stat__label">of GenAI pilots cited as not reaching production (MIT NANDA, 2025)</div></div><div class="stat"><div class="stat__num">1<em>in 4</em></div><div class="stat__label">AI projects delivering promised ROI (IBM CEO survey, 2025)</div></div><div class="stat"><div class="stat__num">853<em></em></div><div class="stat__label">FTE-equivalent work Klarna's agent did by Nov 2025</div></div></div>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <a class="toolbar__btn" href="../agentic-enterprise.pdf" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></a>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-room">The room you've been in</a></li><li><a href="#the-word">The word, used carefully</a></li><li><a href="#the-test">The quiet test</a></li><li><a href="#the-shape">The shape of this report</a></li></ul></aside>
+    <article class="prose">
+      
+<p class="lede">Somewhere in the building you work in, there is a slide deck with the word <em>agentic</em> on the title page. The deck has been opened in a meeting where everyone smiled and nodded, and then it was closed, and three weeks later nothing in the building did anything new. This report is about why that keeps happening, and what to do about it.</p>
+
+<p>It is not a sceptic's pamphlet. Agentic AI is real, and a small number of teams are doing it well. But the gap between what is on stage at vendor conferences and what is running on Tuesday morning at a real company is wider than most leaders realise, and it widens every quarter that the marketing keeps moving and the production work doesn't.</p>
+
+<h2 id="the-room">The room you've been in</h2>
+
+<p>You know the room. A consultant or a vendor demos an agent that books a flight, fills a form, files a ticket, escalates a case. The demo always works. The questions afterwards are about pricing and rollout. Nobody asks the only question that matters: <em>what happens the first time it is wrong</em>?</p>
+
+<p>The honest answer is usually one of three. Either no one is sure, or there's a vague gesture toward "human in the loop", or the fallback is the very process the agent was supposed to replace. None of those are answers. They are placeholders for an answer.</p>
+
+<p>This is why pilots stall, and why the most-cited "failures" in the press are usually more nuanced than the headline. Klarna's customer-service agent, deployed in early 2024, was first held up as a poster child for <a href="https://www.klarna.com/international/press/klarna-ai-assistant-handles-two-thirds-of-customer-service-chats-in-its-first-month/">replacing 700 humans</a>, then in May 2025 reported as a walkback when CEO Sebastian Siemiatkowski admitted that <a href="https://fortune.com/2025/05/09/klarna-ai-humans-return-on-investment/">cost had been weighed too heavily against quality</a>. The fuller picture, six months later, is more interesting than either headline: by November 2025 the AI was doing the work of 853 agents, saving roughly $60M annually, and Klarna had simply added a small human tier for emotionally complex interactions — <a href="https://signal-memo.com/memo-klarna-fired-700-agents-then-hired-them-back-then-saved-60m-anyway-what-actually-happened/">a calibration, not a reversal</a>. Air Canada's chatbot, by contrast, promised a bereavement fare it had no authority to grant, and a tribunal ruled the airline owed the customer the difference: the agent's mistake became the company's <a href="https://www.bbc.com/travel/article/20240222-air-canada-chatbot-misinformation-what-travellers-should-know">legal liability</a>. The pattern is consistent across the wins and the losses. The places where agentic AI fails are not the places where it does the wrong thing — they are the places where nobody had decided what the right thing was.</p>
+
+<h2 id="the-word">The word, used carefully</h2>
+
+<p>Before going further, the vocabulary needs sweeping. The industry uses "AI agent", "agentic AI", "copilot", "automation", and "workflow" interchangeably, and the resulting confusion is not innocent — it sells software. In this report, the word <strong>agent</strong> means something specific:</p>
+
+<blockquote>An agent is a model placed in a closed loop with tools, memory, and a goal — capable of taking multi-step action toward that goal without per-step human prompting.</blockquote>
+
+<p>That definition does work. It excludes a one-shot LLM call that writes an email (no loop). It excludes a copilot that suggests text and waits for you to press accept (no autonomy). It excludes a workflow with a hard-coded if-this-then-that (no goal-directed reasoning). It includes the underwriter that drafts a credit memo, queries five systems, asks for a missing document, and files the case. It includes the support agent that classifies a ticket, looks up the customer's contract, drafts a response, and either sends it or escalates depending on its own confidence.</p>
+
+<p>The line between "automation with a model in it" and "agent" is exactly this loop. Cross it and you have new powers and new problems. Most of the rest of this report is about both.</p>
+
+<h2 id="the-test">The quiet test</h2>
+
+<p>Here is a small test you can run on your own current agent project. Take the most senior person who can be in a room and ask them three questions, in order, and listen to how long the silence is between each one.</p>
+
+<ol>
+  <li><strong>What does this agent do that the previous workflow could not?</strong> The right answer is concrete and small. "It reads unstructured email and decides which of seven categories it falls into" is a good answer. "It transforms our operations" is not.</li>
+  <li><strong>What is the worst thing it can do, and who pays?</strong> Worst-thing analysis is a habit borrowed from safety engineering. If the answer is "it can issue a refund up to fifty dollars" you have a small problem. If the answer is "it can email the wrong customer a competitor's contract" you have a different problem. If the answer is silence, you have the worst problem.</li>
+  <li><strong>How will we know it has gotten worse?</strong> Models drift. Tools change. Data changes. The agent that worked on Monday can quietly stop working on Friday in a way that nobody notices until a customer complains. If there is no eval suite, no production monitoring, no golden set, then the answer is "we won't, until it embarrasses us."</li>
+</ol>
+
+<p>If those three questions get crisp answers, you are in a small minority and you should keep going. If they don't, you are not yet ready to deploy, no matter what the timeline says. The work between today and ready is the work this report is about.</p>
+
+<h2 id="the-shape">The shape of this report</h2>
+
+<p>The report has three parts, written for somebody who has to ship something on Tuesday.</p>
+
+<p><strong>Part I — Foundations.</strong> What an agent is in detail; how to map a business process to one; the five honest questions you should pass before you build; the reference stack of orchestration, registry, memory, tools, and evals; and the protocols that bind them.</p>
+
+<p><strong>Part II — Governance and architecture.</strong> The NIST AI Risk Management Framework — Govern, Map, Measure, Manage — turned into something a real team can actually run; the agent registry as a piece of infrastructure, not a slide; the risks that bite (prompt injection, autonomy creep, identity sprawl, OWASP and MITRE's catalogues); and how human-in-the-loop is more than a comforting phrase.</p>
+
+<p><strong>Part III — Deployment, ROI, the flywheel.</strong> Three real case studies, including the cautionary ones; an honest tour of no-code and low-code platforms; an ROI template that will sometimes tell you not to build; and the flywheel — data, evals, telemetry — that decides whether your agent program compounds or just costs.</p>
+
+<p>Throughout, you'll see boxes labelled <em>questions to ask</em>, <em>caution</em>, and <em>flywheel note</em>. The <em>questions</em> boxes are the ones to read out loud in your next meeting. The <em>caution</em> boxes are where money or trust is most often lost. The <em>flywheel</em> boxes are where the compounding lives. They are written from the floor of a server room, not the back of a stage.</p>
+
+<div class="aside" data-tone="copper">
+  <span class="aside__label">A practitioner's note</span>
+  <p>Two industries currently set the bar for agentic AI in production: financial services, where the cost of being wrong is concretely priced, and customer support, where the volume justifies investment. Both are useful templates. Both have also produced the most expensive failures. Read their case studies (Part III) before reading anyone's marketing.</p>
+</div>
+
+<p>One more thing before we begin. This is a report for people building <em>inside</em> organisations, not selling <em>to</em> them. There are no vendor logos on the cover. The platforms named in these pages are named because they exist and matter, not because they paid to be here. Where one is genuinely better at something than another, that's stated. Where the market is too young to know, that's stated too.</p>
+
+<p>We start with the smallest part of the work, which is also the most often skipped: deciding what an agent should actually do.</p>
+
+      <figure class="figure figure--wide reveal" id="figure">
+      <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="The agent loop: perceive, plan, act, reflect">
+  <defs>
+    <marker id="arr1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--color-primary)"/></marker>
+  </defs>
+  <text x="40" y="40" class="label-display" font-size="16">The agent loop</text>
+  <text x="40" y="60" font-size="11" fill="var(--color-text-muted)">A model in a closed loop with tools, memory, and a goal — the smallest definition that matters.</text>
+  <!-- center node: model -->
+  <circle cx="400" cy="200" r="56" fill="var(--color-surface-2)" stroke="var(--color-primary)" stroke-width="1.5"/>
+  <text x="400" y="195" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--color-text)">MODEL</text>
+  <text x="400" y="210" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">reasoner</text>
+  <!-- four cardinal nodes -->
+  <g font-family="var(--font-mono)" font-size="11" fill="var(--color-text)">
+    <rect x="120" y="170" width="120" height="60" rx="2" fill="var(--color-accent-copper-soft)" stroke="var(--color-accent-copper)" stroke-width="1"/>
+    <text x="180" y="195" text-anchor="middle">PERCEIVE</text>
+    <text x="180" y="212" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">user goal · context</text>
+
+    <rect x="340" y="60" width="120" height="60" rx="2" fill="var(--color-accent-quartz)" fill-opacity="0.35" stroke="var(--color-accent-copper)" stroke-width="1"/>
+    <text x="400" y="85" text-anchor="middle">PLAN</text>
+    <text x="400" y="102" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">decompose · pick tool</text>
+
+    <rect x="560" y="170" width="120" height="60" rx="2" fill="var(--color-primary-highlight)" stroke="var(--color-primary)" stroke-width="1"/>
+    <text x="620" y="195" text-anchor="middle">ACT</text>
+    <text x="620" y="212" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">tool call · side-effect</text>
+
+    <rect x="340" y="280" width="120" height="60" rx="2" fill="var(--color-accent-euv-soft)" stroke="var(--color-accent-euv)" stroke-width="1"/>
+    <text x="400" y="305" text-anchor="middle">REFLECT</text>
+    <text x="400" y="322" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">eval · retry · finish</text>
+  </g>
+  <!-- arrows around the loop -->
+  <g fill="none" stroke="var(--color-primary)" stroke-width="1.4" marker-end="url(#arr1)">
+    <path d="M240 200 L344 200"/>
+    <path d="M400 144 C 400 130, 400 130, 400 120"/>
+    <path d="M400 256 C 400 270, 400 270, 400 280"/>
+    <path d="M456 200 L560 200"/>
+    <path d="M460 110 C 530 130, 580 150, 580 170"/>
+    <path d="M580 230 C 530 260, 460 280, 460 290"/>
+    <path d="M340 290 C 270 280, 220 250, 220 230"/>
+    <path d="M220 170 C 270 130, 340 110, 340 110"/>
+  </g>
+  <!-- memory ribbon -->
+  <g>
+    <rect x="60" y="290" width="180" height="32" rx="2" fill="none" stroke="var(--color-text-muted)" stroke-dasharray="3 3"/>
+    <text x="150" y="310" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--color-text-muted)">memory · vector + episodic</text>
+  </g>
+</svg></div>
+      <figcaption class="figure__caption"><span class="label">Figure 1.1</span><span class="text">The agent loop. A model in a closed loop with tools and memory, working toward a goal — the smallest definition that does any real work.</span></figcaption>
+    </figure>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <span></span>
+      <a class="ch-nav-link" data-dir="next" href="02-workflow-to-agent.html"><span class="ch-nav-link__label">Chapter 02 →</span><span class="ch-nav-link__title">From Workflow to Agent</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters and the reference. Try <em>NIST</em>, <em>MCP</em>, <em>registry</em>, or <em>flywheel</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how do I run a NIST RMF Map workshop?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">Building an Agentic Enterprise</strong><br>
+      A practitioner's report on shipping agentic AI inside real organizations.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

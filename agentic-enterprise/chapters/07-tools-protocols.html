@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 07 · Tools and Protocols — Building an Agentic Enterprise</title>
+<meta name="description" content="The protocols binding agents to tools and to each other — function calling, MCP, A2A — and the engineering tradeoffs each implies.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="07-tools-protocols" data-chapter-title="Tools and Protocols">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-quiet-test", "title": "The Quiet Test", "subtitle": "What 'agentic' actually means, and the failure rate nobody puts on the slide"}, {"num": "02", "slug": "02-workflow-to-agent", "title": "From Workflow to Agent", "subtitle": "A SIPOC canvas, repurposed: how to translate a business process into agent wiring"}, {"num": "03", "slug": "03-five-honest-questions", "title": "The Five Honest Questions", "subtitle": "A short test that kills bad agent projects before they consume budget"}, {"num": "04", "slug": "04-anatomy", "title": "Anatomy of an Agent", "subtitle": "Six parts you cannot leave out without the system pretending to work"}, {"num": "05", "slug": "05-reference-stack", "title": "The Reference Stack", "subtitle": "Six layers, named honestly: experience, orchestration, registry, memory, tools, evals"}, {"num": "06", "slug": "06-memory", "title": "Memory, in Plain English", "subtitle": "Four kinds, four jobs, and the failure modes specific to each"}, {"num": "07", "slug": "07-tools-protocols", "title": "Tools and Protocols", "subtitle": "Function calling, MCP, A2A — what each binds to what, and the parts that aren't standardised yet"}, {"num": "08", "slug": "08-governance-first", "title": "Why Governance Comes First", "subtitle": "The work that has to exist before the agent does"}, {"num": "09", "slug": "09-mapping-what-it-does", "title": "Mapping What an Agent Actually Does", "subtitle": "Context, authority, blast radius — the artefact your Map function produces"}, {"num": "10", "slug": "10-measure-evals", "title": "Measure: Evals That Actually Catch Things", "subtitle": "Golden sets, drift, the Measure function as a weekly habit"}, {"num": "11", "slug": "11-manage-incidents", "title": "Manage: Incidents, Rollback, the Off-Switch", "subtitle": "What you do when something goes wrong, written down before something goes wrong"}, {"num": "12", "slug": "12-agent-registry", "title": "The Agent Registry", "subtitle": "The inventory that turns governance from binder into infrastructure"}, {"num": "13", "slug": "13-risks-that-bite", "title": "The Risks That Bite", "subtitle": "OWASP LLM Top 10 (2025), MITRE ATLAS, and prompt injection as the central threat"}, {"num": "14", "slug": "14-human-in-the-loop", "title": "Human-in-the-Loop, Done Honestly", "subtitle": "Where humans actually belong, and where they pretend to belong"}, {"num": "15", "slug": "15-klarna", "title": "Klarna: The Most Honest Story on the Public Record", "subtitle": "What actually happened — fire, walkback, $60M, and the layered architecture that worked"}, {"num": "16", "slug": "16-jpmorgan", "title": "JPMorgan: LLM Suite and the Compliance-First Path", "subtitle": "What 230,000 internal users teaches about the right pace in a regulated firm"}, {"num": "17", "slug": "17-mcdonalds", "title": "McDonald's: How to Pull the Plug Without Embarrassment", "subtitle": "The drive-thru AI rollback that the press read as a failure was, in fact, a textbook pilot"}, {"num": "18", "slug": "18-platform-map", "title": "The Platform Map", "subtitle": "No-code, low-code, code-first — pick the lock-in you can live with"}, {"num": "19", "slug": "19-roi-honest", "title": "ROI: The Cost Stack and the Honest Arithmetic", "subtitle": "Why most ROI claims are wrong, and the small set of variables that actually move the answer"}, {"num": "20", "slug": "20-flywheel", "title": "The Flywheel", "subtitle": "Why some agent deployments compound and most don't"}, {"num": "21", "slug": "21-thirty-sixty-ninety", "title": "A 30-60-90 Plan", "subtitle": "What a real team does in the first quarter of an agent program"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="3" fill="currentColor" /><path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" /></svg>
+      <span>Building an Agentic Enterprise<span class="brand__sub"> — a practitioner's report</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">Building an Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 07 of 21</div>
+    <div class="ch-header__num">Chapter 07</div>
+    <h1 class="ch-header__title">Tools and Protocols</h1>
+    <p class="ch-header__dek">Function calling, MCP, A2A — what each binds to what, and the parts that aren't standardised yet</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">3<em></em></div><div class="stat__label">live protocols (function calling, MCP, A2A)</div></div><div class="stat"><div class="stat__num">2024<em></em></div><div class="stat__label">MCP open-sourced by Anthropic</div></div><div class="stat"><div class="stat__num">2025<em></em></div><div class="stat__label">A2A specification published by Google</div></div></div>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <a class="toolbar__btn" href="../agentic-enterprise.pdf" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></a>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#fc">Function calling — model to tool</a></li><li><a href="#mcp">MCP — many models, shared tools</a></li><li><a href="#a2a">A2A — agent to agent</a></li><li><a href="#stack">How the protocols stack</a></li><li><a href="#buy">What to standardise on now</a></li></ul></aside>
+    <article class="prose">
+      
+<p class="lede">Three protocols mostly carry the weight of agentic AI today. Each binds a different pair of things together. None of them is finished. All of them are mature enough that committing to them now is sensible. Picking the wrong one — or pretending they're interchangeable — produces an agent stack that works for one team and is unbuildable for the next.</p>
+
+<h2 id="fc">Function calling — model to tool</h2>
+
+<p>The oldest of the three. A model emits a structured tool invocation — a name and a JSON object of arguments — instead of free text, and the runtime executes the tool and returns the result. OpenAI introduced this at scale in 2023; every major model provider supports a variant.</p>
+
+<p>Function calling is in-process and model-specific. The schemas are defined per-deployment. Switching models means re-describing tools in the new model's preferred format. It works extremely well inside one stack. It does not, on its own, solve the problem of <em>many models, many tools</em> in a large organisation, where you have ten models in production and a hundred tools.</p>
+
+<p>The right place for function calling: as the per-call mechanism inside an MCP-mediated tool layer, or as the simple primitive in small, single-team agents that don't need cross-team reuse.</p>
+
+<h2 id="mcp">MCP — many models, shared tools</h2>
+
+<p>The Model Context Protocol, open-sourced by Anthropic in late 2024 and adopted broadly through 2025–2026, separates the tool from the model. A tool is implemented as an MCP server with a standard description; any compliant model can call any compliant server. The win is composability and reuse — write a CRM tool once, use it from Claude, GPT, Gemini, or your local Llama.</p>
+
+<p>What MCP gives you, in practice: a standard schema for tools (name, description, parameters, return); a transport (HTTP, with streaming where relevant); and a permission/scope model (what the agent can do with this tool). What it doesn't give you: a registry. A discovery protocol. Long-term thinking about identity. Those are still each enterprise's homework — and we cover the registry shape in Chapter 12.</p>
+
+<p>The minimum sensible commitment in 2026: every tool you build for agents is wrapped as an MCP server (or trivially convertible to one). This costs little upfront and pays back the first time you swap a model or onboard a second one.</p>
+
+<h2 id="a2a">A2A — agent to agent</h2>
+
+<p>The youngest and most speculative of the three. Google's Agent-to-Agent specification (2025) defines how one agent discovers another, learns its capabilities, authenticates against it, and invokes it. The use case: a sales agent that needs a pricing question answered calls the pricing agent, which is owned by a different team, runs on a different stack, and exposes a small, contracted surface.</p>
+
+<p>This is the future of inter-agent work, but the specifications are still maturing and the operational practices around them — discovery, identity, billing, audit — are deeply unfinished. The pragmatic 2026 advice: design your agents <em>as if</em> they will eventually be A2A endpoints (each has a clean capability description, scoped auth, a stable contract), but don't bet your programme on A2A interoperability across organisations until at least 2027.</p>
+
+<p>Inside one organisation, the same job is often done with internal RPC or HTTP, and that's fine. The A2A discipline of capabilities and contracts is more valuable than the wire format.</p>
+
+<h2 id="stack">How the protocols stack</h2>
+
+<p>A common shape: an agent built on an orchestrator (LangGraph, say) reasons in the model and emits function calls; the runtime translates those into MCP calls to a curated set of tools; some of those tools are themselves wrappers around other agents, called via A2A. Function calling is the per-step mechanic; MCP is the cross-model tool surface; A2A is the cross-agent surface. Each operates at a different scale.</p>
+
+<p>Where this gets messy is identity. The user's identity, the agent's identity, the tool's identity, and the downstream agent's identity all need to flow through the call chain so that the audit log later answers "who did what, on whose behalf, with whose consent?". OAuth on-behalf-of and step-up authentication patterns are the current best answer. They work. They are also enough plumbing that most projects under-invest and pay for it during their first audit.</p>
+
+<h2 id="buy">What to standardise on now</h2>
+
+<p>If you are starting today, three commitments will save you re-work later. <strong>Wrap every tool as MCP-compatible.</strong> The cost is small; the option value is large. <strong>Treat function-calling formats as a per-orchestrator detail.</strong> Don't write business logic that depends on the exact JSON your current model emits; abstract it. <strong>Design every agent with a clean capability description.</strong> Even if it never gets called via A2A, the description is a useful artefact for the registry, for evals, and for the eventual day when another agent does want to call it.</p>
+
+<p>Three commitments. Not glamorous. Not vendor-specific. They will outlast any of the named platforms — and the named platforms will keep being named, in marketing decks, for as long as the music plays.</p>
+
+      <figure class="figure figure--wide reveal" id="figure">
+      <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="Agent protocols: function calling, MCP, A2A">
+  <text x="40" y="36" class="label-display" font-size="16">Three protocols, three jobs</text>
+  <text x="40" y="56" font-size="11" fill="var(--color-text-muted)">Function calls bind a model to a tool. MCP binds tools to many models. A2A binds agents to each other.</text>
+  <!-- function calling -->
+  <g>
+    <rect x="40" y="100" width="220" height="200" rx="2" fill="var(--color-surface-2)" stroke="var(--color-border)"/>
+    <text x="150" y="124" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--color-accent-copper)">FUNCTION CALLING</text>
+    <text x="150" y="140" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">model → one tool</text>
+    <circle cx="100" cy="200" r="22" fill="var(--color-accent-copper-soft)" stroke="var(--color-accent-copper)"/>
+    <text x="100" y="204" text-anchor="middle" font-family="var(--font-mono)" font-size="10">M</text>
+    <rect x="180" y="180" width="60" height="40" rx="2" fill="var(--color-primary-highlight)" stroke="var(--color-primary)"/>
+    <text x="210" y="204" text-anchor="middle" font-family="var(--font-mono)" font-size="10">tool</text>
+    <line x1="122" y1="200" x2="180" y2="200" stroke="var(--color-primary)" stroke-width="1.4" marker-end="url(#arrA)"/>
+    <text x="150" y="270" text-anchor="middle" font-family="var(--font-body)" font-size="10.5" fill="var(--color-text-muted)">in-process · model-specific JSON</text>
+  </g>
+  <!-- MCP -->
+  <g>
+    <rect x="290" y="100" width="220" height="200" rx="2" fill="var(--color-surface-2)" stroke="var(--color-border)"/>
+    <text x="400" y="124" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--color-accent-copper)">MCP</text>
+    <text x="400" y="140" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">many models ↔ shared tools</text>
+    <circle cx="320" cy="180" r="14" fill="var(--color-accent-copper-soft)" stroke="var(--color-accent-copper)"/>
+    <circle cx="320" cy="220" r="14" fill="var(--color-accent-copper-soft)" stroke="var(--color-accent-copper)"/>
+    <text x="320" y="184" text-anchor="middle" font-family="var(--font-mono)" font-size="9">M1</text>
+    <text x="320" y="224" text-anchor="middle" font-family="var(--font-mono)" font-size="9">M2</text>
+    <rect x="380" y="170" width="50" height="60" rx="2" fill="var(--color-accent-quartz)" fill-opacity="0.45" stroke="var(--color-accent-copper)"/>
+    <text x="405" y="204" text-anchor="middle" font-family="var(--font-mono)" font-size="9">MCP</text>
+    <text x="405" y="216" text-anchor="middle" font-family="var(--font-mono)" font-size="9">srv</text>
+    <rect x="450" y="160" width="40" height="32" rx="2" fill="var(--color-primary-highlight)" stroke="var(--color-primary)"/>
+    <rect x="450" y="200" width="40" height="32" rx="2" fill="var(--color-primary-highlight)" stroke="var(--color-primary)"/>
+    <text x="470" y="180" text-anchor="middle" font-family="var(--font-mono)" font-size="9">CRM</text>
+    <text x="470" y="220" text-anchor="middle" font-family="var(--font-mono)" font-size="9">files</text>
+    <line x1="334" y1="180" x2="380" y2="190" stroke="var(--color-primary)" stroke-width="1.2"/>
+    <line x1="334" y1="220" x2="380" y2="210" stroke="var(--color-primary)" stroke-width="1.2"/>
+    <line x1="430" y1="190" x2="450" y2="180" stroke="var(--color-primary)" stroke-width="1.2"/>
+    <line x1="430" y1="210" x2="450" y2="216" stroke="var(--color-primary)" stroke-width="1.2"/>
+    <text x="400" y="270" text-anchor="middle" font-family="var(--font-body)" font-size="10.5" fill="var(--color-text-muted)">open spec · tool catalog · scopes</text>
+  </g>
+  <!-- A2A -->
+  <g>
+    <rect x="540" y="100" width="220" height="200" rx="2" fill="var(--color-surface-2)" stroke="var(--color-border)"/>
+    <text x="650" y="124" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--color-accent-copper)">A2A</text>
+    <text x="650" y="140" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">agent → agent (network)</text>
+    <circle cx="585" cy="200" r="22" fill="var(--color-accent-euv-soft)" stroke="var(--color-accent-euv)"/>
+    <text x="585" y="204" text-anchor="middle" font-family="var(--font-mono)" font-size="10">A1</text>
+    <circle cx="715" cy="200" r="22" fill="var(--color-accent-euv-soft)" stroke="var(--color-accent-euv)"/>
+    <text x="715" y="204" text-anchor="middle" font-family="var(--font-mono)" font-size="10">A2</text>
+    <line x1="607" y1="200" x2="693" y2="200" stroke="var(--color-accent-euv)" stroke-width="1.4" stroke-dasharray="3 3"/>
+    <text x="650" y="270" text-anchor="middle" font-family="var(--font-body)" font-size="10.5" fill="var(--color-text-muted)">discovery · capabilities · auth</text>
+  </g>
+  <defs><marker id="arrA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--color-primary)"/></marker></defs>
+</svg></div>
+      <figcaption class="figure__caption"><span class="label">Figure 7.1</span><span class="text">Three protocols, three jobs. Function calling ties a model to one tool; MCP ties many models to a shared catalogue of tools; A2A ties agents to one another over a network.</span></figcaption>
+    </figure>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="06-memory.html"><span class="ch-nav-link__label">← Chapter 06</span><span class="ch-nav-link__title">Memory, in Plain English</span></a>
+      <a class="ch-nav-link" data-dir="next" href="08-governance-first.html"><span class="ch-nav-link__label">Chapter 08 →</span><span class="ch-nav-link__title">Why Governance Comes First</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters and the reference. Try <em>NIST</em>, <em>MCP</em>, <em>registry</em>, or <em>flywheel</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how do I run a NIST RMF Map workshop?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">Building an Agentic Enterprise</strong><br>
+      A practitioner's report on shipping agentic AI inside real organizations.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

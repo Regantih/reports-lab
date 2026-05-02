@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 08 · Why Governance Comes First — Building an Agentic Enterprise</title>
+<meta name="description" content="Governance is not the document you write after launch. It is the spine that makes launch survivable.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="08-governance-first" data-chapter-title="Why Governance Comes First">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-quiet-test", "title": "The Quiet Test", "subtitle": "What 'agentic' actually means, and the failure rate nobody puts on the slide"}, {"num": "02", "slug": "02-workflow-to-agent", "title": "From Workflow to Agent", "subtitle": "A SIPOC canvas, repurposed: how to translate a business process into agent wiring"}, {"num": "03", "slug": "03-five-honest-questions", "title": "The Five Honest Questions", "subtitle": "A short test that kills bad agent projects before they consume budget"}, {"num": "04", "slug": "04-anatomy", "title": "Anatomy of an Agent", "subtitle": "Six parts you cannot leave out without the system pretending to work"}, {"num": "05", "slug": "05-reference-stack", "title": "The Reference Stack", "subtitle": "Six layers, named honestly: experience, orchestration, registry, memory, tools, evals"}, {"num": "06", "slug": "06-memory", "title": "Memory, in Plain English", "subtitle": "Four kinds, four jobs, and the failure modes specific to each"}, {"num": "07", "slug": "07-tools-protocols", "title": "Tools and Protocols", "subtitle": "Function calling, MCP, A2A — what each binds to what, and the parts that aren't standardised yet"}, {"num": "08", "slug": "08-governance-first", "title": "Why Governance Comes First", "subtitle": "The work that has to exist before the agent does"}, {"num": "09", "slug": "09-mapping-what-it-does", "title": "Mapping What an Agent Actually Does", "subtitle": "Context, authority, blast radius — the artefact your Map function produces"}, {"num": "10", "slug": "10-measure-evals", "title": "Measure: Evals That Actually Catch Things", "subtitle": "Golden sets, drift, the Measure function as a weekly habit"}, {"num": "11", "slug": "11-manage-incidents", "title": "Manage: Incidents, Rollback, the Off-Switch", "subtitle": "What you do when something goes wrong, written down before something goes wrong"}, {"num": "12", "slug": "12-agent-registry", "title": "The Agent Registry", "subtitle": "The inventory that turns governance from binder into infrastructure"}, {"num": "13", "slug": "13-risks-that-bite", "title": "The Risks That Bite", "subtitle": "OWASP LLM Top 10 (2025), MITRE ATLAS, and prompt injection as the central threat"}, {"num": "14", "slug": "14-human-in-the-loop", "title": "Human-in-the-Loop, Done Honestly", "subtitle": "Where humans actually belong, and where they pretend to belong"}, {"num": "15", "slug": "15-klarna", "title": "Klarna: The Most Honest Story on the Public Record", "subtitle": "What actually happened — fire, walkback, $60M, and the layered architecture that worked"}, {"num": "16", "slug": "16-jpmorgan", "title": "JPMorgan: LLM Suite and the Compliance-First Path", "subtitle": "What 230,000 internal users teaches about the right pace in a regulated firm"}, {"num": "17", "slug": "17-mcdonalds", "title": "McDonald's: How to Pull the Plug Without Embarrassment", "subtitle": "The drive-thru AI rollback that the press read as a failure was, in fact, a textbook pilot"}, {"num": "18", "slug": "18-platform-map", "title": "The Platform Map", "subtitle": "No-code, low-code, code-first — pick the lock-in you can live with"}, {"num": "19", "slug": "19-roi-honest", "title": "ROI: The Cost Stack and the Honest Arithmetic", "subtitle": "Why most ROI claims are wrong, and the small set of variables that actually move the answer"}, {"num": "20", "slug": "20-flywheel", "title": "The Flywheel", "subtitle": "Why some agent deployments compound and most don't"}, {"num": "21", "slug": "21-thirty-sixty-ninety", "title": "A 30-60-90 Plan", "subtitle": "What a real team does in the first quarter of an agent program"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="3" fill="currentColor" /><path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" /></svg>
+      <span>Building an Agentic Enterprise<span class="brand__sub"> — a practitioner's report</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">Building an Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 08 of 21</div>
+    <div class="ch-header__num">Chapter 08</div>
+    <h1 class="ch-header__title">Why Governance Comes First</h1>
+    <p class="ch-header__dek">The work that has to exist before the agent does</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">12<em></em></div><div class="stat__label">generative-AI risk categories in NIST AI 600-1</div></div><div class="stat"><div class="stat__num">€35M<em></em></div><div class="stat__label">or 7% of global turnover — EU AI Act prohibited-practice fine ceiling</div></div><div class="stat"><div class="stat__num">6<em>mo</em></div><div class="stat__label">minimum logging retention for high-risk EU AI Act systems</div></div></div>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <a class="toolbar__btn" href="../agentic-enterprise.pdf" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></a>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-document-trap">The document trap</a></li><li><a href="#rmf-as-spine">The RMF as a spine, not a checklist</a></li><li><a href="#the-twelve-risks">The twelve risks, in plain English</a></li><li><a href="#where-eu-meets-nist">Where EU AI Act meets NIST</a></li></ul></aside>
+    <article class="prose">
+      
+<p class="lede">There is a version of governance that exists to protect the company from regulators, and a version that exists to protect the company from itself. They share a vocabulary and almost nothing else. Part II is about the second version.</p>
+
+<p>This is the part of the report most often skipped, and it is the part that decides whether the agent you build in Part I survives the contact with reality described in Part III. The teams that ship agentic AI well have something the slides do not show: a small, durable governance structure built before the first agent went into production, run by people who knew where the off-switch was.</p>
+
+<h2 id="the-document-trap">The document trap</h2>
+
+<p>Most enterprise governance for AI begins as a document. A policy is drafted, approved, posted on an intranet page, and never read. The next time anyone in the organisation thinks about the document is when a regulator asks for it, or an incident forces it. By then, the agent has been live for nine months and the policy bears almost no resemblance to what was actually built.</p>
+
+<p>This is the failure pattern that the <a href="https://nvlpubs.nist.gov/nistpubs/ai/nist.ai.100-1.pdf">NIST AI Risk Management Framework 1.0</a> was designed to break, although you would not know it from the way most consultancies present it. The framework is not a compliance regime. It is a habit. Read carefully, the four functions — <strong>Govern, Map, Measure, Manage</strong> — describe a small loop that an actual team runs every week, not a binder a lawyer signs once a year.</p>
+
+<p>The trap is that "governance" sounds like a thing you finish. It is not. It is a thing you operate.</p>
+
+<h2 id="rmf-as-spine">The RMF as a spine, not a checklist</h2>
+
+<p>The RMF's four functions are concurrent, not sequential. Govern is the cross-cutting function: the policies, the accountability, the inventory, the kill-switch procedure. Map is the act of writing down, for each agent, what it does, what tools it has, who it acts for, and where it can hurt somebody. Measure is the eval suite, the production monitoring, the drift watch. Manage is the work of responding when one of the other three reports a problem.</p>
+
+<p>If your governance program produces a binder and not a weekly meeting where someone reads the latest measure-output, you have built the document, not the spine. The four-function diagram below is what each of those functions actually contains when it is doing real work.</p>
+
+<div class="aside" data-tone="copper">
+  <span class="aside__label">A practitioner's note</span>
+  <p>The single highest-leverage RMF practice is the GV 1.6 inventory. Knowing what agents you have, what tools they hold, and who their human principal is — that one document, kept current — prevents more incidents than any other artefact in this report. Most enterprises do not have it. The first quarter of any agent program should produce it before a second agent is built.</p>
+</div>
+
+<h2 id="the-twelve-risks">The twelve risks, in plain English</h2>
+
+<p>In July 2024, NIST released <a href="https://www.nist.gov/itl/ai-risk-management-framework">AI 600-1, the Generative AI Profile</a>, naming twelve specific risk categories that the base RMF understood only loosely. The list is the most useful one-page artefact in the entire field. Read it once and you have a vocabulary. The categories are: CBRN information, confabulation (hallucination presented as fact), dangerous or violent content, data privacy, environmental impact, harmful bias, human-AI configuration (over-reliance, automation bias), information integrity, information security, intellectual property, obscene content, and value-chain integration.</p>
+
+<p>Most enterprise programs touch only four or five of those in any serious way: confabulation, data privacy, information security, human-AI configuration, and value-chain. The other seven matter for specific industries or specific deployments. The discipline is to read the list, decide which apply, document the decision, and revisit it when a tool changes. That is governance. The rest is theatre.</p>
+
+<h2 id="where-eu-meets-nist">Where EU AI Act meets NIST</h2>
+
+<p>If your enterprise has any presence in the EU, the <a href="https://www.tredence.com/blog/eu-ai-act-compliance-guide-us-companies">EU AI Act</a> is the regulation that will define the next three years of your governance work. Prohibited practices have been enforceable since February 2025, with fines up to €35M or 7% of global turnover. GPAI transparency obligations activated in August 2025. Full high-risk obligations begin August 2, 2026. Annex III high-risk sectors include credit scoring, employment, biometric ID, education, and critical infrastructure. If you deploy an agent there, Articles 9–17 apply: risk management systems, technical documentation, six-month minimum logging, transparency, and human oversight.</p>
+
+<p>The good news, if you accept the framing of this chapter, is that <a href="https://labs.cloudsecurityalliance.org/research/csa-research-note-eu-ai-act-high-risk-compliance-deadline-20/">a rigorous NIST RMF program produces most of what the EU AI Act asks for</a>. The Cloud Security Alliance's 2026 analysis is blunt about this: organisations running the RMF as described above are substantially better positioned than those who treated it as paperwork. The difference is whether your inventory is real, your measure outputs are produced, and your manage responses are exercised. That is what the regulator will ask for, in any geography. Build it once, defend it everywhere.</p>
+
+<p>The next chapter is about the second function — Map — and the canvas a team can use on a Monday morning to write down what an agent actually does, before anyone writes a line of code.</p>
+
+      <figure class="figure figure--wide reveal" id="figure">
+      <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="NIST AI RMF four functions: Govern wraps Map, Measure, Manage">
+  <defs>
+    <marker id="rmfA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--color-primary)"/></marker>
+  </defs>
+  <text x="40" y="36" class="label-display" font-size="16">The RMF as a spine</text>
+  <text x="40" y="56" font-size="11" fill="var(--color-text-muted)">Govern is the cross-cutting shell. Map–Measure–Manage is the continuous loop that runs inside it.</text>
+  <!-- govern outer rounded box -->
+  <rect x="80" y="90" width="640" height="240" rx="6" fill="var(--color-surface-2)" stroke="var(--color-primary)" stroke-width="1.6"/>
+  <text x="100" y="115" font-family="var(--font-mono)" font-size="12" fill="var(--color-primary)">GOVERN</text>
+  <text x="100" y="132" font-size="10" fill="var(--color-text-muted)">policy · accountability · inventory · kill-switch · third-party</text>
+  <!-- inner three nodes -->
+  <g font-family="var(--font-mono)" font-size="11" fill="var(--color-text)">
+    <rect x="140" y="170" width="150" height="120" rx="3" fill="var(--color-accent-copper-soft)" stroke="var(--color-accent-copper)" stroke-width="1"/>
+    <text x="215" y="200" text-anchor="middle">MAP</text>
+    <text x="215" y="220" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">context · authority</text>
+    <text x="215" y="234" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">action-consequence</text>
+    <text x="215" y="248" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">topology</text>
+    <text x="215" y="262" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">autonomy tier</text>
+
+    <rect x="325" y="170" width="150" height="120" rx="3" fill="var(--color-accent-quartz)" fill-opacity="0.35" stroke="var(--color-accent-copper)" stroke-width="1"/>
+    <text x="400" y="200" text-anchor="middle">MEASURE</text>
+    <text x="400" y="220" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">golden set</text>
+    <text x="400" y="234" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">offline + online</text>
+    <text x="400" y="248" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">drift detection</text>
+    <text x="400" y="262" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">canary</text>
+
+    <rect x="510" y="170" width="150" height="120" rx="3" fill="var(--color-primary-highlight)" stroke="var(--color-primary)" stroke-width="1"/>
+    <text x="585" y="200" text-anchor="middle">MANAGE</text>
+    <text x="585" y="220" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">incident response</text>
+    <text x="585" y="234" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">rollback (3 layers)</text>
+    <text x="585" y="248" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">kill-switch</text>
+    <text x="585" y="262" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">post-mortem</text>
+  </g>
+  <!-- arrows between -->
+  <g fill="none" stroke="var(--color-primary)" stroke-width="1.4" marker-end="url(#rmfA)">
+    <path d="M290 220 L322 220"/>
+    <path d="M475 220 L508 220"/>
+    <path d="M585 290 C 585 320, 215 320, 215 290"/>
+  </g>
+  <text x="400" y="316" text-anchor="middle" font-size="10" fill="var(--color-text-muted)">feedback: each Manage event updates Map and Measure</text>
+</svg></div>
+      <figcaption class="figure__caption"><span class="label">Figure 8.1</span><span class="text">The four NIST RMF functions, drawn as the cross-cutting Govern shell wrapping a continuous Map–Measure–Manage loop. Concurrent, not sequential.</span></figcaption>
+    </figure>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="07-tools-protocols.html"><span class="ch-nav-link__label">← Chapter 07</span><span class="ch-nav-link__title">Tools and Protocols</span></a>
+      <a class="ch-nav-link" data-dir="next" href="09-mapping-what-it-does.html"><span class="ch-nav-link__label">Chapter 09 →</span><span class="ch-nav-link__title">Mapping What an Agent Actually Does</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters and the reference. Try <em>NIST</em>, <em>MCP</em>, <em>registry</em>, or <em>flywheel</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how do I run a NIST RMF Map workshop?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">Building an Agentic Enterprise</strong><br>
+      A practitioner's report on shipping agentic AI inside real organizations.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

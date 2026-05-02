@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 17 · McDonald's: How to Pull the Plug Without Embarrassment — Building an Agentic Enterprise</title>
+<meta name="description" content="The 2024 McDonald's IBM AOT rollback is widely cited as an enterprise AI failure. Read carefully, it is the field's best example of how to run a pilot.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="17-mcdonalds" data-chapter-title="McDonald's: How to Pull the Plug Without Embarrassment">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-quiet-test", "title": "The Quiet Test", "subtitle": "What 'agentic' actually means, and the failure rate nobody puts on the slide"}, {"num": "02", "slug": "02-workflow-to-agent", "title": "From Workflow to Agent", "subtitle": "A SIPOC canvas, repurposed: how to translate a business process into agent wiring"}, {"num": "03", "slug": "03-five-honest-questions", "title": "The Five Honest Questions", "subtitle": "A short test that kills bad agent projects before they consume budget"}, {"num": "04", "slug": "04-anatomy", "title": "Anatomy of an Agent", "subtitle": "Six parts you cannot leave out without the system pretending to work"}, {"num": "05", "slug": "05-reference-stack", "title": "The Reference Stack", "subtitle": "Six layers, named honestly: experience, orchestration, registry, memory, tools, evals"}, {"num": "06", "slug": "06-memory", "title": "Memory, in Plain English", "subtitle": "Four kinds, four jobs, and the failure modes specific to each"}, {"num": "07", "slug": "07-tools-protocols", "title": "Tools and Protocols", "subtitle": "Function calling, MCP, A2A — what each binds to what, and the parts that aren't standardised yet"}, {"num": "08", "slug": "08-governance-first", "title": "Why Governance Comes First", "subtitle": "The work that has to exist before the agent does"}, {"num": "09", "slug": "09-mapping-what-it-does", "title": "Mapping What an Agent Actually Does", "subtitle": "Context, authority, blast radius — the artefact your Map function produces"}, {"num": "10", "slug": "10-measure-evals", "title": "Measure: Evals That Actually Catch Things", "subtitle": "Golden sets, drift, the Measure function as a weekly habit"}, {"num": "11", "slug": "11-manage-incidents", "title": "Manage: Incidents, Rollback, the Off-Switch", "subtitle": "What you do when something goes wrong, written down before something goes wrong"}, {"num": "12", "slug": "12-agent-registry", "title": "The Agent Registry", "subtitle": "The inventory that turns governance from binder into infrastructure"}, {"num": "13", "slug": "13-risks-that-bite", "title": "The Risks That Bite", "subtitle": "OWASP LLM Top 10 (2025), MITRE ATLAS, and prompt injection as the central threat"}, {"num": "14", "slug": "14-human-in-the-loop", "title": "Human-in-the-Loop, Done Honestly", "subtitle": "Where humans actually belong, and where they pretend to belong"}, {"num": "15", "slug": "15-klarna", "title": "Klarna: The Most Honest Story on the Public Record", "subtitle": "What actually happened — fire, walkback, $60M, and the layered architecture that worked"}, {"num": "16", "slug": "16-jpmorgan", "title": "JPMorgan: LLM Suite and the Compliance-First Path", "subtitle": "What 230,000 internal users teaches about the right pace in a regulated firm"}, {"num": "17", "slug": "17-mcdonalds", "title": "McDonald's: How to Pull the Plug Without Embarrassment", "subtitle": "The drive-thru AI rollback that the press read as a failure was, in fact, a textbook pilot"}, {"num": "18", "slug": "18-platform-map", "title": "The Platform Map", "subtitle": "No-code, low-code, code-first — pick the lock-in you can live with"}, {"num": "19", "slug": "19-roi-honest", "title": "ROI: The Cost Stack and the Honest Arithmetic", "subtitle": "Why most ROI claims are wrong, and the small set of variables that actually move the answer"}, {"num": "20", "slug": "20-flywheel", "title": "The Flywheel", "subtitle": "Why some agent deployments compound and most don't"}, {"num": "21", "slug": "21-thirty-sixty-ninety", "title": "A 30-60-90 Plan", "subtitle": "What a real team does in the first quarter of an agent program"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="3" fill="currentColor" /><path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" /></svg>
+      <span>Building an Agentic Enterprise<span class="brand__sub"> — a practitioner's report</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">Building an Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 17 of 21</div>
+    <div class="ch-header__num">Chapter 17</div>
+    <h1 class="ch-header__title">McDonald's: How to Pull the Plug Without Embarrassment</h1>
+    <p class="ch-header__dek">The drive-thru AI rollback that the press read as a failure was, in fact, a textbook pilot</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">100<em>+</em></div><div class="stat__label">test locations during the AOT trial</div></div><div class="stat"><div class="stat__num">40,000<em>+</em></div><div class="stat__label">total McDonald's locations — the trial was 0.25% of the estate</div></div><div class="stat"><div class="stat__num">3<em>yrs</em></div><div class="stat__label">of measured testing before the decision to terminate</div></div></div>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <a class="toolbar__btn" href="../agentic-enterprise.pdf" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></a>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#what-happened">What happened</a></li><li><a href="#what-the-press-saw">What the press saw</a></li><li><a href="#what-actually-went-right">What actually went right</a></li><li><a href="#the-template">The pilot template</a></li></ul></aside>
+    <article class="prose">
+      
+<p class="lede">In June 2024, McDonald's terminated its AI drive-thru pilot. The internet treated it as a viral failure. The Museum of Failure took a more interesting view: McDonald's did this right. The chapter is about why, and what to copy.</p>
+
+<h2 id="what-happened">What happened</h2>
+
+<p>In 2021, McDonald's partnered with IBM to test <a href="https://www.bbc.com/news/articles/c722gne7qngo">Automated Order Taking (AOT)</a> — AI-powered voice ordering at drive-throughs. The system was deployed at over 100 U.S. restaurants over a nearly three-year trial. In June 2024, McDonald's <a href="https://restaurantbusinessonline.com/technology/mcdonalds-ending-its-drive-thru-ai-test">terminated the IBM AOT partnership</a> and removed the technology from all testing locations by July 26, 2024. The official statement said the company would "explore voice ordering solutions more broadly" and find a new partner.</p>
+
+<p>The pilot's most-shared moments — TikTok videos of the AOT misordering customer requests, adding two thousand chicken nuggets, refusing to stop — were genuinely funny and genuinely embarrassing. They also occurred on a sample of locations small enough that the embarrassment scaled with the meme economy, not with the business.</p>
+
+<h2 id="what-the-press-saw">What the press saw</h2>
+
+<p>The press read the rollback as a failure of AI, of IBM, of McDonald's, or of all three. The story fit a familiar template: ambitious technology meets the real world, fails comically, gets pulled. Each retelling reinforced the template. Within weeks, "McDonald's drive-thru AI" became shorthand for AI in general not being ready for the real world.</p>
+
+<p>The reading is wrong in three places. First, AOT failed at a sample, not at the chain. Second, the failure was discovered before it cost the company materially, because of the sample design. Third, the decision to terminate without sunk-cost paralysis is, by itself, evidence of a healthy AI program — most enterprises are unable to kill projects that have run for three years and cost millions.</p>
+
+<h2 id="what-actually-went-right">What actually went right</h2>
+
+<p>The <a href="https://museumoffailure.com/exhibition/mcdonalds-ai-failure">Museum of Failure</a> made the point most directly: "McDonald's did this right. They tested at only 100 locations. There are over 40,000 McDonald's locations. If they had installed this expensive tech at all locations at enormous cost only to find out it didn't work, <em>that</em> would have been a failure." Running a controlled experiment at 0.25% of the estate, measuring real-world outcomes, and pulling the plug without sunk-cost bias is exactly how enterprise AI pilots <em>should</em> be run.</p>
+
+<p>The deeper signal is the operational discipline behind the visible decision. To kill a three-year, multi-vendor pilot in a public way requires: a pre-committed go/no-go threshold, a measurement programme that produced credible numbers, an executive owner empowered to terminate, a public-relations posture that did not double down out of pride, and a procurement framework that allowed graceful contract exit. None of those are AI capabilities. All of them are organisational capabilities, and they are the reason the cost of being wrong was bounded.</p>
+
+<div class="aside" data-tone="copper">
+  <span class="aside__label">Caution</span>
+  <p>The most expensive form of "AI failure" is not the failed pilot. It is the pilot that should have failed and was instead allowed to ship. McDonald's chose embarrassment at 0.25% of the estate over operational failure at 100%. That trade is almost always correct. The teams that get it wrong are the ones that cannot stomach a public termination — and so accept a much larger private one.</p>
+</div>
+
+<h2 id="the-template">The pilot template</h2>
+
+<p>The template McDonald's accidentally produced for the field is short. <strong>Start small enough that termination is bearable.</strong> One percent of the estate is generous; 0.1–0.5% is responsible. <strong>Define termination criteria in advance</strong>, in writing, in numbers, and tie them to a measurement programme that produces those numbers without ambiguity. <strong>Empower the executive owner</strong> to terminate without having to escalate to the board to do so; an owner who must seek board approval to kill a project will almost always extend it instead. <strong>Pre-write the public statement</strong> for both outcomes — success and termination — so the communications are not authored under emotional pressure.</p>
+
+<p>Two corollaries. The first: do not pilot what you cannot afford to pull. If your pilot would be too expensive to terminate after a year because of training costs, integration, or political capital, your pilot is a launch in disguise. The second: evaluate pilots against business outcomes (order accuracy, throughput, customer experience) and not against AI quality metrics in isolation. AOT's measured failure was operational; the right metric to terminate on was the operational metric.</p>
+
+<p>The next chapter is the platform map: which no-code, low-code, and code-first platforms exist, what they are good at, and where the lock-in risks bite.</p>
+
+      <figure class="figure figure--wide reveal" id="figure">
+      <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="Three case studies plotted on blast radius and pilot rigour axes">
+  <text x="40" y="36" class="label-display" font-size="16">Where each case sits</text>
+  <text x="40" y="56" font-size="11" fill="var(--color-text-muted)">Blast radius (vertical) versus pilot rigour (horizontal). Each company sits where its actual choice put it.</text>
+  <!-- axes -->
+  <line x1="120" y1="300" x2="720" y2="300" stroke="var(--color-text-muted)" stroke-width="1"/>
+  <line x1="120" y1="100" x2="120" y2="300" stroke="var(--color-text-muted)" stroke-width="1"/>
+  <text x="420" y="332" text-anchor="middle" font-size="10" fill="var(--color-text-muted)">pilot rigour (small sample · pre-set termination · empowered owner) →</text>
+  <text x="78" y="200" text-anchor="middle" font-size="10" fill="var(--color-text-muted)" transform="rotate(-90 78 200)">blast radius →</text>
+  <!-- gridlines -->
+  <g stroke="var(--color-text-muted)" stroke-opacity="0.2" stroke-dasharray="3 4">
+    <line x1="120" y1="170" x2="720" y2="170"/>
+    <line x1="120" y1="235" x2="720" y2="235"/>
+    <line x1="320" y1="100" x2="320" y2="300"/>
+    <line x1="520" y1="100" x2="520" y2="300"/>
+  </g>
+  <!-- Klarna point -->
+  <circle cx="450" cy="180" r="14" fill="var(--color-accent-copper)" fill-opacity="0.85"/>
+  <text x="450" y="184" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--color-bg)">K</text>
+  <text x="470" y="172" font-family="var(--font-mono)" font-size="10" fill="var(--color-text)">Klarna · CX agent</text>
+  <text x="470" y="186" font-size="9" fill="var(--color-text-muted)">customer-facing · learnt to layer</text>
+
+  <!-- JPMorgan point -->
+  <circle cx="600" cy="240" r="14" fill="var(--color-primary)" fill-opacity="0.85"/>
+  <text x="600" y="244" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--color-bg)">J</text>
+  <text x="540" y="232" font-family="var(--font-mono)" font-size="10" fill="var(--color-text)">JPMorgan · LLM Suite</text>
+  <text x="540" y="246" font-size="9" fill="var(--color-text-muted)">internal first · long runway</text>
+
+  <!-- McDonald's point -->
+  <circle cx="580" cy="270" r="14" fill="var(--color-accent-euv)" fill-opacity="0.85"/>
+  <text x="580" y="274" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--color-bg)">M</text>
+  <text x="600" y="270" font-family="var(--font-mono)" font-size="10" fill="var(--color-text)">McDonald's · AOT</text>
+  <text x="600" y="284" font-size="9" fill="var(--color-text-muted)">100 of 40,000 sites · pulled clean</text>
+
+  <!-- "danger zone" label -->
+  <text x="180" y="130" font-size="10" fill="var(--color-accent-copper)">danger zone:</text>
+  <text x="180" y="144" font-size="9" fill="var(--color-text-muted)">large blast · low rigour</text>
+  <text x="180" y="158" font-size="9" fill="var(--color-text-muted)">most cited "AI failures" live here</text>
+
+  <text x="540" y="130" font-size="10" fill="var(--color-accent-euv)">target zone:</text>
+  <text x="540" y="144" font-size="9" fill="var(--color-text-muted)">contained blast · high rigour</text>
+  <text x="540" y="158" font-size="9" fill="var(--color-text-muted)">where compounding deployments live</text>
+</svg></div>
+      <figcaption class="figure__caption"><span class="label">Figure 17.1</span><span class="text">Three production cases, drawn against two axes: blast radius (small to large) and pilot rigour (low to high). Each company sits where its actual choice put it.</span></figcaption>
+    </figure>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="16-jpmorgan.html"><span class="ch-nav-link__label">← Chapter 16</span><span class="ch-nav-link__title">JPMorgan: LLM Suite and the Compliance-First Path</span></a>
+      <a class="ch-nav-link" data-dir="next" href="18-platform-map.html"><span class="ch-nav-link__label">Chapter 18 →</span><span class="ch-nav-link__title">The Platform Map</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters and the reference. Try <em>NIST</em>, <em>MCP</em>, <em>registry</em>, or <em>flywheel</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how do I run a NIST RMF Map workshop?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">Building an Agentic Enterprise</strong><br>
+      A practitioner's report on shipping agentic AI inside real organizations.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

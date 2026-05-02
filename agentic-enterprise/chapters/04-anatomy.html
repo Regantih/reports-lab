@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 04 · Anatomy of an Agent — Building an Agentic Enterprise</title>
+<meta name="description" content="The minimal anatomy of an agent — model, prompt, tools, memory, guardrails, observability — and what each one is actually for.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="04-anatomy" data-chapter-title="Anatomy of an Agent">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-quiet-test", "title": "The Quiet Test", "subtitle": "What 'agentic' actually means, and the failure rate nobody puts on the slide"}, {"num": "02", "slug": "02-workflow-to-agent", "title": "From Workflow to Agent", "subtitle": "A SIPOC canvas, repurposed: how to translate a business process into agent wiring"}, {"num": "03", "slug": "03-five-honest-questions", "title": "The Five Honest Questions", "subtitle": "A short test that kills bad agent projects before they consume budget"}, {"num": "04", "slug": "04-anatomy", "title": "Anatomy of an Agent", "subtitle": "Six parts you cannot leave out without the system pretending to work"}, {"num": "05", "slug": "05-reference-stack", "title": "The Reference Stack", "subtitle": "Six layers, named honestly: experience, orchestration, registry, memory, tools, evals"}, {"num": "06", "slug": "06-memory", "title": "Memory, in Plain English", "subtitle": "Four kinds, four jobs, and the failure modes specific to each"}, {"num": "07", "slug": "07-tools-protocols", "title": "Tools and Protocols", "subtitle": "Function calling, MCP, A2A — what each binds to what, and the parts that aren't standardised yet"}, {"num": "08", "slug": "08-governance-first", "title": "Why Governance Comes First", "subtitle": "The work that has to exist before the agent does"}, {"num": "09", "slug": "09-mapping-what-it-does", "title": "Mapping What an Agent Actually Does", "subtitle": "Context, authority, blast radius — the artefact your Map function produces"}, {"num": "10", "slug": "10-measure-evals", "title": "Measure: Evals That Actually Catch Things", "subtitle": "Golden sets, drift, the Measure function as a weekly habit"}, {"num": "11", "slug": "11-manage-incidents", "title": "Manage: Incidents, Rollback, the Off-Switch", "subtitle": "What you do when something goes wrong, written down before something goes wrong"}, {"num": "12", "slug": "12-agent-registry", "title": "The Agent Registry", "subtitle": "The inventory that turns governance from binder into infrastructure"}, {"num": "13", "slug": "13-risks-that-bite", "title": "The Risks That Bite", "subtitle": "OWASP LLM Top 10 (2025), MITRE ATLAS, and prompt injection as the central threat"}, {"num": "14", "slug": "14-human-in-the-loop", "title": "Human-in-the-Loop, Done Honestly", "subtitle": "Where humans actually belong, and where they pretend to belong"}, {"num": "15", "slug": "15-klarna", "title": "Klarna: The Most Honest Story on the Public Record", "subtitle": "What actually happened — fire, walkback, $60M, and the layered architecture that worked"}, {"num": "16", "slug": "16-jpmorgan", "title": "JPMorgan: LLM Suite and the Compliance-First Path", "subtitle": "What 230,000 internal users teaches about the right pace in a regulated firm"}, {"num": "17", "slug": "17-mcdonalds", "title": "McDonald's: How to Pull the Plug Without Embarrassment", "subtitle": "The drive-thru AI rollback that the press read as a failure was, in fact, a textbook pilot"}, {"num": "18", "slug": "18-platform-map", "title": "The Platform Map", "subtitle": "No-code, low-code, code-first — pick the lock-in you can live with"}, {"num": "19", "slug": "19-roi-honest", "title": "ROI: The Cost Stack and the Honest Arithmetic", "subtitle": "Why most ROI claims are wrong, and the small set of variables that actually move the answer"}, {"num": "20", "slug": "20-flywheel", "title": "The Flywheel", "subtitle": "Why some agent deployments compound and most don't"}, {"num": "21", "slug": "21-thirty-sixty-ninety", "title": "A 30-60-90 Plan", "subtitle": "What a real team does in the first quarter of an agent program"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="3" fill="currentColor" /><path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" /></svg>
+      <span>Building an Agentic Enterprise<span class="brand__sub"> — a practitioner's report</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">Building an Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 04 of 21</div>
+    <div class="ch-header__num">Chapter 04</div>
+    <h1 class="ch-header__title">Anatomy of an Agent</h1>
+    <p class="ch-header__dek">Six parts you cannot leave out without the system pretending to work</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">6<em></em></div><div class="stat__label">parts, all required</div></div><div class="stat"><div class="stat__num">1<em></em></div><div class="stat__label">the part teams skip first: observability</div></div><div class="stat"><div class="stat__num">0<em></em></div><div class="stat__label">agents in production without all six (that survive a year)</div></div></div>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <a class="toolbar__btn" href="../agentic-enterprise.pdf" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></a>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#model">Model and prompt</a></li><li><a href="#tools">Tools, scoped</a></li><li><a href="#memory">Memory, in three flavours</a></li><li><a href="#guardrails">Guardrails, plural</a></li><li><a href="#obs">Evals and observability</a></li><li><a href="#checklist">The bring-up checklist</a></li></ul></aside>
+    <article class="prose">
+      
+<p class="lede">An agent is a small system. Like all small systems, it has parts. Skip a part and the system runs anyway — for a while — and then fails in a way that's hard to debug because the missing piece is exactly the piece that would have told you what went wrong. This chapter walks the six parts and what each of them is actually for.</p>
+
+<h2 id="model">Model and prompt</h2>
+
+<p>The model is the reasoner. In 2026 the choice is mostly between a frontier closed model (Anthropic Claude, OpenAI GPT-class, Google Gemini), a strong open model run on your own infrastructure (Llama, Qwen, Mistral, DeepSeek), or a domain-specific small model. The choice depends on three things: the latency budget (how fast must each step be?), the cost budget per task (model price × tokens × steps × volume), and the data residency constraints (can the data leave your tenant?). Frontier-closed wins on raw capability. Open wins on cost and control. Small wins on latency and predictability for narrow tasks.</p>
+
+<p>The prompt is where most teams under-invest. The system prompt is not a polite request; it is the agent's job description, escalation procedure, scope of authority, and code of conduct, all in one document. A good system prompt explicitly says what the agent does and does not do, what tools it has, what it should do when uncertain (ask, don't guess), and what it must <em>never</em> do regardless of how the user phrases the request. Versions of the system prompt are managed like code: in source control, with diffs, with an owner, and with regression tests. A "prompt update" is a deploy. Treat it accordingly.</p>
+
+<h2 id="tools">Tools, scoped</h2>
+
+<p>Tools are the levers the agent can pull on the world. In the worst design, the agent has a tool called <code>do_anything</code> wired to a service account with admin rights. That's not an exaggeration; it's an early-2024 anti-pattern that produced several embarrassing incidents.</p>
+
+<p>The right shape: each tool has a single, narrow purpose; takes a small, typed input; returns a small, typed output; runs as the user, not as the agent's service account, where possible (OAuth on-behalf-of); and is rate-limited and logged on every call. The agent's <em>tool catalogue</em> is the union of these — not a free-for-all, but a curated set of capabilities, each with an owner.</p>
+
+<p>This is the layer where the Model Context Protocol (MCP) earns its keep. MCP standardises how tools describe themselves to models, which means a tool written once is callable by any compliant model, and a tool can be revoked or updated without re-prompting. We'll spend more time on protocols in Chapter 7. For now, the rule: every tool the agent can call should be one you'd be comfortable handing to a contractor with the same scope.</p>
+
+<h2 id="memory">Memory, in three flavours</h2>
+
+<p>Memory is the most miscast part of agents. People reach for "vector database" the way they used to reach for "Hadoop" — as a generic answer that doesn't always fit the question.</p>
+
+<p>The taxonomy in plain language: <strong>short-term</strong> memory is the working scratchpad — what's in the context window for this run. <strong>Long-term</strong> memory is the agent's own remembered facts about a user, project, or domain — usually a mix of vectors (for fuzzy lookup) and structured records (for clean lookup). <strong>Episodic</strong> memory is the trace of past runs — useful for "have we done this before?" and for few-shot prompting from history. <strong>Semantic</strong> memory is the organisation's knowledge — policies, products, SOPs — owned by humans, versioned, refreshed on a schedule.</p>
+
+<p>Most agent failures that look like model failures are actually memory failures: the agent reached into the wrong store, retrieved the wrong thing, and stitched it confidently into an answer. Chapter 6 walks through each of the four kinds in more detail. For now: pick the store on purpose, not by default.</p>
+
+<h2 id="guardrails">Guardrails, plural</h2>
+
+<p>"We have guardrails" is one of the most overloaded phrases in agentic AI. In practice, guardrails are at least four separate things, and most teams confuse them.</p>
+
+<p><strong>Input guardrails</strong> screen what enters the agent: prompt-injection detection, PII detection, jailbreak attempts, scope checks ("is this question one we even answer?"). <strong>Output guardrails</strong> screen what leaves: PII redaction, profanity, regulated language ("guarantees", "free", in financial-services contexts), policy compliance. <strong>Tool-call guardrails</strong> intercept proposed tool calls and block ones that are out of scope, suspicious, or above the agent's authority limit. <strong>Behaviour guardrails</strong> watch the agent's own actions: did it loop more than N times? Has its cost exceeded a ceiling? Is it about to take an irreversible action? — and either intervene or hand off.</p>
+
+<p>Tools like NeMo Guardrails, Guardrails AI, and Lakera implement parts of this. None of them is a substitute for designing the four layers explicitly. The cheap, high-yield baseline: a regex-and-policy filter on inputs, a PII scrubber on outputs, a deny-list on tool calls, and a per-run budget cap. That alone catches most production incidents.</p>
+
+<h2 id="obs">Evals and observability</h2>
+
+<p>This is the part teams skip. They skip it because it produces no demo and consumes engineering time. They are punished for it later, and the punishment compounds.</p>
+
+<p><strong>Evals</strong> are the structured tests of your agent against a curated set of inputs with known good outputs. Run them on every prompt change, every model swap, every tool change, every memory update — the way you'd run unit tests on every code change. The eval suite must include: golden positive cases, golden negative cases, edge cases that have failed in production, and adversarial cases (prompt injection, jailbreaks, tool misuse). Vendors here include LangSmith, Braintrust, Arize, Patronus, Galileo. The platform matters less than the discipline.</p>
+
+<p><strong>Observability</strong> is what runs in production: traces of every run (prompt, tool calls, outputs, latency, cost), aggregate metrics (success rate, escalation rate, cost per task, time to resolution), and alerts on regressions. The trace is the single most useful artefact when something goes wrong — without it, debugging an agent is somewhere between guesswork and seance.</p>
+
+<h2 id="checklist">The bring-up checklist</h2>
+
+<p>Before letting an agent see a real user, walk this list:</p>
+
+<ul>
+  <li>System prompt versioned in source control, with an owner.</li>
+  <li>Tools registered, each with a typed schema, an owner, and a rate limit.</li>
+  <li>Memory stores chosen on purpose, with retention and refresh policies.</li>
+  <li>Input/output/tool/behaviour guardrails configured and tested.</li>
+  <li>Eval suite of at least a hundred labelled cases, covering happy path, edge, and adversarial.</li>
+  <li>Tracing on, going to a place a human can read and search.</li>
+  <li>A per-run cost ceiling and a global cost ceiling, both alerting.</li>
+  <li>An escalation path: when the agent can't or shouldn't act, what happens?</li>
+  <li>A rollback plan: if a regression appears, how do we revert in under an hour?</li>
+  <li>Named owner, named exec sponsor, both on the hook.</li>
+</ul>
+
+<p>Ten items. None novel. Most missed. Each one missed is a place where the agent will pretend to work and then quietly fail — which is the failure mode that costs the most, because it doesn't show up until the customer is already on the phone.</p>
+
+      <figure class="figure figure--wide reveal" id="figure">
+      <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="Anatomy of an agent: model, prompt, tools, memory, guardrails, observability">
+  <text x="40" y="36" class="label-display" font-size="16">Anatomy of an agent</text>
+  <text x="40" y="56" font-size="11" fill="var(--color-text-muted)">Six parts. Pull any one out and the agent stops working — or worse, pretends to.</text>
+  <!-- frame -->
+  <rect x="60" y="90" width="680" height="220" fill="none" stroke="var(--color-border)" stroke-dasharray="3 3"/>
+  <text x="400" y="84" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--color-text-muted)">— the agent —</text>
+  <!-- model + prompt -->
+  <rect x="90" y="130" width="180" height="60" rx="2" fill="var(--color-accent-copper-soft)" stroke="var(--color-accent-copper)"/>
+  <text x="180" y="155" text-anchor="middle" font-family="var(--font-mono)" font-size="11">MODEL</text>
+  <text x="180" y="172" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">+ system prompt + role</text>
+  <!-- tools -->
+  <rect x="310" y="130" width="180" height="60" rx="2" fill="var(--color-primary-highlight)" stroke="var(--color-primary)"/>
+  <text x="400" y="155" text-anchor="middle" font-family="var(--font-mono)" font-size="11">TOOLS</text>
+  <text x="400" y="172" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">scoped capabilities</text>
+  <!-- memory -->
+  <rect x="530" y="130" width="180" height="60" rx="2" fill="var(--color-accent-quartz)" fill-opacity="0.40" stroke="var(--color-accent-copper)"/>
+  <text x="620" y="155" text-anchor="middle" font-family="var(--font-mono)" font-size="11">MEMORY</text>
+  <text x="620" y="172" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">short / long / episodic</text>
+  <!-- guardrails -->
+  <rect x="90" y="220" width="280" height="60" rx="2" fill="var(--color-accent-euv-soft)" stroke="var(--color-accent-euv)"/>
+  <text x="230" y="245" text-anchor="middle" font-family="var(--font-mono)" font-size="11">GUARDRAILS</text>
+  <text x="230" y="262" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">policy · PII · injection · jailbreak · scope</text>
+  <!-- evals/obs -->
+  <rect x="430" y="220" width="280" height="60" rx="2" fill="var(--color-surface-dynamic)" stroke="var(--color-border)"/>
+  <text x="570" y="245" text-anchor="middle" font-family="var(--font-mono)" font-size="11">EVALS + OBSERVABILITY</text>
+  <text x="570" y="262" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">traces · cost · golden sets · drift</text>
+  <!-- arrows -->
+  <g stroke="var(--color-primary)" stroke-width="1.4" fill="none" marker-end="url(#arrB)">
+    <line x1="270" y1="160" x2="310" y2="160"/>
+    <line x1="490" y1="160" x2="530" y2="160"/>
+  </g>
+  <defs><marker id="arrB" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--color-primary)"/></marker></defs>
+</svg></div>
+      <figcaption class="figure__caption"><span class="label">Figure 4.1</span><span class="text">The six parts of an agent. The arrangement varies, the parts don't. Pull any one out and the system runs for a while, and then doesn't.</span></figcaption>
+    </figure>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="03-five-honest-questions.html"><span class="ch-nav-link__label">← Chapter 03</span><span class="ch-nav-link__title">The Five Honest Questions</span></a>
+      <a class="ch-nav-link" data-dir="next" href="05-reference-stack.html"><span class="ch-nav-link__label">Chapter 05 →</span><span class="ch-nav-link__title">The Reference Stack</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters and the reference. Try <em>NIST</em>, <em>MCP</em>, <em>registry</em>, or <em>flywheel</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how do I run a NIST RMF Map workshop?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">Building an Agentic Enterprise</strong><br>
+      A practitioner's report on shipping agentic AI inside real organizations.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

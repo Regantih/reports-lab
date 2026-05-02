@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 19 · ROI: The Cost Stack and the Honest Arithmetic — Building an Agentic Enterprise</title>
+<meta name="description" content="An honest ROI model for agentic AI — the full TCO stack, the value-side metrics that hold up, and the sensitivity variables that change the answer.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="19-roi-honest" data-chapter-title="ROI: The Cost Stack and the Honest Arithmetic">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-quiet-test", "title": "The Quiet Test", "subtitle": "What 'agentic' actually means, and the failure rate nobody puts on the slide"}, {"num": "02", "slug": "02-workflow-to-agent", "title": "From Workflow to Agent", "subtitle": "A SIPOC canvas, repurposed: how to translate a business process into agent wiring"}, {"num": "03", "slug": "03-five-honest-questions", "title": "The Five Honest Questions", "subtitle": "A short test that kills bad agent projects before they consume budget"}, {"num": "04", "slug": "04-anatomy", "title": "Anatomy of an Agent", "subtitle": "Six parts you cannot leave out without the system pretending to work"}, {"num": "05", "slug": "05-reference-stack", "title": "The Reference Stack", "subtitle": "Six layers, named honestly: experience, orchestration, registry, memory, tools, evals"}, {"num": "06", "slug": "06-memory", "title": "Memory, in Plain English", "subtitle": "Four kinds, four jobs, and the failure modes specific to each"}, {"num": "07", "slug": "07-tools-protocols", "title": "Tools and Protocols", "subtitle": "Function calling, MCP, A2A — what each binds to what, and the parts that aren't standardised yet"}, {"num": "08", "slug": "08-governance-first", "title": "Why Governance Comes First", "subtitle": "The work that has to exist before the agent does"}, {"num": "09", "slug": "09-mapping-what-it-does", "title": "Mapping What an Agent Actually Does", "subtitle": "Context, authority, blast radius — the artefact your Map function produces"}, {"num": "10", "slug": "10-measure-evals", "title": "Measure: Evals That Actually Catch Things", "subtitle": "Golden sets, drift, the Measure function as a weekly habit"}, {"num": "11", "slug": "11-manage-incidents", "title": "Manage: Incidents, Rollback, the Off-Switch", "subtitle": "What you do when something goes wrong, written down before something goes wrong"}, {"num": "12", "slug": "12-agent-registry", "title": "The Agent Registry", "subtitle": "The inventory that turns governance from binder into infrastructure"}, {"num": "13", "slug": "13-risks-that-bite", "title": "The Risks That Bite", "subtitle": "OWASP LLM Top 10 (2025), MITRE ATLAS, and prompt injection as the central threat"}, {"num": "14", "slug": "14-human-in-the-loop", "title": "Human-in-the-Loop, Done Honestly", "subtitle": "Where humans actually belong, and where they pretend to belong"}, {"num": "15", "slug": "15-klarna", "title": "Klarna: The Most Honest Story on the Public Record", "subtitle": "What actually happened — fire, walkback, $60M, and the layered architecture that worked"}, {"num": "16", "slug": "16-jpmorgan", "title": "JPMorgan: LLM Suite and the Compliance-First Path", "subtitle": "What 230,000 internal users teaches about the right pace in a regulated firm"}, {"num": "17", "slug": "17-mcdonalds", "title": "McDonald's: How to Pull the Plug Without Embarrassment", "subtitle": "The drive-thru AI rollback that the press read as a failure was, in fact, a textbook pilot"}, {"num": "18", "slug": "18-platform-map", "title": "The Platform Map", "subtitle": "No-code, low-code, code-first — pick the lock-in you can live with"}, {"num": "19", "slug": "19-roi-honest", "title": "ROI: The Cost Stack and the Honest Arithmetic", "subtitle": "Why most ROI claims are wrong, and the small set of variables that actually move the answer"}, {"num": "20", "slug": "20-flywheel", "title": "The Flywheel", "subtitle": "Why some agent deployments compound and most don't"}, {"num": "21", "slug": "21-thirty-sixty-ninety", "title": "A 30-60-90 Plan", "subtitle": "What a real team does in the first quarter of an agent program"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="3" fill="currentColor" /><path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" /></svg>
+      <span>Building an Agentic Enterprise<span class="brand__sub"> — a practitioner's report</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">Building an Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 19 of 21</div>
+    <div class="ch-header__num">Chapter 19</div>
+    <h1 class="ch-header__title">ROI: The Cost Stack and the Honest Arithmetic</h1>
+    <p class="ch-header__dek">Why most ROI claims are wrong, and the small set of variables that actually move the answer</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">30–50<em>%</em></div><div class="stat__label">of TCO is model inference; the rest is everything around it</div></div><div class="stat"><div class="stat__num">1 in 4<em></em></div><div class="stat__label">AI projects deliver promised ROI (IBM CEO survey)</div></div><div class="stat"><div class="stat__num">40–60<em>%</em></div><div class="stat__label">discount typically required from pilot results to project production ROI</div></div></div>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <a class="toolbar__btn" href="../agentic-enterprise.pdf" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></a>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-cost-stack">The honest cost stack</a></li><li><a href="#the-value-stack">The value stack that holds up</a></li><li><a href="#why-claims-wrong">Why most claims are wrong</a></li><li><a href="#sensitivity">The variables that move the answer</a></li></ul></aside>
+    <article class="prose">
+      
+<p class="lede">The most common form of bad ROI for agentic AI is not over-optimism about value. It is under-counting of cost. Most analyses we see omit between forty and seventy percent of the actual stack. The chapter is the missing pieces.</p>
+
+<h2 id="the-cost-stack">The honest cost stack</h2>
+
+<p>A complete TCO for a production agent has ten layers, in rough order of share. <strong>Model inference</strong> is the visible cost: input plus output tokens at API pricing, typically 30–50% of total cost of ownership. <strong>Tool-call overhead</strong> is the cost few people model: each tool call carries both a token cost (packaging the request and parsing the result) and an external API cost. <strong>Vector database</strong> for retrieval: $50–300/month for a 10K-document knowledge base, more at scale. <strong>Orchestration platform</strong>: LangSmith, Arize, or managed orchestration, typically $500–5,000/month. <strong>Eval and observability</strong>: $500–3,000/month for non-trivial deployments. <strong>Guardrails</strong> (NeMo, Lakera, custom): $500–5,000/month and roughly 0.5s of added latency. <strong>Engineering build</strong>: the one-time cost, typically 3–12 FTE-months for a serious agent. <strong>Engineering run</strong>: 0.5–2 FTE on an ongoing basis to maintain, evaluate, and iterate. <strong>Change management</strong>: training, process redesign, workflow integration — almost always under-estimated. <strong>Governance and compliance</strong>: $0.5–5M total for a high-risk deployment in EU AI Act scope.</p>
+
+<p><a href="https://agentmelt.com/blog/ai-agent-total-cost-of-ownership/">AgentMelt's 2026 TCO analysis</a> puts it bluntly: "by the time an agent is reliably handling real work, inference is typically 30–50% of total cost of ownership and the rest is everything around it." Token pricing is what gets quoted; the layers above it are where the surprise lives.</p>
+
+<p>A concrete benchmark, useful as a sanity-check: <a href="https://www.linkedin.com/posts/dr-biraja-ghoshal-a196927_total-cost-of-ownership-tco-in-agentic-activity-7331768223983411201-45GC">a large-scale agentic system processing 5 million monthly interactions costs roughly $1.2M/year all-in</a> — substantially less than a $6M offshore team performing equivalent work, with full ROI achievable within twelve months at 20% workload reduction. The shape of those numbers is portable; the absolute values depend on geography, regulatory regime, and the company's existing infrastructure.</p>
+
+<h2 id="the-value-stack">The value stack that holds up</h2>
+
+<p>Three value metrics survive scrutiny. <strong>Time saved × hourly cost</strong> is the most defensible. If the agent handles 1,000 tickets/day at 15 minutes each at a $40/hour fully-loaded rate, that is $10,000/day, or $3.65M/year — multiplied by a realistic automation rate (40–80%, depending on the use case) and presented with a confidence interval, not as a point estimate.</p>
+
+<p><strong>Containment / deflection rate</strong> is the customer-service-specific version: the percentage of interactions fully resolved by the agent without escalation. Klarna's two-thirds containment is an aspirational benchmark; most well-scoped enterprise deployments achieve 40–60%. Above that requires either narrow use cases or a mature flywheel. Below that suggests the use case is wrong, not the agent.</p>
+
+<p><strong>Revenue lift</strong> is harder to attribute but real in sales and CX contexts. Salesforce reports <a href="https://maplewaveai.com/insights/agentforce-roi-case-studies">Agentforce customers seeing 290% first-year ROI</a> driven primarily by speed-to-lead — response time dropping from four hours to forty-five seconds accounted for more than half of the conversion-rate improvement. Treat vendor-published numbers as upper bounds and discount aggressively.</p>
+
+<p><strong>Error reduction</strong> is the under-appreciated category. In high-error workflows — manual data entry, document processing, intake — agents can halve error rates, and the downstream cost of errors (rework, customer impact, compliance risk) is often more than the cost of the original work. Quantifying this requires a pre-agent baseline you may not have, which is itself a reason to instrument the human process before the agent goes live.</p>
+
+<h2 id="why-claims-wrong">Why most claims are wrong</h2>
+
+<p><a href="https://www.bcg.com/publications/2025/are-you-generating-value-from-ai-the-widening-gap">BCG's 2025 research</a> shows a widening gap between AI leaders (future-built companies achieving 5x revenue increases and 3x cost reductions) and laggards. Even leaders, however, frequently overclaim. Five recurring failure modes:</p>
+
+<p><strong>Pilot ROI ≠ production ROI.</strong> Pilots run on curated datasets and favourable conditions. Production has messy edge cases, user resistance, and integration friction. Discount pilot results by 40–60% for initial production projections; recover the difference only after a quarter of measured production performance.</p>
+
+<p><strong>Gross savings ≠ net savings.</strong> Subtract engineering costs, governance costs, observability costs, and ongoing eval and maintenance burden from gross cost savings. The net is what matters.</p>
+
+<p><strong>Correlation vs. causation.</strong> Many AI deployments coincide with process redesign that would have generated savings independently. Attribution is hard. Wherever possible, isolate the agent's contribution by running parallel control groups.</p>
+
+<p><strong>Ignoring transition costs.</strong> Retraining staff, redesigning workflows, managing change has real costs that almost never appear in AI ROI models.</p>
+
+<p><strong>Ignoring liability tail risk.</strong> One serious agent error — Air Canada-scale liability, a data breach, a regulatory fine — can dwarf years of operational savings. Expected-value calculations must include tail risk weighted by probability.</p>
+
+<p><a href="https://fortune.com/2025/05/09/klarna-ai-humans-return-on-investment/">IBM's 2025 survey of 2,000 CEOs</a> found that only 1 in 4 AI projects delivers promised ROI and only 16% scale across the enterprise — consistent with MIT NANDA's finding that only 5% reach production at scale with P&L impact.</p>
+
+<h2 id="sensitivity">The variables that move the answer</h2>
+
+<p>For most agent ROI models, six variables are high-sensitivity: a 25% change in any one of them shifts projected ROI by 20% or more. <strong>Automation rate</strong> (40–80% in most use cases). <strong>Agent error rate</strong> versus <strong>human error rate</strong> (agents typically 2–15%, humans typically 3–8%, with the comparison highly use-case-specific). <strong>Fully-loaded agent cost per task</strong> ($0.01–$2.00 depending on token intensity and tool-call count). <strong>Human cost per equivalent task</strong> ($15–$150, depending on role level and geography). <strong>Adoption rate</strong> (40–90%, set by change-management quality). <strong>Time to production value</strong> (3–18 months).</p>
+
+<div class="aside" data-tone="copper">
+  <span class="aside__label">A practitioner's note</span>
+  <p>If your ROI model is a single point estimate, it is wrong. The honest version is a range, with a sensitivity table on the six variables above, and a tail-risk line that explicitly prices the worst-plausible incident. The teams that present this version are easier to take seriously than the teams that present a single number with two decimal places.</p>
+</div>
+
+<p>The most reliable predictor of positive ROI, across the deployments we have observed: narrow use case + tight workflow integration + measurable before/after metric + a system that learns from feedback + managed transition of affected staff. If any of those five is missing, the ROI model probably does not survive contact with reality.</p>
+
+<p>The next chapter is the system that produces the "learns from feedback" piece — the flywheel.</p>
+
+      <figure class="figure figure--wide reveal" id="figure">
+      <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="ROI sensitivity tornado chart of six high-impact variables">
+  <text x="40" y="36" class="label-display" font-size="16">ROI sensitivity</text>
+  <text x="40" y="56" font-size="11" fill="var(--color-text-muted)">For each variable: ±25% input change → projected ROI swing. Bars centred at the baseline.</text>
+  <!-- center axis -->
+  <line x1="400" y1="100" x2="400" y2="320" stroke="var(--color-primary)" stroke-width="1"/>
+  <text x="400" y="92" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">baseline</text>
+  <g font-family="var(--font-mono)" font-size="10" fill="var(--color-text)">
+    <!-- bar 1: automation rate -->
+    <rect x="220" y="116" width="180" height="14" fill="var(--color-accent-copper)" fill-opacity="0.85"/>
+    <rect x="400" y="116" width="180" height="14" fill="var(--color-accent-copper)" fill-opacity="0.85"/>
+    <text x="40" y="128">automation rate</text>
+    <text x="600" y="128" font-size="9" fill="var(--color-text-muted)">±36%</text>
+
+    <!-- bar 2: agent vs human cost -->
+    <rect x="240" y="146" width="160" height="14" fill="var(--color-primary)" fill-opacity="0.85"/>
+    <rect x="400" y="146" width="160" height="14" fill="var(--color-primary)" fill-opacity="0.85"/>
+    <text x="40" y="158">human task cost</text>
+    <text x="580" y="158" font-size="9" fill="var(--color-text-muted)">±32%</text>
+
+    <!-- bar 3: error rate -->
+    <rect x="270" y="176" width="130" height="14" fill="var(--color-primary)" fill-opacity="0.7"/>
+    <rect x="400" y="176" width="130" height="14" fill="var(--color-primary)" fill-opacity="0.7"/>
+    <text x="40" y="188">agent vs human error</text>
+    <text x="550" y="188" font-size="9" fill="var(--color-text-muted)">±26%</text>
+
+    <!-- bar 4: agent task cost -->
+    <rect x="280" y="206" width="120" height="14" fill="var(--color-accent-copper)" fill-opacity="0.7"/>
+    <rect x="400" y="206" width="120" height="14" fill="var(--color-accent-copper)" fill-opacity="0.7"/>
+    <text x="40" y="218">agent cost / task</text>
+    <text x="540" y="218" font-size="9" fill="var(--color-text-muted)">±24%</text>
+
+    <!-- bar 5: adoption -->
+    <rect x="290" y="236" width="110" height="14" fill="var(--color-accent-euv)" fill-opacity="0.85"/>
+    <rect x="400" y="236" width="110" height="14" fill="var(--color-accent-euv)" fill-opacity="0.85"/>
+    <text x="40" y="248">adoption rate</text>
+    <text x="530" y="248" font-size="9" fill="var(--color-text-muted)">±22%</text>
+
+    <!-- bar 6: time to value -->
+    <rect x="310" y="266" width="90" height="14" fill="var(--color-accent-euv)" fill-opacity="0.65"/>
+    <rect x="400" y="266" width="90" height="14" fill="var(--color-accent-euv)" fill-opacity="0.65"/>
+    <text x="40" y="278">time to production</text>
+    <text x="510" y="278" font-size="9" fill="var(--color-text-muted)">±18%</text>
+  </g>
+  <text x="220" y="304" font-size="9" fill="var(--color-text-muted)">– worse ROI</text>
+  <text x="580" y="304" font-size="9" fill="var(--color-text-muted)">+ better ROI</text>
+  <text x="40" y="334" font-size="9" fill="var(--color-text-muted)">A single-point ROI estimate is wrong. Present a range across these six variables, plus a tail-risk line for incidents.</text>
+</svg></div>
+      <figcaption class="figure__caption"><span class="label">Figure 19.1</span><span class="text">ROI sensitivity. Tornado chart of the six variables that most often change the sign or magnitude of agent ROI. Address them in the model before you write the executive summary.</span></figcaption>
+    </figure>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="18-platform-map.html"><span class="ch-nav-link__label">← Chapter 18</span><span class="ch-nav-link__title">The Platform Map</span></a>
+      <a class="ch-nav-link" data-dir="next" href="20-flywheel.html"><span class="ch-nav-link__label">Chapter 20 →</span><span class="ch-nav-link__title">The Flywheel</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters and the reference. Try <em>NIST</em>, <em>MCP</em>, <em>registry</em>, or <em>flywheel</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how do I run a NIST RMF Map workshop?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">Building an Agentic Enterprise</strong><br>
+      A practitioner's report on shipping agentic AI inside real organizations.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

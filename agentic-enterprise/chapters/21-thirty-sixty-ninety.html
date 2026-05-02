@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 21 · A 30-60-90 Plan — Building an Agentic Enterprise</title>
+<meta name="description" content="An honest, sequenced 30-60-90 plan for an enterprise agent program — the artefacts, decisions, and small wins to land in each window.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="21-thirty-sixty-ninety" data-chapter-title="A 30-60-90 Plan">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-quiet-test", "title": "The Quiet Test", "subtitle": "What 'agentic' actually means, and the failure rate nobody puts on the slide"}, {"num": "02", "slug": "02-workflow-to-agent", "title": "From Workflow to Agent", "subtitle": "A SIPOC canvas, repurposed: how to translate a business process into agent wiring"}, {"num": "03", "slug": "03-five-honest-questions", "title": "The Five Honest Questions", "subtitle": "A short test that kills bad agent projects before they consume budget"}, {"num": "04", "slug": "04-anatomy", "title": "Anatomy of an Agent", "subtitle": "Six parts you cannot leave out without the system pretending to work"}, {"num": "05", "slug": "05-reference-stack", "title": "The Reference Stack", "subtitle": "Six layers, named honestly: experience, orchestration, registry, memory, tools, evals"}, {"num": "06", "slug": "06-memory", "title": "Memory, in Plain English", "subtitle": "Four kinds, four jobs, and the failure modes specific to each"}, {"num": "07", "slug": "07-tools-protocols", "title": "Tools and Protocols", "subtitle": "Function calling, MCP, A2A — what each binds to what, and the parts that aren't standardised yet"}, {"num": "08", "slug": "08-governance-first", "title": "Why Governance Comes First", "subtitle": "The work that has to exist before the agent does"}, {"num": "09", "slug": "09-mapping-what-it-does", "title": "Mapping What an Agent Actually Does", "subtitle": "Context, authority, blast radius — the artefact your Map function produces"}, {"num": "10", "slug": "10-measure-evals", "title": "Measure: Evals That Actually Catch Things", "subtitle": "Golden sets, drift, the Measure function as a weekly habit"}, {"num": "11", "slug": "11-manage-incidents", "title": "Manage: Incidents, Rollback, the Off-Switch", "subtitle": "What you do when something goes wrong, written down before something goes wrong"}, {"num": "12", "slug": "12-agent-registry", "title": "The Agent Registry", "subtitle": "The inventory that turns governance from binder into infrastructure"}, {"num": "13", "slug": "13-risks-that-bite", "title": "The Risks That Bite", "subtitle": "OWASP LLM Top 10 (2025), MITRE ATLAS, and prompt injection as the central threat"}, {"num": "14", "slug": "14-human-in-the-loop", "title": "Human-in-the-Loop, Done Honestly", "subtitle": "Where humans actually belong, and where they pretend to belong"}, {"num": "15", "slug": "15-klarna", "title": "Klarna: The Most Honest Story on the Public Record", "subtitle": "What actually happened — fire, walkback, $60M, and the layered architecture that worked"}, {"num": "16", "slug": "16-jpmorgan", "title": "JPMorgan: LLM Suite and the Compliance-First Path", "subtitle": "What 230,000 internal users teaches about the right pace in a regulated firm"}, {"num": "17", "slug": "17-mcdonalds", "title": "McDonald's: How to Pull the Plug Without Embarrassment", "subtitle": "The drive-thru AI rollback that the press read as a failure was, in fact, a textbook pilot"}, {"num": "18", "slug": "18-platform-map", "title": "The Platform Map", "subtitle": "No-code, low-code, code-first — pick the lock-in you can live with"}, {"num": "19", "slug": "19-roi-honest", "title": "ROI: The Cost Stack and the Honest Arithmetic", "subtitle": "Why most ROI claims are wrong, and the small set of variables that actually move the answer"}, {"num": "20", "slug": "20-flywheel", "title": "The Flywheel", "subtitle": "Why some agent deployments compound and most don't"}, {"num": "21", "slug": "21-thirty-sixty-ninety", "title": "A 30-60-90 Plan", "subtitle": "What a real team does in the first quarter of an agent program"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="3" fill="currentColor" /><path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" /></svg>
+      <span>Building an Agentic Enterprise<span class="brand__sub"> — a practitioner's report</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">Building an Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 21 of 21</div>
+    <div class="ch-header__num">Chapter 21</div>
+    <h1 class="ch-header__title">A 30-60-90 Plan</h1>
+    <p class="ch-header__dek">What a real team does in the first quarter of an agent program</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">1<em>agent</em></div><div class="stat__label">in production by Day 90 — that is the goal, not three</div></div><div class="stat"><div class="stat__num">1<em>registry</em></div><div class="stat__label">before the first agent ships, not after the third</div></div><div class="stat"><div class="stat__num">0<em></em></div><div class="stat__label">tolerance for moving past Day 30 without an Agent Council and an owner</div></div></div>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <a class="toolbar__btn" href="../agentic-enterprise.pdf" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></a>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-spirit">The spirit of the plan</a></li><li><a href="#days-1-30">Days 1–30: spine</a></li><li><a href="#days-31-60">Days 31–60: the first agent</a></li><li><a href="#days-61-90">Days 61–90: production and the wheel</a></li></ul></aside>
+    <article class="prose">
+      
+<p class="lede">The point of a plan is to put the artefacts of Parts I and II into a sequence a team can actually run. This chapter is that sequence — written for a team that has roughly one quarter to land its first production agent and the governance to put a second one in next quarter.</p>
+
+<h2 id="the-spirit">The spirit of the plan</h2>
+
+<p>Before the calendar, three principles. <strong>Spine before agents.</strong> The governance, registry, and telemetry stack come before the first deployment, not after the third. This is the most counter-intuitive recommendation in the report and the most reliable predictor of which programs compound.</p>
+
+<p><strong>Internal before external.</strong> The first production agent in any organisation should serve employees, not customers. The blast radius is smaller, the feedback is faster, and the political cost of an early failure is bounded. Klarna shipped customer-facing first and recovered well; most organisations are not Klarna and will not.</p>
+
+<p><strong>Narrow before broad.</strong> One use case, well-scoped, fully instrumented, with a measurable before/after, beats five half-built ones. The temptation to land three pilots in the first quarter is the most reliable failure pattern we have observed. Resist it.</p>
+
+<h2 id="days-1-30">Days 1–30: build the spine</h2>
+
+<p>The first thirty days produce no working agent. They produce four artefacts and one decision. Skip any one and the rest of the quarter struggles.</p>
+
+<p><strong>Artefact one: an Agent Council.</strong> A small, named cross-functional group with formal authority to approve and block agent deployments. CISO, CTO/CDO, Legal/DPO, CRO, and a CFO representative for material investments. Meets weekly in the first quarter; biweekly thereafter. Has a written charter. Has a defined autonomy threshold above which its approval is required (Tier 2+ in our taxonomy).</p>
+
+<p><strong>Artefact two: an agent registry skeleton.</strong> Even before the first agent enters it. The schema from Chapter 12: identity, owner, purpose, autonomy tier, tools, data scope, model and prompt versions, delegation, authority review date, kill-switch procedure, incident history. A spreadsheet is acceptable for week one; a database with access controls is required by week four.</p>
+
+<p><strong>Artefact three: telemetry stack and observability platform decision.</strong> The six-layer stack from Chapter 20, with a vendor decision (LangSmith, Arize, Langfuse, or in-house) made and budgeted. Telemetry deploys before the first agent does, into a small reference workflow, so that day-one of the first agent has a working baseline.</p>
+
+<p><strong>Artefact four: an incident and kill-switch playbook.</strong> Drafted, reviewed, and rehearsed in tabletop form against a hypothetical agent that does not yet exist. The rehearsal is the point.</p>
+
+<p>The decision: <strong>which use case ships first.</strong> The selection criteria from Chapter 4 (the five honest questions) are the input. The Agent Council approves the selection. The use case should be internal, narrow, reversible, and have a measurable before/after metric.</p>
+
+<h2 id="days-31-60">Days 31–60: build the first agent</h2>
+
+<p>The middle thirty days produce a working agent in a controlled environment, not in production. Two artefacts and one rehearsal.</p>
+
+<p><strong>The Map artefact for the chosen use case.</strong> The one-page Map from Chapter 9: context paragraph, system summary, action-consequence table, autonomy tier, kill-switch procedure, authority review date. Reviewed and approved by the Agent Council.</p>
+
+<p><strong>The first golden set.</strong> A hundred curated cases drawn from the existing process (tickets, documents, queries — whatever the agent will replace or augment), with expected behaviours written and acceptance criteria set. The team running the offline eval pipeline against the golden set should be different from the team writing the agent's prompt — independence at this layer pays back.</p>
+
+<p><strong>The rehearsal:</strong> a tabletop incident response with the new agent. Trigger a simulated confabulation, a simulated indirect prompt injection, and a simulated tool-cascade error. Walk the playbook end-to-end. Refine. The first time you run the kill-switch should be in this window, not during a real incident.</p>
+
+<p>By Day 60, the agent has passed the offline eval suite, the Map is approved, the kill-switch has been rehearsed, the registry has its first real entry, and the Agent Council has formally approved canary deployment.</p>
+
+<h2 id="days-61-90">Days 61–90: production, controlled</h2>
+
+<p>The final thirty days take the agent into production carefully and start the wheel turning.</p>
+
+<p><strong>Canary deployment</strong> at 5% of relevant traffic, with the online metrics from Chapter 10 collected from minute one. Drift detection alerts wired to the team that owns the agent, not just the platform team.</p>
+
+<p><strong>Tier-2 post-action sampling</strong> from day one. A defined percentage of the agent's actions reviewed by humans after the fact, with the findings logged into the curation queue that grows the golden set.</p>
+
+<p><strong>The first improvement cycle.</strong> Two weeks into production, the team meets to review the curation queue, categorise failure modes, and ship the first prompt or tool change through the deployment pipeline. The cadence — every two weeks, religiously — is the wheel.</p>
+
+<p><strong>Public scaling.</strong> Once the agent has thirty days of production data above its threshold, scale to 100% of the chosen use case. Not faster. Not to a new use case until the second cycle of the wheel has produced at least one improvement.</p>
+
+<div class="aside" data-tone="copper">
+  <span class="aside__label">A practitioner's note</span>
+  <p>By Day 90, what a successful program has is one production agent, one well-instrumented telemetry stack, one alive registry, one Agent Council with a real meeting cadence, one tested kill-switch, one growing golden set, and one fortnightly improvement cycle. That is enough. The second agent is much cheaper than the first. The third is cheaper than the second. The compounding starts at the second deployment, not the first.</p>
+</div>
+
+<p>What you avoid by Day 90 is more important than what you ship: an agent in customer-facing high-stakes production without governance; an agent whose registry entry was created retroactively; an agent whose first incident is also its first kill-switch test; an agent without a measurable before/after; an agent that shipped because the launch date was on a slide. Each of these is the recurring failure pattern of the field. Each is avoidable.</p>
+
+<h2 id="end">A closing note</h2>
+
+<p>This report has been about a small set of practices that make agentic AI in enterprises survivable, accountable, and — sometimes — actually transformative. None of them are exotic. The five honest questions, the Map artefact, the eval suite, the registry, the kill-switch, the HITL design, the cost stack, and the flywheel are not technically difficult. They are organisationally difficult. They require teams to do unsexy work in a field that rewards sexy slides.</p>
+
+<p>The teams that do the unsexy work are the teams whose agents are still working a year later, still improving, and still inside the company's risk tolerance. The teams that skip it are the teams whose pilot is in a slide deck somewhere, opened in a meeting where everybody smiled and nodded, and then closed, and three weeks later nothing in the building did anything new.</p>
+
+<p>This is the gap between agentic AI on stage and agentic AI in production. It is bridgeable. The bridge is in this report.</p>
+
+      <figure class="figure figure--wide reveal" id="figure">
+      <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="30-60-90 day plan: spine, build, production">
+  <text x="40" y="36" class="label-display" font-size="16">A 30-60-90 plan</text>
+  <text x="40" y="56" font-size="11" fill="var(--color-text-muted)">Spine before agents. Internal before external. Narrow before broad.</text>
+  <g font-family="var(--font-mono)" font-size="10" fill="var(--color-text)">
+    <!-- D1-30 -->
+    <rect x="40" y="90" width="230" height="240" rx="4" fill="var(--color-accent-copper-soft)" stroke="var(--color-accent-copper)" stroke-width="1"/>
+    <text x="155" y="116" text-anchor="middle" font-size="12">DAYS 1–30 · spine</text>
+    <text x="60" y="146" font-size="11" fill="var(--color-primary)">artefacts</text>
+    <text x="60" y="164">· Agent Council (charter)</text>
+    <text x="60" y="180">· registry skeleton</text>
+    <text x="60" y="196">· telemetry stack live</text>
+    <text x="60" y="212">· kill-switch playbook</text>
+    <text x="60" y="234" font-size="11" fill="var(--color-primary)">decision</text>
+    <text x="60" y="252">· first use case · internal</text>
+    <text x="60" y="268">· narrow · reversible</text>
+    <text x="60" y="284">· measurable before/after</text>
+    <text x="60" y="306" font-size="9" fill="var(--color-accent-copper)">no agent in production yet</text>
+
+    <!-- D31-60 -->
+    <rect x="285" y="90" width="230" height="240" rx="4" fill="var(--color-accent-quartz)" fill-opacity="0.35" stroke="var(--color-accent-copper)" stroke-width="1"/>
+    <text x="400" y="116" text-anchor="middle" font-size="12">DAYS 31–60 · build</text>
+    <text x="305" y="146" font-size="11" fill="var(--color-primary)">artefacts</text>
+    <text x="305" y="164">· Map (one page)</text>
+    <text x="305" y="180">· action-consequence map</text>
+    <text x="305" y="196">· golden set (100+)</text>
+    <text x="305" y="212">· offline eval green</text>
+    <text x="305" y="234" font-size="11" fill="var(--color-primary)">rehearsal</text>
+    <text x="305" y="252">· tabletop incident</text>
+    <text x="305" y="268">· kill-switch drill</text>
+    <text x="305" y="284">· Council canary approval</text>
+    <text x="305" y="306" font-size="9" fill="var(--color-accent-copper)">agent works in staging</text>
+
+    <!-- D61-90 -->
+    <rect x="530" y="90" width="230" height="240" rx="4" fill="var(--color-primary-highlight)" stroke="var(--color-primary)" stroke-width="1.4"/>
+    <text x="645" y="116" text-anchor="middle" font-size="12">DAYS 61–90 · production</text>
+    <text x="550" y="146" font-size="11" fill="var(--color-primary)">rollout</text>
+    <text x="550" y="164">· canary 5% of traffic</text>
+    <text x="550" y="180">· online metrics live</text>
+    <text x="550" y="196">· tier-2 sample review</text>
+    <text x="550" y="212">· drift alerts wired</text>
+    <text x="550" y="234" font-size="11" fill="var(--color-primary)">flywheel · 2-week cadence</text>
+    <text x="550" y="252">· curation queue review</text>
+    <text x="550" y="268">· first prompt/tool ship</text>
+    <text x="550" y="284">· scale to 100% on signal</text>
+    <text x="550" y="306" font-size="9" fill="var(--color-primary)">one agent · one wheel</text>
+  </g>
+</svg></div>
+      <figcaption class="figure__caption"><span class="label">Figure 21.1</span><span class="text">Days 1–30: spine. Days 31–60: build. Days 61–90: production and the first turn of the wheel. The artefacts and decisions in each window.</span></figcaption>
+    </figure>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="20-flywheel.html"><span class="ch-nav-link__label">← Chapter 20</span><span class="ch-nav-link__title">The Flywheel</span></a>
+      <a class="ch-nav-link" data-dir="next" href="glossary.html"><span class="ch-nav-link__label">Reference →</span><span class="ch-nav-link__title">Glossary & bibliography</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters and the reference. Try <em>NIST</em>, <em>MCP</em>, <em>registry</em>, or <em>flywheel</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how do I run a NIST RMF Map workshop?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">Building an Agentic Enterprise</strong><br>
+      A practitioner's report on shipping agentic AI inside real organizations.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

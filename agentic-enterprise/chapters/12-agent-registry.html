@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 12 · The Agent Registry — Building an Agentic Enterprise</title>
+<meta name="description" content="What an agent registry contains, why it is the single highest-leverage piece of governance infrastructure, and how to build one that does not rot.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="12-agent-registry" data-chapter-title="The Agent Registry">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-quiet-test", "title": "The Quiet Test", "subtitle": "What 'agentic' actually means, and the failure rate nobody puts on the slide"}, {"num": "02", "slug": "02-workflow-to-agent", "title": "From Workflow to Agent", "subtitle": "A SIPOC canvas, repurposed: how to translate a business process into agent wiring"}, {"num": "03", "slug": "03-five-honest-questions", "title": "The Five Honest Questions", "subtitle": "A short test that kills bad agent projects before they consume budget"}, {"num": "04", "slug": "04-anatomy", "title": "Anatomy of an Agent", "subtitle": "Six parts you cannot leave out without the system pretending to work"}, {"num": "05", "slug": "05-reference-stack", "title": "The Reference Stack", "subtitle": "Six layers, named honestly: experience, orchestration, registry, memory, tools, evals"}, {"num": "06", "slug": "06-memory", "title": "Memory, in Plain English", "subtitle": "Four kinds, four jobs, and the failure modes specific to each"}, {"num": "07", "slug": "07-tools-protocols", "title": "Tools and Protocols", "subtitle": "Function calling, MCP, A2A — what each binds to what, and the parts that aren't standardised yet"}, {"num": "08", "slug": "08-governance-first", "title": "Why Governance Comes First", "subtitle": "The work that has to exist before the agent does"}, {"num": "09", "slug": "09-mapping-what-it-does", "title": "Mapping What an Agent Actually Does", "subtitle": "Context, authority, blast radius — the artefact your Map function produces"}, {"num": "10", "slug": "10-measure-evals", "title": "Measure: Evals That Actually Catch Things", "subtitle": "Golden sets, drift, the Measure function as a weekly habit"}, {"num": "11", "slug": "11-manage-incidents", "title": "Manage: Incidents, Rollback, the Off-Switch", "subtitle": "What you do when something goes wrong, written down before something goes wrong"}, {"num": "12", "slug": "12-agent-registry", "title": "The Agent Registry", "subtitle": "The inventory that turns governance from binder into infrastructure"}, {"num": "13", "slug": "13-risks-that-bite", "title": "The Risks That Bite", "subtitle": "OWASP LLM Top 10 (2025), MITRE ATLAS, and prompt injection as the central threat"}, {"num": "14", "slug": "14-human-in-the-loop", "title": "Human-in-the-Loop, Done Honestly", "subtitle": "Where humans actually belong, and where they pretend to belong"}, {"num": "15", "slug": "15-klarna", "title": "Klarna: The Most Honest Story on the Public Record", "subtitle": "What actually happened — fire, walkback, $60M, and the layered architecture that worked"}, {"num": "16", "slug": "16-jpmorgan", "title": "JPMorgan: LLM Suite and the Compliance-First Path", "subtitle": "What 230,000 internal users teaches about the right pace in a regulated firm"}, {"num": "17", "slug": "17-mcdonalds", "title": "McDonald's: How to Pull the Plug Without Embarrassment", "subtitle": "The drive-thru AI rollback that the press read as a failure was, in fact, a textbook pilot"}, {"num": "18", "slug": "18-platform-map", "title": "The Platform Map", "subtitle": "No-code, low-code, code-first — pick the lock-in you can live with"}, {"num": "19", "slug": "19-roi-honest", "title": "ROI: The Cost Stack and the Honest Arithmetic", "subtitle": "Why most ROI claims are wrong, and the small set of variables that actually move the answer"}, {"num": "20", "slug": "20-flywheel", "title": "The Flywheel", "subtitle": "Why some agent deployments compound and most don't"}, {"num": "21", "slug": "21-thirty-sixty-ninety", "title": "A 30-60-90 Plan", "subtitle": "What a real team does in the first quarter of an agent program"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="3" fill="currentColor" /><path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" /></svg>
+      <span>Building an Agentic Enterprise<span class="brand__sub"> — a practitioner's report</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">Building an Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 12 of 21</div>
+    <div class="ch-header__num">Chapter 12</div>
+    <h1 class="ch-header__title">The Agent Registry</h1>
+    <p class="ch-header__dek">The inventory that turns governance from binder into infrastructure</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">GV-1.6<em></em></div><div class="stat__label">the NIST subcategory the registry implements</div></div><div class="stat"><div class="stat__num">1<em>place</em></div><div class="stat__label">where the inventory, authority, and kill-switch live</div></div><div class="stat"><div class="stat__num">>50<em>%</em></div><div class="stat__label">of organisations lack systematic AI inventories — the most common compliance gap</div></div></div>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <a class="toolbar__btn" href="../agentic-enterprise.pdf" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></a>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#what-is-it">What an agent registry is</a></li><li><a href="#fields">The fields that matter</a></li><li><a href="#build-vs-buy">Build, buy, or extend</a></li><li><a href="#keeping-it-alive">Keeping it alive</a></li></ul></aside>
+    <article class="prose">
+      
+<p class="lede">The single most valuable artefact in any enterprise agent program is the registry. It is also the most often missing one. <a href="https://labs.cloudsecurityalliance.org/research/csa-research-note-eu-ai-act-high-risk-compliance-deadline-20/">More than half of organisations</a> deploying AI lack a systematic inventory of what they have deployed — which is why the registry is also the most common compliance gap.</p>
+
+<h2 id="what-is-it">What an agent registry is</h2>
+
+<p>An <a href="https://www.truefoundry.com/blog/ai-agent-registry">agent registry</a> is the centralised catalogue of every agent in production: what each one does, what tools it can invoke, what data it can read, what actions it can take, who its human principal is, what its current authority scope is, what version of the model it runs, and how to turn it off. Done well, the registry is operational infrastructure: a service the rest of the organisation calls to discover, invoke, audit, or revoke agents. Done badly, it is a spreadsheet that nobody updates.</p>
+
+<p>The NIST RMF subcategory <strong>GV 1.6</strong> calls for an inventory of AI systems. For agentic systems specifically, the Cloud Security Alliance's <a href="https://labs.cloudsecurityalliance.org/agentic/agentic-nist-ai-rmf-profile-v1/">Agentic Profile</a> extends this: the registry must capture <em>tool access</em>, <em>delegation relationships</em>, and <em>authority review schedules</em>. None of those are properties of the model. All of them are properties of the deployment. That is why the registry is a piece of infrastructure, not a model artefact.</p>
+
+<h2 id="fields">The fields that matter</h2>
+
+<p>The minimum useful registry has, for each agent, a record with the following fields. The agent's identity (a stable ID, not a name that might change). Its owner (the human accountable, named, with a backup). Its purpose, written in one sentence anyone in the company would understand. Its autonomy tier (0–4, per Chapter 3). Its tool list, with each entry linking to an Action-Consequence Map row from Chapter 9. Its data scope: what it can read, what it can write, with what scoping. Its model and prompt versions, with hashes. Its delegation relationships: which agents can call it, which it can call. Its authority review date. Its kill-switch procedure. Its incident history.</p>
+
+<p>That is more than most teams maintain on their first attempt, and less than the EU AI Act will eventually require for high-risk deployments. The discipline is to build the schema before there is anything to register, so that the first agent enters the registry on the day it goes to production, not six months later when the auditor asks.</p>
+
+<h2 id="build-vs-buy">Build, buy, or extend</h2>
+
+<p>There are three reasonable patterns. The first is to build the registry as a small internal application — typically a database with a thin web interface — owned by the central AI platform team. This is the most flexible approach and the one most large enterprises end up with eventually. It is also the one that requires actual engineering investment.</p>
+
+<p>The second is to extend an existing inventory system: a CMDB, a service catalogue, an API gateway's registry. This works if the existing system can carry the agent-specific fields (autonomy tier, tool access, delegation), and if the team that owns it is willing to add them. Most enterprise CMDBs were not designed for this and adding the fields is more political than technical.</p>
+
+<p>The third is to buy. Several vendors now sell agent registries as products, and orchestration platforms like LangSmith and Arize provide registry-adjacent functionality. Buying is fastest. The risk is lock-in: the registry is the most stable artefact in the agent program, and you do not want it tied to whichever orchestration vendor is fashionable this year. If you buy, ensure the schema is exportable.</p>
+
+<div class="aside" data-tone="navy">
+  <span class="aside__label">Caution</span>
+  <p>The registry is the artefact most likely to become a security target. It contains the most concentrated description of every agent's authority in the organisation. Treat its access controls with the same seriousness you would treat the IAM control plane itself. The registry of registries is a thing real attackers care about.</p>
+</div>
+
+<h2 id="keeping-it-alive">Keeping it alive</h2>
+
+<p>A dead registry is worse than no registry, because it is consulted as if it were true. The mechanisms that keep one alive are mostly procedural. New agents cannot enter production without a registry record (this requires the deployment pipeline to enforce it). Tool changes require a registry update (this requires the tool registration to be coupled to the agent's). Authority review dates trigger a real review with a real human in the loop (this requires a calendar). Decommissioned agents are marked decommissioned, not deleted (so the audit trail survives).</p>
+
+<p>The single best test of whether your registry is alive is to pick one agent at random and ask: when was its last authority review? If the answer is "I would have to ask", the registry is a document. If the answer is in the registry, with a date and a name, you have built infrastructure.</p>
+
+<p>The next chapter is the catalogue of risks the registry exists to defend against — and the techniques to mitigate them, drawn from OWASP's 2025 LLM Top 10 and MITRE ATLAS.</p>
+
+      <figure class="figure figure--wide reveal" id="figure">
+      <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="Agent registry schema with the minimum useful fields">
+  <text x="40" y="36" class="label-display" font-size="16">An agent registry record</text>
+  <text x="40" y="56" font-size="11" fill="var(--color-text-muted)">The minimum useful schema. Every agent gets one. Without this, governance is a binder.</text>
+  <!-- card frame -->
+  <rect x="60" y="80" width="680" height="260" rx="6" fill="var(--color-surface-2)" stroke="var(--color-primary)" stroke-width="1.4"/>
+  <line x1="60" y1="124" x2="740" y2="124" stroke="var(--color-primary)" stroke-width="1" stroke-opacity="0.4"/>
+  <g font-family="var(--font-mono)" font-size="11" fill="var(--color-text)">
+    <text x="80" y="108" font-size="13" fill="var(--color-primary)">agent: refund-assistant-v3.2</text>
+    <text x="540" y="108" font-size="11" fill="var(--color-accent-copper)">tier 2 · post-action sample</text>
+
+    <!-- two columns -->
+    <text x="80" y="148">owner</text>
+    <text x="220" y="148" fill="var(--color-text-muted)">M. Lopez · backup R. Singh</text>
+
+    <text x="80" y="170">purpose</text>
+    <text x="220" y="170" fill="var(--color-text-muted)">resolve refund tickets &lt; $200, EU + UK</text>
+
+    <text x="80" y="192">model · prompt</text>
+    <text x="220" y="192" fill="var(--color-text-muted)">gpt-5.1 · sha 7f2b1c · prompt v3.2 · sha 9e1a4d</text>
+
+    <text x="80" y="214">tools</text>
+    <text x="220" y="214" fill="var(--color-text-muted)">crm.search · case.note · refund.issue · email.send (tier 3)</text>
+
+    <text x="80" y="236">data scope</text>
+    <text x="220" y="236" fill="var(--color-text-muted)">tenant=eu · read: customer · write: case_notes only</text>
+
+    <text x="80" y="258">delegation</text>
+    <text x="220" y="258" fill="var(--color-text-muted)">callable by: support-router · calls: none</text>
+
+    <text x="80" y="280">authority review</text>
+    <text x="220" y="280" fill="var(--color-text-muted)">last 2026-03-12 · next 2026-06-12 · owner approves</text>
+
+    <text x="80" y="302">kill-switch</text>
+    <text x="220" y="302" fill="var(--color-text-muted)">/runbook/refund.kill · &lt;5min · pages on-call</text>
+
+    <text x="80" y="324">incident history</text>
+    <text x="220" y="324" fill="var(--color-text-muted)">2 minor (2026-01) · 0 high · last drill 2026-04</text>
+  </g>
+</svg></div>
+      <figcaption class="figure__caption"><span class="label">Figure 12.1</span><span class="text">An agent registry schema. Identity, ownership, purpose, autonomy tier, tools, data scope, delegation, authority review, and incident history — the minimum viable record.</span></figcaption>
+    </figure>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="11-manage-incidents.html"><span class="ch-nav-link__label">← Chapter 11</span><span class="ch-nav-link__title">Manage: Incidents, Rollback, the Off-Switch</span></a>
+      <a class="ch-nav-link" data-dir="next" href="13-risks-that-bite.html"><span class="ch-nav-link__label">Chapter 13 →</span><span class="ch-nav-link__title">The Risks That Bite</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters and the reference. Try <em>NIST</em>, <em>MCP</em>, <em>registry</em>, or <em>flywheel</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how do I run a NIST RMF Map workshop?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">Building an Agentic Enterprise</strong><br>
+      A practitioner's report on shipping agentic AI inside real organizations.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

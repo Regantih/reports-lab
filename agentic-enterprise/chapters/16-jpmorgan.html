@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 16 · JPMorgan: LLM Suite and the Compliance-First Path — Building an Agentic Enterprise</title>
+<meta name="description" content="JPMorgan's LLM Suite is the most-deployed enterprise generative AI platform of 2025 — and the lesson is not the scale, but the order of operations.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="16-jpmorgan" data-chapter-title="JPMorgan: LLM Suite and the Compliance-First Path">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-quiet-test", "title": "The Quiet Test", "subtitle": "What 'agentic' actually means, and the failure rate nobody puts on the slide"}, {"num": "02", "slug": "02-workflow-to-agent", "title": "From Workflow to Agent", "subtitle": "A SIPOC canvas, repurposed: how to translate a business process into agent wiring"}, {"num": "03", "slug": "03-five-honest-questions", "title": "The Five Honest Questions", "subtitle": "A short test that kills bad agent projects before they consume budget"}, {"num": "04", "slug": "04-anatomy", "title": "Anatomy of an Agent", "subtitle": "Six parts you cannot leave out without the system pretending to work"}, {"num": "05", "slug": "05-reference-stack", "title": "The Reference Stack", "subtitle": "Six layers, named honestly: experience, orchestration, registry, memory, tools, evals"}, {"num": "06", "slug": "06-memory", "title": "Memory, in Plain English", "subtitle": "Four kinds, four jobs, and the failure modes specific to each"}, {"num": "07", "slug": "07-tools-protocols", "title": "Tools and Protocols", "subtitle": "Function calling, MCP, A2A — what each binds to what, and the parts that aren't standardised yet"}, {"num": "08", "slug": "08-governance-first", "title": "Why Governance Comes First", "subtitle": "The work that has to exist before the agent does"}, {"num": "09", "slug": "09-mapping-what-it-does", "title": "Mapping What an Agent Actually Does", "subtitle": "Context, authority, blast radius — the artefact your Map function produces"}, {"num": "10", "slug": "10-measure-evals", "title": "Measure: Evals That Actually Catch Things", "subtitle": "Golden sets, drift, the Measure function as a weekly habit"}, {"num": "11", "slug": "11-manage-incidents", "title": "Manage: Incidents, Rollback, the Off-Switch", "subtitle": "What you do when something goes wrong, written down before something goes wrong"}, {"num": "12", "slug": "12-agent-registry", "title": "The Agent Registry", "subtitle": "The inventory that turns governance from binder into infrastructure"}, {"num": "13", "slug": "13-risks-that-bite", "title": "The Risks That Bite", "subtitle": "OWASP LLM Top 10 (2025), MITRE ATLAS, and prompt injection as the central threat"}, {"num": "14", "slug": "14-human-in-the-loop", "title": "Human-in-the-Loop, Done Honestly", "subtitle": "Where humans actually belong, and where they pretend to belong"}, {"num": "15", "slug": "15-klarna", "title": "Klarna: The Most Honest Story on the Public Record", "subtitle": "What actually happened — fire, walkback, $60M, and the layered architecture that worked"}, {"num": "16", "slug": "16-jpmorgan", "title": "JPMorgan: LLM Suite and the Compliance-First Path", "subtitle": "What 230,000 internal users teaches about the right pace in a regulated firm"}, {"num": "17", "slug": "17-mcdonalds", "title": "McDonald's: How to Pull the Plug Without Embarrassment", "subtitle": "The drive-thru AI rollback that the press read as a failure was, in fact, a textbook pilot"}, {"num": "18", "slug": "18-platform-map", "title": "The Platform Map", "subtitle": "No-code, low-code, code-first — pick the lock-in you can live with"}, {"num": "19", "slug": "19-roi-honest", "title": "ROI: The Cost Stack and the Honest Arithmetic", "subtitle": "Why most ROI claims are wrong, and the small set of variables that actually move the answer"}, {"num": "20", "slug": "20-flywheel", "title": "The Flywheel", "subtitle": "Why some agent deployments compound and most don't"}, {"num": "21", "slug": "21-thirty-sixty-ninety", "title": "A 30-60-90 Plan", "subtitle": "What a real team does in the first quarter of an agent program"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="3" fill="currentColor" /><path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" /></svg>
+      <span>Building an Agentic Enterprise<span class="brand__sub"> — a practitioner's report</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">Building an Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 16 of 21</div>
+    <div class="ch-header__num">Chapter 16</div>
+    <h1 class="ch-header__title">JPMorgan: LLM Suite and the Compliance-First Path</h1>
+    <p class="ch-header__dek">What 230,000 internal users teaches about the right pace in a regulated firm</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">230,000<em></em></div><div class="stat__label">employees with access to JPMorgan's LLM Suite</div></div><div class="stat"><div class="stat__num">4<em>yrs</em></div><div class="stat__label">consecutive years topping Evident's AI Index</div></div><div class="stat"><div class="stat__num">1<em>Grand Prize</em></div><div class="stat__label">American Banker Innovation of the Year 2025</div></div></div>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <a class="toolbar__btn" href="../agentic-enterprise.pdf" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></a>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-shape">What they shipped</a></li><li><a href="#before-llm-suite">What was already there</a></li><li><a href="#what-broader">What the broader market should note</a></li><li><a href="#the-cost">The cost of patience</a></li></ul></aside>
+    <article class="prose">
+      
+<p class="lede">JPMorgan's enterprise AI program looks slow from outside and is the fastest-compounding deployment in financial services. Its central artefact, the LLM Suite, is the most-used internal generative AI platform on the planet by employee count. The lesson is the order of operations.</p>
+
+<h2 id="the-shape">What they shipped</h2>
+
+<p>JPMorgan Chase deployed its <strong>LLM Suite</strong> — an internal generative AI platform providing secure access to advanced large language models from multiple providers — to <a href="https://thedigitalbanker.com/jpmorgan-chases-llm-suite-drives-ai-transformation-across-the-enterprise/">over 230,000 employees globally</a>, for legal, sales, and client service operations. The platform was developed in-house, operates within a tightly controlled environment that prioritises data protection and regulatory compliance, and earned <a href="https://finance.yahoo.com/news/jpmorganchases-llm-suite-wins-american-130000369.html">American Banker's 2025 Innovation of the Year Grand Prize</a>. JPMorgan has topped <a href="https://www.bankingexchange.com/news-feed/item/10434-jpmorganchase-named-leading-bank-for-ai-innovation">Evident's AI Index</a> for four consecutive years.</p>
+
+<p>What the LLM Suite is not: a customer-facing agent. It is a productivity platform — an internal Copilot at industrial scale — and the careful framing matters. JPMorgan has chosen, at every observable step, to deploy AI to the people who already work for the firm before deploying AI on behalf of the firm to people who do not. That sequence is the core of the lesson.</p>
+
+<h2 id="before-llm-suite">What was already there</h2>
+
+<p>The LLM Suite did not arrive in an organisation that had no AI. JPMorgan's <strong>COIN</strong> (Contract Intelligence) system, deployed in 2017, was one of the first large-scale enterprise machine-learning deployments in finance — automating review of commercial loan agreements that previously consumed 360,000 man-hours a year. <strong>IndexGPT</strong>, in 2023, was a different product targeting thematic securities baskets. These are different generations of technology and different use cases. They are also a decade of institutional muscle: the data infrastructure, the legal patterns, the change-management practices, and (most importantly) the relationship with regulators that you cannot stand up in eighteen months.</p>
+
+<p>The LLM Suite is, in this sense, the third or fourth wave of AI at JPMorgan, not the first. Reading the deployment without that history is the most common mistake outsiders make. They see the speed and the scale of LLM Suite without seeing the runway it was built on.</p>
+
+<h2 id="what-broader">What the broader market should note</h2>
+
+<p>JPMorgan's posture reflects what works in heavily regulated environments. <strong>Build or customise rather than using off-the-shelf tools with opaque data handling.</strong> Maintain complete data lineage. Deploy to internal productivity before customer-facing use cases. Invest in in-house AI infrastructure and talent rather than outsourcing the core. Engage regulators early. Move at compliance-pace, not vendor-pace.</p>
+
+<p>The temptation, in any regulated firm, is to argue that this kind of patience is a competitive disadvantage. The Klarna story — fast deploy, fast results, fast headlines — gets deployed as the counter-example. But Klarna is consumer credit; JPMorgan is the centre of the global financial system. The blast radius is not comparable, and the right autonomy tier (Chapter 9), the right HITL design (Chapter 14), and the right compliance posture for one is not the right one for the other.</p>
+
+<p>If your firm is in financial services, healthcare, energy, or any other Annex III high-risk sector under the EU AI Act, JPMorgan's order of operations is the template, not Klarna's. Internal first. Regulator engagement throughout. Production deployment behind a deep set of controls, not in front of them.</p>
+
+<div class="aside" data-tone="navy">
+  <span class="aside__label">Questions to ask</span>
+  <p>If your firm is regulated, what is the equivalent of LLM Suite in your organisation — the internal productivity platform that gives every employee a way to do their job better with AI, before any AI is exposed to a customer? If the answer is "we are starting with a customer-facing chatbot", you have not earned that right yet. The internal program is the runway.</p>
+</div>
+
+<h2 id="the-cost">The cost of patience</h2>
+
+<p>Specific production metrics for LLM Suite are not publicly disclosed, which is itself a signal. Regulated firms are appropriately cautious about claims that could be construed as forward-looking statements or that could complicate ongoing supervisory dialogue. The absence of glossy stat-deck numbers is part of why the deployment looks slow from outside. It is also why it is durable.</p>
+
+<p>The cost of this approach is real. JPMorgan was not first to consumer-facing AI in banking. Some smaller institutions and fintechs have shipped customer-facing assistants before JPMorgan would. The risk-adjusted return on patience, however, is the lesson: the firm that has internal infrastructure, governed inventory, regulator engagement, and a workforce that has used the tools for two years before the customer sees one is the firm whose first customer deployment is least likely to become an Air Canada-class incident.</p>
+
+<p>The next chapter is McDonald's, which is — counter-intuitively — also a story about doing it right.</p>
+
+      <figure class="figure figure--wide reveal" id="figure">
+      <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="JPMorgan Chase AI runway: COIN 2017, IndexGPT 2023, LLM Suite 2024-25 at scale">
+  <text x="40" y="36" class="label-display" font-size="16">JPMorgan's runway</text>
+  <text x="40" y="56" font-size="11" fill="var(--color-text-muted)">Each generation built the muscle the next required. LLM Suite is wave 3, not wave 1.</text>
+  <g font-family="var(--font-mono)" font-size="10" fill="var(--color-text)">
+    <!-- step 1: COIN -->
+    <rect x="50" y="120" width="200" height="160" rx="4" fill="var(--color-accent-euv-soft)" stroke="var(--color-accent-euv)" stroke-width="1"/>
+    <text x="150" y="146" text-anchor="middle" font-size="12">COIN — 2017</text>
+    <text x="150" y="166" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">Contract Intelligence</text>
+    <text x="150" y="184" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">commercial loan review</text>
+    <text x="150" y="202" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">360,000 hrs/yr automated</text>
+    <text x="150" y="226" text-anchor="middle" font-size="9" fill="var(--color-primary)">muscle: data lineage</text>
+    <text x="150" y="240" text-anchor="middle" font-size="9" fill="var(--color-primary)">muscle: legal patterns</text>
+    <text x="150" y="254" text-anchor="middle" font-size="9" fill="var(--color-primary)">muscle: model ops</text>
+
+    <!-- step 2: IndexGPT -->
+    <rect x="290" y="120" width="200" height="160" rx="4" fill="var(--color-accent-copper-soft)" stroke="var(--color-accent-copper)" stroke-width="1"/>
+    <text x="390" y="146" text-anchor="middle" font-size="12">IndexGPT — 2023</text>
+    <text x="390" y="166" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">thematic baskets</text>
+    <text x="390" y="184" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">first generative product</text>
+    <text x="390" y="202" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">narrow scope</text>
+    <text x="390" y="226" text-anchor="middle" font-size="9" fill="var(--color-primary)">muscle: regulator dialogue</text>
+    <text x="390" y="240" text-anchor="middle" font-size="9" fill="var(--color-primary)">muscle: prompt patterns</text>
+    <text x="390" y="254" text-anchor="middle" font-size="9" fill="var(--color-primary)">muscle: change mgmt</text>
+
+    <!-- step 3: LLM Suite -->
+    <rect x="530" y="120" width="220" height="160" rx="4" fill="var(--color-primary-highlight)" stroke="var(--color-primary)" stroke-width="1.4"/>
+    <text x="640" y="146" text-anchor="middle" font-size="12">LLM Suite — 2024–25</text>
+    <text x="640" y="166" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">internal generative platform</text>
+    <text x="640" y="184" text-anchor="middle" font-size="11" fill="var(--color-primary)">230,000 employees</text>
+    <text x="640" y="202" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">legal · sales · client svc</text>
+    <text x="640" y="226" text-anchor="middle" font-size="9" fill="var(--color-accent-copper)">American Banker IOTY 2025</text>
+    <text x="640" y="240" text-anchor="middle" font-size="9" fill="var(--color-accent-copper)">Evident #1 four years</text>
+    <text x="640" y="254" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">no customer-facing yet</text>
+  </g>
+  <!-- arrows -->
+  <g fill="none" stroke="var(--color-primary)" stroke-width="1.4">
+    <path d="M250 200 L288 200" marker-end="url(#jr1)"/>
+    <path d="M490 200 L528 200" marker-end="url(#jr1)"/>
+  </g>
+  <defs><marker id="jr1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--color-primary)"/></marker></defs>
+  <text x="400" y="320" text-anchor="middle" font-size="10" fill="var(--color-text-muted)">The lesson is the order of operations: internal first, regulator early, customer-facing last (and not yet).</text>
+</svg></div>
+      <figcaption class="figure__caption"><span class="label">Figure 16.1</span><span class="text">JPMorgan AI runway: COIN (2017) → IndexGPT (2023) → LLM Suite (2024–25 at scale to 230k users). Each generation built the muscle the next required.</span></figcaption>
+    </figure>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="15-klarna.html"><span class="ch-nav-link__label">← Chapter 15</span><span class="ch-nav-link__title">Klarna: The Most Honest Story on the Public Record</span></a>
+      <a class="ch-nav-link" data-dir="next" href="17-mcdonalds.html"><span class="ch-nav-link__label">Chapter 17 →</span><span class="ch-nav-link__title">McDonald's: How to Pull the Plug Without Embarrassment</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters and the reference. Try <em>NIST</em>, <em>MCP</em>, <em>registry</em>, or <em>flywheel</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how do I run a NIST RMF Map workshop?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">Building an Agentic Enterprise</strong><br>
+      A practitioner's report on shipping agentic AI inside real organizations.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

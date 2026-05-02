@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 05 · The Reference Stack — Building an Agentic Enterprise</title>
+<meta name="description" content="A six-layer reference architecture for enterprise agents — what each layer is, who builds it, and why none can be safely skipped.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="05-reference-stack" data-chapter-title="The Reference Stack">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-quiet-test", "title": "The Quiet Test", "subtitle": "What 'agentic' actually means, and the failure rate nobody puts on the slide"}, {"num": "02", "slug": "02-workflow-to-agent", "title": "From Workflow to Agent", "subtitle": "A SIPOC canvas, repurposed: how to translate a business process into agent wiring"}, {"num": "03", "slug": "03-five-honest-questions", "title": "The Five Honest Questions", "subtitle": "A short test that kills bad agent projects before they consume budget"}, {"num": "04", "slug": "04-anatomy", "title": "Anatomy of an Agent", "subtitle": "Six parts you cannot leave out without the system pretending to work"}, {"num": "05", "slug": "05-reference-stack", "title": "The Reference Stack", "subtitle": "Six layers, named honestly: experience, orchestration, registry, memory, tools, evals"}, {"num": "06", "slug": "06-memory", "title": "Memory, in Plain English", "subtitle": "Four kinds, four jobs, and the failure modes specific to each"}, {"num": "07", "slug": "07-tools-protocols", "title": "Tools and Protocols", "subtitle": "Function calling, MCP, A2A — what each binds to what, and the parts that aren't standardised yet"}, {"num": "08", "slug": "08-governance-first", "title": "Why Governance Comes First", "subtitle": "The work that has to exist before the agent does"}, {"num": "09", "slug": "09-mapping-what-it-does", "title": "Mapping What an Agent Actually Does", "subtitle": "Context, authority, blast radius — the artefact your Map function produces"}, {"num": "10", "slug": "10-measure-evals", "title": "Measure: Evals That Actually Catch Things", "subtitle": "Golden sets, drift, the Measure function as a weekly habit"}, {"num": "11", "slug": "11-manage-incidents", "title": "Manage: Incidents, Rollback, the Off-Switch", "subtitle": "What you do when something goes wrong, written down before something goes wrong"}, {"num": "12", "slug": "12-agent-registry", "title": "The Agent Registry", "subtitle": "The inventory that turns governance from binder into infrastructure"}, {"num": "13", "slug": "13-risks-that-bite", "title": "The Risks That Bite", "subtitle": "OWASP LLM Top 10 (2025), MITRE ATLAS, and prompt injection as the central threat"}, {"num": "14", "slug": "14-human-in-the-loop", "title": "Human-in-the-Loop, Done Honestly", "subtitle": "Where humans actually belong, and where they pretend to belong"}, {"num": "15", "slug": "15-klarna", "title": "Klarna: The Most Honest Story on the Public Record", "subtitle": "What actually happened — fire, walkback, $60M, and the layered architecture that worked"}, {"num": "16", "slug": "16-jpmorgan", "title": "JPMorgan: LLM Suite and the Compliance-First Path", "subtitle": "What 230,000 internal users teaches about the right pace in a regulated firm"}, {"num": "17", "slug": "17-mcdonalds", "title": "McDonald's: How to Pull the Plug Without Embarrassment", "subtitle": "The drive-thru AI rollback that the press read as a failure was, in fact, a textbook pilot"}, {"num": "18", "slug": "18-platform-map", "title": "The Platform Map", "subtitle": "No-code, low-code, code-first — pick the lock-in you can live with"}, {"num": "19", "slug": "19-roi-honest", "title": "ROI: The Cost Stack and the Honest Arithmetic", "subtitle": "Why most ROI claims are wrong, and the small set of variables that actually move the answer"}, {"num": "20", "slug": "20-flywheel", "title": "The Flywheel", "subtitle": "Why some agent deployments compound and most don't"}, {"num": "21", "slug": "21-thirty-sixty-ninety", "title": "A 30-60-90 Plan", "subtitle": "What a real team does in the first quarter of an agent program"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="3" fill="currentColor" /><path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" /></svg>
+      <span>Building an Agentic Enterprise<span class="brand__sub"> — a practitioner's report</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">Building an Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 05 of 21</div>
+    <div class="ch-header__num">Chapter 05</div>
+    <h1 class="ch-header__title">The Reference Stack</h1>
+    <p class="ch-header__dek">Six layers, named honestly: experience, orchestration, registry, memory, tools, evals</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">6<em></em></div><div class="stat__label">layers in the reference stack</div></div><div class="stat"><div class="stat__num">3<em></em></div><div class="stat__label">the layers vendors compete hardest on (and lock-in lives)</div></div><div class="stat"><div class="stat__num">2<em></em></div><div class="stat__label">the layers most often skipped (registry, evals)</div></div></div>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <a class="toolbar__btn" href="../agentic-enterprise.pdf" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></a>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#experience">Layer 1 — Experience</a></li><li><a href="#orchestration">Layer 2 — Orchestration</a></li><li><a href="#registry">Layer 3 — Registry & Identity</a></li><li><a href="#memory">Layer 4 — Memory</a></li><li><a href="#tools">Layer 5 — Tools</a></li><li><a href="#evals">Layer 6 — Evals & Observability</a></li><li><a href="#buy">Buy, build, or rent</a></li></ul></aside>
+    <article class="prose">
+      
+<p class="lede">Every enterprise eventually draws an agent stack. Some draw it well, some draw it once and forget. The shape that's converging across well-run programmes — across financial services, technology firms, healthcare, retail — has six layers. Naming them out loud is the first step to actually building them.</p>
+
+<h2 id="experience">Layer 1 — Experience</h2>
+
+<p>Where users and systems meet the agent. Chat windows are the cliché, and they have their place, but the most successful enterprise agents in 2026 are <em>embedded</em>: in the support tool the rep already uses, in the email client where the salesperson already lives, in the IDE where the engineer is already working. The agent that requires a context-switch to use is the agent that gets used less.</p>
+
+<p>The layer also includes voice (call centres are the largest agent surface in financial services), email (one of the most useful, because email is asynchronous and forgiving), and machine-to-machine surfaces (other systems calling your agent via API or A2A). Each surface has its own latency budget and its own UX rules. None can be ignored.</p>
+
+<h2 id="orchestration">Layer 2 — Orchestration</h2>
+
+<p>The runtime that coordinates the agent loop, manages tool calls, handles retries, branches on conditions, and schedules sub-agents. The serious choices in mid-2026 are <strong>LangGraph</strong> (graph-based, good for explicit control flow), <strong>CrewAI</strong> (role-based, good for multi-agent with simple coordination), <strong>Microsoft Semantic Kernel</strong> (integrates well with Azure and the Microsoft stack), <strong>OpenAI's Agents SDK</strong> (native to the OpenAI ecosystem), <strong>Google ADK / Vertex Agents</strong>, and <strong>AWS Bedrock Agents</strong>. Beyond those, <strong>n8n</strong> and <strong>Microsoft Power Automate</strong> are no-code/low-code options worth taking seriously for narrower flows.</p>
+
+<p>The bad news: switching cost between orchestrators is real. The agent's prompts, tool wrappers, memory schema, and tracing format are all framework-specific. The good news: the core abstractions are converging, and a thin internal abstraction layer (your own "agent runner" interface) buys you the option of switching later. Almost every team that did this is glad they did.</p>
+
+<h2 id="registry">Layer 3 — Registry &amp; Identity</h2>
+
+<p>The most-skipped layer, and the layer that most distinguishes a programme from a pilot.</p>
+
+<p>An <strong>agent registry</strong> is the catalogue of every agent in the organisation: name, owner, business purpose, scope, tools it can call, model it uses, data it touches, regulatory classification, current version, owner-on-call, kill-switch URL, last eval pass date. Without it, you cannot answer "how many agents are in production?" with a straight face after the first dozen. With it, you can. We dig into the registry's schema and lifecycle in Chapter 12.</p>
+
+<p>The identity sub-layer is where agentic AI breaks the assumptions of traditional IAM. An agent acting on a user's behalf needs scoped, time-bound access to that user's data — not the agent's own god-mode service account. OAuth on-behalf-of, token vending services, and per-run credentials are how that gets done. The early-stage "give the agent a service account with admin rights" pattern is the pattern that ends up on the front page.</p>
+
+<h2 id="memory">Layer 4 — Memory</h2>
+
+<p>Short-term, long-term, episodic, semantic. Each picks its own substrate. Vector databases (pgvector, Pinecone, Weaviate, Qdrant) handle fuzzy long-term and episodic. Key-value stores handle structured long-term. Postgres or your existing data warehouse handles semantic, with a knowledge-graph or RAG layer over the top. Short-term lives in the context window — the cheapest and most volatile memory of all.</p>
+
+<p>The honest test of your memory layer is governance, not technology. Who can write to long-term memory? Who can read it? When does it expire? Is PII flagged? Is there a "right to be forgotten" path? Most memory layers are perfectly engineered and perfectly ungoverned, and that's a regulatory accident waiting to happen.</p>
+
+<h2 id="tools">Layer 5 — Tools</h2>
+
+<p>Where the agent meets the rest of your stack. Each tool is an MCP server, an internal API, or a function-call wrapper around an existing system. The tool catalogue is owned, versioned, and discoverable. The two questions to ask: <em>can a new agent reuse an existing tool</em>, and <em>can we revoke a tool's access without redeploying the agent</em>? If both are yes, you have a real tool layer. If not, every agent is reinventing wheels and accumulating risk.</p>
+
+<p>The fast-moving piece here is MCP. As of mid-2026, most major model providers and tool vendors support it natively. The investment to standardise on MCP (or whatever supersedes it) pays back as soon as you have more than one agent talking to more than one tool.</p>
+
+<h2 id="evals">Layer 6 — Evals &amp; Observability</h2>
+
+<p>The cross-cutting layer that keeps the other five honest. Evals run pre-deploy; observability runs in production. The connecting thread is the <em>trace</em> — a structured record of every step the agent took, every tool it called, every result it got, every token of input and output, every dollar of cost.</p>
+
+<p>If you do nothing else from this chapter, do this: ensure every agent run produces a trace, and that traces are searchable by humans. With searchable traces, you can debug. Without them, you cannot. Most of the cost of an evals/observability platform is justified by the first incident it lets you triage in twenty minutes instead of three days.</p>
+
+<h2 id="buy">Buy, build, or rent</h2>
+
+<p>The pragmatic answer for a team starting in 2026: rent the orchestration runtime (LangGraph or your cloud provider's), buy the evals platform (one of LangSmith / Braintrust / Arize), build the registry and the tool layer (because both are deeply specific to your business), and treat memory as a portfolio of off-the-shelf stores plus your own thin governance layer.</p>
+
+<p>The seductive alternative is to buy a full vertical stack from a single vendor — Salesforce Agentforce, ServiceNow AI Agents, Microsoft Copilot Studio. We'll discuss those in Chapter 18. They are real products and they ship real value. They are also lock-in by design, and they make the registry-and-evals layer the vendor's, not yours, which is fine until you want to consolidate across vendors. There is no neutral choice; there is only the choice you make on purpose.</p>
+
+<div class="aside" data-tone="copper">
+  <span class="aside__label">Flywheel note</span>
+  <p>The compounding from this stack happens at Layers 3 and 6 — the registry and evals. Every new agent makes the registry more valuable (faster onboarding, more reuse) and every production run makes the eval suite better (more cases, more coverage). The teams that win in agentic AI win because <em>those two layers</em> are theirs and improve every quarter, regardless of which model is fashionable.</p>
+</div>
+
+      <figure class="figure figure--wide reveal" id="figure">
+      <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="Enterprise agent reference stack">
+  <text x="40" y="36" class="label-display" font-size="16">The reference stack</text>
+  <text x="40" y="56" font-size="11" fill="var(--color-text-muted)">Six layers. Drop one and the system runs anyway — for a while.</text>
+  <g font-family="var(--font-mono)" font-size="10">
+    <!-- row layers -->
+    <rect x="40" y="80"  width="720" height="36" fill="var(--color-accent-copper-soft)" stroke="var(--color-accent-copper)"/>
+    <text x="60" y="103" fill="var(--color-text)">EXPERIENCE  ·  chat surfaces · email · slack · embedded UI · voice</text>
+
+    <rect x="40" y="120" width="720" height="36" fill="var(--color-accent-quartz)" fill-opacity="0.35" stroke="var(--color-accent-copper)"/>
+    <text x="60" y="143" fill="var(--color-text)">ORCHESTRATION  ·  LangGraph · CrewAI · Semantic Kernel · Agents SDK</text>
+
+    <rect x="40" y="160" width="720" height="36" fill="var(--color-primary-highlight)" stroke="var(--color-primary)"/>
+    <text x="60" y="183" fill="var(--color-text)">REGISTRY + IDENTITY  ·  agent catalog · OAuth on-behalf-of · scopes · audit</text>
+
+    <rect x="40" y="200" width="350" height="100" fill="var(--color-surface-2)" stroke="var(--color-border)"/>
+    <text x="60" y="222" fill="var(--color-accent-copper)">MEMORY</text>
+    <text x="60" y="240" fill="var(--color-text)">short-term · session state</text>
+    <text x="60" y="256" fill="var(--color-text)">long-term · vector + KV</text>
+    <text x="60" y="272" fill="var(--color-text)">episodic · prior runs</text>
+    <text x="60" y="288" fill="var(--color-text)">semantic · org knowledge</text>
+
+    <rect x="410" y="200" width="350" height="100" fill="var(--color-surface-2)" stroke="var(--color-border)"/>
+    <text x="430" y="222" fill="var(--color-accent-copper)">TOOLS</text>
+    <text x="430" y="240" fill="var(--color-text)">MCP servers · function calls</text>
+    <text x="430" y="256" fill="var(--color-text)">enterprise APIs · ERP · CRM</text>
+    <text x="430" y="272" fill="var(--color-text)">browsers · files · code</text>
+    <text x="430" y="288" fill="var(--color-text)">A2A · sub-agents</text>
+
+    <rect x="40" y="304" width="720" height="36" fill="var(--color-accent-euv-soft)" stroke="var(--color-accent-euv)"/>
+    <text x="60" y="327" fill="var(--color-text)">EVALS + OBSERVABILITY  ·  traces · golden sets · regression · cost · drift · red-team</text>
+  </g>
+</svg></div>
+      <figcaption class="figure__caption"><span class="label">Figure 5.1</span><span class="text">The reference stack. Six layers, named honestly. The two thin ones — registry and evals — are where the compounding lives.</span></figcaption>
+    </figure>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="04-anatomy.html"><span class="ch-nav-link__label">← Chapter 04</span><span class="ch-nav-link__title">Anatomy of an Agent</span></a>
+      <a class="ch-nav-link" data-dir="next" href="06-memory.html"><span class="ch-nav-link__label">Chapter 06 →</span><span class="ch-nav-link__title">Memory, in Plain English</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters and the reference. Try <em>NIST</em>, <em>MCP</em>, <em>registry</em>, or <em>flywheel</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how do I run a NIST RMF Map workshop?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">Building an Agentic Enterprise</strong><br>
+      A practitioner's report on shipping agentic AI inside real organizations.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

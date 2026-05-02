@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 15 · Klarna: The Most Honest Story on the Public Record — Building an Agentic Enterprise</title>
+<meta name="description" content="Klarna's customer-service agent has been the field's most-cited deployment, the most-misread, and — read carefully — the most useful template.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="15-klarna" data-chapter-title="Klarna: The Most Honest Story on the Public Record">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-quiet-test", "title": "The Quiet Test", "subtitle": "What 'agentic' actually means, and the failure rate nobody puts on the slide"}, {"num": "02", "slug": "02-workflow-to-agent", "title": "From Workflow to Agent", "subtitle": "A SIPOC canvas, repurposed: how to translate a business process into agent wiring"}, {"num": "03", "slug": "03-five-honest-questions", "title": "The Five Honest Questions", "subtitle": "A short test that kills bad agent projects before they consume budget"}, {"num": "04", "slug": "04-anatomy", "title": "Anatomy of an Agent", "subtitle": "Six parts you cannot leave out without the system pretending to work"}, {"num": "05", "slug": "05-reference-stack", "title": "The Reference Stack", "subtitle": "Six layers, named honestly: experience, orchestration, registry, memory, tools, evals"}, {"num": "06", "slug": "06-memory", "title": "Memory, in Plain English", "subtitle": "Four kinds, four jobs, and the failure modes specific to each"}, {"num": "07", "slug": "07-tools-protocols", "title": "Tools and Protocols", "subtitle": "Function calling, MCP, A2A — what each binds to what, and the parts that aren't standardised yet"}, {"num": "08", "slug": "08-governance-first", "title": "Why Governance Comes First", "subtitle": "The work that has to exist before the agent does"}, {"num": "09", "slug": "09-mapping-what-it-does", "title": "Mapping What an Agent Actually Does", "subtitle": "Context, authority, blast radius — the artefact your Map function produces"}, {"num": "10", "slug": "10-measure-evals", "title": "Measure: Evals That Actually Catch Things", "subtitle": "Golden sets, drift, the Measure function as a weekly habit"}, {"num": "11", "slug": "11-manage-incidents", "title": "Manage: Incidents, Rollback, the Off-Switch", "subtitle": "What you do when something goes wrong, written down before something goes wrong"}, {"num": "12", "slug": "12-agent-registry", "title": "The Agent Registry", "subtitle": "The inventory that turns governance from binder into infrastructure"}, {"num": "13", "slug": "13-risks-that-bite", "title": "The Risks That Bite", "subtitle": "OWASP LLM Top 10 (2025), MITRE ATLAS, and prompt injection as the central threat"}, {"num": "14", "slug": "14-human-in-the-loop", "title": "Human-in-the-Loop, Done Honestly", "subtitle": "Where humans actually belong, and where they pretend to belong"}, {"num": "15", "slug": "15-klarna", "title": "Klarna: The Most Honest Story on the Public Record", "subtitle": "What actually happened — fire, walkback, $60M, and the layered architecture that worked"}, {"num": "16", "slug": "16-jpmorgan", "title": "JPMorgan: LLM Suite and the Compliance-First Path", "subtitle": "What 230,000 internal users teaches about the right pace in a regulated firm"}, {"num": "17", "slug": "17-mcdonalds", "title": "McDonald's: How to Pull the Plug Without Embarrassment", "subtitle": "The drive-thru AI rollback that the press read as a failure was, in fact, a textbook pilot"}, {"num": "18", "slug": "18-platform-map", "title": "The Platform Map", "subtitle": "No-code, low-code, code-first — pick the lock-in you can live with"}, {"num": "19", "slug": "19-roi-honest", "title": "ROI: The Cost Stack and the Honest Arithmetic", "subtitle": "Why most ROI claims are wrong, and the small set of variables that actually move the answer"}, {"num": "20", "slug": "20-flywheel", "title": "The Flywheel", "subtitle": "Why some agent deployments compound and most don't"}, {"num": "21", "slug": "21-thirty-sixty-ninety", "title": "A 30-60-90 Plan", "subtitle": "What a real team does in the first quarter of an agent program"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="3" fill="currentColor" /><path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" /></svg>
+      <span>Building an Agentic Enterprise<span class="brand__sub"> — a practitioner's report</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">Building an Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 15 of 21</div>
+    <div class="ch-header__num">Chapter 15</div>
+    <h1 class="ch-header__title">Klarna: The Most Honest Story on the Public Record</h1>
+    <p class="ch-header__dek">What actually happened — fire, walkback, $60M, and the layered architecture that worked</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">853<em>FTE</em></div><div class="stat__label">equivalent work the agent did by Nov 2025</div></div><div class="stat"><div class="stat__num">$60M<em>/yr</em></div><div class="stat__label">annual savings on Klarna's first earnings call as a public company</div></div><div class="stat"><div class="stat__num">5,500<em>→3,000</em></div><div class="stat__label">headcount, while doubling revenue, customer satisfaction maintained</div></div></div>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <a class="toolbar__btn" href="../agentic-enterprise.pdf" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></a>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#what-they-shipped">What they shipped</a></li><li><a href="#the-walkback">The partial walkback</a></li><li><a href="#the-full-story">The full story</a></li><li><a href="#the-template">The template, read carefully</a></li></ul></aside>
+    <article class="prose">
+      
+<p class="lede">Klarna's agent is the most-discussed enterprise AI deployment of the last two years and the most consistently misread. The headline arc — fire, hire back, walk back — is wrong. The actual arc is more interesting and more useful as a template.</p>
+
+<h2 id="what-they-shipped">What they shipped</h2>
+
+<p>In February 2024, Klarna deployed an OpenAI-powered AI assistant for customer service. <a href="https://www.klarna.com/international/press/klarna-ai-assistant-handles-two-thirds-of-customer-service-chats-in-its-first-month/">Within its first month</a>, the assistant handled 2.3 million conversations — two-thirds of all customer service chats — doing the equivalent work of 700 full-time agents across 35 languages in 23 markets. Resolution time dropped from 11 minutes to under two. Repeat inquiries fell 25%. Customer satisfaction was on par with human agents. The company projected a $40M profit improvement for 2024.</p>
+
+<p>The press received it as a victory and a warning at the same time. The implicit story — "Klarna replaced 700 humans with one AI" — became a fixture of every subsequent vendor pitch and every think-piece on AI displacement. It was a useful headline. It was also incomplete in ways that mattered.</p>
+
+<h2 id="the-walkback">The partial walkback</h2>
+
+<p>In May 2025, CEO Sebastian Siemiatkowski <a href="https://fortune.com/2025/05/09/klarna-ai-humans-return-on-investment/">told Bloomberg</a> that "cost was a too predominant evaluation factor" and that the AI-first strategy "resulted in lower quality." Klarna announced it was hiring human agents again, describing an "Uber-type" flexible remote model. The press received this as a reversal. The headline became "Klarna fires its AI and rehires humans" — a tidy narrative arc with a moral about the limits of automation.</p>
+
+<p>That narrative was wrong. It read the May 2025 Bloomberg comment as a retreat when it was a calibration. Klarna did not turn off the agent. It added a small human tier for emotional and complex interactions, while keeping the agent doing the work it had always done well.</p>
+
+<h2 id="the-full-story">The full story</h2>
+
+<p>By November 2025, on Klarna's first earnings call as a public company, the picture became visible. The AI assistant was doing the work of 853 full-time agents — up from 700 — saving roughly $60M annually. Klarna had cut overall headcount from about 5,500 to under 3,000. Revenue had doubled. Customer satisfaction was still on par with humans. <a href="https://signal-memo.com/memo-klarna-fired-700-agents-then-hired-them-back-then-saved-60m-anyway-what-actually-happened/">A careful reading of the public statements</a> shows the architecture was right; the operational design — full replacement, no human tier — was the part that needed adjustment.</p>
+
+<p>So what was the "rehire"? The added human tier was small, scoped to complex and emotionally charged interactions, and structured as flexible/remote work rather than a return to the prior contact-centre model. The total economic impact compared to the pre-agent baseline remained dramatically positive. The story is not "AI is not ready." The story is "full replacement is not the right operational design, even when the agent works."</p>
+
+<div class="aside" data-tone="copper">
+  <span class="aside__label">A practitioner's note</span>
+  <p>The single most expensive decision in the Klarna story was not technical. It was the decision to deploy as a full replacement rather than a layered system. The technology made the decision tempting; the calibration cost was the price of taking the temptation. Read this carefully: layered AI + human is not a compromise. It is the architecture that compounds.</p>
+</div>
+
+<h2 id="the-template">The template, read carefully</h2>
+
+<p>What the careful reader takes from Klarna is not "AI replaces humans" or "AI fails." It is something more useful: a layered design works, and the layers belong in this order. The agent handles the high-volume, repeatable, well-scoped majority of interactions. A small human tier handles the emotionally complex minority and the cases the agent's confidence flags as low. The agent's eval suite ingests the human tier's resolutions as new golden-set candidates. The flywheel runs.</p>
+
+<p>The metrics worth borrowing from Klarna: <strong>containment rate</strong> (percent fully resolved by the agent without escalation, Klarna at roughly two-thirds), <strong>resolution time</strong> (Klarna's 82% reduction is the right order of magnitude for a successful CX deployment), <strong>repeat-inquiry rate</strong> (the agent should not be making the customer come back), and <strong>customer satisfaction parity</strong> (a non-negotiable floor — if the agent's CSAT is materially lower than human's, the architecture is wrong, not the operational tuning).</p>
+
+<p>The numbers worth treating with caution: the per-agent FTE-equivalent figure is Klarna's framing of throughput, not a portable productivity metric. Other companies' agents will produce different numbers because their interactions, languages, and authority scopes differ. The portable lessons are architectural, not numerical.</p>
+
+<p>The next chapter is the cautionary case — JPMorgan — which is also a success story, told as a lesson in patience.</p>
+
+      <figure class="figure figure--wide reveal" id="figure">
+      <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="Klarna deployment timeline: Feb 2024 deploy, May 2025 calibration, Nov 2025 reveal">
+  <text x="40" y="36" class="label-display" font-size="16">Klarna's actual arc</text>
+  <text x="40" y="56" font-size="11" fill="var(--color-text-muted)">Deploy → calibration → public reveal. The architecture remained throughout; the operational design adjusted at one point.</text>
+  <!-- timeline axis -->
+  <line x1="60" y1="180" x2="740" y2="180" stroke="var(--color-primary)" stroke-width="1.2"/>
+  <g font-family="var(--font-mono)" font-size="10" fill="var(--color-text)">
+    <!-- Feb 2024 -->
+    <circle cx="140" cy="180" r="6" fill="var(--color-primary)"/>
+    <text x="140" y="160" text-anchor="middle">Feb 2024</text>
+    <text x="140" y="206" text-anchor="middle">deploy</text>
+    <rect x="60" y="220" width="160" height="100" rx="3" fill="var(--color-accent-copper-soft)" stroke="var(--color-accent-copper)" stroke-width="1"/>
+    <text x="140" y="240" text-anchor="middle" font-size="11">700 FTE-equiv</text>
+    <text x="140" y="256" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">2.3M chats / month</text>
+    <text x="140" y="270" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">35 languages · 23 markets</text>
+    <text x="140" y="286" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">11 → &lt;2 min resolution</text>
+    <text x="140" y="302" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">$40M projected profit lift</text>
+
+    <!-- May 2025 -->
+    <circle cx="400" cy="180" r="6" fill="var(--color-accent-copper)"/>
+    <text x="400" y="160" text-anchor="middle">May 2025</text>
+    <text x="400" y="206" text-anchor="middle">calibration</text>
+    <rect x="320" y="220" width="160" height="100" rx="3" fill="var(--color-accent-quartz)" fill-opacity="0.35" stroke="var(--color-accent-copper)" stroke-width="1"/>
+    <text x="400" y="240" text-anchor="middle" font-size="11">add human tier</text>
+    <text x="400" y="256" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">"cost weighed too heavily"</text>
+    <text x="400" y="270" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">flexible / remote model</text>
+    <text x="400" y="286" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">scoped to complex / empathic</text>
+    <text x="400" y="302" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">agent retained throughout</text>
+
+    <!-- Nov 2025 -->
+    <circle cx="660" cy="180" r="6" fill="var(--color-accent-euv)"/>
+    <text x="660" y="160" text-anchor="middle">Nov 2025</text>
+    <text x="660" y="206" text-anchor="middle">public reveal</text>
+    <rect x="580" y="220" width="160" height="100" rx="3" fill="var(--color-primary-highlight)" stroke="var(--color-primary)" stroke-width="1"/>
+    <text x="660" y="240" text-anchor="middle" font-size="11">853 FTE · $60M/yr</text>
+    <text x="660" y="256" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">first earnings call</text>
+    <text x="660" y="270" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">5,500 → &lt;3,000 headcount</text>
+    <text x="660" y="286" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">revenue doubled</text>
+    <text x="660" y="302" text-anchor="middle" font-size="9" fill="var(--color-text-muted)">CSAT on par with humans</text>
+  </g>
+  <text x="400" y="92" text-anchor="middle" font-size="10" fill="var(--color-text-muted)">Press read May 2025 as a reversal. Earnings revealed it was a calibration on a working architecture.</text>
+</svg></div>
+      <figcaption class="figure__caption"><span class="label">Figure 15.1</span><span class="text">Klarna timeline: deploy (Feb 2024), public walkback (May 2025), public earnings reveal (Nov 2025). The architecture remained throughout; the operational design adjusted at one point.</span></figcaption>
+    </figure>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="14-human-in-the-loop.html"><span class="ch-nav-link__label">← Chapter 14</span><span class="ch-nav-link__title">Human-in-the-Loop, Done Honestly</span></a>
+      <a class="ch-nav-link" data-dir="next" href="16-jpmorgan.html"><span class="ch-nav-link__label">Chapter 16 →</span><span class="ch-nav-link__title">JPMorgan: LLM Suite and the Compliance-First Path</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters and the reference. Try <em>NIST</em>, <em>MCP</em>, <em>registry</em>, or <em>flywheel</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how do I run a NIST RMF Map workshop?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">Building an Agentic Enterprise</strong><br>
+      A practitioner's report on shipping agentic AI inside real organizations.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>
