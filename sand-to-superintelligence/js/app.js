@@ -482,6 +482,70 @@
       el.innerHTML = '<span class="tutor__typing"><span></span><span></span><span></span></span>';
     };
 
+    // Pollinations occasionally injects ad/promo content into responses
+    // ("Support Pollinations.AI", "\u{1F33C} Ad \u{1F33C}", etc.) and the gpt-oss-20b
+    // model sometimes leaks reasoning-style preambles when reasoning_effort
+    // isn't honoured. Sanitize the reply before showing it to the user.
+    const AD_MARKERS = [
+      /---\s*\n+\**\s*Support Pollinations[\s\S]*$/i,
+      /\**\s*Support Pollinations\.AI[\s\S]*$/i,
+      /\u{1F33C}\s*\**\s*Ad\s*\**\s*\u{1F33C}[\s\S]*$/iu,
+      /\[Sponsored[\s\S]*$/i,
+    ];
+    const REASONING_PREFIXES = [
+      // "They said X. So correct. Missing: ..." — raw scratchpad voice.
+      // Strip up to a few sentences of self-talk before real content begins.
+      /^(They|The user|User|We|I)\s+(said|wrote|answered|responded|need|should|must)[^.]*\.\s+/i,
+      /^So\s+(I|we|the user)\s+(should|need|must|will)[^.]*\.\s+/i,
+      /^So\s+(correct|right|wrong)[^.]*\.\s+/i,
+      /^Got it[,.]\s+/i,
+      /^Let me\s+(think|see|consider)[^.]*\.\s+/i,
+      /^Missing:\s*[^.]*\.\s+/i,
+    ];
+    // Heuristic: a reply is "reasoning-trace" if it talks about the user in
+    // third person or grades itself ("so correct", "missing: ..."). These are
+    // fundamentally unfit for direct display — reject entirely so we retry.
+    function looksLikeReasoningTrace(s) {
+      const t = s.toLowerCase();
+      // Phrases that only appear in scratchpad/grading notes, never in a
+      // tutor's direct reply to the student.
+      const tells = [
+        /\bthey said\b/,
+        /\bthe user (said|wrote|answered)/,
+        /\bso (correct|right|wrong)\b/,
+        /\bmissing:\s/,
+        /\bso i should\b/,
+        /\bwe should (mention|note|add)\b/,
+      ];
+      let hits = 0;
+      for (const re of tells) if (re.test(t)) hits++;
+      // Two or more tells = almost certainly a leaked reasoning trace.
+      return hits >= 2;
+    }
+    function sanitizeTutorReply(raw) {
+      let s = String(raw || '');
+      // Strip Pollinations ad blocks anywhere they appear (usually trailing).
+      for (const re of AD_MARKERS) s = s.replace(re, '');
+      // Strip raw reasoning-trace prefixes — iterate so consecutive
+      // self-talk sentences ("They said X. So I should explain. Missing: Y.")
+      // all get stripped, not just the first one.
+      let changed = true, guard = 0;
+      while (changed && guard < 6) {
+        changed = false; guard++;
+        for (const re of REASONING_PREFIXES) {
+          const next = s.replace(re, '');
+          if (next !== s) { s = next; changed = true; }
+        }
+        s = s.replace(/^\s+/, '');
+      }
+      // Collapse runs of blank lines and stray hr lines.
+      s = s.replace(/\n{3,}/g, '\n\n').replace(/^\s*---+\s*$/gm, '').trim();
+      // If after sanitizing the reply still reads like a reasoning trace,
+      // discard it — caller will treat as empty and trigger a retry.
+      if (s && looksLikeReasoningTrace(s)) return '';
+      return s;
+    }
+
     const renderError = (el, question, attemptIdx, kind) => {
       const base = document.body.getAttribute('data-base') || '';
       const next = ENDPOINTS[(attemptIdx + 1) % ENDPOINTS.length];
@@ -565,7 +629,15 @@
         const res = await fetch(endpoint.url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model: endpoint.model, messages, referrer: 'sand-to-superintelligence' }),
+          body: JSON.stringify({
+            model: endpoint.model,
+            messages,
+            // Pollinations only exposes gpt-oss-20b (a reasoning model) on the
+            // free tier. 'low' keeps content populated instead of going into
+            // long reasoning_content traces that leak scratchpad voice.
+            reasoning_effort: 'low',
+            referrer: 'sand-to-superintelligence',
+          }),
           signal: controller.signal,
         });
         clearTimeout(timeoutId);
@@ -576,17 +648,15 @@
         if (data && data.choices && data.choices[0]) {
           const choice = data.choices[0];
           finishReason = choice.finish_reason || '';
-          if (choice.message) {
-            // Some Pollinations responses route output to reasoning_content
-            // and leave content empty. Fall back to it so the user sees text.
-            answer = choice.message.content || choice.message.reasoning_content || '';
-          }
+          // Only read message.content. NEVER fall back to reasoning_content —
+          // it's third-person scratchpad ("they said\u2026 so correct") not a reply.
+          if (choice.message) answer = choice.message.content || '';
         } else if (typeof data === 'string') {
           answer = data;
         } else if (data && (data.reply || data.answer)) {
           answer = data.reply || data.answer;
         }
-        answer = (answer || '').trim();
+        answer = sanitizeTutorReply(answer);
         if (!answer) {
           // Empty content — retry silently up to 2 times before surfacing.
           if (attemptIdx < ENDPOINTS.length - 1) {
@@ -740,7 +810,12 @@
         const res = await fetch(endpoint.url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model: endpoint.model, messages, referrer: 'sand-to-superintelligence' }),
+          body: JSON.stringify({
+            model: endpoint.model,
+            messages,
+            reasoning_effort: 'low',
+            referrer: 'sand-to-superintelligence',
+          }),
           signal: controller.signal,
         });
         clearTimeout(timeoutId);
@@ -751,15 +826,13 @@
         if (data && data.choices && data.choices[0]) {
           const choice = data.choices[0];
           finishReason = choice.finish_reason || '';
-          if (choice.message) {
-            answer = choice.message.content || choice.message.reasoning_content || '';
-          }
+          if (choice.message) answer = choice.message.content || '';
         } else if (typeof data === 'string') {
           answer = data;
         } else if (data && (data.reply || data.answer)) {
           answer = data.reply || data.answer;
         }
-        answer = (answer || '').trim();
+        answer = sanitizeTutorReply(answer);
         if (!answer) {
           if (attemptIdx < ENDPOINTS.length - 1) {
             await new Promise(r => setTimeout(r, 600 * (attemptIdx + 1)));
@@ -1026,7 +1099,12 @@
         'they said or missed. The verdict line must be exactly that format \u2014 it is parsed ' +
         'by the UI to offer them a save action. Do not give a verdict before they ask.\n' +
         '\u2022 Format: open each question with **Q\u2099 \u00b7 factual**, **Q\u2099 \u00b7 numerical**, etc. ' +
-        'Bold the prompt only. Keep prose tight. No markdown headers (#).';
+        'Bold the prompt only. Keep prose tight. No markdown headers (#).\n' +
+        '\u2022 VOICE: speak directly to the reader in second person ("you"). NEVER write ' +
+        'in third person about them ("they said\u2026", "the user wrote\u2026"). NEVER write ' +
+        'self-talk or grading notes ("so correct", "missing: \u2026", "so I should\u2026"). ' +
+        'These read as raw scratchpad and break the experience. If you catch yourself, ' +
+        'rewrite as a direct reply to the reader.';
       tutor.open();
       tutor.setQuizMode(
         QUIZ_PROMPT,
