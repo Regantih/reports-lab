@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 01 · The Shift — The Agentic Enterprise</title>
+<meta name="description" content="From copilots to colleagues — what changes when software starts to act">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="01-the-shift" data-chapter-title="The Shift" data-base="../">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-shift", "title": "The Shift", "subtitle": "From copilots to colleagues \u2014 what changes when software starts to act"}, {"num": "02", "slug": "02-anatomy-of-an-agent", "title": "Anatomy of an Agent", "subtitle": "Plan, act, observe, remember \u2014 the four moving parts"}, {"num": "03", "slug": "03-spectrum-of-autonomy", "title": "The Spectrum of Autonomy", "subtitle": "Five rungs from automation to autonomy, and where most enterprises actually live"}, {"num": "04", "slug": "04-from-models-to-systems", "title": "From Models to Systems", "subtitle": "Why agentic AI is a systems problem, not a model problem"}, {"num": "05", "slug": "05-tool-use-and-grounding", "title": "Tool Use and Grounding", "subtitle": "How an agent reaches into the world \u2014 APIs, retrieval, and the limits of context"}, {"num": "06", "slug": "06-multi-agent-and-swarm", "title": "Multi-Agent and Swarm", "subtitle": "When one mind isn't enough \u2014 coordination, delegation, and emergent failure modes"}, {"num": "07", "slug": "07-the-economics", "title": "The Economics of an Agent", "subtitle": "Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI"}, {"num": "08", "slug": "08-failure-modes", "title": "Failure Modes", "subtitle": "Hallucinated calls, prompt injection, runaway loops, and the cost of being wrong at scale"}, {"num": "09", "slug": "09-threat-landscape", "title": "The Threat Landscape", "subtitle": "OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do"}, {"num": "10", "slug": "10-regulatory-perimeter", "title": "The Regulatory Perimeter", "subtitle": "EU AI Act, US executive orders, sectoral rules \u2014 what bites and what doesn't"}, {"num": "11", "slug": "11-frameworks-landscape", "title": "The Frameworks Landscape", "subtitle": "NIST, ISO, OECD, OWASP, the analyst maturity models \u2014 ranked by what actually moves the needle"}, {"num": "12", "slug": "12-the-four-pillars", "title": "The Four Pillars", "subtitle": "A readiness model: governance, orchestration, use case identification, integration"}, {"num": "13", "slug": "13-governance-charter", "title": "The Governance Charter", "subtitle": "Pillar I \u2014 who owns the agents, who answers when they fail"}, {"num": "14", "slug": "14-policy-stack", "title": "The Policy Stack", "subtitle": "Acceptable use, model risk, data classification, third-party AI, incident response"}, {"num": "15", "slug": "15-nist-rmf-walk", "title": "Walking the NIST AI RMF", "subtitle": "Govern, Map, Measure, Manage \u2014 applied to a real agent program"}, {"num": "16", "slug": "16-iso-42001-and-eu", "title": "ISO/IEC 42001 and the EU AI Act", "subtitle": "Certification, conformity assessment, and the audit trail of an autonomous system"}, {"num": "17", "slug": "17-orchestration-stack", "title": "The Orchestration Stack", "subtitle": "Pillar II \u2014 frameworks, runtimes, and the plumbing of multi-step work"}, {"num": "18", "slug": "18-memory-and-state", "title": "Memory and State", "subtitle": "Short-term, long-term, episodic \u2014 what an agent needs to remember to be useful"}, {"num": "19", "slug": "19-evals-and-observability", "title": "Evals and Observability", "subtitle": "Traces, replays, scorecards \u2014 the dashboards that keep agents honest"}, {"num": "20", "slug": "20-guardrails-and-policy", "title": "Guardrails and Policy Engines", "subtitle": "From input filters to runtime policy \u2014 defense in depth for autonomous systems"}, {"num": "21", "slug": "21-use-case-portfolio", "title": "The Use Case Portfolio", "subtitle": "Pillar III \u2014 picking the right work for an agent to do"}, {"num": "22", "slug": "22-value-and-feasibility", "title": "Value and Feasibility", "subtitle": "Scoring use cases on a 2\u00d72 \u2014 and the trap of doing the easy ones first"}, {"num": "23", "slug": "23-human-in-the-loop", "title": "Human in the Loop", "subtitle": "Where supervision belongs, where it doesn't, and how to design the handoff"}, {"num": "24", "slug": "24-pilot-to-production", "title": "From Pilot to Production", "subtitle": "The valley of death \u2014 and how a use case earns the right to scale"}, {"num": "25", "slug": "25-integration-spine", "title": "The Integration Spine", "subtitle": "Pillar IV \u2014 APIs, identity, data, and the enterprise systems an agent must touch"}, {"num": "26", "slug": "26-identity-for-agents", "title": "Identity for Agents", "subtitle": "Service accounts, scoped tokens, on-behalf-of \u2014 auth for non-human actors"}, {"num": "27", "slug": "27-data-readiness", "title": "Data Readiness", "subtitle": "Lineage, freshness, classification, and why your data lake is not a vector store"}, {"num": "28", "slug": "28-mcp-a2a-protocols", "title": "MCP, A2A, and the Interop Layer", "subtitle": "Model Context Protocol, Agent2Agent, and the protocols that let agents share work"}, {"num": "29", "slug": "29-the-maturity-model", "title": "The Maturity Model", "subtitle": "Five levels \u2014 Initial, Repeatable, Defined, Managed, Optimized \u2014 across all four pillars"}, {"num": "30", "slug": "30-the-scorecard-method", "title": "The Scorecard Method", "subtitle": "How to assess your organization in a half-day, with evidence"}, {"num": "\u2605", "slug": "scorecard", "title": "Interactive Scorecard", "subtitle": "Score yourself across four pillars \u00b7 five levels \u00b7 40 questions \u00b7 share your results"}, {"num": "31", "slug": "31-reading-the-radar", "title": "Reading the Radar", "subtitle": "What a four-pillar profile tells you about where to invest first"}, {"num": "32", "slug": "32-the-thirty-sixty-ninety", "title": "The 30/60/90", "subtitle": "What an enterprise can credibly accomplish in the first ninety days"}, {"num": "33", "slug": "33-the-twelve-month-roadmap", "title": "The Twelve-Month Roadmap", "subtitle": "From scattered pilots to a governed agent platform \u2014 by quarter"}, {"num": "34", "slug": "34-the-operating-model", "title": "The Operating Model", "subtitle": "Center of excellence, hub-and-spoke, federated \u2014 pick one and live with it"}, {"num": "35", "slug": "35-roles-and-careers", "title": "Roles and Careers", "subtitle": "AI product managers, agent engineers, evals leads \u2014 the jobs the org didn't have last year"}, {"num": "36", "slug": "36-procurement-and-vendors", "title": "Procurement and Vendors", "subtitle": "Buy, build, or rent \u2014 and the contract clauses you'll wish you had insisted on"}, {"num": "37", "slug": "37-change-management", "title": "Change Management", "subtitle": "How to roll agents into a workforce without losing the workforce"}, {"num": "38", "slug": "38-economics-at-scale", "title": "Economics at Scale", "subtitle": "Unit costs, gross margin, and the second-order effects of letting agents run your processes"}, {"num": "39", "slug": "39-the-failure-postmortem", "title": "The Failure Postmortem", "subtitle": "Three case studies of agentic deployments that broke \u2014 and what they teach"}, {"num": "40", "slug": "40-the-next-decade", "title": "The Next Decade", "subtitle": "What ready looks like in 2030, and how to recognize it from where you stand today"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>The Agentic Enterprise<span class="brand__sub"> — a readiness field guide</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/scorecard.html">Scorecard</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">The Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 01</div>
+    <div class="ch-header__num">Chapter 01</div>
+    <h1 class="ch-header__title">The Shift</h1>
+    <p class="ch-header__dek">From copilots to colleagues — what changes when software starts to act</p>
+    
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-old-contract">The Old Contract</a></li><li><a href="#what-actually-changes">What Actually Changes</a></li><li><a href="#early-systems-what-we-learned">Early Systems, What We Learned</a></li><li><a href="#the-enterprise-stakes">The Enterprise Stakes</a></li><li><a href="#a-map-of-what-follows">A Map of What Follows</a></li></ul></aside>
+    <article class="prose">
+      <p class="lede">Something changed in the relationship between software and the people who use it. For most of computing's history, software was a remarkably patient thing: it waited. You typed, it responded; you clicked, it moved. Even the first generation of large-language-model products — the chatbots, the copilots, the completion engines — preserved this arrangement. The human was still the one deciding every step. What is different about an agent is precisely that: the model now decides the next step. That single reversal carries more operational, ethical, and economic weight than almost any other shift in enterprise technology since the move to the cloud.</p>
+
+<figure class="figure figure--wide reveal">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 320" role="img" aria-label="From copilots to colleagues">
+  <text x="60" y="36" font-family="var(--font-display)" font-size="18" fill="var(--color-text)">From copilot to colleague</text>
+  <text x="60" y="56" font-family="var(--font-mono)" font-size="11" fill="var(--color-text-muted)">The same model, framed two ways. The shift is in who decides the next step.</text>
+  <g>
+    <rect x="60" y="110" width="320" height="160" rx="6" fill="var(--color-accent-copper-soft)" stroke="var(--color-accent-copper)" stroke-width="1.2"/>
+    <text x="220" y="138" text-anchor="middle" font-family="var(--font-display)" font-size="15">Copilot</text>
+    <text x="220" y="156" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--color-text-muted)">human picks every step</text>
+    <g font-family="var(--font-mono)" font-size="10" fill="var(--color-text)">
+      <text x="80" y="190">→ user types prompt</text>
+      <text x="80" y="210">→ model drafts a reply</text>
+      <text x="80" y="230">→ user reviews</text>
+      <text x="80" y="250">→ user accepts or edits</text>
+    </g>
+  </g>
+  <g>
+    <rect x="420" y="110" width="320" height="160" rx="6" fill="var(--color-primary-highlight)" stroke="var(--color-primary)" stroke-width="1.4"/>
+    <text x="580" y="138" text-anchor="middle" font-family="var(--font-display)" font-size="15">Agent</text>
+    <text x="580" y="156" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--color-text-muted)">model picks the next step</text>
+    <g font-family="var(--font-mono)" font-size="10" fill="var(--color-text)">
+      <text x="440" y="190">→ user states the goal</text>
+      <text x="440" y="210">→ agent decomposes</text>
+      <text x="440" y="230">→ agent calls tools</text>
+      <text x="440" y="250">→ agent reports back</text>
+    </g>
+  </g>
+  <text x="400" y="295" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--color-text-muted)">The work doesn’t change. The contract does.</text>
+</svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 1.1</span><span class="text">Copilot to agent — same model, different contract.</span></figcaption>
+</figure>
+
+<h2 id="the-old-contract">The Old Contract</h2>
+<p>The history of enterprise software is, at its core, a history of waiting. Mainframes waited for batch jobs. Client-server applications waited for keystrokes. Even web APIs — for all their promise of connectivity — waited politely for a caller. This passivity was not a bug. It was a carefully maintained guarantee: the human remained the proximate cause of every action taken in the system. When something went wrong, the trail of responsibility led, always, back to a person at a keyboard.</p>
+<p>The large language model disrupted that contract at the linguistic layer first. Suddenly, the system could <em>draft</em> — it could produce text that looked authoritative, that could slip past a cursory review and land in a sent folder. But even there, the human had to press send. The copilot was aptly named: it sat in the right seat, could handle the controls when asked, and handed them back. The pilot was still responsible.</p>
+<p>Agents change the seating arrangement entirely. When you brief an agent on a goal — <em>close this support ticket by finding the relevant documentation, drafting a reply, and updating the CRM record</em> — you are not typing a prompt. You are issuing a delegation. The agent will read, search, draft, call tools, and write records. It will do all of this without asking permission at each step. You are, for the duration of that task, more manager than operator.</p>
+
+<h2 id="what-actually-changes">What Actually Changes</h2>
+<p>The practical differences between a copilot and an agent are not merely philosophical. They are architectural and operational. A copilot interaction is <em>stateless</em> in the meaningful sense: each prompt is self-contained, the blast radius of any single error is bounded, and the human review step is the natural firewall. An agent interaction is, by contrast, stateful, extended, and consequential. Actions accumulate. A mistake in step two doesn't just produce a bad paragraph — it sends the agent down a wrong path that may take dozens of tool calls to course-correct, or may never be corrected at all if no one is watching.</p>
+<p>This is not a hypothetical concern. When <a href="https://www.anthropic.com/news/3-5-models-and-computer-use">Anthropic introduced computer use</a> — the capability that allows Claude to navigate desktop applications, click buttons, and fill forms — it published explicit warnings about the irreversibility of actions in certain environments. When <a href="https://openai.com/index/introducing-operator/">OpenAI introduced Operator</a>, its web-browsing agent, it built in confirmation checkpoints for actions deemed consequential. Both companies recognized, and built around, the same principle: agency introduces irreversibility, and irreversibility demands governance.</p>
+<p>The implications run deeper than safety. They run through accountability (who answers when the agent makes a costly mistake?), through auditability (can you reconstruct what the agent decided and why?), and through economics (what does an hour of agentic work actually cost, and what does it return?). Each of these questions has a familiar shape — enterprises have answered versions of them for automation systems before — but the specific texture of agentic AI makes them harder. The agent reasons in natural language, which is harder to inspect than a flowchart. It uses tools dynamically, which is harder to audit than a fixed API call sequence. It can be manipulated through the content it reads, a vulnerability that no previous class of software shared.</p>
+
+<h2 id="early-systems-what-we-learned">Early Systems, What We Learned</h2>
+<p>The first production agentic systems appeared not in enterprise IT but in software engineering. <em>Devin</em>, released by Cognition AI in early 2024, could take a GitHub issue and close it — reading code, writing tests, running the test suite, committing changes. <em>OpenHands</em> (formerly OpenDevin), the open-source equivalent, followed weeks later. Both demonstrated something important: agents could navigate genuinely complex, multi-step technical workflows. They also demonstrated something humbling: they failed in ways that experienced engineers found surprising and non-obvious. They wrote code that passed tests but broke production. They made confident assumptions about environment state that turned out to be wrong. They sometimes looped, burning API credits and time on circular reasoning.</p>
+<p>Claude Code, Anthropic's terminal-native coding agent, and GitHub Copilot Workspace took a more conservative approach: tighter scope, explicit human checkpoints, lower autonomy budgets. The lesson from the first wave was that autonomy is not binary, and that matching the autonomy level to the task's risk profile is more valuable than maximizing autonomy for its own sake. By 2025, enterprise platforms had absorbed this lesson. Salesforce Agentforce and ServiceNow AI Agent Fabric both ship with explicit autonomy controls, audit logging, and human-override mechanisms — engineering choices that reflect operational hard lessons, not marketing preferences.</p>
+
+<h2 id="the-enterprise-stakes">The Enterprise Stakes</h2>
+<p>Why does any of this matter to a large organization? Because the value proposition of agentic AI — the thing that makes it genuinely transformative rather than another productivity increment — is precisely its ability to operate at scale, continuously, across systems, without constant human shepherding. A copilot that helps a customer service agent write better replies is valuable, but its value is proportional to the number of agents who use it and the hours they spend with it. An agent that handles the routine tier-one support queue end-to-end — reading tickets, looking up account history, drafting resolutions, escalating edge cases — is valuable proportional to the volume of work, which may be orders of magnitude larger.</p>
+<p>That is also why the stakes are higher. Scale amplifies errors as readily as it amplifies value. An agent with a misconfigured policy, or a prompt-injection vulnerability in the documents it reads, or an overly permissive set of tool access rights, does not make one mistake. It makes that mistake ten thousand times before anyone notices.</p>
+<p>The organizations that will extract durable value from agentic AI are not necessarily those with the most advanced models. They are those with the governance structures, the integration plumbing, the evaluation frameworks, and the cultural readiness to deploy agents at scale with confidence. That is what this report is about.</p>
+
+<blockquote>
+<p>"The model is the least interesting part of the problem. What is hard — what has always been hard — is the surrounding system: the data, the integrations, the policies, the oversight. Agents make that problem bigger and more urgent, not smaller."</p>
+</blockquote>
+
+<h2 id="a-map-of-what-follows">A Map of What Follows</h2>
+<p>Part I of this report builds the conceptual and threat-model foundation. It answers what an agent is, how autonomy should be classified, what the economics look like, how it fails, and what legal and regulatory perimeter it operates inside. Part II turns to the four pillars of readiness: governance, orchestration, use case identification, and integration. Part III offers the operational instruments — the scorecard, the roadmap, the operating model — that turn understanding into action.</p>
+<p>The audience is a CIO, a CISO, a chief data officer, or a senior technology leader who has moved past asking <em>what is this?</em> and arrived at <em>how do we do this responsibly, at scale, in a way we can defend to regulators and the board?</em> The answer is not simple. But it is knowable. And the enterprises that know it first will hold an advantage that compounds.</p>
+
+<aside class="aside" data-tone="copper">
+<div class="aside__label">Operator's note</div>
+<p>When briefing a board or executive committee on agentic AI, resist the temptation to start with the technology. Start with the contract change: the organization is moving from software that waits to software that acts. That single sentence captures the governance challenge better than any technical diagram, and it prompts the right questions about accountability, audit, and risk appetite.</p>
+</aside>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="../index.html"><span class="ch-nav-link__label">← Cover</span><span class="ch-nav-link__title">Begin the journey</span></a>
+      <a class="ch-nav-link" data-dir="next" href="02-anatomy-of-an-agent.html"><span class="ch-nav-link__label">Chapter 02 →</span><span class="ch-nav-link__title">Anatomy of an Agent</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters, the glossary, and the bibliography. Try <em>NIST</em>, <em>orchestration</em>, <em>guardrails</em>, or <em>EU AI Act</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does the NIST AI RMF apply to agentic AI?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">The Agentic Enterprise</strong><br>
+      A long-form readiness field guide for agentic AI in the enterprise.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

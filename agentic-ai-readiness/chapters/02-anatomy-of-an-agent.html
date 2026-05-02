@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 02 · Anatomy of an Agent — The Agentic Enterprise</title>
+<meta name="description" content="Plan, act, observe, remember — the four moving parts">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="02-anatomy-of-an-agent" data-chapter-title="Anatomy of an Agent" data-base="../">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-shift", "title": "The Shift", "subtitle": "From copilots to colleagues \u2014 what changes when software starts to act"}, {"num": "02", "slug": "02-anatomy-of-an-agent", "title": "Anatomy of an Agent", "subtitle": "Plan, act, observe, remember \u2014 the four moving parts"}, {"num": "03", "slug": "03-spectrum-of-autonomy", "title": "The Spectrum of Autonomy", "subtitle": "Five rungs from automation to autonomy, and where most enterprises actually live"}, {"num": "04", "slug": "04-from-models-to-systems", "title": "From Models to Systems", "subtitle": "Why agentic AI is a systems problem, not a model problem"}, {"num": "05", "slug": "05-tool-use-and-grounding", "title": "Tool Use and Grounding", "subtitle": "How an agent reaches into the world \u2014 APIs, retrieval, and the limits of context"}, {"num": "06", "slug": "06-multi-agent-and-swarm", "title": "Multi-Agent and Swarm", "subtitle": "When one mind isn't enough \u2014 coordination, delegation, and emergent failure modes"}, {"num": "07", "slug": "07-the-economics", "title": "The Economics of an Agent", "subtitle": "Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI"}, {"num": "08", "slug": "08-failure-modes", "title": "Failure Modes", "subtitle": "Hallucinated calls, prompt injection, runaway loops, and the cost of being wrong at scale"}, {"num": "09", "slug": "09-threat-landscape", "title": "The Threat Landscape", "subtitle": "OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do"}, {"num": "10", "slug": "10-regulatory-perimeter", "title": "The Regulatory Perimeter", "subtitle": "EU AI Act, US executive orders, sectoral rules \u2014 what bites and what doesn't"}, {"num": "11", "slug": "11-frameworks-landscape", "title": "The Frameworks Landscape", "subtitle": "NIST, ISO, OECD, OWASP, the analyst maturity models \u2014 ranked by what actually moves the needle"}, {"num": "12", "slug": "12-the-four-pillars", "title": "The Four Pillars", "subtitle": "A readiness model: governance, orchestration, use case identification, integration"}, {"num": "13", "slug": "13-governance-charter", "title": "The Governance Charter", "subtitle": "Pillar I \u2014 who owns the agents, who answers when they fail"}, {"num": "14", "slug": "14-policy-stack", "title": "The Policy Stack", "subtitle": "Acceptable use, model risk, data classification, third-party AI, incident response"}, {"num": "15", "slug": "15-nist-rmf-walk", "title": "Walking the NIST AI RMF", "subtitle": "Govern, Map, Measure, Manage \u2014 applied to a real agent program"}, {"num": "16", "slug": "16-iso-42001-and-eu", "title": "ISO/IEC 42001 and the EU AI Act", "subtitle": "Certification, conformity assessment, and the audit trail of an autonomous system"}, {"num": "17", "slug": "17-orchestration-stack", "title": "The Orchestration Stack", "subtitle": "Pillar II \u2014 frameworks, runtimes, and the plumbing of multi-step work"}, {"num": "18", "slug": "18-memory-and-state", "title": "Memory and State", "subtitle": "Short-term, long-term, episodic \u2014 what an agent needs to remember to be useful"}, {"num": "19", "slug": "19-evals-and-observability", "title": "Evals and Observability", "subtitle": "Traces, replays, scorecards \u2014 the dashboards that keep agents honest"}, {"num": "20", "slug": "20-guardrails-and-policy", "title": "Guardrails and Policy Engines", "subtitle": "From input filters to runtime policy \u2014 defense in depth for autonomous systems"}, {"num": "21", "slug": "21-use-case-portfolio", "title": "The Use Case Portfolio", "subtitle": "Pillar III \u2014 picking the right work for an agent to do"}, {"num": "22", "slug": "22-value-and-feasibility", "title": "Value and Feasibility", "subtitle": "Scoring use cases on a 2\u00d72 \u2014 and the trap of doing the easy ones first"}, {"num": "23", "slug": "23-human-in-the-loop", "title": "Human in the Loop", "subtitle": "Where supervision belongs, where it doesn't, and how to design the handoff"}, {"num": "24", "slug": "24-pilot-to-production", "title": "From Pilot to Production", "subtitle": "The valley of death \u2014 and how a use case earns the right to scale"}, {"num": "25", "slug": "25-integration-spine", "title": "The Integration Spine", "subtitle": "Pillar IV \u2014 APIs, identity, data, and the enterprise systems an agent must touch"}, {"num": "26", "slug": "26-identity-for-agents", "title": "Identity for Agents", "subtitle": "Service accounts, scoped tokens, on-behalf-of \u2014 auth for non-human actors"}, {"num": "27", "slug": "27-data-readiness", "title": "Data Readiness", "subtitle": "Lineage, freshness, classification, and why your data lake is not a vector store"}, {"num": "28", "slug": "28-mcp-a2a-protocols", "title": "MCP, A2A, and the Interop Layer", "subtitle": "Model Context Protocol, Agent2Agent, and the protocols that let agents share work"}, {"num": "29", "slug": "29-the-maturity-model", "title": "The Maturity Model", "subtitle": "Five levels \u2014 Initial, Repeatable, Defined, Managed, Optimized \u2014 across all four pillars"}, {"num": "30", "slug": "30-the-scorecard-method", "title": "The Scorecard Method", "subtitle": "How to assess your organization in a half-day, with evidence"}, {"num": "\u2605", "slug": "scorecard", "title": "Interactive Scorecard", "subtitle": "Score yourself across four pillars \u00b7 five levels \u00b7 40 questions \u00b7 share your results"}, {"num": "31", "slug": "31-reading-the-radar", "title": "Reading the Radar", "subtitle": "What a four-pillar profile tells you about where to invest first"}, {"num": "32", "slug": "32-the-thirty-sixty-ninety", "title": "The 30/60/90", "subtitle": "What an enterprise can credibly accomplish in the first ninety days"}, {"num": "33", "slug": "33-the-twelve-month-roadmap", "title": "The Twelve-Month Roadmap", "subtitle": "From scattered pilots to a governed agent platform \u2014 by quarter"}, {"num": "34", "slug": "34-the-operating-model", "title": "The Operating Model", "subtitle": "Center of excellence, hub-and-spoke, federated \u2014 pick one and live with it"}, {"num": "35", "slug": "35-roles-and-careers", "title": "Roles and Careers", "subtitle": "AI product managers, agent engineers, evals leads \u2014 the jobs the org didn't have last year"}, {"num": "36", "slug": "36-procurement-and-vendors", "title": "Procurement and Vendors", "subtitle": "Buy, build, or rent \u2014 and the contract clauses you'll wish you had insisted on"}, {"num": "37", "slug": "37-change-management", "title": "Change Management", "subtitle": "How to roll agents into a workforce without losing the workforce"}, {"num": "38", "slug": "38-economics-at-scale", "title": "Economics at Scale", "subtitle": "Unit costs, gross margin, and the second-order effects of letting agents run your processes"}, {"num": "39", "slug": "39-the-failure-postmortem", "title": "The Failure Postmortem", "subtitle": "Three case studies of agentic deployments that broke \u2014 and what they teach"}, {"num": "40", "slug": "40-the-next-decade", "title": "The Next Decade", "subtitle": "What ready looks like in 2030, and how to recognize it from where you stand today"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>The Agentic Enterprise<span class="brand__sub"> — a readiness field guide</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/scorecard.html">Scorecard</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">The Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 02</div>
+    <div class="ch-header__num">Chapter 02</div>
+    <h1 class="ch-header__title">Anatomy of an Agent</h1>
+    <p class="ch-header__dek">Plan, act, observe, remember — the four moving parts</p>
+    
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-planning-layer">The Planning Layer</a></li><li><a href="#the-act-layer">The Act Layer</a></li><li><a href="#the-observe-layer">The Observe Layer</a></li><li><a href="#the-memory-layer">The Memory Layer</a></li><li><a href="#how-the-loop-runs">How the Loop Runs</a></li></ul></aside>
+    <article class="prose">
+      <p class="lede">Beneath the surface of every agent — whether it books travel, reviews contracts, or writes production code — the same four-part machinery is running. The agent plans, acts, observes the results of its actions, and remembers what it has learned. Then it plans again. This loop, deceptively simple in description, is where virtually all of the interesting behavior emerges, and where virtually all of the failures begin. Understanding the mechanics of each component — not at the level of a research paper but at the level of an engineering and governance decision — is the prerequisite for everything else in this report.</p>
+
+<figure class="figure figure--wide reveal">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="The agent loop: plan, act, observe, remember">
+  <defs>
+    <marker id="arr-loop" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="var(--color-primary)"/>
+    </marker>
+  </defs>
+  <text x="60" y="36" class="label-display" font-family="var(--font-display)" font-size="18" fill="var(--color-text)">The agent loop</text>
+  <text x="60" y="56" font-family="var(--font-mono)" font-size="11" fill="var(--color-text-muted)">A single tick of an autonomous system, repeated until the goal is met or a budget is exhausted.</text>
+  <g font-family="var(--font-body)" font-size="13" fill="var(--color-text)">
+    <g transform="translate(180,150)">
+      <circle cx="0" cy="0" r="60" fill="var(--color-accent-copper-soft)" stroke="var(--color-accent-copper)" stroke-width="1.4"/>
+      <text x="0" y="-4" text-anchor="middle" font-family="var(--font-display)" font-size="16">Plan</text>
+      <text x="0" y="14" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">decompose · choose</text>
+    </g>
+    <g transform="translate(380,150)">
+      <circle cx="0" cy="0" r="60" fill="var(--color-primary-highlight)" stroke="var(--color-primary)" stroke-width="1.4"/>
+      <text x="0" y="-4" text-anchor="middle" font-family="var(--font-display)" font-size="16">Act</text>
+      <text x="0" y="14" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">call tool · API</text>
+    </g>
+    <g transform="translate(580,150)">
+      <circle cx="0" cy="0" r="60" fill="var(--color-accent-quartz)" fill-opacity="0.35" stroke="var(--color-accent-copper)" stroke-width="1.4"/>
+      <text x="0" y="-4" text-anchor="middle" font-family="var(--font-display)" font-size="16">Observe</text>
+      <text x="0" y="14" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">parse · ground</text>
+    </g>
+    <g transform="translate(380,290)">
+      <rect x="-80" y="-25" width="160" height="50" rx="6" fill="var(--color-accent-euv-soft)" stroke="var(--color-accent-euv)" stroke-width="1.2"/>
+      <text x="0" y="-3" text-anchor="middle" font-family="var(--font-display)" font-size="15">Remember</text>
+      <text x="0" y="14" text-anchor="middle" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">short-term + long-term</text>
+    </g>
+  </g>
+  <g fill="none" stroke="var(--color-primary)" stroke-width="1.4" marker-end="url(#arr-loop)">
+    <path d="M240 150 L320 150"/>
+    <path d="M440 150 L520 150"/>
+    <path d="M580 210 C 540 270, 460 290, 420 290"/>
+    <path d="M340 290 C 240 290, 200 240, 200 210"/>
+  </g>
+  <g font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">
+    <text x="280" y="142">prompt + plan</text>
+    <text x="480" y="142">request</text>
+    <text x="540" y="252">tool result</text>
+    <text x="220" y="252">context</text>
+  </g>
+</svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 2.1</span><span class="text">The agent loop. Plan, act, observe, remember — and then plan again, having learned something. Most agentic failures live on the arrows, not in the circles.</span></figcaption>
+</figure>
+
+<h2 id="the-planning-layer">The Planning Layer</h2>
+<p>Planning is the step where a model transforms a goal into a sequence of actions. In the simplest case, this is a single inference call that produces a short to-do list. In more sophisticated systems, planning is itself a multi-step process: a high-level planner decomposes the goal into sub-goals, each of which is handed to a more specialized executor. The ReAct paradigm — Reasoning and Acting interleaved in a single prompt — was an early demonstration that models could plan and act in the same context window. More recent architectures, like those underlying Anthropic's Claude Code and OpenAI's Codex-based tools, use explicit scratchpad reasoning that is stripped before the final output is produced.</p>
+<p>The planning layer is where model quality matters most. A model that reasons well — that can decompose ambiguous goals, identify dependencies between steps, recognize when a plan needs revision — will complete tasks that a weaker model fails at, even with identical tool access. But planning quality is also where the first class of failures appears: models that confidently construct plans based on incorrect assumptions about the environment, or that over-plan (generating elaborate multi-step sequences for tasks that could be accomplished in one tool call), or that under-plan (diving into execution without adequate decomposition, creating situations that are difficult to recover from).</p>
+<p>Enterprise architects need to understand the planning layer not only to evaluate model capability but to design appropriate oversight. A plan that is legible — that can be inspected before execution begins — enables a class of human-in-the-loop governance that is impossible when planning and execution are fused. Some orchestration frameworks, including LangGraph and CrewAI, expose explicit plan objects for this reason. Others, following the React paradigm, interleave planning and execution in a way that makes pre-execution review impractical. Neither approach is universally correct; the choice depends on the reversibility of the actions involved.</p>
+
+<h2 id="the-act-layer">The Act Layer</h2>
+<p>Acting is the step where the agent reaches outside its own context window and changes something in the world. This is the step that distinguishes an agent from a chatbot, and it is the step that creates real risk. Tool calls are the primary mechanism: the model generates a structured call to a function, API, browser, code interpreter, or external service, and the result is returned to the context.</p>
+<p>The range of tools available to modern agents has expanded dramatically. Early tool-augmented models could search the web and run simple computations. Current systems — using the <a href="https://modelcontextprotocol.io/">Model Context Protocol (MCP)</a>, which has become the de facto standard for agent-tool integration — can interact with essentially any system that can expose an API: CRMs, ERPs, file systems, databases, code repositories, email, calendars, and increasingly, physical-world interfaces like browser-controlled desktops and robotic actuators.</p>
+<p>The governance implications of tool access are proportional to the power of the tools. An agent that can only read documents has a very different risk profile from one that can write to a database, send emails on behalf of a user, or execute code in a production environment. The principle of least privilege — grant only the minimum tool access necessary for the task — is as important in agentic system design as it is in conventional access control. In practice, it is harder to enforce: tool permissions are often configured once at deployment time and not revisited as the agent's operational scope evolves.</p>
+
+<h2 id="the-observe-layer">The Observe Layer</h2>
+<p>Observation is the step where the agent processes the results of its actions. A tool call returns a response — a database query result, an API response body, a web page's text content, a code execution output — and the agent must parse that response, determine whether its action succeeded, and update its understanding of the world accordingly.</p>
+<p>This step sounds passive but is anything but. The observe layer is where a significant class of vulnerabilities lives. The agent is, by design, trusting the content it receives from tool calls. If that content has been manipulated — if a document the agent retrieves from the web contains instructions designed to redirect its behavior, if a database record has been poisoned with adversarial text — the agent may incorporate those instructions into its planning and produce behavior that its operators neither intended nor anticipated. This is the mechanism behind indirect prompt injection, one of the most operationally significant security risks in agentic systems and a central concern of the <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/">OWASP LLM Top 10</a>.</p>
+<p>Designing robust observation means building not just the capability to receive tool results but the capability to verify them. Does the result make sense given the context? Is it plausible that this external source would return this content? Should the agent flag this result for human review before acting on it? These are design questions that current frameworks leave largely to the application developer, and they are questions that few developers ask with sufficient rigor before deployment.</p>
+
+<h2 id="the-memory-layer">The Memory Layer</h2>
+<p>Memory is what separates a stateful agent from a stateless one, and a useful agent from an irritating one. The simplest form of agent memory is the context window itself: everything the model has seen in the current interaction is, in principle, available to it. But context windows are finite (even very large ones impose latency and cost penalties), and they are ephemeral — they do not persist across sessions. For agents that operate over extended time horizons, on tasks that span hours or days, or in environments where they need to recall decisions made in prior sessions, external memory stores are required.</p>
+<p>Memory architectures typically distinguish at least three layers. <strong>Short-term memory</strong> — the current context window — holds the immediate task state. <strong>Long-term memory</strong> — typically a vector database or a structured key-value store — holds persistent facts, prior decisions, user preferences, and domain knowledge that should survive across sessions. <strong>Episodic memory</strong> — a log of what the agent actually did and what the results were — is the most underbuilt of the three in current systems, yet it is the most important for both learning and audit.</p>
+<p>From a governance perspective, memory is where data residency, retention, and privacy obligations land. An agent that accumulates a long-term memory of a user's decisions, preferences, and conversations is, in effect, building a profile. That profile is subject to the same GDPR and CCPA obligations as any other personal data store — but the tooling for managing agent memory with the same rigor as a conventional database is still immature. Organizations deploying agents with persistent memory should, at minimum, define explicit retention policies, classification labels for stored memories, and audit mechanisms before they discover these gaps through a regulator rather than an internal review.</p>
+
+<blockquote>
+<p>"Most agentic failures don't live in the circles — in the plan, the act, or the observe step taken individually. They live on the arrows: in the translation between observation and the next plan, where wrong assumptions compound, and in the memory layer, where bad facts get entrenched."</p>
+</blockquote>
+
+<h2 id="how-the-loop-runs">How the Loop Runs</h2>
+<p>The four components do not execute once. They execute in a loop — plan, act, observe, update memory, plan again — until the agent determines that the goal has been met, that the goal cannot be met, or that it has reached its resource budget (in tokens, tool calls, or elapsed time). The loop is the source of both the power and the risk.</p>
+<p>Power: the loop allows an agent to adapt. If a tool call fails, the agent can try a different approach. If new information changes the picture, the agent can revise the plan. This adaptivity is what makes agents useful for open-ended tasks where the path is not known in advance. Risk: the loop can diverge. An agent that loses track of its goal, or that develops an incorrect model of the environment, or that is manipulated through adversarial tool outputs, can run for many iterations in a direction that is costly or irreversible before any oversight mechanism catches it.</p>
+<p>Practical agent deployments manage loop risk through a combination of resource budgets (maximum token spend, maximum tool call count, maximum elapsed time), explicit goal-completion checks, and human-in-the-loop confirmation gates for actions above a configurable risk threshold. The specific values of these parameters are among the most consequential engineering decisions in agentic system design — and among the least discussed in vendor documentation.</p>
+
+<aside class="aside" data-tone="euv">
+<div class="aside__label">Architecture note</div>
+<p>When specifying an agent system for procurement or internal development, require explicit documentation of the four components: the planning mechanism and its legibility, the tool catalog and permission model, the observation validation approach, and the memory architecture with its retention and classification policy. A vendor who cannot answer these questions clearly has likely not thought through the governance implications of their system.</p>
+</aside>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="01-the-shift.html"><span class="ch-nav-link__label">← Chapter 01</span><span class="ch-nav-link__title">The Shift</span></a>
+      <a class="ch-nav-link" data-dir="next" href="03-spectrum-of-autonomy.html"><span class="ch-nav-link__label">Chapter 03 →</span><span class="ch-nav-link__title">The Spectrum of Autonomy</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters, the glossary, and the bibliography. Try <em>NIST</em>, <em>orchestration</em>, <em>guardrails</em>, or <em>EU AI Act</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does the NIST AI RMF apply to agentic AI?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">The Agentic Enterprise</strong><br>
+      A long-form readiness field guide for agentic AI in the enterprise.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

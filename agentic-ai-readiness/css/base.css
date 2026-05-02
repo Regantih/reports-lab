@@ -1,0 +1,184 @@
+/* =========================================
+   Design tokens — From Sand to Superintelligence
+   Subject-derived palette: silicon (cool slate), copper (warm), EUV (violet)
+   ========================================= */
+:root {
+  --text-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.875rem);
+  --text-sm: clamp(0.875rem, 0.8rem + 0.35vw, 1rem);
+  --text-base: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --text-lg: clamp(1.125rem, 1rem + 0.75vw, 1.5rem);
+  --text-xl: clamp(1.5rem, 1.2rem + 1.25vw, 2.25rem);
+  --text-2xl: clamp(2rem, 1.2rem + 2.5vw, 3.5rem);
+  --text-3xl: clamp(2.5rem, 1rem + 4vw, 5rem);
+  --text-hero: clamp(3rem, 0.5rem + 7vw, 8rem);
+
+  --space-1: 0.25rem; --space-2: 0.5rem;  --space-3: 0.75rem; --space-4: 1rem;
+  --space-5: 1.25rem; --space-6: 1.5rem;  --space-8: 2rem;    --space-10: 2.5rem;
+  --space-12: 3rem;   --space-16: 4rem;   --space-20: 5rem;   --space-24: 6rem;
+  --space-32: 8rem;
+
+  --radius-sm: 0.375rem; --radius-md: 0.5rem; --radius-lg: 0.75rem;
+  --radius-xl: 1rem;     --radius-full: 9999px;
+
+  --transition-interactive: 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-slow: 600ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  --content-narrow: 680px;
+  --content-default: 980px;
+  --content-wide: 1240px;
+  --content-full: 100%;
+
+  --font-display: 'Fraunces', 'Iowan Old Style', Georgia, serif;
+  --font-body: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+}
+
+:root,
+[data-theme='light'] {
+  /* Surfaces — warm paper, like a research notebook */
+  --color-bg: #f6f3ed;
+  --color-surface: #faf7f1;
+  --color-surface-2: #fdfbf6;
+  --color-surface-offset: #ece7dd;
+  --color-surface-offset-2: #e3ddd1;
+  --color-surface-dynamic: #d8d2c5;
+  --color-divider: #d8d3c7;
+  --color-border: #c4bfb3;
+
+  /* Text — deep ink */
+  --color-text: #1a1814;
+  --color-text-muted: #6a6660;
+  --color-text-faint: #a8a49b;
+  --color-text-inverse: #faf7f1;
+
+  /* Primary — silicon blue (cool, deep, technical) */
+  --color-primary: #1f4a6b;
+  --color-primary-hover: #163750;
+  --color-primary-active: #0d2536;
+  --color-primary-highlight: #cbd6df;
+
+  /* Copper — warm contrast, the metallurgy color */
+  --color-accent-copper: #a04a1a;
+  --color-accent-copper-soft: #e8d3c0;
+
+  /* EUV violet — for high-energy, lithography moments */
+  --color-accent-euv: #5b3a8a;
+  --color-accent-euv-soft: #ddd4ea;
+
+  /* Quartz — bright neutral for highlights */
+  --color-accent-quartz: #c9b15a;
+
+  /* Plasma — etching/heat */
+  --color-accent-plasma: #c43d5b;
+
+  --shadow-sm: 0 1px 2px rgba(40, 30, 15, 0.06);
+  --shadow-md: 0 4px 14px rgba(40, 30, 15, 0.08);
+  --shadow-lg: 0 18px 40px rgba(40, 30, 15, 0.12);
+
+  --grid-line: rgba(26, 24, 20, 0.06);
+}
+
+[data-theme='dark'] {
+  /* Surfaces — deep graphite, like a fab cleanroom at night */
+  --color-bg: #0e1116;
+  --color-surface: #141821;
+  --color-surface-2: #1a1f29;
+  --color-surface-offset: #1d2330;
+  --color-surface-offset-2: #232938;
+  --color-surface-dynamic: #2a3142;
+  --color-divider: #232938;
+  --color-border: #353d50;
+
+  --color-text: #d8dde6;
+  --color-text-muted: #8a92a3;
+  --color-text-faint: #5a6273;
+  --color-text-inverse: #14181f;
+
+  --color-primary: #6ba3cc;
+  --color-primary-hover: #8fbedb;
+  --color-primary-active: #b3d3e8;
+  --color-primary-highlight: #1f3144;
+
+  --color-accent-copper: #d97a3c;
+  --color-accent-copper-soft: #3a2b20;
+
+  --color-accent-euv: #a487d8;
+  --color-accent-euv-soft: #2c2440;
+
+  --color-accent-quartz: #e0c878;
+
+  --color-accent-plasma: #e85f7d;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 14px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 18px 40px rgba(0, 0, 0, 0.6);
+
+  --grid-line: rgba(255, 255, 255, 0.04);
+}
+
+/* base reset */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html {
+  -moz-text-size-adjust: none; -webkit-text-size-adjust: none; text-size-adjust: none;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+  hanging-punctuation: first last;
+  scroll-padding-top: 5rem;
+}
+body {
+  min-height: 100dvh;
+  line-height: 1.65;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 64px 64px;
+  background-position: -1px -1px;
+  transition: background-color var(--transition-slow), color var(--transition-slow);
+}
+img, picture, video, canvas, svg { display: block; max-width: 100%; height: auto; }
+ul[role='list'], ol[role='list'] { list-style: none; }
+input, button, textarea, select { font: inherit; color: inherit; }
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  text-wrap: balance;
+  line-height: 1.12;
+  letter-spacing: -0.01em;
+}
+p, li, figcaption { text-wrap: pretty; max-width: 68ch; }
+a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--color-primary) 30%, transparent);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+a:hover { text-decoration-color: var(--color-primary); }
+::selection { background: color-mix(in oklab, var(--color-accent-copper) 35%, transparent); color: var(--color-text); }
+:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; border-radius: var(--radius-sm); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+button { cursor: pointer; background: none; border: none; }
+table { border-collapse: collapse; width: 100%; }
+a, button, [role='button'], [role='link'], input, textarea, select {
+  transition: color var(--transition-interactive),
+    background var(--transition-interactive),
+    border-color var(--transition-interactive),
+    box-shadow var(--transition-interactive),
+    transform var(--transition-interactive);
+}
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;
+}

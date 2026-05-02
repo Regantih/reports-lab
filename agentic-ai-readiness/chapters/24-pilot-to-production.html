@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 24 · From Pilot to Production — The Agentic Enterprise</title>
+<meta name="description" content="The valley of death — and how a use case earns the right to scale">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="24-pilot-to-production" data-chapter-title="From Pilot to Production" data-base="../">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-shift", "title": "The Shift", "subtitle": "From copilots to colleagues \u2014 what changes when software starts to act"}, {"num": "02", "slug": "02-anatomy-of-an-agent", "title": "Anatomy of an Agent", "subtitle": "Plan, act, observe, remember \u2014 the four moving parts"}, {"num": "03", "slug": "03-spectrum-of-autonomy", "title": "The Spectrum of Autonomy", "subtitle": "Five rungs from automation to autonomy, and where most enterprises actually live"}, {"num": "04", "slug": "04-from-models-to-systems", "title": "From Models to Systems", "subtitle": "Why agentic AI is a systems problem, not a model problem"}, {"num": "05", "slug": "05-tool-use-and-grounding", "title": "Tool Use and Grounding", "subtitle": "How an agent reaches into the world \u2014 APIs, retrieval, and the limits of context"}, {"num": "06", "slug": "06-multi-agent-and-swarm", "title": "Multi-Agent and Swarm", "subtitle": "When one mind isn't enough \u2014 coordination, delegation, and emergent failure modes"}, {"num": "07", "slug": "07-the-economics", "title": "The Economics of an Agent", "subtitle": "Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI"}, {"num": "08", "slug": "08-failure-modes", "title": "Failure Modes", "subtitle": "Hallucinated calls, prompt injection, runaway loops, and the cost of being wrong at scale"}, {"num": "09", "slug": "09-threat-landscape", "title": "The Threat Landscape", "subtitle": "OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do"}, {"num": "10", "slug": "10-regulatory-perimeter", "title": "The Regulatory Perimeter", "subtitle": "EU AI Act, US executive orders, sectoral rules \u2014 what bites and what doesn't"}, {"num": "11", "slug": "11-frameworks-landscape", "title": "The Frameworks Landscape", "subtitle": "NIST, ISO, OECD, OWASP, the analyst maturity models \u2014 ranked by what actually moves the needle"}, {"num": "12", "slug": "12-the-four-pillars", "title": "The Four Pillars", "subtitle": "A readiness model: governance, orchestration, use case identification, integration"}, {"num": "13", "slug": "13-governance-charter", "title": "The Governance Charter", "subtitle": "Pillar I \u2014 who owns the agents, who answers when they fail"}, {"num": "14", "slug": "14-policy-stack", "title": "The Policy Stack", "subtitle": "Acceptable use, model risk, data classification, third-party AI, incident response"}, {"num": "15", "slug": "15-nist-rmf-walk", "title": "Walking the NIST AI RMF", "subtitle": "Govern, Map, Measure, Manage \u2014 applied to a real agent program"}, {"num": "16", "slug": "16-iso-42001-and-eu", "title": "ISO/IEC 42001 and the EU AI Act", "subtitle": "Certification, conformity assessment, and the audit trail of an autonomous system"}, {"num": "17", "slug": "17-orchestration-stack", "title": "The Orchestration Stack", "subtitle": "Pillar II \u2014 frameworks, runtimes, and the plumbing of multi-step work"}, {"num": "18", "slug": "18-memory-and-state", "title": "Memory and State", "subtitle": "Short-term, long-term, episodic \u2014 what an agent needs to remember to be useful"}, {"num": "19", "slug": "19-evals-and-observability", "title": "Evals and Observability", "subtitle": "Traces, replays, scorecards \u2014 the dashboards that keep agents honest"}, {"num": "20", "slug": "20-guardrails-and-policy", "title": "Guardrails and Policy Engines", "subtitle": "From input filters to runtime policy \u2014 defense in depth for autonomous systems"}, {"num": "21", "slug": "21-use-case-portfolio", "title": "The Use Case Portfolio", "subtitle": "Pillar III \u2014 picking the right work for an agent to do"}, {"num": "22", "slug": "22-value-and-feasibility", "title": "Value and Feasibility", "subtitle": "Scoring use cases on a 2\u00d72 \u2014 and the trap of doing the easy ones first"}, {"num": "23", "slug": "23-human-in-the-loop", "title": "Human in the Loop", "subtitle": "Where supervision belongs, where it doesn't, and how to design the handoff"}, {"num": "24", "slug": "24-pilot-to-production", "title": "From Pilot to Production", "subtitle": "The valley of death \u2014 and how a use case earns the right to scale"}, {"num": "25", "slug": "25-integration-spine", "title": "The Integration Spine", "subtitle": "Pillar IV \u2014 APIs, identity, data, and the enterprise systems an agent must touch"}, {"num": "26", "slug": "26-identity-for-agents", "title": "Identity for Agents", "subtitle": "Service accounts, scoped tokens, on-behalf-of \u2014 auth for non-human actors"}, {"num": "27", "slug": "27-data-readiness", "title": "Data Readiness", "subtitle": "Lineage, freshness, classification, and why your data lake is not a vector store"}, {"num": "28", "slug": "28-mcp-a2a-protocols", "title": "MCP, A2A, and the Interop Layer", "subtitle": "Model Context Protocol, Agent2Agent, and the protocols that let agents share work"}, {"num": "29", "slug": "29-the-maturity-model", "title": "The Maturity Model", "subtitle": "Five levels \u2014 Initial, Repeatable, Defined, Managed, Optimized \u2014 across all four pillars"}, {"num": "30", "slug": "30-the-scorecard-method", "title": "The Scorecard Method", "subtitle": "How to assess your organization in a half-day, with evidence"}, {"num": "\u2605", "slug": "scorecard", "title": "Interactive Scorecard", "subtitle": "Score yourself across four pillars \u00b7 five levels \u00b7 40 questions \u00b7 share your results"}, {"num": "31", "slug": "31-reading-the-radar", "title": "Reading the Radar", "subtitle": "What a four-pillar profile tells you about where to invest first"}, {"num": "32", "slug": "32-the-thirty-sixty-ninety", "title": "The 30/60/90", "subtitle": "What an enterprise can credibly accomplish in the first ninety days"}, {"num": "33", "slug": "33-the-twelve-month-roadmap", "title": "The Twelve-Month Roadmap", "subtitle": "From scattered pilots to a governed agent platform \u2014 by quarter"}, {"num": "34", "slug": "34-the-operating-model", "title": "The Operating Model", "subtitle": "Center of excellence, hub-and-spoke, federated \u2014 pick one and live with it"}, {"num": "35", "slug": "35-roles-and-careers", "title": "Roles and Careers", "subtitle": "AI product managers, agent engineers, evals leads \u2014 the jobs the org didn't have last year"}, {"num": "36", "slug": "36-procurement-and-vendors", "title": "Procurement and Vendors", "subtitle": "Buy, build, or rent \u2014 and the contract clauses you'll wish you had insisted on"}, {"num": "37", "slug": "37-change-management", "title": "Change Management", "subtitle": "How to roll agents into a workforce without losing the workforce"}, {"num": "38", "slug": "38-economics-at-scale", "title": "Economics at Scale", "subtitle": "Unit costs, gross margin, and the second-order effects of letting agents run your processes"}, {"num": "39", "slug": "39-the-failure-postmortem", "title": "The Failure Postmortem", "subtitle": "Three case studies of agentic deployments that broke \u2014 and what they teach"}, {"num": "40", "slug": "40-the-next-decade", "title": "The Next Decade", "subtitle": "What ready looks like in 2030, and how to recognize it from where you stand today"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>The Agentic Enterprise<span class="brand__sub"> — a readiness field guide</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/scorecard.html">Scorecard</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">The Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 24</div>
+    <div class="ch-header__num">Chapter 24</div>
+    <h1 class="ch-header__title">From Pilot to Production</h1>
+    <p class="ch-header__dek">The valley of death — and how a use case earns the right to scale</p>
+    
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#why-pilots-succeed-and-productions-fail">Why Pilots Succeed and Productions Fail</a></li><li><a href="#the-integration-cliff">The Integration Cliff</a></li><li><a href="#operationalizing-governance-at-scale">Operationalizing Governance at Scale</a></li><li><a href="#the-change-management-dimension">The Change Management Dimension</a></li><li><a href="#defining-and-measuring-success">Defining and Measuring Success</a></li></ul></aside>
+    <article class="prose">
+      <p class="lede">The valley of death is a well-documented phenomenon in technology adoption: the gap between a promising pilot and a scaled production deployment that destroys more organizational value than it creates. For agentic AI, the valley is notably wide and notably deep. The failure modes that end agentic pilots — data quality problems that were invisible in the curated prototype environment, integration challenges that multiplied as the agent encountered the full complexity of production systems, governance gaps that became visible only when the agent operated at scale, organizational resistance from the teams whose work the agent was supposed to augment — are predictable, and the organizations that cross the valley are those that anticipate them rather than discovering them after the fact.</p>
+
+<h2 id="why-pilots-succeed-and-productions-fail">Why Pilots Succeed and Productions Fail</h2>
+<p>The most common reason an agentic pilot succeeds is that its conditions are controlled: the data is curated, the inputs are selected, the users are motivated early adopters, and the team is paying close attention and fixing problems quickly. The most common reason the subsequent production deployment fails is that none of those conditions persist. Production data is messier than pilot data by definition — it includes all the edge cases, malformed inputs, and unusual requests that the pilot team carefully excluded. Production users include skeptics, opponents, and people who are actively trying to break the system for reasons ranging from legitimate quality assurance to political resistance. And the team that was fixing problems daily during the pilot is now spread across multiple initiatives, with no time to monitor every production run the way they monitored every pilot run.</p>
+<p>The structural response to this pattern is a <strong>production readiness review</strong> that explicitly stress-tests the pilot's design against production conditions before the transition. The review asks: what does the input distribution look like at production scale, and has the agent been evaluated on a sample that represents that distribution? What are the failure modes that have not been encountered in the pilot, and what is the plan when they occur? What does the monitoring and alerting infrastructure look like, and who is responsible for acting on alerts? What is the rollback plan if the production deployment needs to be paused? Organizations that can answer these questions confidently before the transition have materially better production outcomes than those that discover the answers after go-live.</p>
+
+<h2 id="the-integration-cliff">The Integration Cliff</h2>
+<p>Agentic pilots typically run against a small number of carefully selected integrations — the APIs and data sources that were easiest to connect and most directly relevant to the pilot's task. Production deployment requires connecting to a much larger and more complex set of systems, and the integration work expands non-linearly with the number of systems because integration problems interact: a system that works fine in isolation may behave unexpectedly when it is one of ten systems the agent is calling in parallel, because the systems have dependencies on each other's data, competing rate limits, and inconsistent authentication requirements.</p>
+<p>The integration cliff — the point at which the number of required integrations exceeds what the team can build and maintain — is one of the most common causes of production deployment failure. Organizations that approach integration strategically rather than tactically — building and maintaining a documented integration layer with consistent authentication, logging, and error handling rather than building bespoke integrations for each agent deployment — can cross the cliff significantly more easily. The integration spine architecture described in Chapter 25 is the systematic answer to the integration cliff: by standardizing the plumbing, it converts integration from a custom engineering problem to a configuration problem.</p>
+
+<h2 id="operationalizing-governance-at-scale">Operationalizing Governance at Scale</h2>
+<p>A governance charter that works for a pilot — where the business owner reads every output and the technical owner reviews the logs daily — typically cannot be scaled to production without significant redesign. The oversight mechanisms that are appropriate for a hundred agent runs per month are not appropriate for ten thousand runs per month, and the human review capacity that is adequate for a pilot is almost never sufficient for a production deployment at scale. Production governance requires three things that pilots typically lack: automated monitoring that can detect problems without requiring human review of every run, tiered oversight that concentrates human attention on the cases where it matters most, and a clear escalation path that is fast enough to be useful when something goes wrong.</p>
+<p>The transition from pilot to production is also the moment when the governance charter must be revised from a pilot charter to a production charter. A production charter differs from a pilot charter in three important ways: it names a production operations team in addition to the original three owners; it specifies monitoring thresholds and automated responses rather than just escalation contacts; and it includes a formal capacity planning commitment — the people, the infrastructure, and the budget required to operate and maintain the agent at the projected production scale.</p>
+
+<blockquote>
+<p>"The pilot is a proof of concept. The production deployment is an organizational commitment. The governance gap between those two things is where most agentic programs go to die."</p>
+</blockquote>
+
+<h2 id="the-change-management-dimension">The Change Management Dimension</h2>
+<p>Technical production readiness is necessary but not sufficient. Agentic deployments that succeed technically but fail organizationally — because the people whose work the agent is supposed to support do not trust it, have not been trained to use it effectively, or are actively resistant — are common enough to constitute a distinct failure mode. The change management work required to deploy an agent in production is often underestimated because it is less visible than the technical work, but it is typically the more time-consuming and the more consequential.</p>
+<p>Effective change management for an agentic deployment requires three investments. First, early and genuine engagement with the people whose work the agent will affect — not to sell them on the deployment, but to understand their concerns, incorporate their expertise into the agent's design, and build the trust that comes from being heard. Second, training that is specific to the agent's actual behavior — not generic AI literacy training but training on what this specific agent does well, what it does poorly, and how to use its outputs effectively. Third, a feedback loop that gives users a structured way to report problems and see those reports acted on — because the users who interact with the agent most are the best source of information about its failure modes, and a deployment that does not capture their feedback is leaving its most valuable quality signal on the floor.</p>
+
+<h2 id="defining-and-measuring-success">Defining and Measuring Success</h2>
+<p>An agentic deployment without defined success criteria cannot be declared successful — or failed. Success criteria for a production deployment should be defined before go-live and should include at minimum: a quality threshold (the percentage of agent outputs that meet the accuracy standard required by the use case), a safety threshold (the maximum acceptable rate of policy violations or escalations per unit of work), an efficiency threshold (the maximum acceptable cost per unit of work), and a user satisfaction threshold (the minimum acceptable score on a regular user survey). These criteria become the production charter's performance benchmarks, and the governance council reviews them quarterly to determine whether the deployment continues, scales, or is modified.</p>
+
+<aside class="aside" data-tone="plasma">
+  <div class="aside__label">The Three Conversations You Must Have Before Go-Live</div>
+  <p>Before any agentic deployment transitions from pilot to production, three conversations must happen and be documented. First, with legal and compliance: what are the regulatory obligations that attach to this agent in production (as opposed to a pilot, which may have been operating under a research or prototype exemption), and are all of those obligations met? Second, with information security: has the production environment been hardened against the attack vectors that were not present in the pilot, including the full set of integrations and the production user population? Third, with the affected business units: do the people who will be working alongside this agent understand what it does, what it doesn't do, and what they should do when it produces a result they are uncertain about?</p>
+</aside>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="23-human-in-the-loop.html"><span class="ch-nav-link__label">← Chapter 23</span><span class="ch-nav-link__title">Human in the Loop</span></a>
+      <a class="ch-nav-link" data-dir="next" href="25-integration-spine.html"><span class="ch-nav-link__label">Chapter 25 →</span><span class="ch-nav-link__title">The Integration Spine</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters, the glossary, and the bibliography. Try <em>NIST</em>, <em>orchestration</em>, <em>guardrails</em>, or <em>EU AI Act</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does the NIST AI RMF apply to agentic AI?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">The Agentic Enterprise</strong><br>
+      A long-form readiness field guide for agentic AI in the enterprise.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

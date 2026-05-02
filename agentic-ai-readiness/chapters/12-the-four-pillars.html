@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 12 · The Four Pillars — The Agentic Enterprise</title>
+<meta name="description" content="A readiness model: governance, orchestration, use case identification, integration">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="12-the-four-pillars" data-chapter-title="The Four Pillars" data-base="../">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-shift", "title": "The Shift", "subtitle": "From copilots to colleagues \u2014 what changes when software starts to act"}, {"num": "02", "slug": "02-anatomy-of-an-agent", "title": "Anatomy of an Agent", "subtitle": "Plan, act, observe, remember \u2014 the four moving parts"}, {"num": "03", "slug": "03-spectrum-of-autonomy", "title": "The Spectrum of Autonomy", "subtitle": "Five rungs from automation to autonomy, and where most enterprises actually live"}, {"num": "04", "slug": "04-from-models-to-systems", "title": "From Models to Systems", "subtitle": "Why agentic AI is a systems problem, not a model problem"}, {"num": "05", "slug": "05-tool-use-and-grounding", "title": "Tool Use and Grounding", "subtitle": "How an agent reaches into the world \u2014 APIs, retrieval, and the limits of context"}, {"num": "06", "slug": "06-multi-agent-and-swarm", "title": "Multi-Agent and Swarm", "subtitle": "When one mind isn't enough \u2014 coordination, delegation, and emergent failure modes"}, {"num": "07", "slug": "07-the-economics", "title": "The Economics of an Agent", "subtitle": "Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI"}, {"num": "08", "slug": "08-failure-modes", "title": "Failure Modes", "subtitle": "Hallucinated calls, prompt injection, runaway loops, and the cost of being wrong at scale"}, {"num": "09", "slug": "09-threat-landscape", "title": "The Threat Landscape", "subtitle": "OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do"}, {"num": "10", "slug": "10-regulatory-perimeter", "title": "The Regulatory Perimeter", "subtitle": "EU AI Act, US executive orders, sectoral rules \u2014 what bites and what doesn't"}, {"num": "11", "slug": "11-frameworks-landscape", "title": "The Frameworks Landscape", "subtitle": "NIST, ISO, OECD, OWASP, the analyst maturity models \u2014 ranked by what actually moves the needle"}, {"num": "12", "slug": "12-the-four-pillars", "title": "The Four Pillars", "subtitle": "A readiness model: governance, orchestration, use case identification, integration"}, {"num": "13", "slug": "13-governance-charter", "title": "The Governance Charter", "subtitle": "Pillar I \u2014 who owns the agents, who answers when they fail"}, {"num": "14", "slug": "14-policy-stack", "title": "The Policy Stack", "subtitle": "Acceptable use, model risk, data classification, third-party AI, incident response"}, {"num": "15", "slug": "15-nist-rmf-walk", "title": "Walking the NIST AI RMF", "subtitle": "Govern, Map, Measure, Manage \u2014 applied to a real agent program"}, {"num": "16", "slug": "16-iso-42001-and-eu", "title": "ISO/IEC 42001 and the EU AI Act", "subtitle": "Certification, conformity assessment, and the audit trail of an autonomous system"}, {"num": "17", "slug": "17-orchestration-stack", "title": "The Orchestration Stack", "subtitle": "Pillar II \u2014 frameworks, runtimes, and the plumbing of multi-step work"}, {"num": "18", "slug": "18-memory-and-state", "title": "Memory and State", "subtitle": "Short-term, long-term, episodic \u2014 what an agent needs to remember to be useful"}, {"num": "19", "slug": "19-evals-and-observability", "title": "Evals and Observability", "subtitle": "Traces, replays, scorecards \u2014 the dashboards that keep agents honest"}, {"num": "20", "slug": "20-guardrails-and-policy", "title": "Guardrails and Policy Engines", "subtitle": "From input filters to runtime policy \u2014 defense in depth for autonomous systems"}, {"num": "21", "slug": "21-use-case-portfolio", "title": "The Use Case Portfolio", "subtitle": "Pillar III \u2014 picking the right work for an agent to do"}, {"num": "22", "slug": "22-value-and-feasibility", "title": "Value and Feasibility", "subtitle": "Scoring use cases on a 2\u00d72 \u2014 and the trap of doing the easy ones first"}, {"num": "23", "slug": "23-human-in-the-loop", "title": "Human in the Loop", "subtitle": "Where supervision belongs, where it doesn't, and how to design the handoff"}, {"num": "24", "slug": "24-pilot-to-production", "title": "From Pilot to Production", "subtitle": "The valley of death \u2014 and how a use case earns the right to scale"}, {"num": "25", "slug": "25-integration-spine", "title": "The Integration Spine", "subtitle": "Pillar IV \u2014 APIs, identity, data, and the enterprise systems an agent must touch"}, {"num": "26", "slug": "26-identity-for-agents", "title": "Identity for Agents", "subtitle": "Service accounts, scoped tokens, on-behalf-of \u2014 auth for non-human actors"}, {"num": "27", "slug": "27-data-readiness", "title": "Data Readiness", "subtitle": "Lineage, freshness, classification, and why your data lake is not a vector store"}, {"num": "28", "slug": "28-mcp-a2a-protocols", "title": "MCP, A2A, and the Interop Layer", "subtitle": "Model Context Protocol, Agent2Agent, and the protocols that let agents share work"}, {"num": "29", "slug": "29-the-maturity-model", "title": "The Maturity Model", "subtitle": "Five levels \u2014 Initial, Repeatable, Defined, Managed, Optimized \u2014 across all four pillars"}, {"num": "30", "slug": "30-the-scorecard-method", "title": "The Scorecard Method", "subtitle": "How to assess your organization in a half-day, with evidence"}, {"num": "\u2605", "slug": "scorecard", "title": "Interactive Scorecard", "subtitle": "Score yourself across four pillars \u00b7 five levels \u00b7 40 questions \u00b7 share your results"}, {"num": "31", "slug": "31-reading-the-radar", "title": "Reading the Radar", "subtitle": "What a four-pillar profile tells you about where to invest first"}, {"num": "32", "slug": "32-the-thirty-sixty-ninety", "title": "The 30/60/90", "subtitle": "What an enterprise can credibly accomplish in the first ninety days"}, {"num": "33", "slug": "33-the-twelve-month-roadmap", "title": "The Twelve-Month Roadmap", "subtitle": "From scattered pilots to a governed agent platform \u2014 by quarter"}, {"num": "34", "slug": "34-the-operating-model", "title": "The Operating Model", "subtitle": "Center of excellence, hub-and-spoke, federated \u2014 pick one and live with it"}, {"num": "35", "slug": "35-roles-and-careers", "title": "Roles and Careers", "subtitle": "AI product managers, agent engineers, evals leads \u2014 the jobs the org didn't have last year"}, {"num": "36", "slug": "36-procurement-and-vendors", "title": "Procurement and Vendors", "subtitle": "Buy, build, or rent \u2014 and the contract clauses you'll wish you had insisted on"}, {"num": "37", "slug": "37-change-management", "title": "Change Management", "subtitle": "How to roll agents into a workforce without losing the workforce"}, {"num": "38", "slug": "38-economics-at-scale", "title": "Economics at Scale", "subtitle": "Unit costs, gross margin, and the second-order effects of letting agents run your processes"}, {"num": "39", "slug": "39-the-failure-postmortem", "title": "The Failure Postmortem", "subtitle": "Three case studies of agentic deployments that broke \u2014 and what they teach"}, {"num": "40", "slug": "40-the-next-decade", "title": "The Next Decade", "subtitle": "What ready looks like in 2030, and how to recognize it from where you stand today"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>The Agentic Enterprise<span class="brand__sub"> — a readiness field guide</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/scorecard.html">Scorecard</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">The Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 12</div>
+    <div class="ch-header__num">Chapter 12</div>
+    <h1 class="ch-header__title">The Four Pillars</h1>
+    <p class="ch-header__dek">A readiness model: governance, orchestration, use case identification, integration</p>
+    
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#pillar-one-governance">Pillar I — Governance and Risk</a></li><li><a href="#pillar-two-orchestration">Pillar II — Orchestration and Architecture</a></li><li><a href="#pillar-three-use-case">Pillar III — Use Case Identification</a></li><li><a href="#pillar-four-integration">Pillar IV — Integration and Data</a></li><li><a href="#the-pillar-interactions">The Pillar Interactions</a></li></ul></aside>
+    <article class="prose">
+      <p class="lede">Every assessment framework eventually converges on a question of structure: what are the distinct capabilities that an organization must develop, and how do they relate to each other? This report's answer, derived from analysis of dozens of enterprise agentic deployments across industries and from the governance frameworks examined in the preceding chapter, is four pillars. Governance and risk. Orchestration and architecture. Use case identification and portfolio management. Integration and data. An enterprise can be strong in three and critically weak in the fourth, and the weak pillar will determine the program's outcomes regardless of the others' strength. Understanding the four pillars — what each encompasses, why it matters, and how it interacts with the others — is the bridge from the conceptual foundation built in Part I to the operational detail of Part II.</p>
+
+<figure class="figure figure--wide reveal">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 380" role="img" aria-label="Four pillars of agentic AI readiness">
+  <text x="60" y="36" font-family="var(--font-display)" font-size="18" fill="var(--color-text)">Four pillars of agentic AI readiness</text>
+  <text x="60" y="56" font-family="var(--font-mono)" font-size="11" fill="var(--color-text-muted)">A program that stands on three pillars and ignores the fourth will tip over within a year.</text>
+  <g>
+    <rect x="60" y="320" width="680" height="20" fill="var(--color-surface-offset)" stroke="var(--color-border)"/>
+    <text x="400" y="335" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--color-text-muted)">enterprise mission · risk appetite · culture</text>
+  </g>
+  <g font-family="var(--font-display)" font-size="14" fill="var(--color-text)" text-anchor="middle">
+    <g transform="translate(140,90)">
+      <rect x="-60" y="0" width="120" height="230" fill="var(--color-accent-copper-soft)" stroke="var(--color-accent-copper)" stroke-width="1.4"/>
+      <text x="0" y="30">I.</text>
+      <text x="0" y="60">Governance</text>
+      <text x="0" y="80" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">policy · risk · audit</text>
+      <line x1="-50" y1="100" x2="50" y2="100" stroke="var(--color-accent-copper)" stroke-width="0.6"/>
+      <text x="0" y="125" font-family="var(--font-body)" font-size="11">accountability</text>
+      <text x="0" y="150" font-family="var(--font-body)" font-size="11">model risk</text>
+      <text x="0" y="175" font-family="var(--font-body)" font-size="11">conformity</text>
+      <text x="0" y="200" font-family="var(--font-body)" font-size="11">incident response</text>
+    </g>
+    <g transform="translate(310,90)">
+      <rect x="-60" y="0" width="120" height="230" fill="var(--color-accent-quartz)" fill-opacity="0.35" stroke="var(--color-accent-copper)" stroke-width="1.4"/>
+      <text x="0" y="30">II.</text>
+      <text x="0" y="60">Orchestration</text>
+      <text x="0" y="80" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">runtime · evals</text>
+      <line x1="-50" y1="100" x2="50" y2="100" stroke="var(--color-accent-copper)" stroke-width="0.6"/>
+      <text x="0" y="125" font-family="var(--font-body)" font-size="11">framework</text>
+      <text x="0" y="150" font-family="var(--font-body)" font-size="11">memory</text>
+      <text x="0" y="175" font-family="var(--font-body)" font-size="11">observability</text>
+      <text x="0" y="200" font-family="var(--font-body)" font-size="11">guardrails</text>
+    </g>
+    <g transform="translate(480,90)">
+      <rect x="-60" y="0" width="120" height="230" fill="var(--color-primary-highlight)" stroke="var(--color-primary)" stroke-width="1.4"/>
+      <text x="0" y="30">III.</text>
+      <text x="0" y="60">Use cases</text>
+      <text x="0" y="80" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">value · feasibility</text>
+      <line x1="-50" y1="100" x2="50" y2="100" stroke="var(--color-primary)" stroke-width="0.6"/>
+      <text x="0" y="125" font-family="var(--font-body)" font-size="11">portfolio</text>
+      <text x="0" y="150" font-family="var(--font-body)" font-size="11">scoring</text>
+      <text x="0" y="175" font-family="var(--font-body)" font-size="11">human-in-loop</text>
+      <text x="0" y="200" font-family="var(--font-body)" font-size="11">scale path</text>
+    </g>
+    <g transform="translate(650,90)">
+      <rect x="-60" y="0" width="120" height="230" fill="var(--color-accent-euv-soft)" stroke="var(--color-accent-euv)" stroke-width="1.4"/>
+      <text x="0" y="30">IV.</text>
+      <text x="0" y="60">Integration</text>
+      <text x="0" y="80" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">data · identity</text>
+      <line x1="-50" y1="100" x2="50" y2="100" stroke="var(--color-accent-euv)" stroke-width="0.6"/>
+      <text x="0" y="125" font-family="var(--font-body)" font-size="11">APIs · MCP</text>
+      <text x="0" y="150" font-family="var(--font-body)" font-size="11">identity</text>
+      <text x="0" y="175" font-family="var(--font-body)" font-size="11">data lineage</text>
+      <text x="0" y="200" font-family="var(--font-body)" font-size="11">A2A protocols</text>
+    </g>
+  </g>
+</svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 12.1</span><span class="text">The four pillars. Each rests on the same foundation: enterprise mission, risk appetite, and culture.</span></figcaption>
+</figure>
+
+<h2 id="pillar-one-governance">Pillar I — Governance and Risk</h2>
+<p>Governance is the first pillar, and it is first not because it is the most technically interesting but because it is the one that enables the others. Without a governance framework — a clear assignment of accountability, a policy stack that translates risk appetite into operational rules, a risk management process that can evaluate and approve agentic deployments — the other pillars operate in an organizational vacuum. Agents get deployed without adequate review, incidents occur without clear ownership, and the program accumulates technical debt alongside governance debt in a combination that eventually requires painful remediation.</p>
+<p>The governance pillar encompasses several distinct domains. <em>Accountability assignment</em>: who is responsible for each deployed agent, for the policy stack that governs it, and for the incident response when it fails? In most organizations, this assignment does not exist at the start of an agentic program and must be created, typically through a governance charter and the establishment of an AI program office or center of excellence. <em>Policy development</em>: the acceptable-use policy for agents, the model risk policy that governs model selection and evaluation, the data classification policy that determines what data agents can access, and the incident response process specific to agent failures. <em>Regulatory compliance</em>: the mapping of deployed agents to applicable regulatory requirements (EU AI Act risk classification, sectoral rules, state-level requirements) and the maintenance of the documentation and audit trail those requirements demand.</p>
+<p>Governance failures are the most common cause of enterprise agentic program setbacks that are not immediately visible in technical metrics. An agent that is technically well-built but deployed without adequate governance review may perform well for months before a compliance gap, a policy violation, or an accountability question surfaces in a context — regulatory inquiry, board audit, media incident — where the absence of governance infrastructure is deeply inconvenient. The organizations that avoid this experience build governance alongside capability, not after it.</p>
+
+<h2 id="pillar-two-orchestration">Pillar II — Orchestration and Architecture</h2>
+<p>The orchestration pillar is where the technical substance of agentic AI lives: the frameworks, runtimes, evaluation systems, and guardrail infrastructure that make agents work reliably in production. It is the pillar most familiar to engineering teams — the one that maps most directly to the build-and-ship work that engineering organizations know how to do — and it is consequently often the most developed and the least often the limiting factor in a mature program. The more common pattern is that orchestration is developed while governance and integration lag.</p>
+<p>Orchestration encompasses: the choice of agent framework (LangGraph, AutoGen, CrewAI, or proprietary platforms like ServiceNow AI Agent Fabric) and the implications of that choice for architecture, vendor dependency, and governance capability; memory architecture and the state management patterns that allow agents to maintain context across sessions and tasks; evaluation infrastructure — the harness of automated tests, human review processes, and metric dashboards that provide the continuous quality signal needed to detect capability drift and policy violations; and guardrails, the runtime policy enforcement that prevents agents from taking actions outside their defined permission envelope.</p>
+<p>The orchestration pillar is also where observability lives. An orchestration stack without adequate observability is a production deployment without instruments — you will discover problems from their effects rather than from their early signals, and the effects of agentic failures are often more expensive than the failures themselves. Trace-level, metric-level, and evaluation-level observability should be designed into the orchestration architecture from the start, not bolted on after the first incident.</p>
+
+<h2 id="pillar-three-use-case">Pillar III — Use Case Identification</h2>
+<p>The use case pillar is about selection: choosing the right work for agents to do. This sounds like a strategy question, and it partly is, but it is also an engineering and governance question. Not all tasks are equally well-matched to agentic approaches; not all tasks that are well-matched carry the same risk profile; and not all tasks that look promising in a pilot environment scale successfully to production. The use case pillar is the structured process for making these distinctions and acting on them.</p>
+<p>Use case identification involves a portfolio approach: mapping the landscape of candidate tasks, scoring them on value (what is the economic and strategic return if the agent succeeds?) and feasibility (how mature is the technology, how well-defined is the task, how reversible are the agent's actions?), and selecting a prioritized portfolio that balances quick wins (high feasibility, moderate value) with strategic investments (high value, higher complexity) and lighthouse projects (the use cases that demonstrate transformative capability and earn the next round of funding).</p>
+<p>The human-in-the-loop design question — for each use case, at what points should a human review the agent's work, and what triggers escalation? — is also part of the use case pillar. This design question is not purely a safety question; it is also an economics question. Checkpoints that are too frequent recover the labor cost the agent was supposed to eliminate. Checkpoints that are too infrequent allow errors to propagate at scale. The right answer depends on the specific task, the agent's demonstrated quality at that task, and the organization's risk tolerance — and it should be revisited as the agent matures and quality metrics are established.</p>
+
+<h2 id="pillar-four-integration">Pillar IV — Integration and Data</h2>
+<p>The integration pillar is, in many enterprise programs, the one that most consistently surprises. It is the pillar that determines whether an agent can actually do useful work, because an agent without reliable access to the systems and data it needs is, in practice, a capability demonstration rather than a production system. Integration work is also the pillar that most often hits organizational boundaries — the teams that own the CRM, the ERP, the data warehouse, and the identity provider may not be in the chain of command of the team building the agent, and their cooperation is not guaranteed.</p>
+<p>Integration encompasses: <em>system connectivity</em>, the technical work of connecting the agent to enterprise systems through APIs, MCP servers, or direct database access; <em>identity and access management</em>, the design and implementation of the agent's identity model, its credential management, and its scoped access to enterprise systems; <em>data readiness</em>, the quality, currency, and governance of the data that the agent will retrieve and act upon; and <em>interoperability protocols</em>, the adoption of standards like MCP and A2A that allow agents to communicate with tools and with each other in a governed, auditable way.</p>
+<p>Data readiness is frequently the binding constraint in integration. Organizations discover, through the process of building agentic systems, that their data is less clean, less well-governed, and less accessible than they believed. Knowledge bases contain stale documents. CRM data has quality problems that were acceptable when humans were reading it but are unacceptable when an agent is acting on it at scale. Data classification is inadequate to support the access control requirements of an agent that operates across many domains and serves users with different permission levels. Addressing these problems takes time and organizational will — and the time to start is before the agent deployment rather than after the pilot has demonstrated that the data is a problem.</p>
+
+<h2 id="the-pillar-interactions">The Pillar Interactions</h2>
+<p>The four pillars are not independent. Each depends on the others, and weakness in one propagates. A strong orchestration stack without adequate governance is a capable but ungoverned agent program — technically impressive, organizationally vulnerable. Strong governance and orchestration without adequate integration produces agents that are well-governed and well-built but cannot access the systems needed to be useful. Excellent use case selection without the integration and orchestration to support the selected use cases produces a roadmap that looks compelling and lands nowhere.</p>
+<p>The most effective approach to building agentic readiness is to develop all four pillars in parallel, with a shared timeline and explicit dependencies between them. The governance pillar should set the policy requirements that the orchestration pillar implements as guardrails. The use case pillar should be informed by the integration pillar's realistic assessment of what is achievable with the data and systems available. The orchestration pillar's evaluation infrastructure should be informed by the specific failure modes that the governance pillar's risk analysis has identified as most important to detect and measure.</p>
+<p>This parallel development requires cross-functional coordination — between the engineering team building the orchestration stack, the governance team developing policies, the business teams identifying use cases, and the platform and data engineering teams managing integration. That coordination is itself a governance challenge, and it is the one that most commonly falls through the cracks in organizations that are accustomed to sequencing technology and governance as separate workstreams. The agentic enterprise is an integrated system; it requires integrated development.</p>
+
+<blockquote>
+<p>"A program that stands on three pillars and ignores the fourth will tip over within a year. The tipping usually happens in a way that was entirely predictable from the structure of the program — and entirely surprising to the leadership who approved it."</p>
+</blockquote>
+
+<aside class="aside" data-tone="copper">
+<div class="aside__label">Program design note</div>
+<p>When establishing an enterprise agentic AI program, map your initial budget and headcount allocation across the four pillars explicitly. If more than 60% of the initial investment is in orchestration and use cases (the technically interesting work) and less than 40% is in governance and integration (the work that enables everything else), the allocation is likely to produce a program that creates impressive demos and struggles to reach production at scale. Rebalancing toward governance and integration early is cheaper than doing so after a production incident makes the imbalance undeniable.</p>
+</aside>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="11-frameworks-landscape.html"><span class="ch-nav-link__label">← Chapter 11</span><span class="ch-nav-link__title">The Frameworks Landscape</span></a>
+      <a class="ch-nav-link" data-dir="next" href="13-governance-charter.html"><span class="ch-nav-link__label">Chapter 13 →</span><span class="ch-nav-link__title">The Governance Charter</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters, the glossary, and the bibliography. Try <em>NIST</em>, <em>orchestration</em>, <em>guardrails</em>, or <em>EU AI Act</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does the NIST AI RMF apply to agentic AI?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">The Agentic Enterprise</strong><br>
+      A long-form readiness field guide for agentic AI in the enterprise.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 31 · Reading the Radar — The Agentic Enterprise</title>
+<meta name="description" content="What a four-pillar profile tells you about where to invest first">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="31-reading-the-radar" data-chapter-title="Reading the Radar" data-base="../">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-shift", "title": "The Shift", "subtitle": "From copilots to colleagues \u2014 what changes when software starts to act"}, {"num": "02", "slug": "02-anatomy-of-an-agent", "title": "Anatomy of an Agent", "subtitle": "Plan, act, observe, remember \u2014 the four moving parts"}, {"num": "03", "slug": "03-spectrum-of-autonomy", "title": "The Spectrum of Autonomy", "subtitle": "Five rungs from automation to autonomy, and where most enterprises actually live"}, {"num": "04", "slug": "04-from-models-to-systems", "title": "From Models to Systems", "subtitle": "Why agentic AI is a systems problem, not a model problem"}, {"num": "05", "slug": "05-tool-use-and-grounding", "title": "Tool Use and Grounding", "subtitle": "How an agent reaches into the world \u2014 APIs, retrieval, and the limits of context"}, {"num": "06", "slug": "06-multi-agent-and-swarm", "title": "Multi-Agent and Swarm", "subtitle": "When one mind isn't enough \u2014 coordination, delegation, and emergent failure modes"}, {"num": "07", "slug": "07-the-economics", "title": "The Economics of an Agent", "subtitle": "Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI"}, {"num": "08", "slug": "08-failure-modes", "title": "Failure Modes", "subtitle": "Hallucinated calls, prompt injection, runaway loops, and the cost of being wrong at scale"}, {"num": "09", "slug": "09-threat-landscape", "title": "The Threat Landscape", "subtitle": "OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do"}, {"num": "10", "slug": "10-regulatory-perimeter", "title": "The Regulatory Perimeter", "subtitle": "EU AI Act, US executive orders, sectoral rules \u2014 what bites and what doesn't"}, {"num": "11", "slug": "11-frameworks-landscape", "title": "The Frameworks Landscape", "subtitle": "NIST, ISO, OECD, OWASP, the analyst maturity models \u2014 ranked by what actually moves the needle"}, {"num": "12", "slug": "12-the-four-pillars", "title": "The Four Pillars", "subtitle": "A readiness model: governance, orchestration, use case identification, integration"}, {"num": "13", "slug": "13-governance-charter", "title": "The Governance Charter", "subtitle": "Pillar I \u2014 who owns the agents, who answers when they fail"}, {"num": "14", "slug": "14-policy-stack", "title": "The Policy Stack", "subtitle": "Acceptable use, model risk, data classification, third-party AI, incident response"}, {"num": "15", "slug": "15-nist-rmf-walk", "title": "Walking the NIST AI RMF", "subtitle": "Govern, Map, Measure, Manage \u2014 applied to a real agent program"}, {"num": "16", "slug": "16-iso-42001-and-eu", "title": "ISO/IEC 42001 and the EU AI Act", "subtitle": "Certification, conformity assessment, and the audit trail of an autonomous system"}, {"num": "17", "slug": "17-orchestration-stack", "title": "The Orchestration Stack", "subtitle": "Pillar II \u2014 frameworks, runtimes, and the plumbing of multi-step work"}, {"num": "18", "slug": "18-memory-and-state", "title": "Memory and State", "subtitle": "Short-term, long-term, episodic \u2014 what an agent needs to remember to be useful"}, {"num": "19", "slug": "19-evals-and-observability", "title": "Evals and Observability", "subtitle": "Traces, replays, scorecards \u2014 the dashboards that keep agents honest"}, {"num": "20", "slug": "20-guardrails-and-policy", "title": "Guardrails and Policy Engines", "subtitle": "From input filters to runtime policy \u2014 defense in depth for autonomous systems"}, {"num": "21", "slug": "21-use-case-portfolio", "title": "The Use Case Portfolio", "subtitle": "Pillar III \u2014 picking the right work for an agent to do"}, {"num": "22", "slug": "22-value-and-feasibility", "title": "Value and Feasibility", "subtitle": "Scoring use cases on a 2\u00d72 \u2014 and the trap of doing the easy ones first"}, {"num": "23", "slug": "23-human-in-the-loop", "title": "Human in the Loop", "subtitle": "Where supervision belongs, where it doesn't, and how to design the handoff"}, {"num": "24", "slug": "24-pilot-to-production", "title": "From Pilot to Production", "subtitle": "The valley of death \u2014 and how a use case earns the right to scale"}, {"num": "25", "slug": "25-integration-spine", "title": "The Integration Spine", "subtitle": "Pillar IV \u2014 APIs, identity, data, and the enterprise systems an agent must touch"}, {"num": "26", "slug": "26-identity-for-agents", "title": "Identity for Agents", "subtitle": "Service accounts, scoped tokens, on-behalf-of \u2014 auth for non-human actors"}, {"num": "27", "slug": "27-data-readiness", "title": "Data Readiness", "subtitle": "Lineage, freshness, classification, and why your data lake is not a vector store"}, {"num": "28", "slug": "28-mcp-a2a-protocols", "title": "MCP, A2A, and the Interop Layer", "subtitle": "Model Context Protocol, Agent2Agent, and the protocols that let agents share work"}, {"num": "29", "slug": "29-the-maturity-model", "title": "The Maturity Model", "subtitle": "Five levels \u2014 Initial, Repeatable, Defined, Managed, Optimized \u2014 across all four pillars"}, {"num": "30", "slug": "30-the-scorecard-method", "title": "The Scorecard Method", "subtitle": "How to assess your organization in a half-day, with evidence"}, {"num": "\u2605", "slug": "scorecard", "title": "Interactive Scorecard", "subtitle": "Score yourself across four pillars \u00b7 five levels \u00b7 40 questions \u00b7 share your results"}, {"num": "31", "slug": "31-reading-the-radar", "title": "Reading the Radar", "subtitle": "What a four-pillar profile tells you about where to invest first"}, {"num": "32", "slug": "32-the-thirty-sixty-ninety", "title": "The 30/60/90", "subtitle": "What an enterprise can credibly accomplish in the first ninety days"}, {"num": "33", "slug": "33-the-twelve-month-roadmap", "title": "The Twelve-Month Roadmap", "subtitle": "From scattered pilots to a governed agent platform \u2014 by quarter"}, {"num": "34", "slug": "34-the-operating-model", "title": "The Operating Model", "subtitle": "Center of excellence, hub-and-spoke, federated \u2014 pick one and live with it"}, {"num": "35", "slug": "35-roles-and-careers", "title": "Roles and Careers", "subtitle": "AI product managers, agent engineers, evals leads \u2014 the jobs the org didn't have last year"}, {"num": "36", "slug": "36-procurement-and-vendors", "title": "Procurement and Vendors", "subtitle": "Buy, build, or rent \u2014 and the contract clauses you'll wish you had insisted on"}, {"num": "37", "slug": "37-change-management", "title": "Change Management", "subtitle": "How to roll agents into a workforce without losing the workforce"}, {"num": "38", "slug": "38-economics-at-scale", "title": "Economics at Scale", "subtitle": "Unit costs, gross margin, and the second-order effects of letting agents run your processes"}, {"num": "39", "slug": "39-the-failure-postmortem", "title": "The Failure Postmortem", "subtitle": "Three case studies of agentic deployments that broke \u2014 and what they teach"}, {"num": "40", "slug": "40-the-next-decade", "title": "The Next Decade", "subtitle": "What ready looks like in 2030, and how to recognize it from where you stand today"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>The Agentic Enterprise<span class="brand__sub"> — a readiness field guide</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/scorecard.html">Scorecard</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">The Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 31</div>
+    <div class="ch-header__num">Chapter 31</div>
+    <h1 class="ch-header__title">Reading the Radar</h1>
+    <p class="ch-header__dek">What a four-pillar profile tells you about where to invest first</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">value<em>note</em></div><div class="stat__label">label</div></div></div>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#reading-the-shape">Reading the shape</a></li><li><a href="#pillar-interaction-effects">Pillar interaction effects</a></li><li><a href="#the-six-archetypal-profiles">Six archetypal profiles</a></li><li><a href="#investment-sequencing">Investment sequencing</a></li><li><a href="#the-radar-as-communication-tool">The radar as communication tool</a></li></ul></aside>
+    <article class="prose">
+      <p class="lede">A four-pillar profile is a picture, not a prescription. The picture shows you where you are; reading it well tells you where to go next. Most organisations make the mistake of investing in their strongest pillar — the one where the team is confident, the roadmap is clear, and the wins are visible — when the right move is almost always to invest in the weakest. The radar tells you which dent is load-bearing.</p>
+
+<figure class="figure figure--wide reveal">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 380" role="img" aria-label="Four-pillar radar profile">
+  <text x="60" y="36" font-family="var(--font-display)" font-size="18" fill="var(--color-text)">Four-pillar profile</text>
+  <text x="60" y="56" font-family="var(--font-mono)" font-size="11" fill="var(--color-text-muted)">A worked example: a financial services firm we know well. Strong governance, weak orchestration.</text>
+  <g transform="translate(400,210)">
+    <g stroke="var(--color-text-muted)" stroke-width="0.4" fill="none">
+      <polygon points="0,-140 121.24,-70 121.24,70 0,140 -121.24,70 -121.24,-70" />
+      <polygon points="0,-112 96.99,-56 96.99,56 0,112 -96.99,56 -96.99,-56" />
+      <polygon points="0,-84 72.74,-42 72.74,42 0,84 -72.74,42 -72.74,-42" />
+      <polygon points="0,-56 48.5,-28 48.5,28 0,56 -48.5,28 -48.5,-28" />
+      <polygon points="0,-28 24.25,-14 24.25,14 0,28 -24.25,14 -24.25,-14" />
+    </g>
+    <g stroke="var(--color-text-muted)" stroke-width="0.4">
+      <line x1="0" y1="0" x2="0" y2="-140"/>
+      <line x1="0" y1="0" x2="121.24" y2="-70"/>
+      <line x1="0" y1="0" x2="121.24" y2="70"/>
+      <line x1="0" y1="0" x2="0" y2="140"/>
+      <line x1="0" y1="0" x2="-121.24" y2="70"/>
+      <line x1="0" y1="0" x2="-121.24" y2="-70"/>
+    </g>
+    <!-- Sample profile: gov=4 orch=2 use=3 int=2 (rest are duplicates for hex shape) -->
+    <polygon points="0,-112 48.5,-28 72.74,42 0,84 -48.5,28 -72.74,-42"
+             fill="var(--color-accent-copper)" fill-opacity="0.18"
+             stroke="var(--color-accent-copper)" stroke-width="1.6"/>
+    <g font-family="var(--font-mono)" font-size="10" fill="var(--color-text)" text-anchor="middle">
+      <text x="0" y="-156">Governance · 4</text>
+      <text x="155" y="-66">Orchestration · 2</text>
+      <text x="155" y="80">Use cases · 3</text>
+      <text x="0" y="170">Integration · 2</text>
+    </g>
+  </g>
+  <g font-family="var(--font-mono)" font-size="10" fill="var(--color-text-muted)">
+    <text x="60" y="340">Concentric levels: 1 Initial · 2 Repeatable · 3 Defined · 4 Managed · 5 Optimized.</text>
+    <text x="60" y="358">A sharp dent on one pillar predicts the next eighteen months of incident reports.</text>
+  </g>
+</svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 31.1</span><span class="text">A four-pillar profile, plotted on a radar. Sharp dents predict where the next year's incidents will come from.</span></figcaption>
+</figure>
+
+<h2 id="reading-the-shape">Reading the shape</h2>
+<p>A balanced radar — all four pillars at roughly the same level — is rare, and not necessarily the goal. What matters is the <em>relationship</em> between the pillars. Certain imbalances are benign; others are dangerous. A firm that scores high on Governance and low on Use Cases has a policy apparatus in search of something to govern — a manageable problem. A firm that scores high on Orchestration and low on Governance has built a machine that can act faster than it can be stopped — a dangerous one.</p>
+<p>The radar in Figure 31.1 shows a representative profile from a financial services firm: strong Governance (L4), moderate Use Cases (L3), weak Orchestration (L2), weak Integration (L2). The interpretation is immediate: this organisation's agents are well-governed in principle but under-instrumented in practice. The policy says agents must log every tool call; the orchestration layer does not actually do so. The policy says agent identities must be scoped; the integration layer issues credentials with excessive scope because the identity model for agents has not been built. The risk is not that the governance is weak — it is that the governance is strong <em>on paper</em> and weak in execution.</p>
+
+<h2 id="pillar-interaction-effects">Pillar interaction effects</h2>
+<p>The four pillars interact. A Use Case portfolio that is rated at L4 — well-scored, well-governed, with clear kill criteria — is only as safe as the Orchestration layer running those use cases. If the Orchestration pillar is at L2, the kill criteria exist in a document but not in a circuit breaker. Similarly, an Integration pillar at L3 — APIs catalogued, secrets managed, data classification in place — becomes a liability if Governance is at L1, because the agent can reach data that no policy has decided it should be allowed to reach.</p>
+<p>The <a href="https://genai.owasp.org/initiatives/#agenticsecurity">OWASP Agentic AI Security Initiative</a> documents this interaction effect in its threat model: the highest-risk scenarios are not those where one pillar is weak but those where two adjacent pillars are mismatched. A strong Use Case selection process (L3) running on a weak Orchestration layer (L1) is the setup for a prompt-injection incident. A strong Integration spine (L4) with weak Governance (L1) is the setup for a data-exfiltration incident. The radar reveals these mismatches at a glance.</p>
+<p><a href="https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai">McKinsey's State of AI research</a> consistently finds that enterprises with the highest returns from AI investment are those that develop governance and technical capabilities in parallel, rather than sequentially. The radar is the instrument that keeps those two tracks synchronised.</p>
+
+<h2 id="the-six-archetypal-profiles">The six archetypal profiles</h2>
+<p>Across dozens of enterprise assessments, six recurring profile shapes emerge. The <em>Compliance-first</em> profile (high Governance, low everything else) is common in regulated industries: the legal team arrived before the engineers. The <em>Engineer-first</em> profile (high Orchestration, low Governance) is common in technology companies: the engineers arrived before the legal team. The <em>Pilot-heavy</em> profile (high Use Cases, low Orchestration and Integration) is common in consulting-influenced organisations: the strategy was clear, the execution was not. The <em>Data-rich</em> profile (high Integration, low Use Cases) is common in data-mature organisations that have yet to identify what the agent should actually do with all the data it can reach. The <em>Balanced-low</em> profile (all pillars at L1–L2) is the most common of all: the organisation has started but has not yet committed. The <em>Balanced-high</em> profile (all pillars at L3–L4) is the rarest and the most valuable.</p>
+<aside class="aside" data-tone="plasma"><p><strong>The profile that looks best but isn't:</strong> a Governance-only high score is the most dangerous false positive in the model. It gives boards comfort that nothing catastrophic can happen while the actual controls are absent. If you are scoring L4 on Governance and L1 on Orchestration, your governance is decoration.</p></aside>
+
+<h2 id="investment-sequencing">Investment sequencing from the radar</h2>
+<p>The practical output of a radar reading is an investment sequence: where to spend the next six months, and in what order. The sequencing heuristic is straightforward: close the most dangerous gap first, then the gap that blocks the most value. The most dangerous gap is defined by the interaction-effect analysis above — the two-pillar mismatch that creates acute risk. The most value-blocking gap is the pillar whose low score is holding down the ceiling for every other pillar.</p>
+<p>In the financial services example from Figure 31.1, the most dangerous gap is Governance/Orchestration mismatch — paper policies with no runtime enforcement. The first investment should be in an orchestration layer that enforces the existing policy automatically: structured logging, circuit breakers, scoped identities. This does not require new policy work; it requires implementing the policy already on paper. Once the mismatch is closed, the integration investment follows: agent credentials scoped to the data classification already defined by Governance.</p>
+<p>The radar reading also reveals what <em>not</em> to invest in. An organisation at L2 across all four pillars that is tempted to acquire an enterprise AI platform at L4 sophistication will find it unusable: the organisation lacks the governance, the evals culture, and the integration plumbing to operate the platform. Tools are only as good as the maturity level of the organisation operating them.</p>
+
+<h2 id="the-radar-as-communication-tool">The radar as communication tool</h2>
+<p>Beyond its diagnostic function, the radar is the most effective communication tool available for briefing a board or executive committee on the state of an agent program. Four pillars, five levels, one picture — it takes thirty seconds to read and generates the right questions. Where are we weakest? What would it take to close the gap? What is the risk of not closing it?</p>
+<p>Chapter 33 structures the twelve-month roadmap explicitly around radar checkpoints: a baseline at Q0, a progress read at Q2, and an expected target state at Q4. The roadmap is not a project plan in isolation; it is a commitment to move a specific set of pillars by a specific number of levels in twelve months, with the evidence to prove it.</p>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="scorecard.html"><span class="ch-nav-link__label">★ Scorecard</span><span class="ch-nav-link__title">Interactive Scorecard</span></a>
+      <a class="ch-nav-link" data-dir="next" href="32-the-thirty-sixty-ninety.html"><span class="ch-nav-link__label">Chapter 32 →</span><span class="ch-nav-link__title">The 30/60/90</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters, the glossary, and the bibliography. Try <em>NIST</em>, <em>orchestration</em>, <em>guardrails</em>, or <em>EU AI Act</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does the NIST AI RMF apply to agentic AI?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">The Agentic Enterprise</strong><br>
+      A long-form readiness field guide for agentic AI in the enterprise.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 28 · MCP, A2A, and the Interop Layer — The Agentic Enterprise</title>
+<meta name="description" content="Model Context Protocol, Agent2Agent, and the protocols that let agents share work">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="28-mcp-a2a-protocols" data-chapter-title="MCP, A2A, and the Interop Layer" data-base="../">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-shift", "title": "The Shift", "subtitle": "From copilots to colleagues \u2014 what changes when software starts to act"}, {"num": "02", "slug": "02-anatomy-of-an-agent", "title": "Anatomy of an Agent", "subtitle": "Plan, act, observe, remember \u2014 the four moving parts"}, {"num": "03", "slug": "03-spectrum-of-autonomy", "title": "The Spectrum of Autonomy", "subtitle": "Five rungs from automation to autonomy, and where most enterprises actually live"}, {"num": "04", "slug": "04-from-models-to-systems", "title": "From Models to Systems", "subtitle": "Why agentic AI is a systems problem, not a model problem"}, {"num": "05", "slug": "05-tool-use-and-grounding", "title": "Tool Use and Grounding", "subtitle": "How an agent reaches into the world \u2014 APIs, retrieval, and the limits of context"}, {"num": "06", "slug": "06-multi-agent-and-swarm", "title": "Multi-Agent and Swarm", "subtitle": "When one mind isn't enough \u2014 coordination, delegation, and emergent failure modes"}, {"num": "07", "slug": "07-the-economics", "title": "The Economics of an Agent", "subtitle": "Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI"}, {"num": "08", "slug": "08-failure-modes", "title": "Failure Modes", "subtitle": "Hallucinated calls, prompt injection, runaway loops, and the cost of being wrong at scale"}, {"num": "09", "slug": "09-threat-landscape", "title": "The Threat Landscape", "subtitle": "OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do"}, {"num": "10", "slug": "10-regulatory-perimeter", "title": "The Regulatory Perimeter", "subtitle": "EU AI Act, US executive orders, sectoral rules \u2014 what bites and what doesn't"}, {"num": "11", "slug": "11-frameworks-landscape", "title": "The Frameworks Landscape", "subtitle": "NIST, ISO, OECD, OWASP, the analyst maturity models \u2014 ranked by what actually moves the needle"}, {"num": "12", "slug": "12-the-four-pillars", "title": "The Four Pillars", "subtitle": "A readiness model: governance, orchestration, use case identification, integration"}, {"num": "13", "slug": "13-governance-charter", "title": "The Governance Charter", "subtitle": "Pillar I \u2014 who owns the agents, who answers when they fail"}, {"num": "14", "slug": "14-policy-stack", "title": "The Policy Stack", "subtitle": "Acceptable use, model risk, data classification, third-party AI, incident response"}, {"num": "15", "slug": "15-nist-rmf-walk", "title": "Walking the NIST AI RMF", "subtitle": "Govern, Map, Measure, Manage \u2014 applied to a real agent program"}, {"num": "16", "slug": "16-iso-42001-and-eu", "title": "ISO/IEC 42001 and the EU AI Act", "subtitle": "Certification, conformity assessment, and the audit trail of an autonomous system"}, {"num": "17", "slug": "17-orchestration-stack", "title": "The Orchestration Stack", "subtitle": "Pillar II \u2014 frameworks, runtimes, and the plumbing of multi-step work"}, {"num": "18", "slug": "18-memory-and-state", "title": "Memory and State", "subtitle": "Short-term, long-term, episodic \u2014 what an agent needs to remember to be useful"}, {"num": "19", "slug": "19-evals-and-observability", "title": "Evals and Observability", "subtitle": "Traces, replays, scorecards \u2014 the dashboards that keep agents honest"}, {"num": "20", "slug": "20-guardrails-and-policy", "title": "Guardrails and Policy Engines", "subtitle": "From input filters to runtime policy \u2014 defense in depth for autonomous systems"}, {"num": "21", "slug": "21-use-case-portfolio", "title": "The Use Case Portfolio", "subtitle": "Pillar III \u2014 picking the right work for an agent to do"}, {"num": "22", "slug": "22-value-and-feasibility", "title": "Value and Feasibility", "subtitle": "Scoring use cases on a 2\u00d72 \u2014 and the trap of doing the easy ones first"}, {"num": "23", "slug": "23-human-in-the-loop", "title": "Human in the Loop", "subtitle": "Where supervision belongs, where it doesn't, and how to design the handoff"}, {"num": "24", "slug": "24-pilot-to-production", "title": "From Pilot to Production", "subtitle": "The valley of death \u2014 and how a use case earns the right to scale"}, {"num": "25", "slug": "25-integration-spine", "title": "The Integration Spine", "subtitle": "Pillar IV \u2014 APIs, identity, data, and the enterprise systems an agent must touch"}, {"num": "26", "slug": "26-identity-for-agents", "title": "Identity for Agents", "subtitle": "Service accounts, scoped tokens, on-behalf-of \u2014 auth for non-human actors"}, {"num": "27", "slug": "27-data-readiness", "title": "Data Readiness", "subtitle": "Lineage, freshness, classification, and why your data lake is not a vector store"}, {"num": "28", "slug": "28-mcp-a2a-protocols", "title": "MCP, A2A, and the Interop Layer", "subtitle": "Model Context Protocol, Agent2Agent, and the protocols that let agents share work"}, {"num": "29", "slug": "29-the-maturity-model", "title": "The Maturity Model", "subtitle": "Five levels \u2014 Initial, Repeatable, Defined, Managed, Optimized \u2014 across all four pillars"}, {"num": "30", "slug": "30-the-scorecard-method", "title": "The Scorecard Method", "subtitle": "How to assess your organization in a half-day, with evidence"}, {"num": "\u2605", "slug": "scorecard", "title": "Interactive Scorecard", "subtitle": "Score yourself across four pillars \u00b7 five levels \u00b7 40 questions \u00b7 share your results"}, {"num": "31", "slug": "31-reading-the-radar", "title": "Reading the Radar", "subtitle": "What a four-pillar profile tells you about where to invest first"}, {"num": "32", "slug": "32-the-thirty-sixty-ninety", "title": "The 30/60/90", "subtitle": "What an enterprise can credibly accomplish in the first ninety days"}, {"num": "33", "slug": "33-the-twelve-month-roadmap", "title": "The Twelve-Month Roadmap", "subtitle": "From scattered pilots to a governed agent platform \u2014 by quarter"}, {"num": "34", "slug": "34-the-operating-model", "title": "The Operating Model", "subtitle": "Center of excellence, hub-and-spoke, federated \u2014 pick one and live with it"}, {"num": "35", "slug": "35-roles-and-careers", "title": "Roles and Careers", "subtitle": "AI product managers, agent engineers, evals leads \u2014 the jobs the org didn't have last year"}, {"num": "36", "slug": "36-procurement-and-vendors", "title": "Procurement and Vendors", "subtitle": "Buy, build, or rent \u2014 and the contract clauses you'll wish you had insisted on"}, {"num": "37", "slug": "37-change-management", "title": "Change Management", "subtitle": "How to roll agents into a workforce without losing the workforce"}, {"num": "38", "slug": "38-economics-at-scale", "title": "Economics at Scale", "subtitle": "Unit costs, gross margin, and the second-order effects of letting agents run your processes"}, {"num": "39", "slug": "39-the-failure-postmortem", "title": "The Failure Postmortem", "subtitle": "Three case studies of agentic deployments that broke \u2014 and what they teach"}, {"num": "40", "slug": "40-the-next-decade", "title": "The Next Decade", "subtitle": "What ready looks like in 2030, and how to recognize it from where you stand today"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>The Agentic Enterprise<span class="brand__sub"> — a readiness field guide</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/scorecard.html">Scorecard</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">The Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 28</div>
+    <div class="ch-header__num">Chapter 28</div>
+    <h1 class="ch-header__title">MCP, A2A, and the Interop Layer</h1>
+    <p class="ch-header__dek">Model Context Protocol, Agent2Agent, and the protocols that let agents share work</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">Dec 2025</div><div class="stat__label">MCP donated to Linux Foundation</div></div><div class="stat"><div class="stat__num">Jun 2025</div><div class="stat__label">A2A donated to Linux Foundation</div></div><div class="stat"><div class="stat__num">6</div><div class="stat__label">A2A task lifecycle states</div></div><div class="stat"><div class="stat__num">3</div><div class="stat__label">MCP capability types: tools, resources, prompts</div></div></div>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#mcp-the-host-client-server-model">MCP: The Host-Client-Server Model</a></li><li><a href="#a2a-agent-to-agent-task-lifecycle">A2A: Agent-to-Agent Task Lifecycle</a></li><li><a href="#agntcy-and-the-agent-network-infrastructure">AGNTCY and the Agent Network Infrastructure</a></li><li><a href="#comparing-mcp-and-a2a">Comparing MCP and A2A</a></li></ul></aside>
+    <article class="prose">
+      <p class="lede">The interoperability layer of agentic AI is in the middle of a rapid, somewhat chaotic standardization process that will determine whether the multi-agent systems being built today are durable or disposable. Two protocols have emerged as the leading candidates for different parts of the interoperability problem. The <a href="https://modelcontextprotocol.io/">Model Context Protocol</a> (MCP), originally developed by Anthropic and donated to the Linux Foundation in December 2025, addresses the connection between an agent and the tools and data sources it uses. The <a href="https://a2aproject.github.io/">Agent2Agent protocol</a> (A2A), originally developed at Google and donated to the Linux Foundation in June 2025, addresses the communication between agents in a multi-agent system. Together they sketch an interoperability stack that has the potential to do for agentic AI what HTTP and TCP/IP did for the web: create a common substrate on which diverse systems can interact without requiring bespoke integration for every pair.</p>
+
+<h2 id="mcp-the-host-client-server-model">MCP: The Host-Client-Server Model</h2>
+<p>MCP defines a three-component architecture: a <strong>host</strong> (the application that runs the agent and manages connections), a <strong>client</strong> (a protocol implementation within the host that maintains a connection to a specific server), and a <strong>server</strong> (a lightweight process that exposes tools, resources, and prompts through the MCP interface). The transport between client and server uses JSON-RPC 2.0, a lightweight remote procedure call protocol that is simple enough to implement in any language and already widely supported in developer tooling. An agent that speaks MCP can connect to any MCP server — a file system, a database, a web browser, a code execution environment, a SaaS API — without requiring bespoke integration code for each. The MCP server ecosystem has grown rapidly: as of early 2026, hundreds of MCP servers are publicly available, covering everything from GitHub and Slack to weather APIs and specialized enterprise data systems.</p>
+<p>The MCP protocol exposes three types of capabilities: <strong>tools</strong> (functions the agent can call), <strong>resources</strong> (data the agent can read), and <strong>prompts</strong> (reusable prompt templates the agent can invoke). This taxonomy maps cleanly onto the agentic use case taxonomy: tools correspond to the action capabilities an agent needs (send an email, create a record, execute a query); resources correspond to the data access capabilities it needs (read a document, query a knowledge base, retrieve a configuration); and prompts correspond to the behavioral specifications it needs (follow this procedure, apply this template, respond in this style). The three-category design is not accidental — it reflects a careful analysis of what agents actually need from their environment and creates clean boundaries between capability types that have different security implications.</p>
+<p>The security model of MCP has evolved significantly since its initial release. The original version had minimal security specifications; the version donated to the Linux Foundation includes OAuth 2.0 support for authentication and authorization, explicit scope definitions for tool and resource access, and a consent model that requires explicit user authorization for sensitive operations. These security improvements are necessary but not sufficient for enterprise deployment — organizations building production MCP integrations will need to add additional controls at the host layer, particularly around tool call auditing and the enforcement of the decision authority matrix for consequential tool invocations.</p>
+
+<h2 id="a2a-agent-to-agent-task-lifecycle">A2A: Agent-to-Agent Task Lifecycle</h2>
+<p>While MCP addresses the agent's connection to its tools and data, <a href="https://a2aproject.github.io/">A2A</a> addresses the agent's relationship with other agents. In a multi-agent system, agents need to delegate tasks to each other, track the progress of delegated tasks, exchange intermediate results, and handle the completion or failure of a delegated workflow. A2A defines a task lifecycle protocol that standardizes these interactions: a requesting agent sends a task with a structured description and a callback address; the responding agent accepts, processes, and returns results through a defined sequence of status transitions; and the requesting agent tracks the task's progress through a polling or event-streaming interface.</p>
+<p>The A2A protocol's task lifecycle has six states: <em>submitted</em>, <em>working</em>, <em>input-required</em> (the receiving agent needs additional information from the requestor), <em>completed</em>, <em>failed</em>, and <em>cancelled</em>. The <em>input-required</em> state is particularly important for enterprise deployments: it models the case where a sub-agent encounters a decision point that requires input from the orchestrating agent or from a human, allowing the task to pause and wait without losing its state. This structured interrupt mechanism is the A2A equivalent of the human-in-the-loop checkpoint that the orchestration stack must support — and its standardization means that multi-agent systems built with A2A get interrupt handling for free, rather than requiring each implementation to build it from scratch.</p>
+
+<h2 id="agntcy-and-the-agent-network-infrastructure">AGNTCY and the Agent Network Infrastructure</h2>
+<p>Beyond MCP and A2A, a third initiative is attempting to address the network infrastructure layer that a large-scale, distributed multi-agent ecosystem will require. <strong>AGNTCY</strong> — an open-source initiative led by Cisco with participation from LangChain, CrewAI, and others — is building an "internet of agents": a directory and routing infrastructure that allows agents to discover other agents, understand their capabilities, and establish secure communication channels with them. Where MCP handles the connection between an agent and its tools and A2A handles the task communication between agents, AGNTCY handles the discovery and routing problem: how does an orchestrating agent find the right sub-agent for a given task among the potentially thousands of agents available in an enterprise's or a network's agent registry?</p>
+<p>The AGNTCY project's core components include an <strong>agent registry</strong> (a directory of available agents with structured capability descriptions), an <strong>agent connect</strong> API (a standard interface for initiating A2A connections with registered agents), and an <strong>open agent schema</strong> (a JSON Schema format for describing agent capabilities in a machine-readable way that enables automated agent selection). The combination of AGNTCY's registry, MCP's tool connectivity, and A2A's task lifecycle protocol sketches a complete interoperability stack for multi-agent systems — though as of early 2026, significant gaps remain in the security specifications and the operational tooling for managing large agent networks.</p>
+
+<blockquote>
+<p>"MCP is the USB standard for agent tools. A2A is the TCP/IP for agent communication. AGNTCY is the DNS. Together they are building the plumbing for an internet of agents that nobody has fully imagined yet."</p>
+</blockquote>
+
+<h2 id="comparing-mcp-and-a2a">Comparing MCP and A2A</h2>
+<p>MCP and A2A are complementary rather than competing protocols, but they do have some functional overlap in the area of agent-to-agent communication that is worth understanding. An MCP server can, in principle, expose another agent as a tool — effectively using MCP to mediate agent-to-agent communication. This is simpler to implement than A2A but loses A2A's structured task lifecycle: MCP tool calls are synchronous request-response interactions, and while the MCP protocol supports streaming, it does not natively model the long-running, interruptible, multi-state task lifecycle that A2A defines. For simple agent-to-agent interactions — an orchestrating agent calling a sub-agent to perform a quick classification or extraction — MCP's tool model may be entirely adequate. For complex, long-running delegated workflows with human-in-the-loop requirements, A2A's task lifecycle model is more appropriate.</p>
+<p>The practical implication for enterprise architects is that both protocols are likely to be present in a mature multi-agent deployment, serving different parts of the interoperability problem. MCP provides the rich ecosystem of tool integrations that give agents their capabilities; A2A provides the structured communication protocol that allows those agents to collaborate on complex tasks; and the choice of which to use for any specific agent-to-agent interaction should be made based on the complexity and duration of the interaction rather than as a global architectural decision.</p>
+
+<aside class="aside" data-tone="plasma">
+  <div class="aside__label">Protocol Adoption Timeline</div>
+  <p>MCP was donated to the Linux Foundation in December 2025 and is already widely adopted — major model providers including Anthropic, Google, and OpenAI support it, and the server ecosystem is growing rapidly. A2A was donated in June 2025 and is in active development, with production implementations at several large enterprises. AGNTCY is earlier stage, with its first stable release expected in late 2026. The practical implication for enterprise planning is to build MCP integration now — the ecosystem is mature enough to support production use — and to watch A2A closely for the task delegation and human-in-the-loop capabilities it provides. AGNTCY is worth tracking but not yet ready for production adoption in most enterprise contexts.</p>
+</aside>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="27-data-readiness.html"><span class="ch-nav-link__label">← Chapter 27</span><span class="ch-nav-link__title">Data Readiness</span></a>
+      <a class="ch-nav-link" data-dir="next" href="29-the-maturity-model.html"><span class="ch-nav-link__label">Chapter 29 →</span><span class="ch-nav-link__title">The Maturity Model</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters, the glossary, and the bibliography. Try <em>NIST</em>, <em>orchestration</em>, <em>guardrails</em>, or <em>EU AI Act</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does the NIST AI RMF apply to agentic AI?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">The Agentic Enterprise</strong><br>
+      A long-form readiness field guide for agentic AI in the enterprise.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

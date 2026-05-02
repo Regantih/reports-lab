@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 35 · Roles and Careers — The Agentic Enterprise</title>
+<meta name="description" content="AI product managers, agent engineers, evals leads — the jobs the org didn't have last year">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="35-roles-and-careers" data-chapter-title="Roles and Careers" data-base="../">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-shift", "title": "The Shift", "subtitle": "From copilots to colleagues \u2014 what changes when software starts to act"}, {"num": "02", "slug": "02-anatomy-of-an-agent", "title": "Anatomy of an Agent", "subtitle": "Plan, act, observe, remember \u2014 the four moving parts"}, {"num": "03", "slug": "03-spectrum-of-autonomy", "title": "The Spectrum of Autonomy", "subtitle": "Five rungs from automation to autonomy, and where most enterprises actually live"}, {"num": "04", "slug": "04-from-models-to-systems", "title": "From Models to Systems", "subtitle": "Why agentic AI is a systems problem, not a model problem"}, {"num": "05", "slug": "05-tool-use-and-grounding", "title": "Tool Use and Grounding", "subtitle": "How an agent reaches into the world \u2014 APIs, retrieval, and the limits of context"}, {"num": "06", "slug": "06-multi-agent-and-swarm", "title": "Multi-Agent and Swarm", "subtitle": "When one mind isn't enough \u2014 coordination, delegation, and emergent failure modes"}, {"num": "07", "slug": "07-the-economics", "title": "The Economics of an Agent", "subtitle": "Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI"}, {"num": "08", "slug": "08-failure-modes", "title": "Failure Modes", "subtitle": "Hallucinated calls, prompt injection, runaway loops, and the cost of being wrong at scale"}, {"num": "09", "slug": "09-threat-landscape", "title": "The Threat Landscape", "subtitle": "OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do"}, {"num": "10", "slug": "10-regulatory-perimeter", "title": "The Regulatory Perimeter", "subtitle": "EU AI Act, US executive orders, sectoral rules \u2014 what bites and what doesn't"}, {"num": "11", "slug": "11-frameworks-landscape", "title": "The Frameworks Landscape", "subtitle": "NIST, ISO, OECD, OWASP, the analyst maturity models \u2014 ranked by what actually moves the needle"}, {"num": "12", "slug": "12-the-four-pillars", "title": "The Four Pillars", "subtitle": "A readiness model: governance, orchestration, use case identification, integration"}, {"num": "13", "slug": "13-governance-charter", "title": "The Governance Charter", "subtitle": "Pillar I \u2014 who owns the agents, who answers when they fail"}, {"num": "14", "slug": "14-policy-stack", "title": "The Policy Stack", "subtitle": "Acceptable use, model risk, data classification, third-party AI, incident response"}, {"num": "15", "slug": "15-nist-rmf-walk", "title": "Walking the NIST AI RMF", "subtitle": "Govern, Map, Measure, Manage \u2014 applied to a real agent program"}, {"num": "16", "slug": "16-iso-42001-and-eu", "title": "ISO/IEC 42001 and the EU AI Act", "subtitle": "Certification, conformity assessment, and the audit trail of an autonomous system"}, {"num": "17", "slug": "17-orchestration-stack", "title": "The Orchestration Stack", "subtitle": "Pillar II \u2014 frameworks, runtimes, and the plumbing of multi-step work"}, {"num": "18", "slug": "18-memory-and-state", "title": "Memory and State", "subtitle": "Short-term, long-term, episodic \u2014 what an agent needs to remember to be useful"}, {"num": "19", "slug": "19-evals-and-observability", "title": "Evals and Observability", "subtitle": "Traces, replays, scorecards \u2014 the dashboards that keep agents honest"}, {"num": "20", "slug": "20-guardrails-and-policy", "title": "Guardrails and Policy Engines", "subtitle": "From input filters to runtime policy \u2014 defense in depth for autonomous systems"}, {"num": "21", "slug": "21-use-case-portfolio", "title": "The Use Case Portfolio", "subtitle": "Pillar III \u2014 picking the right work for an agent to do"}, {"num": "22", "slug": "22-value-and-feasibility", "title": "Value and Feasibility", "subtitle": "Scoring use cases on a 2\u00d72 \u2014 and the trap of doing the easy ones first"}, {"num": "23", "slug": "23-human-in-the-loop", "title": "Human in the Loop", "subtitle": "Where supervision belongs, where it doesn't, and how to design the handoff"}, {"num": "24", "slug": "24-pilot-to-production", "title": "From Pilot to Production", "subtitle": "The valley of death \u2014 and how a use case earns the right to scale"}, {"num": "25", "slug": "25-integration-spine", "title": "The Integration Spine", "subtitle": "Pillar IV \u2014 APIs, identity, data, and the enterprise systems an agent must touch"}, {"num": "26", "slug": "26-identity-for-agents", "title": "Identity for Agents", "subtitle": "Service accounts, scoped tokens, on-behalf-of \u2014 auth for non-human actors"}, {"num": "27", "slug": "27-data-readiness", "title": "Data Readiness", "subtitle": "Lineage, freshness, classification, and why your data lake is not a vector store"}, {"num": "28", "slug": "28-mcp-a2a-protocols", "title": "MCP, A2A, and the Interop Layer", "subtitle": "Model Context Protocol, Agent2Agent, and the protocols that let agents share work"}, {"num": "29", "slug": "29-the-maturity-model", "title": "The Maturity Model", "subtitle": "Five levels \u2014 Initial, Repeatable, Defined, Managed, Optimized \u2014 across all four pillars"}, {"num": "30", "slug": "30-the-scorecard-method", "title": "The Scorecard Method", "subtitle": "How to assess your organization in a half-day, with evidence"}, {"num": "\u2605", "slug": "scorecard", "title": "Interactive Scorecard", "subtitle": "Score yourself across four pillars \u00b7 five levels \u00b7 40 questions \u00b7 share your results"}, {"num": "31", "slug": "31-reading-the-radar", "title": "Reading the Radar", "subtitle": "What a four-pillar profile tells you about where to invest first"}, {"num": "32", "slug": "32-the-thirty-sixty-ninety", "title": "The 30/60/90", "subtitle": "What an enterprise can credibly accomplish in the first ninety days"}, {"num": "33", "slug": "33-the-twelve-month-roadmap", "title": "The Twelve-Month Roadmap", "subtitle": "From scattered pilots to a governed agent platform \u2014 by quarter"}, {"num": "34", "slug": "34-the-operating-model", "title": "The Operating Model", "subtitle": "Center of excellence, hub-and-spoke, federated \u2014 pick one and live with it"}, {"num": "35", "slug": "35-roles-and-careers", "title": "Roles and Careers", "subtitle": "AI product managers, agent engineers, evals leads \u2014 the jobs the org didn't have last year"}, {"num": "36", "slug": "36-procurement-and-vendors", "title": "Procurement and Vendors", "subtitle": "Buy, build, or rent \u2014 and the contract clauses you'll wish you had insisted on"}, {"num": "37", "slug": "37-change-management", "title": "Change Management", "subtitle": "How to roll agents into a workforce without losing the workforce"}, {"num": "38", "slug": "38-economics-at-scale", "title": "Economics at Scale", "subtitle": "Unit costs, gross margin, and the second-order effects of letting agents run your processes"}, {"num": "39", "slug": "39-the-failure-postmortem", "title": "The Failure Postmortem", "subtitle": "Three case studies of agentic deployments that broke \u2014 and what they teach"}, {"num": "40", "slug": "40-the-next-decade", "title": "The Next Decade", "subtitle": "What ready looks like in 2030, and how to recognize it from where you stand today"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>The Agentic Enterprise<span class="brand__sub"> — a readiness field guide</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/scorecard.html">Scorecard</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">The Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 35</div>
+    <div class="ch-header__num">Chapter 35</div>
+    <h1 class="ch-header__title">Roles and Careers</h1>
+    <p class="ch-header__dek">AI product managers, agent engineers, evals leads — the jobs the org didn't have last year</p>
+    
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-ai-product-manager">The AI product manager</a></li><li><a href="#agent-engineers">Agent engineers</a></li><li><a href="#the-evals-lead">The evals lead</a></li><li><a href="#governance-and-risk-roles">Governance and risk roles</a></li><li><a href="#career-paths">Career paths</a></li></ul></aside>
+    <article class="prose">
+      <p class="lede">Every significant technology shift creates new roles before the labour market has names for them, and destroys old roles before the people in them have somewhere to go. Agentic AI is producing both effects simultaneously. The organisations that navigate this transition well are those that name the new roles clearly, build career paths for people who want to grow into them, and create a reskilling bridge for the people whose existing roles are being transformed. Organisations that wait for the labour market to do this for them will be late.</p>
+
+<h2 id="the-ai-product-manager">The AI product manager</h2>
+<p>The <em>AI product manager</em> is the most important role that most enterprises have not yet formally created. This is not a software product manager who happens to work on an AI project; it is a role specifically designed for the governance, scoping, and lifecycle management of agents and AI systems as products. The AI PM owns the use-case selection process — the value-feasibility scoring, the stakeholder alignment, the kill criteria — and is accountable for the agent's performance in production in the same way a traditional product manager is accountable for a software product's Net Promoter Score.</p>
+<p>The AI PM must be fluent in three languages: the business domain (what does this process actually do, and who depends on it?), the technical architecture (what are the orchestration layer's constraints, and what can the evals harness actually measure?), and the governance framework (which regulatory requirements apply, and what does the risk owner need to approve deployment?). This combination is rare; organisations typically find it by promoting experienced product managers with an appetite for technical depth, not by hiring from ML research backgrounds.</p>
+
+<h2 id="agent-engineers">Agent engineers</h2>
+<p>The <em>agent engineer</em> role sits at the intersection of software engineering and applied ML. Unlike a traditional ML engineer, who is primarily concerned with model training and inference infrastructure, the agent engineer is primarily concerned with the agent's runtime behaviour: the orchestration logic, the tool integrations, the memory architecture, the structured output contracts that allow the agent to interoperate with enterprise systems. The agent engineer writes the code that runs between the model's API and the business system's API — and that code is where most agent failures originate.</p>
+<p>Key competencies for an agent engineer: proficiency in at least one orchestration framework; experience with structured output design and eval harness construction; understanding of identity and access management sufficient to design a scoped agent credential; and the discipline to write evals before writing code, in the same way that test-driven development rewired software engineering habits in the 2000s. This last competency is the most culturally difficult to instil, because it requires slowing down before speeding up — and agent engineering culture, at this stage in the technology's development, runs fast by default.</p>
+<blockquote><p>"The difference between an agent engineer and a prompt engineer is that the agent engineer is worried about what happens on the fifth tool call, not the first." — observation from an enterprise AI engineering workshop, 2025.</p></blockquote>
+
+<h2 id="the-evals-lead">The evals lead</h2>
+<p>The <em>evals lead</em> is the newest and least well-understood of the core roles. This person owns the organisation's evaluation library: the test cases, the red-team scenarios, the automatic graders, the human-evaluation protocols. They are the quality director of the agent estate, in the same sense that a QA director is the quality function for a software engineering organisation. Without this role, evals are an afterthought — something the agent engineer runs before deployment and forgets about.</p>
+<p>The evals lead is responsible for three things: maintaining the eval library as the agent estate grows (new agents need new evals, but there should also be a shared library of safety and reliability tests that applies to every agent); running the red-team schedule (periodic adversarial exercises designed to find failures before adversaries do, informed by the <a href="https://genai.owasp.org/initiatives/#agenticsecurity">OWASP Agentic AI threat taxonomy</a>); and owning the incident post-mortem process (when an agent fails in production, the evals lead is responsible for translating the failure into new test cases that prevent recurrence).</p>
+
+<h2 id="governance-and-risk-roles">Governance and risk roles</h2>
+<p>Established governance and risk functions — model risk management, information security, legal, compliance — need not create entirely new roles for agentic AI, but they do need to extend existing ones. The model risk manager who has historically reviewed statistical models for credit and fraud must now review LLM-based agents, which behave probabilistically in ways that traditional model validation frameworks were not designed to handle. The information security architect who has designed identity and access management for human users must extend those designs to machine identities that execute actions on behalf of those users. The legal team that has negotiated SaaS vendor contracts must now negotiate AI model provider contracts, which raise different questions about data usage, model versioning, and liability for model-generated outputs.</p>
+<p>These extensions are not optional; they are required by the governance frameworks the organisation has already committed to. The <a href="https://www.iso.org/standard/42001">ISO/IEC 42001</a> management system, the <a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI RMF</a>, and the <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32024R1689">EU AI Act</a> all presuppose that the governance function has people who understand what agents are and how they fail.</p>
+<aside class="aside" data-tone="euv"><p><strong>On the reskilling question:</strong> the roles most directly affected by agentic AI — knowledge workers who perform tasks that can now be partially automated by an agent — are also the people best positioned to be AI product managers, evals leads, and governance roles. They understand the domain deeply. The organisations that win the talent transition are those that build the bridge explicitly, rather than assuming displaced workers will find it themselves.</p></aside>
+
+<h2 id="career-paths">Career paths for the new roles</h2>
+<p>Career paths for the new roles are still being invented, and any description here will be overtaken by events. But some patterns are already visible. Agent engineers who develop deep evals expertise tend to move toward evals lead roles or AI governance roles, where technical credibility is required to hold a line against engineering teams under deployment pressure. AI product managers who develop deep domain expertise in a specific vertical — financial services, healthcare, supply chain — become highly valuable as the organisations in that vertical start competing on the quality of their agent portfolios. Evals leads who build comprehensive red-team libraries develop a kind of institutional memory that makes them difficult to replace and easy to promote.</p>
+<p><a href="https://www.mckinsey.com/capabilities/quantumblack/our-insights/the-state-of-ai">McKinsey's State of AI research</a> finds that the organisations with the highest AI value realisation are those that invest in AI capability building for employees in existing roles, not just in hiring external AI specialists. The implication for the operating model is clear: the programme needs a learning and development component, not just a hiring plan.</p>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="34-the-operating-model.html"><span class="ch-nav-link__label">← Chapter 34</span><span class="ch-nav-link__title">The Operating Model</span></a>
+      <a class="ch-nav-link" data-dir="next" href="36-procurement-and-vendors.html"><span class="ch-nav-link__label">Chapter 36 →</span><span class="ch-nav-link__title">Procurement and Vendors</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters, the glossary, and the bibliography. Try <em>NIST</em>, <em>orchestration</em>, <em>guardrails</em>, or <em>EU AI Act</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does the NIST AI RMF apply to agentic AI?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">The Agentic Enterprise</strong><br>
+      A long-form readiness field guide for agentic AI in the enterprise.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

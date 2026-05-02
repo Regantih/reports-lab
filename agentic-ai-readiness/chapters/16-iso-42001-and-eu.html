@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 16 · ISO/IEC 42001 and the EU AI Act — The Agentic Enterprise</title>
+<meta name="description" content="Certification, conformity assessment, and the audit trail of an autonomous system">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="16-iso-42001-and-eu" data-chapter-title="ISO/IEC 42001 and the EU AI Act" data-base="../">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-shift", "title": "The Shift", "subtitle": "From copilots to colleagues \u2014 what changes when software starts to act"}, {"num": "02", "slug": "02-anatomy-of-an-agent", "title": "Anatomy of an Agent", "subtitle": "Plan, act, observe, remember \u2014 the four moving parts"}, {"num": "03", "slug": "03-spectrum-of-autonomy", "title": "The Spectrum of Autonomy", "subtitle": "Five rungs from automation to autonomy, and where most enterprises actually live"}, {"num": "04", "slug": "04-from-models-to-systems", "title": "From Models to Systems", "subtitle": "Why agentic AI is a systems problem, not a model problem"}, {"num": "05", "slug": "05-tool-use-and-grounding", "title": "Tool Use and Grounding", "subtitle": "How an agent reaches into the world \u2014 APIs, retrieval, and the limits of context"}, {"num": "06", "slug": "06-multi-agent-and-swarm", "title": "Multi-Agent and Swarm", "subtitle": "When one mind isn't enough \u2014 coordination, delegation, and emergent failure modes"}, {"num": "07", "slug": "07-the-economics", "title": "The Economics of an Agent", "subtitle": "Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI"}, {"num": "08", "slug": "08-failure-modes", "title": "Failure Modes", "subtitle": "Hallucinated calls, prompt injection, runaway loops, and the cost of being wrong at scale"}, {"num": "09", "slug": "09-threat-landscape", "title": "The Threat Landscape", "subtitle": "OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do"}, {"num": "10", "slug": "10-regulatory-perimeter", "title": "The Regulatory Perimeter", "subtitle": "EU AI Act, US executive orders, sectoral rules \u2014 what bites and what doesn't"}, {"num": "11", "slug": "11-frameworks-landscape", "title": "The Frameworks Landscape", "subtitle": "NIST, ISO, OECD, OWASP, the analyst maturity models \u2014 ranked by what actually moves the needle"}, {"num": "12", "slug": "12-the-four-pillars", "title": "The Four Pillars", "subtitle": "A readiness model: governance, orchestration, use case identification, integration"}, {"num": "13", "slug": "13-governance-charter", "title": "The Governance Charter", "subtitle": "Pillar I \u2014 who owns the agents, who answers when they fail"}, {"num": "14", "slug": "14-policy-stack", "title": "The Policy Stack", "subtitle": "Acceptable use, model risk, data classification, third-party AI, incident response"}, {"num": "15", "slug": "15-nist-rmf-walk", "title": "Walking the NIST AI RMF", "subtitle": "Govern, Map, Measure, Manage \u2014 applied to a real agent program"}, {"num": "16", "slug": "16-iso-42001-and-eu", "title": "ISO/IEC 42001 and the EU AI Act", "subtitle": "Certification, conformity assessment, and the audit trail of an autonomous system"}, {"num": "17", "slug": "17-orchestration-stack", "title": "The Orchestration Stack", "subtitle": "Pillar II \u2014 frameworks, runtimes, and the plumbing of multi-step work"}, {"num": "18", "slug": "18-memory-and-state", "title": "Memory and State", "subtitle": "Short-term, long-term, episodic \u2014 what an agent needs to remember to be useful"}, {"num": "19", "slug": "19-evals-and-observability", "title": "Evals and Observability", "subtitle": "Traces, replays, scorecards \u2014 the dashboards that keep agents honest"}, {"num": "20", "slug": "20-guardrails-and-policy", "title": "Guardrails and Policy Engines", "subtitle": "From input filters to runtime policy \u2014 defense in depth for autonomous systems"}, {"num": "21", "slug": "21-use-case-portfolio", "title": "The Use Case Portfolio", "subtitle": "Pillar III \u2014 picking the right work for an agent to do"}, {"num": "22", "slug": "22-value-and-feasibility", "title": "Value and Feasibility", "subtitle": "Scoring use cases on a 2\u00d72 \u2014 and the trap of doing the easy ones first"}, {"num": "23", "slug": "23-human-in-the-loop", "title": "Human in the Loop", "subtitle": "Where supervision belongs, where it doesn't, and how to design the handoff"}, {"num": "24", "slug": "24-pilot-to-production", "title": "From Pilot to Production", "subtitle": "The valley of death \u2014 and how a use case earns the right to scale"}, {"num": "25", "slug": "25-integration-spine", "title": "The Integration Spine", "subtitle": "Pillar IV \u2014 APIs, identity, data, and the enterprise systems an agent must touch"}, {"num": "26", "slug": "26-identity-for-agents", "title": "Identity for Agents", "subtitle": "Service accounts, scoped tokens, on-behalf-of \u2014 auth for non-human actors"}, {"num": "27", "slug": "27-data-readiness", "title": "Data Readiness", "subtitle": "Lineage, freshness, classification, and why your data lake is not a vector store"}, {"num": "28", "slug": "28-mcp-a2a-protocols", "title": "MCP, A2A, and the Interop Layer", "subtitle": "Model Context Protocol, Agent2Agent, and the protocols that let agents share work"}, {"num": "29", "slug": "29-the-maturity-model", "title": "The Maturity Model", "subtitle": "Five levels \u2014 Initial, Repeatable, Defined, Managed, Optimized \u2014 across all four pillars"}, {"num": "30", "slug": "30-the-scorecard-method", "title": "The Scorecard Method", "subtitle": "How to assess your organization in a half-day, with evidence"}, {"num": "\u2605", "slug": "scorecard", "title": "Interactive Scorecard", "subtitle": "Score yourself across four pillars \u00b7 five levels \u00b7 40 questions \u00b7 share your results"}, {"num": "31", "slug": "31-reading-the-radar", "title": "Reading the Radar", "subtitle": "What a four-pillar profile tells you about where to invest first"}, {"num": "32", "slug": "32-the-thirty-sixty-ninety", "title": "The 30/60/90", "subtitle": "What an enterprise can credibly accomplish in the first ninety days"}, {"num": "33", "slug": "33-the-twelve-month-roadmap", "title": "The Twelve-Month Roadmap", "subtitle": "From scattered pilots to a governed agent platform \u2014 by quarter"}, {"num": "34", "slug": "34-the-operating-model", "title": "The Operating Model", "subtitle": "Center of excellence, hub-and-spoke, federated \u2014 pick one and live with it"}, {"num": "35", "slug": "35-roles-and-careers", "title": "Roles and Careers", "subtitle": "AI product managers, agent engineers, evals leads \u2014 the jobs the org didn't have last year"}, {"num": "36", "slug": "36-procurement-and-vendors", "title": "Procurement and Vendors", "subtitle": "Buy, build, or rent \u2014 and the contract clauses you'll wish you had insisted on"}, {"num": "37", "slug": "37-change-management", "title": "Change Management", "subtitle": "How to roll agents into a workforce without losing the workforce"}, {"num": "38", "slug": "38-economics-at-scale", "title": "Economics at Scale", "subtitle": "Unit costs, gross margin, and the second-order effects of letting agents run your processes"}, {"num": "39", "slug": "39-the-failure-postmortem", "title": "The Failure Postmortem", "subtitle": "Three case studies of agentic deployments that broke \u2014 and what they teach"}, {"num": "40", "slug": "40-the-next-decade", "title": "The Next Decade", "subtitle": "What ready looks like in 2030, and how to recognize it from where you stand today"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>The Agentic Enterprise<span class="brand__sub"> — a readiness field guide</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/scorecard.html">Scorecard</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">The Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 16</div>
+    <div class="ch-header__num">Chapter 16</div>
+    <h1 class="ch-header__title">ISO/IEC 42001 and the EU AI Act</h1>
+    <p class="ch-header__dek">Certification, conformity assessment, and the audit trail of an autonomous system</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">8</div><div class="stat__label">Annex A control domains in ISO/IEC 42001</div></div><div class="stat"><div class="stat__num">Articles 8–15</div><div class="stat__label">EU AI Act high-risk obligations</div></div></div>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#iso-42001-the-pdca-backbone">ISO/IEC 42001: The PDCA Backbone</a></li><li><a href="#eu-ai-act-obligations-for-high-risk-systems">EU AI Act: Obligations for High-Risk Systems</a></li><li><a href="#conformity-assessment-and-audit-trail">Conformity Assessment and the Audit Trail</a></li><li><a href="#the-fria-frontier">The FRIA Frontier</a></li></ul></aside>
+    <article class="prose">
+      <p class="lede">Two regulatory instruments now define the outer walls of enterprise AI governance for organizations operating in Europe or with European customers. <a href="https://www.iso.org/standard/42001">ISO/IEC 42001</a>, published in December 2023, is the first certifiable management system standard for AI — a PDCA-cycle framework that gives organizations a structured, auditable path to responsible AI management. The <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32024R1689">EU AI Act</a>, which entered into force in August 2024, is binding law with graduated obligations based on risk classification. Together they create a compliance architecture that is more demanding than anything the enterprise software industry has previously encountered, and for agentic systems specifically, that architecture contains several provisions that require careful engineering, not just careful documentation.</p>
+
+<h2 id="iso-42001-the-pdca-backbone">ISO/IEC 42001: The PDCA Backbone</h2>
+<p>ISO/IEC 42001 is structured like other ISO management system standards — ISO 9001 for quality, ISO 27001 for information security — around the Plan-Do-Check-Act cycle. An organization that implements 42001 establishes an AI management system: a documented set of policies, processes, roles, and records that demonstrates it is managing AI risks in a systematic and continuously improving way. The standard is certifiable, meaning a third-party audit body can assess conformity and issue a certificate — a capability that is becoming increasingly important as enterprise customers and regulators begin requiring documented AI governance from their vendors and counterparties.</p>
+<p>Annex A of the standard contains a library of controls organized around eight domains: AI system impact assessment, AI system life cycle, data management, technical controls, documented information, supply chain, competence and awareness, and stakeholder engagement. For agentic systems, the most operationally demanding controls sit in the technical domain: specifically, the requirements for <strong>explainability</strong>, <strong>robustness testing</strong>, and <strong>human oversight mechanisms</strong>. An agent that cannot provide a human-interpretable account of why it took a specific action at a specific moment will fail the explainability control; an agent that has not been tested against adversarial inputs will fail the robustness testing control; an agent deployed without a documented mechanism for human override will fail the human oversight control.</p>
+<p>The standard also requires an <strong>AI impact assessment</strong> process — analogous to the privacy impact assessments required under GDPR — that evaluates the potential impacts of an AI system on individuals, organizations, and society before deployment and at regular intervals thereafter. For high-autonomy agents with the ability to affect significant resources or make consequential decisions, this assessment is a substantial undertaking that requires input from legal, ethics, and subject matter experts who understand the deployment context.</p>
+
+<h2 id="eu-ai-act-obligations-for-high-risk-systems">EU AI Act: Obligations for High-Risk Systems</h2>
+<p>The EU AI Act classifies AI systems into four risk tiers: unacceptable risk (prohibited), high risk (subject to conformity assessment and ongoing obligations), limited risk (transparency requirements), and minimal risk (no specific obligations). Most agentic systems deployed in consequential enterprise contexts — those affecting employment decisions, credit assessments, safety-critical operations, or public services — are likely to qualify as high-risk under Annex III of the Act. High-risk classification triggers a comprehensive set of obligations under Articles 8 through 15 that collectively define one of the most demanding technical compliance regimes in the history of software regulation.</p>
+<p><strong>Article 9</strong> requires a risk management system that is continuously updated throughout the system's lifecycle — not a one-time risk assessment but an ongoing process that tracks identified risks, their likelihood and severity, and the measures taken to mitigate them. <strong>Article 10</strong> requires that training, validation, and testing data meet defined quality standards — a requirement that applies not just to the foundation model but to any fine-tuning, retrieval corpus, or tool response data that the agent uses at runtime. <strong>Article 11</strong> requires technical documentation that is comprehensive enough to allow a notified body to assess conformity — including documentation of the system's intended purpose, its performance characteristics, its limitations, and its foreseeable misuse scenarios.</p>
+<p><strong>Article 12</strong> requires automatic logging of events throughout the system's operation — with specific requirements for the logging of operations that are "relevant for the identification of risks." For agents, this means logging not just the final output but the intermediate steps: the tool calls made, the data retrieved, the reasoning produced at each planning step. <strong>Article 13</strong> requires transparency toward users that is sufficient for them to interpret the system's output correctly, including disclosure that they are interacting with an AI system. <strong>Article 14</strong> requires human oversight mechanisms that are effective — meaning the oversight must be technically capable of preventing or minimizing risks, not merely a paper control. <strong>Article 15</strong> requires that the system achieves an appropriate level of accuracy, robustness, and cybersecurity, with specific attention to resilience against attempts to alter outputs through adversarial manipulation.</p>
+
+<blockquote>
+<p>"The EU AI Act's Article 14 requirement for effective human oversight is the one provision that most directly constrains the autonomy architecture of a deployed agent. 'Effective' means technically capable of intervention, not merely nominally available."</p>
+</blockquote>
+
+<h2 id="conformity-assessment-and-audit-trail">Conformity Assessment and the Audit Trail</h2>
+<p>For most high-risk AI systems, the EU AI Act requires a conformity assessment before the system can be placed on the market. For some categories — biometric identification, critical infrastructure, employment — this assessment must be conducted by a <strong>notified body</strong>, a third-party organization accredited by a national authority. For other high-risk categories, self-assessment is permitted, but the organization must produce a <strong>Declaration of Conformity</strong> and register the system in the EU AI Act's public database before deployment.</p>
+<p>The audit trail that supports conformity assessment is substantially more demanding than the audit trail required for conventional software compliance. It must include: the technical documentation required under Article 11; records of the quality management system required under Article 17; records of the post-market monitoring system required under Article 72; and, for any serious incidents, the incident report required under Article 73. For agents specifically, the requirement to log "operations relevant for the identification of risks" under Article 12 effectively mandates complete execution traces — not summarized logs but the full sequence of model calls, tool invocations, and state transitions that constitute each agent run.</p>
+
+<h2 id="the-fria-frontier">The FRIA Frontier</h2>
+<p>The EU AI Act introduces a new instrument that has no direct analog in prior EU technology regulation: the <strong>Fundamental Rights Impact Assessment</strong> (FRIA). Required for high-risk AI systems deployed by public bodies and certain private operators in high-stakes contexts, the FRIA extends the standard impact assessment framework to explicitly consider the impacts of the AI system on fundamental rights — the rights protected under the EU Charter of Fundamental Rights. For agents operating in contexts that affect access to essential services, employment, education, or justice, the FRIA is a significant undertaking.</p>
+<p>Conducting a FRIA for an agentic system requires engaging with questions that are genuinely novel: how does the agent's behavior affect the rights of the people it interacts with, and how does that effect change when the agent is operating at the scale and speed that autonomous systems make possible? An agent that processes hundreds of loan applications per hour, making decisions that affect people's access to credit, is not simply a faster version of a human loan officer; it is a qualitatively different kind of decision-maker whose systematic biases can propagate at a speed and scale that makes them far harder to detect and correct. The FRIA is designed to surface exactly these systemic effects before deployment, rather than after they have caused harm at scale.</p>
+
+<aside class="aside" data-tone="copper">
+  <div class="aside__label">42001 vs. the EU AI Act: Complementary, Not Interchangeable</div>
+  <p>ISO/IEC 42001 certification does not constitute conformity with the EU AI Act, and EU AI Act compliance does not substitute for 42001 certification. The two instruments operate at different levels: 42001 is a management system standard that demonstrates organizational capability; the EU AI Act is binding law that mandates specific technical and documentation requirements for specific system types. Organizations serving European markets will ultimately need both — and the overlap between the two frameworks is substantial enough that implementing them in an integrated way is considerably more efficient than treating them as separate compliance workstreams.</p>
+</aside>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="15-nist-rmf-walk.html"><span class="ch-nav-link__label">← Chapter 15</span><span class="ch-nav-link__title">Walking the NIST AI RMF</span></a>
+      <a class="ch-nav-link" data-dir="next" href="17-orchestration-stack.html"><span class="ch-nav-link__label">Chapter 17 →</span><span class="ch-nav-link__title">The Orchestration Stack</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters, the glossary, and the bibliography. Try <em>NIST</em>, <em>orchestration</em>, <em>guardrails</em>, or <em>EU AI Act</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does the NIST AI RMF apply to agentic AI?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">The Agentic Enterprise</strong><br>
+      A long-form readiness field guide for agentic AI in the enterprise.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 07 · The Economics of an Agent — The Agentic Enterprise</title>
+<meta name="description" content="Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="07-the-economics" data-chapter-title="The Economics of an Agent" data-base="../">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-shift", "title": "The Shift", "subtitle": "From copilots to colleagues \u2014 what changes when software starts to act"}, {"num": "02", "slug": "02-anatomy-of-an-agent", "title": "Anatomy of an Agent", "subtitle": "Plan, act, observe, remember \u2014 the four moving parts"}, {"num": "03", "slug": "03-spectrum-of-autonomy", "title": "The Spectrum of Autonomy", "subtitle": "Five rungs from automation to autonomy, and where most enterprises actually live"}, {"num": "04", "slug": "04-from-models-to-systems", "title": "From Models to Systems", "subtitle": "Why agentic AI is a systems problem, not a model problem"}, {"num": "05", "slug": "05-tool-use-and-grounding", "title": "Tool Use and Grounding", "subtitle": "How an agent reaches into the world \u2014 APIs, retrieval, and the limits of context"}, {"num": "06", "slug": "06-multi-agent-and-swarm", "title": "Multi-Agent and Swarm", "subtitle": "When one mind isn't enough \u2014 coordination, delegation, and emergent failure modes"}, {"num": "07", "slug": "07-the-economics", "title": "The Economics of an Agent", "subtitle": "Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI"}, {"num": "08", "slug": "08-failure-modes", "title": "Failure Modes", "subtitle": "Hallucinated calls, prompt injection, runaway loops, and the cost of being wrong at scale"}, {"num": "09", "slug": "09-threat-landscape", "title": "The Threat Landscape", "subtitle": "OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do"}, {"num": "10", "slug": "10-regulatory-perimeter", "title": "The Regulatory Perimeter", "subtitle": "EU AI Act, US executive orders, sectoral rules \u2014 what bites and what doesn't"}, {"num": "11", "slug": "11-frameworks-landscape", "title": "The Frameworks Landscape", "subtitle": "NIST, ISO, OECD, OWASP, the analyst maturity models \u2014 ranked by what actually moves the needle"}, {"num": "12", "slug": "12-the-four-pillars", "title": "The Four Pillars", "subtitle": "A readiness model: governance, orchestration, use case identification, integration"}, {"num": "13", "slug": "13-governance-charter", "title": "The Governance Charter", "subtitle": "Pillar I \u2014 who owns the agents, who answers when they fail"}, {"num": "14", "slug": "14-policy-stack", "title": "The Policy Stack", "subtitle": "Acceptable use, model risk, data classification, third-party AI, incident response"}, {"num": "15", "slug": "15-nist-rmf-walk", "title": "Walking the NIST AI RMF", "subtitle": "Govern, Map, Measure, Manage \u2014 applied to a real agent program"}, {"num": "16", "slug": "16-iso-42001-and-eu", "title": "ISO/IEC 42001 and the EU AI Act", "subtitle": "Certification, conformity assessment, and the audit trail of an autonomous system"}, {"num": "17", "slug": "17-orchestration-stack", "title": "The Orchestration Stack", "subtitle": "Pillar II \u2014 frameworks, runtimes, and the plumbing of multi-step work"}, {"num": "18", "slug": "18-memory-and-state", "title": "Memory and State", "subtitle": "Short-term, long-term, episodic \u2014 what an agent needs to remember to be useful"}, {"num": "19", "slug": "19-evals-and-observability", "title": "Evals and Observability", "subtitle": "Traces, replays, scorecards \u2014 the dashboards that keep agents honest"}, {"num": "20", "slug": "20-guardrails-and-policy", "title": "Guardrails and Policy Engines", "subtitle": "From input filters to runtime policy \u2014 defense in depth for autonomous systems"}, {"num": "21", "slug": "21-use-case-portfolio", "title": "The Use Case Portfolio", "subtitle": "Pillar III \u2014 picking the right work for an agent to do"}, {"num": "22", "slug": "22-value-and-feasibility", "title": "Value and Feasibility", "subtitle": "Scoring use cases on a 2\u00d72 \u2014 and the trap of doing the easy ones first"}, {"num": "23", "slug": "23-human-in-the-loop", "title": "Human in the Loop", "subtitle": "Where supervision belongs, where it doesn't, and how to design the handoff"}, {"num": "24", "slug": "24-pilot-to-production", "title": "From Pilot to Production", "subtitle": "The valley of death \u2014 and how a use case earns the right to scale"}, {"num": "25", "slug": "25-integration-spine", "title": "The Integration Spine", "subtitle": "Pillar IV \u2014 APIs, identity, data, and the enterprise systems an agent must touch"}, {"num": "26", "slug": "26-identity-for-agents", "title": "Identity for Agents", "subtitle": "Service accounts, scoped tokens, on-behalf-of \u2014 auth for non-human actors"}, {"num": "27", "slug": "27-data-readiness", "title": "Data Readiness", "subtitle": "Lineage, freshness, classification, and why your data lake is not a vector store"}, {"num": "28", "slug": "28-mcp-a2a-protocols", "title": "MCP, A2A, and the Interop Layer", "subtitle": "Model Context Protocol, Agent2Agent, and the protocols that let agents share work"}, {"num": "29", "slug": "29-the-maturity-model", "title": "The Maturity Model", "subtitle": "Five levels \u2014 Initial, Repeatable, Defined, Managed, Optimized \u2014 across all four pillars"}, {"num": "30", "slug": "30-the-scorecard-method", "title": "The Scorecard Method", "subtitle": "How to assess your organization in a half-day, with evidence"}, {"num": "\u2605", "slug": "scorecard", "title": "Interactive Scorecard", "subtitle": "Score yourself across four pillars \u00b7 five levels \u00b7 40 questions \u00b7 share your results"}, {"num": "31", "slug": "31-reading-the-radar", "title": "Reading the Radar", "subtitle": "What a four-pillar profile tells you about where to invest first"}, {"num": "32", "slug": "32-the-thirty-sixty-ninety", "title": "The 30/60/90", "subtitle": "What an enterprise can credibly accomplish in the first ninety days"}, {"num": "33", "slug": "33-the-twelve-month-roadmap", "title": "The Twelve-Month Roadmap", "subtitle": "From scattered pilots to a governed agent platform \u2014 by quarter"}, {"num": "34", "slug": "34-the-operating-model", "title": "The Operating Model", "subtitle": "Center of excellence, hub-and-spoke, federated \u2014 pick one and live with it"}, {"num": "35", "slug": "35-roles-and-careers", "title": "Roles and Careers", "subtitle": "AI product managers, agent engineers, evals leads \u2014 the jobs the org didn't have last year"}, {"num": "36", "slug": "36-procurement-and-vendors", "title": "Procurement and Vendors", "subtitle": "Buy, build, or rent \u2014 and the contract clauses you'll wish you had insisted on"}, {"num": "37", "slug": "37-change-management", "title": "Change Management", "subtitle": "How to roll agents into a workforce without losing the workforce"}, {"num": "38", "slug": "38-economics-at-scale", "title": "Economics at Scale", "subtitle": "Unit costs, gross margin, and the second-order effects of letting agents run your processes"}, {"num": "39", "slug": "39-the-failure-postmortem", "title": "The Failure Postmortem", "subtitle": "Three case studies of agentic deployments that broke \u2014 and what they teach"}, {"num": "40", "slug": "40-the-next-decade", "title": "The Next Decade", "subtitle": "What ready looks like in 2030, and how to recognize it from where you stand today"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>The Agentic Enterprise<span class="brand__sub"> — a readiness field guide</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/scorecard.html">Scorecard</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">The Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 07</div>
+    <div class="ch-header__num">Chapter 07</div>
+    <h1 class="ch-header__title">The Economics of an Agent</h1>
+    <p class="ch-header__dek">Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">40–70%</div><div class="stat__label">Cost savings at industrialized agentic deployment</div></div><div class="stat"><div class="stat__num">12–18 mo</div><div class="stat__label">Typical months to reach labor cost inflection point</div></div><div class="stat"><div class="stat__num">3–5×</div><div class="stat__label">Typical underestimate factor for integration engineering cost</div></div></div>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-cost-structure">The Cost Structure</a></li><li><a href="#roi-model">The ROI Model</a></li><li><a href="#hidden-costs">Hidden Costs</a></li><li><a href="#saas-vs-agentic-roi">Why Agentic ROI Looks Nothing Like SaaS ROI</a></li><li><a href="#pricing-the-agent-portfolio">Pricing the Agent Portfolio</a></li></ul></aside>
+    <article class="prose">
+      <p class="lede">Every technology investment eventually comes down to a number. For agentic AI, finding that number is harder than it looks — and the models that companies have borrowed from SaaS, from robotic process automation, or from conventional cloud computing consistently produce estimates that are wrong in interesting ways. The economics of an agent are not the economics of a software license, a data center, or a human worker. They are a hybrid that shares features of all three and is reducible to none of them. Getting the unit economics right — understanding what an agent costs to run, what it returns, and how those numbers change with scale — is not an accounting exercise. It is the foundation of a credible business case, and the absence of it is the quiet reason that more enterprise AI programs stall than fail loudly.</p>
+
+<h2 id="the-cost-structure">The Cost Structure</h2>
+<p>The cost of running an agent has four main components: model inference, tool execution, memory and retrieval, and the human oversight that remains in the loop. Each behaves differently at scale, and the interactions between them are non-trivial.</p>
+<p>Model inference cost is the most visible and most discussed. It is priced per token — typically per million tokens of input and output — and it scales with the complexity and length of the agent's reasoning. A Level 2 copilot interaction might consume a few hundred tokens. A Level 4 agent running a multi-step research task might consume hundreds of thousands of tokens across many reasoning steps, tool calls, and context updates. At the model pricing available in early 2026 — approximately $3–15 per million tokens for frontier models, and $0.10–1.00 for distilled or cached models — the inference cost per complex task ranges from fractions of a cent to several dollars depending on model choice and task design.</p>
+<p>Tool execution costs are less discussed but can dominate. Web search API calls, database queries, code execution in sandboxed environments, and third-party API calls all carry their own pricing. A research agent that makes fifty web search calls per task is spending as much on search API calls as on model inference in some configurations. Tool execution costs are also less predictable: a model that decides to call a tool multiple times in a retry loop can generate costs that were not in the task budget. Rate limits and explicit tool call budgets are operational controls, not just safety controls.</p>
+
+<h2 id="roi-model">The ROI Model</h2>
+<p>The return side of the equation is more complex, and more debated, than the cost side. The most direct return is labor substitution: tasks previously performed by human workers, now performed by agents. But the substitution ratio is almost never one-to-one. An agent that handles routine tier-one support tickets may resolve sixty percent of them without human intervention, escalate thirty percent for human review, and handle ten percent incorrectly in ways that require remediation. The net labor saving is not sixty percent of a human support agent's time; it is sixty percent minus the supervisory and remediation overhead, which in the early phases of deployment can be substantial.</p>
+<p>As agents mature and supervisory overhead decreases, the economics improve — sometimes dramatically. Organizations that have moved from the pilot phase to stable production with well-governed agents consistently report that the supervisory overhead drops by more than the naive learning-curve model predicts, because mature agents develop fewer novel failure modes and the support processes built around them become efficient. The inflection point — where agentic labor becomes cheaper than human labor at a given quality level — varies by use case, but it is typically reached within twelve to eighteen months of careful production deployment for well-matched use cases.</p>
+<p>A 2025 analysis by McKinsey of 200+ enterprise AI programs found that organizations that had achieved what McKinsey terms "industrialized" agentic deployment — stable production agents at scale, with mature governance and observability — reported cost savings of 40–70% for the processes they had automated, with payback periods of twelve to twenty-four months. Organizations still in the pilot phase reported much more modest and less certain returns, reflecting the overhead-heavy early phase of the deployment curve. The gap between pilot economics and production economics is one of the most consistent findings in enterprise AI program research, and one of the most important to communicate to leadership before the program is funded.</p>
+
+<h2 id="hidden-costs">Hidden Costs</h2>
+<p>The costs that most commonly cause enterprise AI business cases to unravel are not the model inference costs — those are well-documented and easy to estimate. They are the costs that don't appear in vendor pricing sheets: governance infrastructure, integration engineering, data quality remediation, and the organizational change management required to deploy agents in a way that the workforce accepts and the regulators tolerate.</p>
+<p>Governance infrastructure costs — the tooling for observability, the policy engine, the audit log storage, the evaluation harness — are typically not trivial. For an enterprise deploying agents at meaningful scale, the annual cost of the governance layer can equal or exceed the annual cost of model inference. This is a ratio that surprises many CIOs who entered the program expecting model inference to be the dominant cost.</p>
+<p>Integration engineering — connecting the agent to the enterprise systems it needs to interact with — is frequently underestimated by a factor of three to five in initial project plans. Integration work is hard to scope before you do it, it hits organizational boundaries (the team that owns the CRM may not be motivated to prioritize the API work that enables the agent), and it often uncovers data quality problems that require remediation before the integration can be made reliable. A program that plans eighteen months and $2M for integration and discovers it needs thirty-six months and $6M is not unusual. It is merely uncomfortable.</p>
+
+<h2 id="saas-vs-agentic-roi">Why Agentic ROI Looks Nothing Like SaaS ROI</h2>
+<p>SaaS investments have a recognizable ROI pattern: a licensing cost that is fixed or grows slowly with seats, a relatively rapid time-to-value (measured in weeks or months rather than years), and a value curve that is relatively flat once the product is deployed — there are no dramatic improvements in the product's output quality over time unless the vendor ships a new version. Agentic AI ROI has none of these characteristics.</p>
+<p>The cost structure is variable and usage-driven, not fixed. The time-to-value is longer, because the integration, data preparation, governance, and evaluation work extends the ramp. But the value curve, once the inflection point is reached, can be substantially steeper: an agent whose quality and reliability is improving over time, in a process that is being continuously refined by an evaluation harness, can deliver compounding improvement in ways that a conventional SaaS application cannot. The enterprise that builds a high-quality agentic capability in year one is not buying a static product; it is building an asset whose value grows with investment.</p>
+<p>This distinction matters for how the investment is governed. SaaS investments are largely recurring OpEx; the value is realized continuously and the decision to continue is re-evaluated annually. Agentic AI investments have a more complex profile: high upfront costs (integration, governance, evaluation infrastructure), a period of negative or uncertain return, followed by a period of strong return that increases with scale. This profile is more like a product development investment than a software license, and it should be budgeted and governed accordingly — with a portfolio approach that accepts early-stage uncertainty in exchange for later-stage value, rather than a line-item approach that requires positive ROI in year one.</p>
+
+<blockquote>
+<p>"The business case for agentic AI that goes wrong almost always has the same flaw: it compares the cost of the agent to the cost of the human at the task level, and misses the cost of the system that supports the agent. That system — governance, integration, data, observability — is what makes the agent reliable, and without reliability, the task-level economics are meaningless."</p>
+</blockquote>
+
+<h2 id="pricing-the-agent-portfolio">Pricing the Agent Portfolio</h2>
+<p>The unit economics question — what does it cost to run this agent on this task? — is answerable with reasonable precision once an agent is in stable production and the costs of all layers are measured. Before that point, estimates require explicit assumptions about supervisory overhead, integration cost amortization, and governance infrastructure allocation. Making those assumptions explicit — and tracking actuals against them — is the financial management discipline that separates successful agentic programs from those that run out of budget before reaching the inflection point.</p>
+<p>A portfolio approach to agent investment — analogous to a product portfolio rather than a project portfolio — is the governance structure that most consistently produces good outcomes. Treat each agent as a product with a lifecycle: seed investment for development and integration, a validation phase where quality and economics are measured, a production phase where the investment is scaled based on demonstrated returns. Kill agents that fail to reach the validation threshold rather than continuing to invest in hope. Fund the ones that pass at the level their demonstrated returns justify.</p>
+
+<aside class="aside" data-tone="copper">
+<div class="aside__label">CFO note</div>
+<p>When reviewing an agentic AI business case, require five numbers: model inference cost per task (estimated from a pilot), tool execution cost per task, integration engineering cost (total, amortized over a three-year deployment), governance infrastructure cost (annual), and supervisory overhead cost at projected scale. A business case that can provide all five numbers, with supporting assumptions, is credible. One that can only provide the first is guessing at the others.</p>
+</aside>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="06-multi-agent-and-swarm.html"><span class="ch-nav-link__label">← Chapter 06</span><span class="ch-nav-link__title">Multi-Agent and Swarm</span></a>
+      <a class="ch-nav-link" data-dir="next" href="08-failure-modes.html"><span class="ch-nav-link__label">Chapter 08 →</span><span class="ch-nav-link__title">Failure Modes</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters, the glossary, and the bibliography. Try <em>NIST</em>, <em>orchestration</em>, <em>guardrails</em>, or <em>EU AI Act</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does the NIST AI RMF apply to agentic AI?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">The Agentic Enterprise</strong><br>
+      A long-form readiness field guide for agentic AI in the enterprise.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

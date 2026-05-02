@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 40 · The Next Decade — The Agentic Enterprise</title>
+<meta name="description" content="What ready looks like in 2030, and how to recognize it from where you stand today">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="40-the-next-decade" data-chapter-title="The Next Decade" data-base="../">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-shift", "title": "The Shift", "subtitle": "From copilots to colleagues \u2014 what changes when software starts to act"}, {"num": "02", "slug": "02-anatomy-of-an-agent", "title": "Anatomy of an Agent", "subtitle": "Plan, act, observe, remember \u2014 the four moving parts"}, {"num": "03", "slug": "03-spectrum-of-autonomy", "title": "The Spectrum of Autonomy", "subtitle": "Five rungs from automation to autonomy, and where most enterprises actually live"}, {"num": "04", "slug": "04-from-models-to-systems", "title": "From Models to Systems", "subtitle": "Why agentic AI is a systems problem, not a model problem"}, {"num": "05", "slug": "05-tool-use-and-grounding", "title": "Tool Use and Grounding", "subtitle": "How an agent reaches into the world \u2014 APIs, retrieval, and the limits of context"}, {"num": "06", "slug": "06-multi-agent-and-swarm", "title": "Multi-Agent and Swarm", "subtitle": "When one mind isn't enough \u2014 coordination, delegation, and emergent failure modes"}, {"num": "07", "slug": "07-the-economics", "title": "The Economics of an Agent", "subtitle": "Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI"}, {"num": "08", "slug": "08-failure-modes", "title": "Failure Modes", "subtitle": "Hallucinated calls, prompt injection, runaway loops, and the cost of being wrong at scale"}, {"num": "09", "slug": "09-threat-landscape", "title": "The Threat Landscape", "subtitle": "OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do"}, {"num": "10", "slug": "10-regulatory-perimeter", "title": "The Regulatory Perimeter", "subtitle": "EU AI Act, US executive orders, sectoral rules \u2014 what bites and what doesn't"}, {"num": "11", "slug": "11-frameworks-landscape", "title": "The Frameworks Landscape", "subtitle": "NIST, ISO, OECD, OWASP, the analyst maturity models \u2014 ranked by what actually moves the needle"}, {"num": "12", "slug": "12-the-four-pillars", "title": "The Four Pillars", "subtitle": "A readiness model: governance, orchestration, use case identification, integration"}, {"num": "13", "slug": "13-governance-charter", "title": "The Governance Charter", "subtitle": "Pillar I \u2014 who owns the agents, who answers when they fail"}, {"num": "14", "slug": "14-policy-stack", "title": "The Policy Stack", "subtitle": "Acceptable use, model risk, data classification, third-party AI, incident response"}, {"num": "15", "slug": "15-nist-rmf-walk", "title": "Walking the NIST AI RMF", "subtitle": "Govern, Map, Measure, Manage \u2014 applied to a real agent program"}, {"num": "16", "slug": "16-iso-42001-and-eu", "title": "ISO/IEC 42001 and the EU AI Act", "subtitle": "Certification, conformity assessment, and the audit trail of an autonomous system"}, {"num": "17", "slug": "17-orchestration-stack", "title": "The Orchestration Stack", "subtitle": "Pillar II \u2014 frameworks, runtimes, and the plumbing of multi-step work"}, {"num": "18", "slug": "18-memory-and-state", "title": "Memory and State", "subtitle": "Short-term, long-term, episodic \u2014 what an agent needs to remember to be useful"}, {"num": "19", "slug": "19-evals-and-observability", "title": "Evals and Observability", "subtitle": "Traces, replays, scorecards \u2014 the dashboards that keep agents honest"}, {"num": "20", "slug": "20-guardrails-and-policy", "title": "Guardrails and Policy Engines", "subtitle": "From input filters to runtime policy \u2014 defense in depth for autonomous systems"}, {"num": "21", "slug": "21-use-case-portfolio", "title": "The Use Case Portfolio", "subtitle": "Pillar III \u2014 picking the right work for an agent to do"}, {"num": "22", "slug": "22-value-and-feasibility", "title": "Value and Feasibility", "subtitle": "Scoring use cases on a 2\u00d72 \u2014 and the trap of doing the easy ones first"}, {"num": "23", "slug": "23-human-in-the-loop", "title": "Human in the Loop", "subtitle": "Where supervision belongs, where it doesn't, and how to design the handoff"}, {"num": "24", "slug": "24-pilot-to-production", "title": "From Pilot to Production", "subtitle": "The valley of death \u2014 and how a use case earns the right to scale"}, {"num": "25", "slug": "25-integration-spine", "title": "The Integration Spine", "subtitle": "Pillar IV \u2014 APIs, identity, data, and the enterprise systems an agent must touch"}, {"num": "26", "slug": "26-identity-for-agents", "title": "Identity for Agents", "subtitle": "Service accounts, scoped tokens, on-behalf-of \u2014 auth for non-human actors"}, {"num": "27", "slug": "27-data-readiness", "title": "Data Readiness", "subtitle": "Lineage, freshness, classification, and why your data lake is not a vector store"}, {"num": "28", "slug": "28-mcp-a2a-protocols", "title": "MCP, A2A, and the Interop Layer", "subtitle": "Model Context Protocol, Agent2Agent, and the protocols that let agents share work"}, {"num": "29", "slug": "29-the-maturity-model", "title": "The Maturity Model", "subtitle": "Five levels \u2014 Initial, Repeatable, Defined, Managed, Optimized \u2014 across all four pillars"}, {"num": "30", "slug": "30-the-scorecard-method", "title": "The Scorecard Method", "subtitle": "How to assess your organization in a half-day, with evidence"}, {"num": "\u2605", "slug": "scorecard", "title": "Interactive Scorecard", "subtitle": "Score yourself across four pillars \u00b7 five levels \u00b7 40 questions \u00b7 share your results"}, {"num": "31", "slug": "31-reading-the-radar", "title": "Reading the Radar", "subtitle": "What a four-pillar profile tells you about where to invest first"}, {"num": "32", "slug": "32-the-thirty-sixty-ninety", "title": "The 30/60/90", "subtitle": "What an enterprise can credibly accomplish in the first ninety days"}, {"num": "33", "slug": "33-the-twelve-month-roadmap", "title": "The Twelve-Month Roadmap", "subtitle": "From scattered pilots to a governed agent platform \u2014 by quarter"}, {"num": "34", "slug": "34-the-operating-model", "title": "The Operating Model", "subtitle": "Center of excellence, hub-and-spoke, federated \u2014 pick one and live with it"}, {"num": "35", "slug": "35-roles-and-careers", "title": "Roles and Careers", "subtitle": "AI product managers, agent engineers, evals leads \u2014 the jobs the org didn't have last year"}, {"num": "36", "slug": "36-procurement-and-vendors", "title": "Procurement and Vendors", "subtitle": "Buy, build, or rent \u2014 and the contract clauses you'll wish you had insisted on"}, {"num": "37", "slug": "37-change-management", "title": "Change Management", "subtitle": "How to roll agents into a workforce without losing the workforce"}, {"num": "38", "slug": "38-economics-at-scale", "title": "Economics at Scale", "subtitle": "Unit costs, gross margin, and the second-order effects of letting agents run your processes"}, {"num": "39", "slug": "39-the-failure-postmortem", "title": "The Failure Postmortem", "subtitle": "Three case studies of agentic deployments that broke \u2014 and what they teach"}, {"num": "40", "slug": "40-the-next-decade", "title": "The Next Decade", "subtitle": "What ready looks like in 2030, and how to recognize it from where you stand today"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>The Agentic Enterprise<span class="brand__sub"> — a readiness field guide</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/scorecard.html">Scorecard</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">The Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 40</div>
+    <div class="ch-header__num">Chapter 40</div>
+    <h1 class="ch-header__title">The Next Decade</h1>
+    <p class="ch-header__dek">What ready looks like in 2030, and how to recognize it from where you stand today</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">value<em>note</em></div><div class="stat__label">label</div></div><div class="stat"><div class="stat__num">value<em>note</em></div><div class="stat__label">label</div></div></div>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#agent-as-employee-accountability">Agent-as-employee accountability</a></li><li><a href="#agent-identity-standards">Agent identity standards mature</a></li><li><a href="#agent-native-procurement">Agent-native procurement clauses</a></li><li><a href="#multi-agent-labour-markets">Multi-agent labour markets</a></li><li><a href="#evals-as-commodity">Evals as commodity</a></li><li><a href="#what-ready-looks-like-in-2030">What ready looks like in 2030</a></li></ul></aside>
+    <article class="prose">
+      <p class="lede">In 2030, the question "are you ready for agentic AI?" will be as dated as "are you ready for cloud?" It will not be because the question was wrong — it was the right question for its moment — but because readiness will have been folded into the ordinary operations of a competent enterprise. The organisations that spent the years between 2025 and 2030 building institutional maturity — governance structures, evaluation cultures, integration discipline — will find that the new generation of agentic capability lands on fertile ground. The organisations that spent those years in perpetual pilot mode will find it landing on sand.</p>
+
+<h2 id="agent-as-employee-accountability">Agent-as-employee accountability frameworks</h2>
+<p>The most significant institutional shift of the next decade will not be technical; it will be legal. The question of who is accountable when an agent causes harm — the enterprise that deployed it, the model provider that built the underlying model, the vendor whose tool the agent called, or the human who approved the deployment — is currently answered inconsistently by different jurisdictions and differently by different courts. By 2030, this inconsistency will have been reduced, not by a single global standard but by a set of converging national frameworks that share a common architecture: the enterprise that deploys the agent is the <em>accountable party</em>, in the same way that the employer of a human employee is the accountable party for that employee's actions within the scope of their employment.</p>
+<p>This framing — agent as employee, enterprise as employer — has significant implications for how agents are designed and deployed. An employer is accountable for the actions of an employee only within a defined scope; actions outside that scope may shift liability to the employee. The analogue for agents is the agent's permission model: actions within the defined permission scope are the enterprise's responsibility; actions that exceed that scope because of a failure in the enterprise's governance model are <em>still</em> the enterprise's responsibility, because the enterprise owns the governance model. The <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32024R1689">EU AI Act</a>'s accountability provisions are a first approximation of this framework; by 2030, they will have been refined through enforcement actions and court decisions into something more precise.</p>
+
+<h2 id="agent-identity-standards">Agent identity and credentials standards mature</h2>
+<p>By 2030, the problem of agent identity — currently solved ad hoc by each enterprise, with service accounts, API keys, and OAuth tokens assigned in ways that reflect the convenience of the deployment rather than a principled model — will have been addressed by mature open standards. The trajectory is already visible: the Model Context Protocol has established a lingua franca for tool access; the A2A protocol is extending it to agent-to-agent communication; and identity standards bodies are beginning to publish guidance on machine-identity scope and lifecycle management for AI systems.</p>
+<p>The 2030 state will likely include: a standardised format for agent identity credentials that is legible to identity providers, audit systems, and regulatory inspection tools; a scope language that allows the enterprise to express, in machine-readable form, exactly what an agent is authorised to do and under what conditions; and a lifecycle management protocol that governs how credentials are issued, rotated, suspended, and revoked as the agent programme evolves. <a href="https://www.anthropic.com/news/anthropic-responsible-scaling-policy">Anthropic's Responsible Scaling Policy</a> and similar commitments from other frontier model labs will, by 2030, have been translated into interoperable technical standards rather than individual vendor commitments.</p>
+<blockquote><p>"Identity is the unsexy problem that determines everything. The enterprises that built their agent identity model early — before the standards existed — will spend 2027 migrating to the standard. The enterprises that waited will adopt the standard on day one. Neither will have a competitive advantage; both will have a functional system." — observed at an enterprise AI architecture summit, 2025.</p></blockquote>
+
+<h2 id="agent-native-procurement">Agent-native procurement clauses</h2>
+<p>The procurement contracts of 2030 will look different from those of 2025 in ways that reflect the maturing understanding of agent-specific risk. Today's contracts are written with human software in mind and adapted (imperfectly) for AI. Tomorrow's contracts will include native clauses for: model behaviour change notification, specifying the enterprise's right to receive advance notice of any change to the model's behaviour above a defined threshold of deviation from the baseline evaluation; agentic scope limitation, specifying the maximum permission scope the provider's agent runtime is permitted to request; incident correlation, specifying the provider's obligation to assist in post-incident root-cause analysis when a model output is implicated in a harm; and evaluation interoperability, specifying the provider's commitment to support the enterprise's evals harness against the provider's model API.</p>
+<p>These clauses will not emerge from regulatory fiat alone; they will emerge from the accumulation of incidents, post-mortems, and legal precedents produced by the agent deployments of the mid-2020s. The organisations that negotiated the early contracts, discovered the gaps, and documented what they wished they had insisted on — the programme teams that wrote their procurement playbooks in year one and updated them every year — will be the organisations whose lawyers write the first industry-standard agent contract templates.</p>
+
+<h2 id="multi-agent-labour-markets">Multi-agent labour markets</h2>
+<p>By 2030, the most sophisticated enterprise agent programmes will not be operating a collection of individual agents; they will be operating agent networks — ensembles of specialised agents that collaborate on complex tasks, with one agent decomposing a goal, delegating to specialised sub-agents, and synthesising the results. This architectural pattern is already emerging in research contexts; its enterprise deployment will require governance frameworks that do not yet exist.</p>
+<p>The governance challenge for agent networks is the chain-of-custody problem: when a network of five agents collaborates to produce an output, and that output is flawed or harmful, which agent in the chain is the failure point? The answer requires a full trace of the agent network's execution — which agent made which decision, with which inputs, at which step — and an evals framework that can test the network's behaviour as a system, not just the behaviour of each agent in isolation. <a href="https://cisr.mit.edu/">MIT CISR research</a> on multi-system risk suggests that the failure modes of agent networks will be qualitatively different from the failure modes of individual agents — more like the failure modes of organisational processes than the failure modes of individual software components.</p>
+<aside class="aside" data-tone="euv"><p><strong>What "ready" looks like in 2030:</strong> not a specific technology configuration but a specific institutional posture. A board that can describe the enterprise's agent estate in terms of maturity, risk, and economics. A governance owner whose no is heard and respected. An evals culture where failure is a data point, not a career risk. An integration model where agent credentials are as legible as human credentials. And a workforce that has been changed by agents without losing the judgment, domain expertise, and accountability that no agent will replicate in this decade.</p></aside>
+
+<h2 id="evals-as-commodity">The lab-grade evaluation regime as commodity</h2>
+<p>The evals regimes of 2025 — custom test suites, LLM-graded subjective evaluations, red-team exercises run by hand — are sophisticated and expensive. By 2030, they will be commodities. The trajectory is already established: evaluation frameworks are being open-sourced, benchmark datasets are being standardised by bodies like <a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST</a>, and the AI safety research community is moving toward evaluation-as-a-service offerings that allow enterprises to run comprehensive safety and reliability evaluations without maintaining a dedicated evals team.</p>
+<p>The commoditisation of evals will lower the barrier to entry for smaller enterprises that currently cannot afford a dedicated evals function. It will also raise the floor: an enterprise that cannot demonstrate that its agents have passed a standardised evaluation battery will face increasing scrutiny from regulators, insurers, and enterprise customers. By 2030, the evals pass report may be as standard a supplier qualification document as an ISO 9001 certificate is today — not a differentiator but a minimum expectation.</p>
+
+<h2 id="what-ready-looks-like-in-2030">What ready looks like in 2030</h2>
+<p>The agentic enterprise of 2030 is not the organisation with the most agents or the largest model investment. It is the organisation that has built the institutional capacity to govern, operate, and improve its agent estate continuously — the organisation for which the maturity model, the scorecard, the operating model, and the economic framework described in this part of the book are not aspirational tools but operational defaults.</p>
+<p>Ready looks like this: a governance model that is tested quarterly, not written annually. An evals culture that treats a failure in a test suite as a success of the evaluation process, not a failure of the team. A procurement playbook that is updated after every significant vendor negotiation. An operating model that has been reviewed and deliberately chosen, not inherited by default. A workforce that understands the agents it oversees well enough to catch the failures the evals missed. And a board that can answer, in a single conversation, where the enterprise sits on the maturity model, what risks are open, and what the programme will look like in twelve months.</p>
+<p>This is not a vision of an enterprise run by machines. It is a vision of an enterprise in which machines are trusted enough to act, watched closely enough to be caught when they fail, and governed carefully enough that the consequences of those failures are bounded. That is what readiness means — not the absence of risk but the institutional capacity to manage it. The organisations that build that capacity in this decade will not merely survive the agentic transition; they will define what it means to operate well within it.</p>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="39-the-failure-postmortem.html"><span class="ch-nav-link__label">← Chapter 39</span><span class="ch-nav-link__title">The Failure Postmortem</span></a>
+      <a class="ch-nav-link" data-dir="next" href="glossary.html"><span class="ch-nav-link__label">Reference →</span><span class="ch-nav-link__title">Glossary</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters, the glossary, and the bibliography. Try <em>NIST</em>, <em>orchestration</em>, <em>guardrails</em>, or <em>EU AI Act</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does the NIST AI RMF apply to agentic AI?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">The Agentic Enterprise</strong><br>
+      A long-form readiness field guide for agentic AI in the enterprise.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

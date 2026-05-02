@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 36 · Procurement and Vendors — The Agentic Enterprise</title>
+<meta name="description" content="Buy, build, or rent — and the contract clauses you'll wish you had insisted on">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="36-procurement-and-vendors" data-chapter-title="Procurement and Vendors" data-base="../">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-shift", "title": "The Shift", "subtitle": "From copilots to colleagues \u2014 what changes when software starts to act"}, {"num": "02", "slug": "02-anatomy-of-an-agent", "title": "Anatomy of an Agent", "subtitle": "Plan, act, observe, remember \u2014 the four moving parts"}, {"num": "03", "slug": "03-spectrum-of-autonomy", "title": "The Spectrum of Autonomy", "subtitle": "Five rungs from automation to autonomy, and where most enterprises actually live"}, {"num": "04", "slug": "04-from-models-to-systems", "title": "From Models to Systems", "subtitle": "Why agentic AI is a systems problem, not a model problem"}, {"num": "05", "slug": "05-tool-use-and-grounding", "title": "Tool Use and Grounding", "subtitle": "How an agent reaches into the world \u2014 APIs, retrieval, and the limits of context"}, {"num": "06", "slug": "06-multi-agent-and-swarm", "title": "Multi-Agent and Swarm", "subtitle": "When one mind isn't enough \u2014 coordination, delegation, and emergent failure modes"}, {"num": "07", "slug": "07-the-economics", "title": "The Economics of an Agent", "subtitle": "Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI"}, {"num": "08", "slug": "08-failure-modes", "title": "Failure Modes", "subtitle": "Hallucinated calls, prompt injection, runaway loops, and the cost of being wrong at scale"}, {"num": "09", "slug": "09-threat-landscape", "title": "The Threat Landscape", "subtitle": "OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do"}, {"num": "10", "slug": "10-regulatory-perimeter", "title": "The Regulatory Perimeter", "subtitle": "EU AI Act, US executive orders, sectoral rules \u2014 what bites and what doesn't"}, {"num": "11", "slug": "11-frameworks-landscape", "title": "The Frameworks Landscape", "subtitle": "NIST, ISO, OECD, OWASP, the analyst maturity models \u2014 ranked by what actually moves the needle"}, {"num": "12", "slug": "12-the-four-pillars", "title": "The Four Pillars", "subtitle": "A readiness model: governance, orchestration, use case identification, integration"}, {"num": "13", "slug": "13-governance-charter", "title": "The Governance Charter", "subtitle": "Pillar I \u2014 who owns the agents, who answers when they fail"}, {"num": "14", "slug": "14-policy-stack", "title": "The Policy Stack", "subtitle": "Acceptable use, model risk, data classification, third-party AI, incident response"}, {"num": "15", "slug": "15-nist-rmf-walk", "title": "Walking the NIST AI RMF", "subtitle": "Govern, Map, Measure, Manage \u2014 applied to a real agent program"}, {"num": "16", "slug": "16-iso-42001-and-eu", "title": "ISO/IEC 42001 and the EU AI Act", "subtitle": "Certification, conformity assessment, and the audit trail of an autonomous system"}, {"num": "17", "slug": "17-orchestration-stack", "title": "The Orchestration Stack", "subtitle": "Pillar II \u2014 frameworks, runtimes, and the plumbing of multi-step work"}, {"num": "18", "slug": "18-memory-and-state", "title": "Memory and State", "subtitle": "Short-term, long-term, episodic \u2014 what an agent needs to remember to be useful"}, {"num": "19", "slug": "19-evals-and-observability", "title": "Evals and Observability", "subtitle": "Traces, replays, scorecards \u2014 the dashboards that keep agents honest"}, {"num": "20", "slug": "20-guardrails-and-policy", "title": "Guardrails and Policy Engines", "subtitle": "From input filters to runtime policy \u2014 defense in depth for autonomous systems"}, {"num": "21", "slug": "21-use-case-portfolio", "title": "The Use Case Portfolio", "subtitle": "Pillar III \u2014 picking the right work for an agent to do"}, {"num": "22", "slug": "22-value-and-feasibility", "title": "Value and Feasibility", "subtitle": "Scoring use cases on a 2\u00d72 \u2014 and the trap of doing the easy ones first"}, {"num": "23", "slug": "23-human-in-the-loop", "title": "Human in the Loop", "subtitle": "Where supervision belongs, where it doesn't, and how to design the handoff"}, {"num": "24", "slug": "24-pilot-to-production", "title": "From Pilot to Production", "subtitle": "The valley of death \u2014 and how a use case earns the right to scale"}, {"num": "25", "slug": "25-integration-spine", "title": "The Integration Spine", "subtitle": "Pillar IV \u2014 APIs, identity, data, and the enterprise systems an agent must touch"}, {"num": "26", "slug": "26-identity-for-agents", "title": "Identity for Agents", "subtitle": "Service accounts, scoped tokens, on-behalf-of \u2014 auth for non-human actors"}, {"num": "27", "slug": "27-data-readiness", "title": "Data Readiness", "subtitle": "Lineage, freshness, classification, and why your data lake is not a vector store"}, {"num": "28", "slug": "28-mcp-a2a-protocols", "title": "MCP, A2A, and the Interop Layer", "subtitle": "Model Context Protocol, Agent2Agent, and the protocols that let agents share work"}, {"num": "29", "slug": "29-the-maturity-model", "title": "The Maturity Model", "subtitle": "Five levels \u2014 Initial, Repeatable, Defined, Managed, Optimized \u2014 across all four pillars"}, {"num": "30", "slug": "30-the-scorecard-method", "title": "The Scorecard Method", "subtitle": "How to assess your organization in a half-day, with evidence"}, {"num": "\u2605", "slug": "scorecard", "title": "Interactive Scorecard", "subtitle": "Score yourself across four pillars \u00b7 five levels \u00b7 40 questions \u00b7 share your results"}, {"num": "31", "slug": "31-reading-the-radar", "title": "Reading the Radar", "subtitle": "What a four-pillar profile tells you about where to invest first"}, {"num": "32", "slug": "32-the-thirty-sixty-ninety", "title": "The 30/60/90", "subtitle": "What an enterprise can credibly accomplish in the first ninety days"}, {"num": "33", "slug": "33-the-twelve-month-roadmap", "title": "The Twelve-Month Roadmap", "subtitle": "From scattered pilots to a governed agent platform \u2014 by quarter"}, {"num": "34", "slug": "34-the-operating-model", "title": "The Operating Model", "subtitle": "Center of excellence, hub-and-spoke, federated \u2014 pick one and live with it"}, {"num": "35", "slug": "35-roles-and-careers", "title": "Roles and Careers", "subtitle": "AI product managers, agent engineers, evals leads \u2014 the jobs the org didn't have last year"}, {"num": "36", "slug": "36-procurement-and-vendors", "title": "Procurement and Vendors", "subtitle": "Buy, build, or rent \u2014 and the contract clauses you'll wish you had insisted on"}, {"num": "37", "slug": "37-change-management", "title": "Change Management", "subtitle": "How to roll agents into a workforce without losing the workforce"}, {"num": "38", "slug": "38-economics-at-scale", "title": "Economics at Scale", "subtitle": "Unit costs, gross margin, and the second-order effects of letting agents run your processes"}, {"num": "39", "slug": "39-the-failure-postmortem", "title": "The Failure Postmortem", "subtitle": "Three case studies of agentic deployments that broke \u2014 and what they teach"}, {"num": "40", "slug": "40-the-next-decade", "title": "The Next Decade", "subtitle": "What ready looks like in 2030, and how to recognize it from where you stand today"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>The Agentic Enterprise<span class="brand__sub"> — a readiness field guide</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/scorecard.html">Scorecard</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">The Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 36</div>
+    <div class="ch-header__num">Chapter 36</div>
+    <h1 class="ch-header__title">Procurement and Vendors</h1>
+    <p class="ch-header__dek">Buy, build, or rent — and the contract clauses you'll wish you had insisted on</p>
+    
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#buy-build-rent">Buy, build, or rent</a></li><li><a href="#model-provider-contracts">Model provider contracts</a></li><li><a href="#orchestration-and-platform-vendors">Orchestration and platform vendors</a></li><li><a href="#the-procurement-playbook">Building the procurement playbook</a></li></ul></aside>
+    <article class="prose">
+      <p class="lede">The procurement conversation for agentic AI is unlike any technology procurement the enterprise has conducted before. It is not software licensing, where the risk is misalignment between the feature set and the business requirement. It is not infrastructure, where the risk is capacity and availability. It is a procurement of systems that will act in the world on behalf of the enterprise, using data the enterprise owns, with consequences the enterprise will be held accountable for. The contract clauses that govern this relationship need to reflect that reality — and most standard SaaS agreements do not.</p>
+
+<h2 id="buy-build-rent">Buy, build, or rent</h2>
+<p>The make-or-buy decision for agentic AI has a third option that does not exist in traditional software: rent-by-inference, where the enterprise pays per API call to a frontier model provider without committing to infrastructure or a vendor relationship. The choice between buy (an enterprise platform with a licence), build (a bespoke agent on open-source infrastructure), and rent (API access to a hosted model) is not a one-time decision; it applies separately to each layer of the stack — model, orchestration, evals, observability, identity.</p>
+<p>The general principle is: build where the competitive differentiation lives, buy or rent where it does not. A retailer's competitive advantage is not in a better prompt engineering framework; it is in the retail data and the domain expertise that shapes how the agent uses that framework. The framework itself should be rented or bought. The data integration, the business logic, the eval set that captures what "good" looks like for this retailer's customer service agent — these should be built and owned.</p>
+<p>The risk profile of each option differs materially. Renting from a frontier model provider introduces model-version risk: the provider updates the model, the agent's behaviour changes, the evals dashboard flags a regression, and the enterprise is now in a negotiation with a provider about when a pinned version will stop being supported. Buying an enterprise platform introduces vendor concentration risk: the platform acquires the orchestration market, raises prices, and the enterprise discovers its entire agent estate runs on a single vendor's proprietary APIs. Building on open-source introduces maintenance risk: the framework version falls behind, a critical security patch is delayed, and the team that built the agent has moved on.</p>
+
+<h2 id="model-provider-contracts">Model provider contracts</h2>
+<p>The contract with a frontier model provider is the most consequential procurement document in the enterprise's AI stack, and it receives the least scrutiny. Standard terms from major providers typically include clauses that most enterprise legal teams, reading quickly, treat as boilerplate. They are not. Four clauses deserve particular attention.</p>
+<p><strong>Data usage for training:</strong> does the provider use enterprise data — prompts, tool-call logs, completions — to fine-tune or improve the model? Most enterprise agreements include an opt-out; most enterprise customers do not read carefully enough to invoke it. For any agent handling confidential business data, customer data, or regulated information, the opt-out must be explicitly invoked and confirmed in writing.</p>
+<p><strong>Model version pinning:</strong> can the enterprise pin to a specific model version, and if so, for how long? Model providers retire versions on schedules that are driven by their roadmap, not their customers' stability requirements. An enterprise agent that has been validated against model version X may produce materially different outputs on version Y. The contract should specify the minimum notice period for version deprecation — ninety days is a reasonable floor — and the enterprise's right to extend access to the pinned version for the duration of a re-validation cycle.</p>
+<p><strong>Incident notification:</strong> what is the provider's obligation to notify the enterprise if the provider discovers that the model has been producing systematically biased or harmful outputs? Most current agreements are silent on this. For enterprises operating under the <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32024R1689">EU AI Act</a>'s incident reporting obligations, the absence of a provider notification clause creates a compliance gap.</p>
+<p><strong>Liability for model outputs:</strong> the standard position of all frontier model providers is that the enterprise is responsible for the outputs of the model when deployed. This is legally defensible for the provider and practically terrifying for the enterprise. The enterprise cannot audit the model; it can only test it. The contract should specify what documentation the provider will supply to support the enterprise's own risk assessment — technical reports, evaluation results, known limitations — and update that documentation when the model changes.</p>
+<blockquote><p>"If you do not negotiate these clauses, you are accepting a contract written by a legal team whose job is to maximise the provider's optionality. That is not a criticism of the provider; it is a description of every contract ever written." — paraphrased from a <a href="https://www.forrester.com/">Forrester</a> enterprise AI procurement briefing.</p></blockquote>
+
+<h2 id="orchestration-and-platform-vendors">Orchestration and platform vendors</h2>
+<p>The orchestration market is consolidating rapidly, and the vendors that win will have significant pricing power over the enterprises whose agent estates are built on their proprietary APIs. The procurement discipline here is the same as for any platform dependency: understand the switching costs before you are inside them. A vendor whose orchestration framework stores agent state in a proprietary format, whose evals harness uses proprietary graders, and whose identity model is tightly integrated with their own identity provider has created switching costs that compound with every agent deployed on the platform.</p>
+<p>The contract clauses that matter for orchestration vendors: data portability (can the enterprise export all agent state, logs, and eval results in a standard format?), source-code access (if the vendor is acquired or ceases to operate, does the enterprise have the right to a source escrow?), and API stability commitments (what is the vendor's obligation to maintain API compatibility across major version upgrades, and what is the notice period for breaking changes?).</p>
+<aside class="aside" data-tone="copper"><p><strong>The vendor you didn't notice:</strong> the most common procurement oversight in agentic AI is the tool provider — the company whose MCP server your agents call to access CRM data, or send emails, or trigger workflows. This vendor is not in the enterprise's AI procurement category; it is in the SaaS category, managed by a different team, with a different contract. But if that tool provider's MCP server is compromised, every agent that calls it is compromised. Add agentic AI security requirements to the tool provider's contract review process before the tool is connected to production agents.</p></aside>
+
+<h2 id="the-procurement-playbook">Building the procurement playbook</h2>
+<p>The procurement playbook is the document that encodes everything the programme has learned about buying agent-adjacent technology. It includes: a vendor risk taxonomy specific to agentic AI (model providers, orchestration platforms, evals vendors, security tooling, tool providers); a standard contract clause library for each category; a vendor risk assessment process that extends the existing third-party risk management framework to cover agent-specific supply chain risks; and a review cadence that ensures the playbook is updated as the market evolves.</p>
+<p>The playbook is a Q4 roadmap deliverable, as described in Chapter 33, because it takes a full year of procurement experience to write it accurately. An organisation that writes its procurement playbook in Q1, before it has negotiated a single model provider contract, will write a document that is theoretically sound and practically useless. The playbook earns its authority from the scars on the contracts that preceded it.</p>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="35-roles-and-careers.html"><span class="ch-nav-link__label">← Chapter 35</span><span class="ch-nav-link__title">Roles and Careers</span></a>
+      <a class="ch-nav-link" data-dir="next" href="37-change-management.html"><span class="ch-nav-link__label">Chapter 37 →</span><span class="ch-nav-link__title">Change Management</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters, the glossary, and the bibliography. Try <em>NIST</em>, <em>orchestration</em>, <em>guardrails</em>, or <em>EU AI Act</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does the NIST AI RMF apply to agentic AI?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">The Agentic Enterprise</strong><br>
+      A long-form readiness field guide for agentic AI in the enterprise.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

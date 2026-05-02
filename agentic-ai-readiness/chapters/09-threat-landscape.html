@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 09 · The Threat Landscape — The Agentic Enterprise</title>
+<meta name="description" content="OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="09-threat-landscape" data-chapter-title="The Threat Landscape" data-base="../">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-shift", "title": "The Shift", "subtitle": "From copilots to colleagues \u2014 what changes when software starts to act"}, {"num": "02", "slug": "02-anatomy-of-an-agent", "title": "Anatomy of an Agent", "subtitle": "Plan, act, observe, remember \u2014 the four moving parts"}, {"num": "03", "slug": "03-spectrum-of-autonomy", "title": "The Spectrum of Autonomy", "subtitle": "Five rungs from automation to autonomy, and where most enterprises actually live"}, {"num": "04", "slug": "04-from-models-to-systems", "title": "From Models to Systems", "subtitle": "Why agentic AI is a systems problem, not a model problem"}, {"num": "05", "slug": "05-tool-use-and-grounding", "title": "Tool Use and Grounding", "subtitle": "How an agent reaches into the world \u2014 APIs, retrieval, and the limits of context"}, {"num": "06", "slug": "06-multi-agent-and-swarm", "title": "Multi-Agent and Swarm", "subtitle": "When one mind isn't enough \u2014 coordination, delegation, and emergent failure modes"}, {"num": "07", "slug": "07-the-economics", "title": "The Economics of an Agent", "subtitle": "Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI"}, {"num": "08", "slug": "08-failure-modes", "title": "Failure Modes", "subtitle": "Hallucinated calls, prompt injection, runaway loops, and the cost of being wrong at scale"}, {"num": "09", "slug": "09-threat-landscape", "title": "The Threat Landscape", "subtitle": "OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do"}, {"num": "10", "slug": "10-regulatory-perimeter", "title": "The Regulatory Perimeter", "subtitle": "EU AI Act, US executive orders, sectoral rules \u2014 what bites and what doesn't"}, {"num": "11", "slug": "11-frameworks-landscape", "title": "The Frameworks Landscape", "subtitle": "NIST, ISO, OECD, OWASP, the analyst maturity models \u2014 ranked by what actually moves the needle"}, {"num": "12", "slug": "12-the-four-pillars", "title": "The Four Pillars", "subtitle": "A readiness model: governance, orchestration, use case identification, integration"}, {"num": "13", "slug": "13-governance-charter", "title": "The Governance Charter", "subtitle": "Pillar I \u2014 who owns the agents, who answers when they fail"}, {"num": "14", "slug": "14-policy-stack", "title": "The Policy Stack", "subtitle": "Acceptable use, model risk, data classification, third-party AI, incident response"}, {"num": "15", "slug": "15-nist-rmf-walk", "title": "Walking the NIST AI RMF", "subtitle": "Govern, Map, Measure, Manage \u2014 applied to a real agent program"}, {"num": "16", "slug": "16-iso-42001-and-eu", "title": "ISO/IEC 42001 and the EU AI Act", "subtitle": "Certification, conformity assessment, and the audit trail of an autonomous system"}, {"num": "17", "slug": "17-orchestration-stack", "title": "The Orchestration Stack", "subtitle": "Pillar II \u2014 frameworks, runtimes, and the plumbing of multi-step work"}, {"num": "18", "slug": "18-memory-and-state", "title": "Memory and State", "subtitle": "Short-term, long-term, episodic \u2014 what an agent needs to remember to be useful"}, {"num": "19", "slug": "19-evals-and-observability", "title": "Evals and Observability", "subtitle": "Traces, replays, scorecards \u2014 the dashboards that keep agents honest"}, {"num": "20", "slug": "20-guardrails-and-policy", "title": "Guardrails and Policy Engines", "subtitle": "From input filters to runtime policy \u2014 defense in depth for autonomous systems"}, {"num": "21", "slug": "21-use-case-portfolio", "title": "The Use Case Portfolio", "subtitle": "Pillar III \u2014 picking the right work for an agent to do"}, {"num": "22", "slug": "22-value-and-feasibility", "title": "Value and Feasibility", "subtitle": "Scoring use cases on a 2\u00d72 \u2014 and the trap of doing the easy ones first"}, {"num": "23", "slug": "23-human-in-the-loop", "title": "Human in the Loop", "subtitle": "Where supervision belongs, where it doesn't, and how to design the handoff"}, {"num": "24", "slug": "24-pilot-to-production", "title": "From Pilot to Production", "subtitle": "The valley of death \u2014 and how a use case earns the right to scale"}, {"num": "25", "slug": "25-integration-spine", "title": "The Integration Spine", "subtitle": "Pillar IV \u2014 APIs, identity, data, and the enterprise systems an agent must touch"}, {"num": "26", "slug": "26-identity-for-agents", "title": "Identity for Agents", "subtitle": "Service accounts, scoped tokens, on-behalf-of \u2014 auth for non-human actors"}, {"num": "27", "slug": "27-data-readiness", "title": "Data Readiness", "subtitle": "Lineage, freshness, classification, and why your data lake is not a vector store"}, {"num": "28", "slug": "28-mcp-a2a-protocols", "title": "MCP, A2A, and the Interop Layer", "subtitle": "Model Context Protocol, Agent2Agent, and the protocols that let agents share work"}, {"num": "29", "slug": "29-the-maturity-model", "title": "The Maturity Model", "subtitle": "Five levels \u2014 Initial, Repeatable, Defined, Managed, Optimized \u2014 across all four pillars"}, {"num": "30", "slug": "30-the-scorecard-method", "title": "The Scorecard Method", "subtitle": "How to assess your organization in a half-day, with evidence"}, {"num": "\u2605", "slug": "scorecard", "title": "Interactive Scorecard", "subtitle": "Score yourself across four pillars \u00b7 five levels \u00b7 40 questions \u00b7 share your results"}, {"num": "31", "slug": "31-reading-the-radar", "title": "Reading the Radar", "subtitle": "What a four-pillar profile tells you about where to invest first"}, {"num": "32", "slug": "32-the-thirty-sixty-ninety", "title": "The 30/60/90", "subtitle": "What an enterprise can credibly accomplish in the first ninety days"}, {"num": "33", "slug": "33-the-twelve-month-roadmap", "title": "The Twelve-Month Roadmap", "subtitle": "From scattered pilots to a governed agent platform \u2014 by quarter"}, {"num": "34", "slug": "34-the-operating-model", "title": "The Operating Model", "subtitle": "Center of excellence, hub-and-spoke, federated \u2014 pick one and live with it"}, {"num": "35", "slug": "35-roles-and-careers", "title": "Roles and Careers", "subtitle": "AI product managers, agent engineers, evals leads \u2014 the jobs the org didn't have last year"}, {"num": "36", "slug": "36-procurement-and-vendors", "title": "Procurement and Vendors", "subtitle": "Buy, build, or rent \u2014 and the contract clauses you'll wish you had insisted on"}, {"num": "37", "slug": "37-change-management", "title": "Change Management", "subtitle": "How to roll agents into a workforce without losing the workforce"}, {"num": "38", "slug": "38-economics-at-scale", "title": "Economics at Scale", "subtitle": "Unit costs, gross margin, and the second-order effects of letting agents run your processes"}, {"num": "39", "slug": "39-the-failure-postmortem", "title": "The Failure Postmortem", "subtitle": "Three case studies of agentic deployments that broke \u2014 and what they teach"}, {"num": "40", "slug": "40-the-next-decade", "title": "The Next Decade", "subtitle": "What ready looks like in 2030, and how to recognize it from where you stand today"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>The Agentic Enterprise<span class="brand__sub"> — a readiness field guide</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/scorecard.html">Scorecard</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">The Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 09</div>
+    <div class="ch-header__num">Chapter 09</div>
+    <h1 class="ch-header__title">The Threat Landscape</h1>
+    <p class="ch-header__dek">OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">15</div><div class="stat__label">OWASP Agentic AI threat categories (ASI v1.0)</div></div><div class="stat"><div class="stat__num">167</div><div class="stat__label">MITRE ATLAS techniques as of 2025</div></div><div class="stat"><div class="stat__num">57</div><div class="stat__label">MITRE ATLAS documented case studies</div></div></div>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-owasp-taxonomy">The OWASP Taxonomy</a></li><li><a href="#mitre-atlas">MITRE ATLAS</a></li><li><a href="#supply-chain-threats">Supply Chain Threats</a></li><li><a href="#the-adversary-advantage">The Adversary Advantage</a></li><li><a href="#defense-in-depth">Defense in Depth</a></li></ul></aside>
+    <article class="prose">
+      <p class="lede">Agentic AI does not face a new kind of adversary. It faces familiar adversaries — financially motivated criminals, nation-state actors, opportunistic hackers — who have learned to exploit a new attack surface with significant speed. The tools of classical cybersecurity apply: threat modeling, layered defense, incident response. What is new is the specific texture of the vulnerabilities that agents introduce, and the speed at which adversaries have developed techniques to exploit them. Several documented attack campaigns against production agentic systems predate the governance frameworks designed to address them. Understanding the threat landscape, in its current specificity, is the prerequisite for building a defense that is more than decorative.</p>
+
+<figure class="figure figure--wide reveal">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 380" role="img" aria-label="Agentic threat surface">
+  <text x="60" y="36" font-family="var(--font-display)" font-size="18" fill="var(--color-text)">The agentic threat surface</text>
+  <text x="60" y="56" font-family="var(--font-mono)" font-size="11" fill="var(--color-text-muted)">Mapped to OWASP Agentic AI v1.0 and MITRE ATLAS. New surfaces emerge wherever an agent gets new capability.</text>
+  <g transform="translate(400,200)">
+    <circle cx="0" cy="0" r="100" fill="var(--color-primary-highlight)" stroke="var(--color-primary)" stroke-width="1.6"/>
+    <text x="0" y="-4" text-anchor="middle" font-family="var(--font-display)" font-size="16" fill="var(--color-text)">Agent</text>
+    <text x="0" y="14" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--color-text-muted)">model + state</text>
+  </g>
+  <g font-family="var(--font-mono)" font-size="10" fill="var(--color-text)">
+    <g transform="translate(160,80)"><rect x="0" y="0" width="170" height="46" rx="4" fill="var(--color-accent-copper-soft)" stroke="var(--color-accent-copper)"/><text x="85" y="20" text-anchor="middle">Prompt injection</text><text x="85" y="34" text-anchor="middle" fill="var(--color-text-muted)" font-size="9">direct · indirect · stored</text></g>
+    <g transform="translate(470,80)"><rect x="0" y="0" width="170" height="46" rx="4" fill="var(--color-accent-copper-soft)" stroke="var(--color-accent-copper)"/><text x="85" y="20" text-anchor="middle">Tool poisoning</text><text x="85" y="34" text-anchor="middle" fill="var(--color-text-muted)" font-size="9">malicious MCP server</text></g>
+    <g transform="translate(70,200)"><rect x="0" y="0" width="170" height="46" rx="4" fill="var(--color-accent-quartz)" fill-opacity="0.35" stroke="var(--color-accent-copper)"/><text x="85" y="20" text-anchor="middle">Identity hijack</text><text x="85" y="34" text-anchor="middle" fill="var(--color-text-muted)" font-size="9">scoped token theft</text></g>
+    <g transform="translate(560,200)"><rect x="0" y="0" width="170" height="46" rx="4" fill="var(--color-accent-quartz)" fill-opacity="0.35" stroke="var(--color-accent-copper)"/><text x="85" y="20" text-anchor="middle">Excessive agency</text><text x="85" y="34" text-anchor="middle" fill="var(--color-text-muted)" font-size="9">scope creep at runtime</text></g>
+    <g transform="translate(160,320)"><rect x="0" y="0" width="170" height="46" rx="4" fill="var(--color-accent-euv-soft)" stroke="var(--color-accent-euv)"/><text x="85" y="20" text-anchor="middle">Memory poisoning</text><text x="85" y="34" text-anchor="middle" fill="var(--color-text-muted)" font-size="9">long-term contamination</text></g>
+    <g transform="translate(470,320)"><rect x="0" y="0" width="170" height="46" rx="4" fill="var(--color-accent-euv-soft)" stroke="var(--color-accent-euv)"/><text x="85" y="20" text-anchor="middle">Cascading failure</text><text x="85" y="34" text-anchor="middle" fill="var(--color-text-muted)" font-size="9">multi-agent collusion</text></g>
+  </g>
+  <g stroke="var(--color-text-muted)" stroke-width="0.5" fill="none" stroke-dasharray="2 3">
+    <path d="M245 126 L325 160"/>
+    <path d="M555 126 L475 160"/>
+    <path d="M240 220 L300 220"/>
+    <path d="M560 220 L500 220"/>
+    <path d="M245 320 L325 270"/>
+    <path d="M555 320 L475 270"/>
+  </g>
+</svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 9.1</span><span class="text">Six categories of agent-specific threat. Most predate agentic AI; agency just makes them more expensive.</span></figcaption>
+</figure>
+
+<h2 id="the-owasp-taxonomy">The OWASP Taxonomy</h2>
+<p>The most comprehensive published taxonomy of agentic AI threats is the <a href="https://genai.owasp.org/initiatives/#agenticsecurity">OWASP Agentic Security Initiative's</a> Threats and Mitigations document, version 1.0, published April 2025. It identifies fifteen threat categories purpose-built for autonomous agent systems, organized by attack surface and impact type. The OWASP <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/">LLM Top 10 v2025</a> provides the broader LLM application context; the ASI taxonomy provides the agentic-specific extension.</p>
+<p>The most operationally significant categories for enterprise deployments are: <strong>Memory Poisoning</strong> — injecting false data into an agent's persistent memory store to influence future behavior across sessions; <strong>Tool Misuse</strong> — manipulating an agent through its tool inputs to abuse tool access for unauthorized purposes; <strong>Privilege Compromise</strong> — exploiting weaknesses in the agent's permission management to acquire capabilities beyond its intended scope; <strong>Cascading Hallucinations</strong> — exploiting error propagation in multi-agent pipelines to amplify a small initial manipulation into a large downstream impact; and <strong>Agent Communication Poisoning</strong> — manipulating the messages passed between agents in a multi-agent system.</p>
+<p>Less discussed but increasingly relevant is <strong>Human Manipulation</strong>: using an agent that has established implicit trust with a user to coerce or deceive that user in ways that the agent's operators did not intend and cannot easily detect. An agent that has managed a user's calendar and email for several months has accumulated significant implicit trust. An adversary who can influence that agent's behavior — through memory poisoning or prompt injection — can leverage that trust for social engineering at scale.</p>
+
+<h2 id="mitre-atlas">MITRE ATLAS</h2>
+<p>The <a href="https://atlas.mitre.org/">MITRE ATLAS</a> knowledge base — Adversarial Threat Landscape for AI Systems — provides the ATT&CK-style structured taxonomy that security teams need to build threat models and red team exercises. As of 2025, ATLAS documents 16 tactics, 167 techniques, and 57 case studies of real-world AI attacks. The case studies are particularly valuable: they ground abstract techniques in documented incidents, making the threat model actionable rather than theoretical.</p>
+<p>ATLAS coverage of agentic AI attack surfaces is actively expanding. The most relevant technique groups for enterprise agentic deployments include: LLM Prompt Injection (AML.T0051) and its sub-techniques covering direct, indirect, and stored injection; Backdoor ML Model (AML.T0020), relevant for supply chain attacks against third-party model providers; and Context Manipulation techniques that exploit the agent's trust in retrieved content. ATLAS integrates with OWASP LLM Top 10 via cross-referencing technique identifiers, enabling security teams that are familiar with one framework to orient in the other.</p>
+<p>The MITRE AI Incident Sharing Initiative, launched alongside ATLAS, allows organizations to report and share AI security incidents in a standardized format. Early-stage enterprise AI programs have a strong interest in reading these reports — they represent some of the most specific threat intelligence available on real-world agentic attacks — and a long-term interest in contributing, both to build collective defense and to receive curated intelligence in return.</p>
+
+<h2 id="supply-chain-threats">Supply Chain Threats</h2>
+<p>An agent is only as trustworthy as every component in its supply chain. The supply chain for a modern enterprise agent includes: the foundation model (from a vendor), the orchestration framework (typically open-source), the MCP servers providing tool access (from a mix of vendors and internal developers), the vector store and retrieval system (from a vendor), the evaluation framework (open-source or proprietary), and the underlying cloud infrastructure. Each component is a potential attack surface, and the attack surface of the assembled system is substantially larger than the sum of its parts.</p>
+<p>Malicious MCP servers — packages that present as legitimate tool providers but exfiltrate data, inject instructions into tool responses, or manipulate the agent's tool call parameters — represent an emerging supply chain threat that has no direct analogue in conventional software. An organization that deploys an agent with an MCP server from a third party without auditing that server's behavior is accepting a supply chain risk that may be invisible until the attack has already succeeded. The practice of "MCP security review" — auditing third-party MCP server implementations before deploying them in production — is a nascent but necessary discipline.</p>
+<p>Model provider supply chain risk is a different but equally real concern. Enterprises that deploy agents built on third-party foundation models are dependent on those providers' security practices for the integrity of the model's behavior. Vendor Responsible Scaling Policies, such as <a href="https://www.anthropic.com/news/anthropic-responsible-scaling-policy">Anthropic's RSP</a>, provide some visibility into provider security practices — they specify the testing and safety evaluations conducted before model deployment — but they do not eliminate the dependency. Organizations deploying agents in high-risk domains should require vendor security attestations and, where possible, evaluate model behavior against known adversarial test cases before production deployment.</p>
+
+<h2 id="the-adversary-advantage">The Adversary Advantage</h2>
+<p>One of the less comfortable facts in the agentic threat landscape is that adversaries have, in several documented cases, developed and deployed attack techniques against agentic systems before the defending organizations had completed their threat models. This is not unusual in cybersecurity — the attacker advantage in time-to-exploit is well-documented — but the agentic surface presents some specific characteristics that accelerate adversary learning.</p>
+<p>Agents are, at least partially, transparent about their capabilities: they tell users what tools they have, what they can access, and how they process requests. This transparency, designed to build user trust, also builds adversary knowledge. An attacker who can interact with an agent has a detailed map of its attack surface. The techniques for exploiting that surface — particularly prompt injection and tool misuse — are well-documented in open literature and require no specialized capabilities to attempt. The barrier to entry for agentic AI attacks is lower than for most classes of cyberattack.</p>
+
+<h2 id="defense-in-depth">Defense in Depth</h2>
+<p>The security architecture for enterprise agentic systems should follow the same defense-in-depth principles that govern conventional cybersecurity, with layers adapted to the specific threat surface. At the input layer: prompt injection detection, content classification for retrieved documents, and explicit validation of tool call parameters. At the execution layer: least-privilege tool access, rate limiting, and behavioral anomaly detection. At the output layer: output sandboxing, post-processing validation, and human review for high-consequence actions. At the infrastructure layer: secure MCP server deployment, model provider attestations, and audit logging with integrity guarantees.</p>
+<p>No single control is sufficient. The depth is the point: an attacker who defeats one layer should encounter the next. The specific controls most important for a given deployment depend on the threat model — which adversaries are realistic, which attack vectors are accessible, which assets are most valuable to protect — and that threat model should be built explicitly, using OWASP ASI and MITRE ATLAS as structured inputs, before deployment rather than after the first incident.</p>
+
+<blockquote>
+<p>"The agentic attack surface is not theoretical. The techniques in OWASP ASI and MITRE ATLAS are documented from real incidents against real production systems. The organizations that treat these as research documents rather than operational threat intelligence are making a choice about risk that they may not have made explicitly."</p>
+</blockquote>
+
+<aside class="aside" data-tone="copper">
+<div class="aside__label">CISO priority list</div>
+<p>Three controls to implement before any production agentic deployment: (1) indirect prompt injection detection — every retrieved document, tool response, and external input should be processed through an instruction-detection layer before being inserted into the agent's context; (2) tool call logging with integrity guarantees — every tool call, its parameters, and its result should be logged in a tamper-evident store, not just for post-incident analysis but for real-time anomaly detection; (3) kill switches at multiple levels — individual tool disablement, individual agent halt, and full-system shutdown, each testable independently.</p>
+</aside>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="08-failure-modes.html"><span class="ch-nav-link__label">← Chapter 08</span><span class="ch-nav-link__title">Failure Modes</span></a>
+      <a class="ch-nav-link" data-dir="next" href="10-regulatory-perimeter.html"><span class="ch-nav-link__label">Chapter 10 →</span><span class="ch-nav-link__title">The Regulatory Perimeter</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters, the glossary, and the bibliography. Try <em>NIST</em>, <em>orchestration</em>, <em>guardrails</em>, or <em>EU AI Act</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does the NIST AI RMF apply to agentic AI?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">The Agentic Enterprise</strong><br>
+      A long-form readiness field guide for agentic AI in the enterprise.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

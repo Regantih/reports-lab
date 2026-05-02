@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Agentic Enterprise — A readiness field guide for agentic AI</title>
+<meta name="description" content="A long-form readiness field guide for agentic AI in the enterprise. 40 chapters across three parts, an interactive scorecard, and an evidence-based roadmap built on NIST AI RMF, ISO/IEC 42001, the EU AI Act, OWASP Agentic AI, and the leading analyst maturity models.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-base="">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-shift", "title": "The Shift", "subtitle": "From copilots to colleagues \u2014 what changes when software starts to act"}, {"num": "02", "slug": "02-anatomy-of-an-agent", "title": "Anatomy of an Agent", "subtitle": "Plan, act, observe, remember \u2014 the four moving parts"}, {"num": "03", "slug": "03-spectrum-of-autonomy", "title": "The Spectrum of Autonomy", "subtitle": "Five rungs from automation to autonomy, and where most enterprises actually live"}, {"num": "04", "slug": "04-from-models-to-systems", "title": "From Models to Systems", "subtitle": "Why agentic AI is a systems problem, not a model problem"}, {"num": "05", "slug": "05-tool-use-and-grounding", "title": "Tool Use and Grounding", "subtitle": "How an agent reaches into the world \u2014 APIs, retrieval, and the limits of context"}, {"num": "06", "slug": "06-multi-agent-and-swarm", "title": "Multi-Agent and Swarm", "subtitle": "When one mind isn't enough \u2014 coordination, delegation, and emergent failure modes"}, {"num": "07", "slug": "07-the-economics", "title": "The Economics of an Agent", "subtitle": "Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI"}, {"num": "08", "slug": "08-failure-modes", "title": "Failure Modes", "subtitle": "Hallucinated calls, prompt injection, runaway loops, and the cost of being wrong at scale"}, {"num": "09", "slug": "09-threat-landscape", "title": "The Threat Landscape", "subtitle": "OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do"}, {"num": "10", "slug": "10-regulatory-perimeter", "title": "The Regulatory Perimeter", "subtitle": "EU AI Act, US executive orders, sectoral rules \u2014 what bites and what doesn't"}, {"num": "11", "slug": "11-frameworks-landscape", "title": "The Frameworks Landscape", "subtitle": "NIST, ISO, OECD, OWASP, the analyst maturity models \u2014 ranked by what actually moves the needle"}, {"num": "12", "slug": "12-the-four-pillars", "title": "The Four Pillars", "subtitle": "A readiness model: governance, orchestration, use case identification, integration"}, {"num": "13", "slug": "13-governance-charter", "title": "The Governance Charter", "subtitle": "Pillar I \u2014 who owns the agents, who answers when they fail"}, {"num": "14", "slug": "14-policy-stack", "title": "The Policy Stack", "subtitle": "Acceptable use, model risk, data classification, third-party AI, incident response"}, {"num": "15", "slug": "15-nist-rmf-walk", "title": "Walking the NIST AI RMF", "subtitle": "Govern, Map, Measure, Manage \u2014 applied to a real agent program"}, {"num": "16", "slug": "16-iso-42001-and-eu", "title": "ISO/IEC 42001 and the EU AI Act", "subtitle": "Certification, conformity assessment, and the audit trail of an autonomous system"}, {"num": "17", "slug": "17-orchestration-stack", "title": "The Orchestration Stack", "subtitle": "Pillar II \u2014 frameworks, runtimes, and the plumbing of multi-step work"}, {"num": "18", "slug": "18-memory-and-state", "title": "Memory and State", "subtitle": "Short-term, long-term, episodic \u2014 what an agent needs to remember to be useful"}, {"num": "19", "slug": "19-evals-and-observability", "title": "Evals and Observability", "subtitle": "Traces, replays, scorecards \u2014 the dashboards that keep agents honest"}, {"num": "20", "slug": "20-guardrails-and-policy", "title": "Guardrails and Policy Engines", "subtitle": "From input filters to runtime policy \u2014 defense in depth for autonomous systems"}, {"num": "21", "slug": "21-use-case-portfolio", "title": "The Use Case Portfolio", "subtitle": "Pillar III \u2014 picking the right work for an agent to do"}, {"num": "22", "slug": "22-value-and-feasibility", "title": "Value and Feasibility", "subtitle": "Scoring use cases on a 2\u00d72 \u2014 and the trap of doing the easy ones first"}, {"num": "23", "slug": "23-human-in-the-loop", "title": "Human in the Loop", "subtitle": "Where supervision belongs, where it doesn't, and how to design the handoff"}, {"num": "24", "slug": "24-pilot-to-production", "title": "From Pilot to Production", "subtitle": "The valley of death \u2014 and how a use case earns the right to scale"}, {"num": "25", "slug": "25-integration-spine", "title": "The Integration Spine", "subtitle": "Pillar IV \u2014 APIs, identity, data, and the enterprise systems an agent must touch"}, {"num": "26", "slug": "26-identity-for-agents", "title": "Identity for Agents", "subtitle": "Service accounts, scoped tokens, on-behalf-of \u2014 auth for non-human actors"}, {"num": "27", "slug": "27-data-readiness", "title": "Data Readiness", "subtitle": "Lineage, freshness, classification, and why your data lake is not a vector store"}, {"num": "28", "slug": "28-mcp-a2a-protocols", "title": "MCP, A2A, and the Interop Layer", "subtitle": "Model Context Protocol, Agent2Agent, and the protocols that let agents share work"}, {"num": "29", "slug": "29-the-maturity-model", "title": "The Maturity Model", "subtitle": "Five levels \u2014 Initial, Repeatable, Defined, Managed, Optimized \u2014 across all four pillars"}, {"num": "30", "slug": "30-the-scorecard-method", "title": "The Scorecard Method", "subtitle": "How to assess your organization in a half-day, with evidence"}, {"num": "\u2605", "slug": "scorecard", "title": "Interactive Scorecard", "subtitle": "Score yourself across four pillars \u00b7 five levels \u00b7 40 questions \u00b7 share your results"}, {"num": "31", "slug": "31-reading-the-radar", "title": "Reading the Radar", "subtitle": "What a four-pillar profile tells you about where to invest first"}, {"num": "32", "slug": "32-the-thirty-sixty-ninety", "title": "The 30/60/90", "subtitle": "What an enterprise can credibly accomplish in the first ninety days"}, {"num": "33", "slug": "33-the-twelve-month-roadmap", "title": "The Twelve-Month Roadmap", "subtitle": "From scattered pilots to a governed agent platform \u2014 by quarter"}, {"num": "34", "slug": "34-the-operating-model", "title": "The Operating Model", "subtitle": "Center of excellence, hub-and-spoke, federated \u2014 pick one and live with it"}, {"num": "35", "slug": "35-roles-and-careers", "title": "Roles and Careers", "subtitle": "AI product managers, agent engineers, evals leads \u2014 the jobs the org didn't have last year"}, {"num": "36", "slug": "36-procurement-and-vendors", "title": "Procurement and Vendors", "subtitle": "Buy, build, or rent \u2014 and the contract clauses you'll wish you had insisted on"}, {"num": "37", "slug": "37-change-management", "title": "Change Management", "subtitle": "How to roll agents into a workforce without losing the workforce"}, {"num": "38", "slug": "38-economics-at-scale", "title": "Economics at Scale", "subtitle": "Unit costs, gross margin, and the second-order effects of letting agents run your processes"}, {"num": "39", "slug": "39-the-failure-postmortem", "title": "The Failure Postmortem", "subtitle": "Three case studies of agentic deployments that broke \u2014 and what they teach"}, {"num": "40", "slug": "40-the-next-decade", "title": "The Next Decade", "subtitle": "What ready looks like in 2030, and how to recognize it from where you stand today"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>The Agentic Enterprise<span class="brand__sub"> — a readiness field guide</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link nav-link--active" href="index.html">Cover</a>
+    <a class="nav-link" href="index.html#chapters">Chapters</a>
+    <a class="nav-link" href="chapters/scorecard.html">Scorecard</a>
+    <a class="nav-link" href="chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <section class="hero reveal">
+    <div class="hero__text">
+      <div class="hero__eyebrow">A readiness field guide · 40 chapters · three parts · ~5 hour read</div>
+      <h1 class="hero__title">The Agentic <em>Enterprise</em></h1>
+      <p class="hero__lede">A long-form, evidence-based field guide to agentic AI in the enterprise — what changes when software stops answering and starts acting, what governance survives that transition, and what the first ninety days of a serious agent program actually look like. Part I lays out what an agent is and the perimeter you are operating inside. Part II walks the four pillars — governance, orchestration, use case identification, integration — in the depth a CIO needs. Part III turns the model into an operating system: a half-day scorecard, a thirty-sixty-ninety, a twelve-month roadmap, and what "ready" looks like by 2030.</p>
+      <div class="hero__meta">
+        <span><strong>40</strong> chapters</span>
+        <span><strong>1</strong> interactive scorecard</span>
+        <span><strong>4</strong> pillars · 5 maturity levels</span>
+      </div>
+      <div class="hero__cta">
+        <a class="hero__cta-link" href="#chapters">Begin reading</a>
+        <a class="hero__cta-secondary" href="chapters/scorecard.html">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3 L12 12 L18 15"/></svg>
+          Score your organization
+          <span class="hero__cta-meta">~30 minutes · radar + roadmap</span>
+        </a>
+        <a class="hero__cta-secondary" href="agentic-ai-readiness.pdf" download>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download full PDF
+          <span class="hero__cta-meta">printable field guide</span>
+        </a>
+      </div>
+    </div>
+    <div class="hero__visual"><svg class="diagram" viewBox="0 0 600 700" role="img" aria-hidden="true" preserveAspectRatio="xMaxYMid meet">
+  <defs>
+    <radialGradient id="coverGlowA" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="var(--color-accent-copper)" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="var(--color-accent-copper)" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="coverGlowB" cx="0.5" cy="0.5" r="0.6">
+      <stop offset="0" stop-color="var(--color-primary)" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="var(--color-primary)" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="coverGlowC" cx="0.5" cy="0.5" r="0.6">
+      <stop offset="0" stop-color="var(--color-accent-euv)" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="var(--color-accent-euv)" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- Ambient field -->
+  <circle cx="300" cy="350" r="280" fill="url(#coverGlowB)"/>
+  <circle cx="180" cy="180" r="150" fill="url(#coverGlowA)"/>
+  <circle cx="430" cy="520" r="170" fill="url(#coverGlowC)"/>
+  <!-- Central agent -->
+  <g transform="translate(300 350)">
+    <circle r="80" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"/>
+    <circle r="56" fill="none" stroke="var(--color-primary)" stroke-width="1" opacity="0.35"/>
+    <circle r="32" fill="var(--color-primary)"/>
+    <circle r="14" fill="var(--color-accent-copper)"/>
+    <text y="-95" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--color-text-muted)" letter-spacing="0.18em">PLAN · ACT · OBSERVE</text>
+  </g>
+  <!-- Satellite agents -->
+  <g stroke="var(--color-text)" stroke-width="1" fill="none" opacity="0.45">
+    <line x1="300" y1="350" x2="120" y2="160"/>
+    <line x1="300" y1="350" x2="500" y2="170"/>
+    <line x1="300" y1="350" x2="120" y2="540"/>
+    <line x1="300" y1="350" x2="500" y2="560"/>
+    <line x1="300" y1="350" x2="300" y2="120"/>
+    <line x1="300" y1="350" x2="300" y2="600"/>
+  </g>
+  <g>
+    <circle cx="120" cy="160" r="22" fill="var(--color-bg)" stroke="var(--color-accent-copper)" stroke-width="1.5"/>
+    <circle cx="120" cy="160" r="8" fill="var(--color-accent-copper)"/>
+    <circle cx="500" cy="170" r="22" fill="var(--color-bg)" stroke="var(--color-accent-euv)" stroke-width="1.5"/>
+    <circle cx="500" cy="170" r="8" fill="var(--color-accent-euv)"/>
+    <circle cx="120" cy="540" r="22" fill="var(--color-bg)" stroke="var(--color-primary)" stroke-width="1.5"/>
+    <circle cx="120" cy="540" r="8" fill="var(--color-primary)"/>
+    <circle cx="500" cy="560" r="22" fill="var(--color-bg)" stroke="var(--color-accent-quartz)" stroke-width="1.5"/>
+    <circle cx="500" cy="560" r="8" fill="var(--color-accent-quartz)"/>
+    <circle cx="300" cy="120" r="22" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"/>
+    <circle cx="300" cy="120" r="8" fill="var(--color-text)"/>
+    <circle cx="300" cy="600" r="22" fill="var(--color-bg)" stroke="var(--color-text)" stroke-width="1.5"/>
+    <circle cx="300" cy="600" r="8" fill="var(--color-text)"/>
+  </g>
+  <!-- Tool ring (outer dotted arc) -->
+  <g fill="none" stroke="var(--color-text-muted)" stroke-width="0.8" stroke-dasharray="2 6" opacity="0.55">
+    <circle cx="300" cy="350" r="240"/>
+  </g>
+  <!-- Pillar labels -->
+  <g font-family="var(--font-mono)" font-size="10" letter-spacing="0.2em" fill="var(--color-text-muted)" text-anchor="middle">
+    <text x="120" y="200">GOVERN</text>
+    <text x="500" y="210">ORCHESTRATE</text>
+    <text x="120" y="580">USE CASE</text>
+    <text x="500" y="600">INTEGRATE</text>
+  </g>
+</svg></div>
+  </section>
+
+  <div data-continue></div>
+
+  <section class="arc reveal" aria-label="Chapter map">
+      <div class="arc__header">
+        <div class="arc__title">The journey at a glance</div>
+        <div class="arc__hint">Hover or tap any chapter — click to open</div>
+      </div>
+      <div class="arc__track">
+        <div class="arc__track-meta">
+          <span class="arc__track-label">Part I</span>
+          <span class="arc__track-sub">What agentic AI actually is</span>
+        </div>
+        <div class="arc__track-line">
+          <div class="arc__track-rail" data-track="part-i"></div>
+          <div class="arc__track-nodes"><a class="arc__node" href="chapters/01-the-shift.html" data-tone="copper" aria-label="Chapter 01: The Shift"><span class="arc__node-dot"></span><span class="arc__node-num">01</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 01</span><span class="arc__node-tip-title">The Shift</span></span></a><a class="arc__node" href="chapters/02-anatomy-of-an-agent.html" data-tone="plasma" aria-label="Chapter 02: Anatomy of an Agent"><span class="arc__node-dot"></span><span class="arc__node-num">02</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 02</span><span class="arc__node-tip-title">Anatomy of an Agent</span></span></a><a class="arc__node" href="chapters/03-spectrum-of-autonomy.html" data-tone="primary" aria-label="Chapter 03: The Spectrum of Autonomy"><span class="arc__node-dot"></span><span class="arc__node-num">03</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 03</span><span class="arc__node-tip-title">The Spectrum of Autonomy</span></span></a><a class="arc__node" href="chapters/04-from-models-to-systems.html" data-tone="primary" aria-label="Chapter 04: From Models to Systems"><span class="arc__node-dot"></span><span class="arc__node-num">04</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 04</span><span class="arc__node-tip-title">From Models to Systems</span></span></a><a class="arc__node" href="chapters/05-tool-use-and-grounding.html" data-tone="primary" aria-label="Chapter 05: Tool Use and Grounding"><span class="arc__node-dot"></span><span class="arc__node-num">05</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 05</span><span class="arc__node-tip-title">Tool Use and Grounding</span></span></a><a class="arc__node" href="chapters/06-multi-agent-and-swarm.html" data-tone="primary" aria-label="Chapter 06: Multi-Agent and Swarm"><span class="arc__node-dot"></span><span class="arc__node-num">06</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 06</span><span class="arc__node-tip-title">Multi-Agent and Swarm</span></span></a><a class="arc__node" href="chapters/07-the-economics.html" data-tone="primary" aria-label="Chapter 07: The Economics of an Agent"><span class="arc__node-dot"></span><span class="arc__node-num">07</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 07</span><span class="arc__node-tip-title">The Economics of an Agent</span></span></a><a class="arc__node" href="chapters/08-failure-modes.html" data-tone="euv" aria-label="Chapter 08: Failure Modes"><span class="arc__node-dot"></span><span class="arc__node-num">08</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 08</span><span class="arc__node-tip-title">Failure Modes</span></span></a><a class="arc__node" href="chapters/09-threat-landscape.html" data-tone="plasma" aria-label="Chapter 09: The Threat Landscape"><span class="arc__node-dot"></span><span class="arc__node-num">09</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 09</span><span class="arc__node-tip-title">The Threat Landscape</span></span></a><a class="arc__node" href="chapters/10-regulatory-perimeter.html" data-tone="copper" aria-label="Chapter 10: The Regulatory Perimeter"><span class="arc__node-dot"></span><span class="arc__node-num">10</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 10</span><span class="arc__node-tip-title">The Regulatory Perimeter</span></span></a><a class="arc__node" href="chapters/11-frameworks-landscape.html" data-tone="primary" aria-label="Chapter 11: The Frameworks Landscape"><span class="arc__node-dot"></span><span class="arc__node-num">11</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 11</span><span class="arc__node-tip-title">The Frameworks Landscape</span></span></a><a class="arc__node" href="chapters/12-the-four-pillars.html" data-tone="copper" aria-label="Chapter 12: The Four Pillars"><span class="arc__node-dot"></span><span class="arc__node-num">12</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 12</span><span class="arc__node-tip-title">The Four Pillars</span></span></a></div>
+        </div>
+      </div>
+      <div class="arc__track">
+        <div class="arc__track-meta">
+          <span class="arc__track-label">Part II</span>
+          <span class="arc__track-sub">The four pillars of readiness</span>
+        </div>
+        <div class="arc__track-line">
+          <div class="arc__track-rail" data-track="part-ii"></div>
+          <div class="arc__track-nodes"><a class="arc__node" href="chapters/13-governance-charter.html" data-tone="copper" aria-label="Chapter 13: The Governance Charter"><span class="arc__node-dot"></span><span class="arc__node-num">13</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 13</span><span class="arc__node-tip-title">The Governance Charter</span></span></a><a class="arc__node" href="chapters/14-policy-stack.html" data-tone="plasma" aria-label="Chapter 14: The Policy Stack"><span class="arc__node-dot"></span><span class="arc__node-num">14</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 14</span><span class="arc__node-tip-title">The Policy Stack</span></span></a><a class="arc__node" href="chapters/15-nist-rmf-walk.html" data-tone="primary" aria-label="Chapter 15: Walking the NIST AI RMF"><span class="arc__node-dot"></span><span class="arc__node-num">15</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 15</span><span class="arc__node-tip-title">Walking the NIST AI RMF</span></span></a><a class="arc__node" href="chapters/16-iso-42001-and-eu.html" data-tone="primary" aria-label="Chapter 16: ISO/IEC 42001 and the EU AI Act"><span class="arc__node-dot"></span><span class="arc__node-num">16</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 16</span><span class="arc__node-tip-title">ISO/IEC 42001 and the EU AI Act</span></span></a><a class="arc__node" href="chapters/17-orchestration-stack.html" data-tone="primary" aria-label="Chapter 17: The Orchestration Stack"><span class="arc__node-dot"></span><span class="arc__node-num">17</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 17</span><span class="arc__node-tip-title">The Orchestration Stack</span></span></a><a class="arc__node" href="chapters/18-memory-and-state.html" data-tone="primary" aria-label="Chapter 18: Memory and State"><span class="arc__node-dot"></span><span class="arc__node-num">18</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 18</span><span class="arc__node-tip-title">Memory and State</span></span></a><a class="arc__node" href="chapters/19-evals-and-observability.html" data-tone="primary" aria-label="Chapter 19: Evals and Observability"><span class="arc__node-dot"></span><span class="arc__node-num">19</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 19</span><span class="arc__node-tip-title">Evals and Observability</span></span></a><a class="arc__node" href="chapters/20-guardrails-and-policy.html" data-tone="euv" aria-label="Chapter 20: Guardrails and Policy Engines"><span class="arc__node-dot"></span><span class="arc__node-num">20</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 20</span><span class="arc__node-tip-title">Guardrails and Policy Engines</span></span></a><a class="arc__node" href="chapters/21-use-case-portfolio.html" data-tone="plasma" aria-label="Chapter 21: The Use Case Portfolio"><span class="arc__node-dot"></span><span class="arc__node-num">21</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 21</span><span class="arc__node-tip-title">The Use Case Portfolio</span></span></a><a class="arc__node" href="chapters/22-value-and-feasibility.html" data-tone="copper" aria-label="Chapter 22: Value and Feasibility"><span class="arc__node-dot"></span><span class="arc__node-num">22</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 22</span><span class="arc__node-tip-title">Value and Feasibility</span></span></a><a class="arc__node" href="chapters/23-human-in-the-loop.html" data-tone="primary" aria-label="Chapter 23: Human in the Loop"><span class="arc__node-dot"></span><span class="arc__node-num">23</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 23</span><span class="arc__node-tip-title">Human in the Loop</span></span></a><a class="arc__node" href="chapters/24-pilot-to-production.html" data-tone="copper" aria-label="Chapter 24: From Pilot to Production"><span class="arc__node-dot"></span><span class="arc__node-num">24</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 24</span><span class="arc__node-tip-title">From Pilot to Production</span></span></a><a class="arc__node" href="chapters/25-integration-spine.html" data-tone="copper" aria-label="Chapter 25: The Integration Spine"><span class="arc__node-dot"></span><span class="arc__node-num">25</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 25</span><span class="arc__node-tip-title">The Integration Spine</span></span></a><a class="arc__node" href="chapters/26-identity-for-agents.html" data-tone="plasma" aria-label="Chapter 26: Identity for Agents"><span class="arc__node-dot"></span><span class="arc__node-num">26</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 26</span><span class="arc__node-tip-title">Identity for Agents</span></span></a><a class="arc__node" href="chapters/27-data-readiness.html" data-tone="primary" aria-label="Chapter 27: Data Readiness"><span class="arc__node-dot"></span><span class="arc__node-num">27</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 27</span><span class="arc__node-tip-title">Data Readiness</span></span></a><a class="arc__node" href="chapters/28-mcp-a2a-protocols.html" data-tone="primary" aria-label="Chapter 28: MCP, A2A, and the Interop Layer"><span class="arc__node-dot"></span><span class="arc__node-num">28</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 28</span><span class="arc__node-tip-title">MCP, A2A, and the Interop Layer</span></span></a></div>
+        </div>
+      </div>
+      <div class="arc__track">
+        <div class="arc__track-meta">
+          <span class="arc__track-label">Part III</span>
+          <span class="arc__track-sub">From assessment to operating model</span>
+        </div>
+        <div class="arc__track-line">
+          <div class="arc__track-rail" data-track="part-iii"></div>
+          <div class="arc__track-nodes"><a class="arc__node" href="chapters/29-the-maturity-model.html" data-tone="copper" aria-label="Chapter 29: The Maturity Model"><span class="arc__node-dot"></span><span class="arc__node-num">29</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 29</span><span class="arc__node-tip-title">The Maturity Model</span></span></a><a class="arc__node" href="chapters/30-the-scorecard-method.html" data-tone="plasma" aria-label="Chapter 30: The Scorecard Method"><span class="arc__node-dot"></span><span class="arc__node-num">30</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 30</span><span class="arc__node-tip-title">The Scorecard Method</span></span></a><a class="arc__node" href="chapters/scorecard.html" data-tone="primary" aria-label="Chapter ★: Interactive Scorecard"><span class="arc__node-dot"></span><span class="arc__node-num">★</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch ★</span><span class="arc__node-tip-title">Interactive Scorecard</span></span></a><a class="arc__node" href="chapters/31-reading-the-radar.html" data-tone="primary" aria-label="Chapter 31: Reading the Radar"><span class="arc__node-dot"></span><span class="arc__node-num">31</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 31</span><span class="arc__node-tip-title">Reading the Radar</span></span></a><a class="arc__node" href="chapters/32-the-thirty-sixty-ninety.html" data-tone="primary" aria-label="Chapter 32: The 30/60/90"><span class="arc__node-dot"></span><span class="arc__node-num">32</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 32</span><span class="arc__node-tip-title">The 30/60/90</span></span></a><a class="arc__node" href="chapters/33-the-twelve-month-roadmap.html" data-tone="primary" aria-label="Chapter 33: The Twelve-Month Roadmap"><span class="arc__node-dot"></span><span class="arc__node-num">33</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 33</span><span class="arc__node-tip-title">The Twelve-Month Roadmap</span></span></a><a class="arc__node" href="chapters/34-the-operating-model.html" data-tone="primary" aria-label="Chapter 34: The Operating Model"><span class="arc__node-dot"></span><span class="arc__node-num">34</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 34</span><span class="arc__node-tip-title">The Operating Model</span></span></a><a class="arc__node" href="chapters/35-roles-and-careers.html" data-tone="euv" aria-label="Chapter 35: Roles and Careers"><span class="arc__node-dot"></span><span class="arc__node-num">35</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 35</span><span class="arc__node-tip-title">Roles and Careers</span></span></a><a class="arc__node" href="chapters/36-procurement-and-vendors.html" data-tone="plasma" aria-label="Chapter 36: Procurement and Vendors"><span class="arc__node-dot"></span><span class="arc__node-num">36</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 36</span><span class="arc__node-tip-title">Procurement and Vendors</span></span></a><a class="arc__node" href="chapters/37-change-management.html" data-tone="copper" aria-label="Chapter 37: Change Management"><span class="arc__node-dot"></span><span class="arc__node-num">37</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 37</span><span class="arc__node-tip-title">Change Management</span></span></a><a class="arc__node" href="chapters/38-economics-at-scale.html" data-tone="primary" aria-label="Chapter 38: Economics at Scale"><span class="arc__node-dot"></span><span class="arc__node-num">38</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 38</span><span class="arc__node-tip-title">Economics at Scale</span></span></a><a class="arc__node" href="chapters/39-the-failure-postmortem.html" data-tone="copper" aria-label="Chapter 39: The Failure Postmortem"><span class="arc__node-dot"></span><span class="arc__node-num">39</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 39</span><span class="arc__node-tip-title">The Failure Postmortem</span></span></a><a class="arc__node" href="chapters/40-the-next-decade.html" data-tone="copper" aria-label="Chapter 40: The Next Decade"><span class="arc__node-dot"></span><span class="arc__node-num">40</span><span class="arc__node-tip"><span class="arc__node-tip-label">Ch 40</span><span class="arc__node-tip-title">The Next Decade</span></span></a></div>
+        </div>
+      </div>
+    </section>
+
+  <section class="section-head reveal" id="chapters">
+    <div class="section-head__num">§ Part I</div>
+    <h2 class="section-head__title">The Shape of Agentic AI</h2>
+    <p>Twelve chapters establishing what agentic AI actually is, what it costs, how it fails, and the regulatory and threat perimeter you are operating inside.</p>
+  </section>
+  <div class="lens-grid"><a class="lens-card reveal" data-tone="copper" href="chapters/01-the-shift.html">
+        <div class="lens-card__index"><span class="ch-num">01</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><circle cx="28" cy="28" r="8"/><path d="M28 6 L28 14 M28 42 L28 50 M6 28 L14 28 M42 28 L50 28 M12 12 L18 18 M38 38 L44 44 M12 44 L18 38 M38 18 L44 12"/></svg></div>
+        <h3 class="lens-card__title">The Shift</h3>
+        <p class="lens-card__desc">From copilots to colleagues — what changes when software starts to act</p>
+      </a><a class="lens-card reveal" data-tone="plasma" href="chapters/02-anatomy-of-an-agent.html">
+        <div class="lens-card__index"><span class="ch-num">02</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><circle cx="14" cy="14" r="5"/><circle cx="42" cy="14" r="5"/><circle cx="14" cy="42" r="5"/><circle cx="42" cy="42" r="5"/><path d="M19 14 L37 14 M14 19 L14 37 M42 19 L42 37 M19 42 L37 42"/></svg></div>
+        <h3 class="lens-card__title">Anatomy of an Agent</h3>
+        <p class="lens-card__desc">Plan, act, observe, remember — the four moving parts</p>
+      </a><a class="lens-card reveal" data-tone="primary" href="chapters/03-spectrum-of-autonomy.html">
+        <div class="lens-card__index"><span class="ch-num">03</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M8 46 L48 46"/><path d="M14 46 L14 14 M22 46 L22 22 M30 46 L30 30 M38 46 L38 18 M46 46 L46 10"/></svg></div>
+        <h3 class="lens-card__title">The Spectrum of Autonomy</h3>
+        <p class="lens-card__desc">Five rungs from automation to autonomy, and where most enterprises actually live</p>
+      </a><a class="lens-card reveal" data-tone="primary" href="chapters/04-from-models-to-systems.html">
+        <div class="lens-card__index"><span class="ch-num">04</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><rect x="6" y="6" width="44" height="44" rx="3"/><rect x="14" y="14" width="28" height="28" rx="2"/><rect x="22" y="22" width="12" height="12"/></svg></div>
+        <h3 class="lens-card__title">From Models to Systems</h3>
+        <p class="lens-card__desc">Why agentic AI is a systems problem, not a model problem</p>
+      </a><a class="lens-card reveal" data-tone="primary" href="chapters/05-tool-use-and-grounding.html">
+        <div class="lens-card__index"><span class="ch-num">05</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M40 8 a10 10 0 0 0 -10 14 L10 42 a4 4 0 0 0 4 6 L18 46 L34 28 a10 10 0 0 0 6 -20"/><circle cx="38" cy="12" r="2.5" fill="currentColor"/></svg></div>
+        <h3 class="lens-card__title">Tool Use and Grounding</h3>
+        <p class="lens-card__desc">How an agent reaches into the world — APIs, retrieval, and the limits of context</p>
+      </a><a class="lens-card reveal" data-tone="primary" href="chapters/06-multi-agent-and-swarm.html">
+        <div class="lens-card__index"><span class="ch-num">06</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><circle cx="14" cy="14" r="3"/><circle cx="28" cy="10" r="3"/><circle cx="42" cy="14" r="3"/><circle cx="46" cy="28" r="3"/><circle cx="42" cy="42" r="3"/><circle cx="28" cy="46" r="3"/><circle cx="14" cy="42" r="3"/><circle cx="10" cy="28" r="3"/><circle cx="28" cy="28" r="4" fill="currentColor"/></svg></div>
+        <h3 class="lens-card__title">Multi-Agent and Swarm</h3>
+        <p class="lens-card__desc">When one mind isn&#x27;t enough — coordination, delegation, and emergent failure modes</p>
+      </a><a class="lens-card reveal" data-tone="primary" href="chapters/07-the-economics.html">
+        <div class="lens-card__index"><span class="ch-num">07</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><circle cx="28" cy="28" r="20"/><path d="M28 14 L28 42"/><path d="M22 20 L34 20 a4 4 0 0 1 0 8 L22 28 L34 28 a4 4 0 0 1 0 8 L22 36"/></svg></div>
+        <h3 class="lens-card__title">The Economics of an Agent</h3>
+        <p class="lens-card__desc">Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI</p>
+      </a><a class="lens-card reveal" data-tone="euv" href="chapters/08-failure-modes.html">
+        <div class="lens-card__index"><span class="ch-num">08</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M28 8 L50 46 L6 46 Z"/><path d="M28 22 L28 34"/><circle cx="28" cy="40" r="1.5" fill="currentColor"/></svg></div>
+        <h3 class="lens-card__title">Failure Modes</h3>
+        <p class="lens-card__desc">Hallucinated calls, prompt injection, runaway loops, and the cost of being wrong at scale</p>
+      </a><a class="lens-card reveal" data-tone="plasma" href="chapters/09-threat-landscape.html">
+        <div class="lens-card__index"><span class="ch-num">09</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M28 6 L46 14 L46 32 a18 18 0 0 1 -18 18 a18 18 0 0 1 -18 -18 L10 14 Z"/><path d="M20 28 L26 34 L36 22"/></svg></div>
+        <h3 class="lens-card__title">The Threat Landscape</h3>
+        <p class="lens-card__desc">OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do</p>
+      </a><a class="lens-card reveal" data-tone="copper" href="chapters/10-regulatory-perimeter.html">
+        <div class="lens-card__index"><span class="ch-num">10</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M10 34 L22 22 L34 34 L22 46 Z"/><path d="M22 22 L40 4"/><path d="M30 12 L48 30"/><path d="M6 50 L26 50"/></svg></div>
+        <h3 class="lens-card__title">The Regulatory Perimeter</h3>
+        <p class="lens-card__desc">EU AI Act, US executive orders, sectoral rules — what bites and what doesn&#x27;t</p>
+      </a><a class="lens-card reveal" data-tone="primary" href="chapters/11-frameworks-landscape.html">
+        <div class="lens-card__index"><span class="ch-num">11</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><rect x="8" y="10" width="14" height="40"/><rect x="22" y="14" width="14" height="36"/><rect x="36" y="6" width="14" height="44"/><path d="M12 18 L18 18 M26 22 L32 22 M40 14 L46 14"/></svg></div>
+        <h3 class="lens-card__title">The Frameworks Landscape</h3>
+        <p class="lens-card__desc">NIST, ISO, OECD, OWASP, the analyst maturity models — ranked by what actually moves the needle</p>
+      </a><a class="lens-card reveal" data-tone="copper" href="chapters/12-the-four-pillars.html">
+        <div class="lens-card__index"><span class="ch-num">12</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M6 14 L50 14 M6 46 L50 46"/><rect x="10" y="14" width="6" height="32"/><rect x="22" y="14" width="6" height="32"/><rect x="34" y="14" width="6" height="32"/><rect x="44" y="14" width="6" height="32"/></svg></div>
+        <h3 class="lens-card__title">The Four Pillars</h3>
+        <p class="lens-card__desc">A readiness model: governance, orchestration, use case identification, integration</p>
+      </a></div>
+
+  <section class="section-head reveal">
+    <div class="section-head__num">§ Part II</div>
+    <h2 class="section-head__title">The Four Pillars of Readiness</h2>
+    <p>Sixteen chapters — four per pillar — laying out governance, orchestration, use case identification, and integration in the depth a CIO needs.</p>
+  </section>
+  <div class="lens-grid"><a class="lens-card reveal" data-tone="copper" href="chapters/13-governance-charter.html">
+        <div class="lens-card__index"><span class="ch-num">13</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><circle cx="28" cy="28" r="8"/><path d="M28 6 L28 14 M28 42 L28 50 M6 28 L14 28 M42 28 L50 28 M12 12 L18 18 M38 38 L44 44 M12 44 L18 38 M38 18 L44 12"/></svg></div>
+        <h3 class="lens-card__title">The Governance Charter</h3>
+        <p class="lens-card__desc">Pillar I — who owns the agents, who answers when they fail</p>
+      </a><a class="lens-card reveal" data-tone="plasma" href="chapters/14-policy-stack.html">
+        <div class="lens-card__index"><span class="ch-num">14</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><circle cx="14" cy="14" r="5"/><circle cx="42" cy="14" r="5"/><circle cx="14" cy="42" r="5"/><circle cx="42" cy="42" r="5"/><path d="M19 14 L37 14 M14 19 L14 37 M42 19 L42 37 M19 42 L37 42"/></svg></div>
+        <h3 class="lens-card__title">The Policy Stack</h3>
+        <p class="lens-card__desc">Acceptable use, model risk, data classification, third-party AI, incident response</p>
+      </a><a class="lens-card reveal" data-tone="primary" href="chapters/15-nist-rmf-walk.html">
+        <div class="lens-card__index"><span class="ch-num">15</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M8 46 L48 46"/><path d="M14 46 L14 14 M22 46 L22 22 M30 46 L30 30 M38 46 L38 18 M46 46 L46 10"/></svg></div>
+        <h3 class="lens-card__title">Walking the NIST AI RMF</h3>
+        <p class="lens-card__desc">Govern, Map, Measure, Manage — applied to a real agent program</p>
+      </a><a class="lens-card reveal" data-tone="primary" href="chapters/16-iso-42001-and-eu.html">
+        <div class="lens-card__index"><span class="ch-num">16</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><rect x="6" y="6" width="44" height="44" rx="3"/><rect x="14" y="14" width="28" height="28" rx="2"/><rect x="22" y="22" width="12" height="12"/></svg></div>
+        <h3 class="lens-card__title">ISO/IEC 42001 and the EU AI Act</h3>
+        <p class="lens-card__desc">Certification, conformity assessment, and the audit trail of an autonomous system</p>
+      </a><a class="lens-card reveal" data-tone="primary" href="chapters/17-orchestration-stack.html">
+        <div class="lens-card__index"><span class="ch-num">17</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M40 8 a10 10 0 0 0 -10 14 L10 42 a4 4 0 0 0 4 6 L18 46 L34 28 a10 10 0 0 0 6 -20"/><circle cx="38" cy="12" r="2.5" fill="currentColor"/></svg></div>
+        <h3 class="lens-card__title">The Orchestration Stack</h3>
+        <p class="lens-card__desc">Pillar II — frameworks, runtimes, and the plumbing of multi-step work</p>
+      </a><a class="lens-card reveal" data-tone="primary" href="chapters/18-memory-and-state.html">
+        <div class="lens-card__index"><span class="ch-num">18</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><circle cx="14" cy="14" r="3"/><circle cx="28" cy="10" r="3"/><circle cx="42" cy="14" r="3"/><circle cx="46" cy="28" r="3"/><circle cx="42" cy="42" r="3"/><circle cx="28" cy="46" r="3"/><circle cx="14" cy="42" r="3"/><circle cx="10" cy="28" r="3"/><circle cx="28" cy="28" r="4" fill="currentColor"/></svg></div>
+        <h3 class="lens-card__title">Memory and State</h3>
+        <p class="lens-card__desc">Short-term, long-term, episodic — what an agent needs to remember to be useful</p>
+      </a><a class="lens-card reveal" data-tone="primary" href="chapters/19-evals-and-observability.html">
+        <div class="lens-card__index"><span class="ch-num">19</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><circle cx="28" cy="28" r="20"/><path d="M28 14 L28 42"/><path d="M22 20 L34 20 a4 4 0 0 1 0 8 L22 28 L34 28 a4 4 0 0 1 0 8 L22 36"/></svg></div>
+        <h3 class="lens-card__title">Evals and Observability</h3>
+        <p class="lens-card__desc">Traces, replays, scorecards — the dashboards that keep agents honest</p>
+      </a><a class="lens-card reveal" data-tone="euv" href="chapters/20-guardrails-and-policy.html">
+        <div class="lens-card__index"><span class="ch-num">20</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M28 8 L50 46 L6 46 Z"/><path d="M28 22 L28 34"/><circle cx="28" cy="40" r="1.5" fill="currentColor"/></svg></div>
+        <h3 class="lens-card__title">Guardrails and Policy Engines</h3>
+        <p class="lens-card__desc">From input filters to runtime policy — defense in depth for autonomous systems</p>
+      </a><a class="lens-card reveal" data-tone="plasma" href="chapters/21-use-case-portfolio.html">
+        <div class="lens-card__index"><span class="ch-num">21</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M28 6 L46 14 L46 32 a18 18 0 0 1 -18 18 a18 18 0 0 1 -18 -18 L10 14 Z"/><path d="M20 28 L26 34 L36 22"/></svg></div>
+        <h3 class="lens-card__title">The Use Case Portfolio</h3>
+        <p class="lens-card__desc">Pillar III — picking the right work for an agent to do</p>
+      </a><a class="lens-card reveal" data-tone="copper" href="chapters/22-value-and-feasibility.html">
+        <div class="lens-card__index"><span class="ch-num">22</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M10 34 L22 22 L34 34 L22 46 Z"/><path d="M22 22 L40 4"/><path d="M30 12 L48 30"/><path d="M6 50 L26 50"/></svg></div>
+        <h3 class="lens-card__title">Value and Feasibility</h3>
+        <p class="lens-card__desc">Scoring use cases on a 2×2 — and the trap of doing the easy ones first</p>
+      </a><a class="lens-card reveal" data-tone="primary" href="chapters/23-human-in-the-loop.html">
+        <div class="lens-card__index"><span class="ch-num">23</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><rect x="8" y="10" width="14" height="40"/><rect x="22" y="14" width="14" height="36"/><rect x="36" y="6" width="14" height="44"/><path d="M12 18 L18 18 M26 22 L32 22 M40 14 L46 14"/></svg></div>
+        <h3 class="lens-card__title">Human in the Loop</h3>
+        <p class="lens-card__desc">Where supervision belongs, where it doesn&#x27;t, and how to design the handoff</p>
+      </a><a class="lens-card reveal" data-tone="copper" href="chapters/24-pilot-to-production.html">
+        <div class="lens-card__index"><span class="ch-num">24</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M6 14 L50 14 M6 46 L50 46"/><rect x="10" y="14" width="6" height="32"/><rect x="22" y="14" width="6" height="32"/><rect x="34" y="14" width="6" height="32"/><rect x="44" y="14" width="6" height="32"/></svg></div>
+        <h3 class="lens-card__title">From Pilot to Production</h3>
+        <p class="lens-card__desc">The valley of death — and how a use case earns the right to scale</p>
+      </a><a class="lens-card reveal" data-tone="copper" href="chapters/25-integration-spine.html">
+        <div class="lens-card__index"><span class="ch-num">25</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M12 8 L40 8 a6 6 0 0 1 6 6 L46 48 L18 48 a6 6 0 0 1 -6 -6 Z"/><path d="M40 8 L40 42 L46 48"/><path d="M18 18 L36 18 M18 26 L36 26 M18 34 L30 34"/></svg></div>
+        <h3 class="lens-card__title">The Integration Spine</h3>
+        <p class="lens-card__desc">Pillar IV — APIs, identity, data, and the enterprise systems an agent must touch</p>
+      </a><a class="lens-card reveal" data-tone="plasma" href="chapters/26-identity-for-agents.html">
+        <div class="lens-card__index"><span class="ch-num">26</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M28 8 L50 18 L28 28 L6 18 Z"/><path d="M6 28 L28 38 L50 28"/><path d="M6 38 L28 48 L50 38"/></svg></div>
+        <h3 class="lens-card__title">Identity for Agents</h3>
+        <p class="lens-card__desc">Service accounts, scoped tokens, on-behalf-of — auth for non-human actors</p>
+      </a><a class="lens-card reveal" data-tone="primary" href="chapters/27-data-readiness.html">
+        <div class="lens-card__index"><span class="ch-num">27</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><circle cx="28" cy="28" r="22"/><path d="M16 28 L25 36 L40 20"/></svg></div>
+        <h3 class="lens-card__title">Data Readiness</h3>
+        <p class="lens-card__desc">Lineage, freshness, classification, and why your data lake is not a vector store</p>
+      </a><a class="lens-card reveal" data-tone="primary" href="chapters/28-mcp-a2a-protocols.html">
+        <div class="lens-card__index"><span class="ch-num">28</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><rect x="8" y="10" width="40" height="30"/><circle cx="20" cy="42" r="6"/><path d="M14 46 L14 54 L20 50 L26 54 L26 46"/><path d="M16 22 L40 22 M16 30 L32 30"/></svg></div>
+        <h3 class="lens-card__title">MCP, A2A, and the Interop Layer</h3>
+        <p class="lens-card__desc">Model Context Protocol, Agent2Agent, and the protocols that let agents share work</p>
+      </a></div>
+
+  <section class="section-head reveal">
+    <div class="section-head__num">§ Part III</div>
+    <h2 class="section-head__title">From Assessment to Operating Model</h2>
+    <p>Twelve chapters that turn the model into an operating system: a half-day scorecard, a 30/60/90, a twelve-month roadmap, and what &quot;ready&quot; looks like by 2030.</p>
+  </section>
+  <div class="lens-grid"><a class="lens-card reveal" data-tone="copper" href="chapters/29-the-maturity-model.html">
+        <div class="lens-card__index"><span class="ch-num">29</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><circle cx="28" cy="28" r="8"/><path d="M28 6 L28 14 M28 42 L28 50 M6 28 L14 28 M42 28 L50 28 M12 12 L18 18 M38 38 L44 44 M12 44 L18 38 M38 18 L44 12"/></svg></div>
+        <h3 class="lens-card__title">The Maturity Model</h3>
+        <p class="lens-card__desc">Five levels — Initial, Repeatable, Defined, Managed, Optimized — across all four pillars</p>
+      </a><a class="lens-card reveal" data-tone="plasma" href="chapters/30-the-scorecard-method.html">
+        <div class="lens-card__index"><span class="ch-num">30</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><circle cx="14" cy="14" r="5"/><circle cx="42" cy="14" r="5"/><circle cx="14" cy="42" r="5"/><circle cx="42" cy="42" r="5"/><path d="M19 14 L37 14 M14 19 L14 37 M42 19 L42 37 M19 42 L37 42"/></svg></div>
+        <h3 class="lens-card__title">The Scorecard Method</h3>
+        <p class="lens-card__desc">How to assess your organization in a half-day, with evidence</p>
+      </a><a class="lens-card reveal" data-tone="primary" href="chapters/scorecard.html">
+        <div class="lens-card__index"><span class="ch-num">★</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M8 46 L48 46"/><path d="M14 46 L14 14 M22 46 L22 22 M30 46 L30 30 M38 46 L38 18 M46 46 L46 10"/></svg></div>
+        <h3 class="lens-card__title">Interactive Scorecard</h3>
+        <p class="lens-card__desc">Score yourself across four pillars · five levels · 40 questions · share your results</p>
+      </a><a class="lens-card reveal" data-tone="primary" href="chapters/31-reading-the-radar.html">
+        <div class="lens-card__index"><span class="ch-num">31</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><rect x="6" y="6" width="44" height="44" rx="3"/><rect x="14" y="14" width="28" height="28" rx="2"/><rect x="22" y="22" width="12" height="12"/></svg></div>
+        <h3 class="lens-card__title">Reading the Radar</h3>
+        <p class="lens-card__desc">What a four-pillar profile tells you about where to invest first</p>
+      </a><a class="lens-card reveal" data-tone="primary" href="chapters/32-the-thirty-sixty-ninety.html">
+        <div class="lens-card__index"><span class="ch-num">32</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M40 8 a10 10 0 0 0 -10 14 L10 42 a4 4 0 0 0 4 6 L18 46 L34 28 a10 10 0 0 0 6 -20"/><circle cx="38" cy="12" r="2.5" fill="currentColor"/></svg></div>
+        <h3 class="lens-card__title">The 30/60/90</h3>
+        <p class="lens-card__desc">What an enterprise can credibly accomplish in the first ninety days</p>
+      </a><a class="lens-card reveal" data-tone="primary" href="chapters/33-the-twelve-month-roadmap.html">
+        <div class="lens-card__index"><span class="ch-num">33</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><circle cx="14" cy="14" r="3"/><circle cx="28" cy="10" r="3"/><circle cx="42" cy="14" r="3"/><circle cx="46" cy="28" r="3"/><circle cx="42" cy="42" r="3"/><circle cx="28" cy="46" r="3"/><circle cx="14" cy="42" r="3"/><circle cx="10" cy="28" r="3"/><circle cx="28" cy="28" r="4" fill="currentColor"/></svg></div>
+        <h3 class="lens-card__title">The Twelve-Month Roadmap</h3>
+        <p class="lens-card__desc">From scattered pilots to a governed agent platform — by quarter</p>
+      </a><a class="lens-card reveal" data-tone="primary" href="chapters/34-the-operating-model.html">
+        <div class="lens-card__index"><span class="ch-num">34</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><circle cx="28" cy="28" r="20"/><path d="M28 14 L28 42"/><path d="M22 20 L34 20 a4 4 0 0 1 0 8 L22 28 L34 28 a4 4 0 0 1 0 8 L22 36"/></svg></div>
+        <h3 class="lens-card__title">The Operating Model</h3>
+        <p class="lens-card__desc">Center of excellence, hub-and-spoke, federated — pick one and live with it</p>
+      </a><a class="lens-card reveal" data-tone="euv" href="chapters/35-roles-and-careers.html">
+        <div class="lens-card__index"><span class="ch-num">35</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M28 8 L50 46 L6 46 Z"/><path d="M28 22 L28 34"/><circle cx="28" cy="40" r="1.5" fill="currentColor"/></svg></div>
+        <h3 class="lens-card__title">Roles and Careers</h3>
+        <p class="lens-card__desc">AI product managers, agent engineers, evals leads — the jobs the org didn&#x27;t have last year</p>
+      </a><a class="lens-card reveal" data-tone="plasma" href="chapters/36-procurement-and-vendors.html">
+        <div class="lens-card__index"><span class="ch-num">36</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M28 6 L46 14 L46 32 a18 18 0 0 1 -18 18 a18 18 0 0 1 -18 -18 L10 14 Z"/><path d="M20 28 L26 34 L36 22"/></svg></div>
+        <h3 class="lens-card__title">Procurement and Vendors</h3>
+        <p class="lens-card__desc">Buy, build, or rent — and the contract clauses you&#x27;ll wish you had insisted on</p>
+      </a><a class="lens-card reveal" data-tone="copper" href="chapters/37-change-management.html">
+        <div class="lens-card__index"><span class="ch-num">37</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M10 34 L22 22 L34 34 L22 46 Z"/><path d="M22 22 L40 4"/><path d="M30 12 L48 30"/><path d="M6 50 L26 50"/></svg></div>
+        <h3 class="lens-card__title">Change Management</h3>
+        <p class="lens-card__desc">How to roll agents into a workforce without losing the workforce</p>
+      </a><a class="lens-card reveal" data-tone="primary" href="chapters/38-economics-at-scale.html">
+        <div class="lens-card__index"><span class="ch-num">38</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><rect x="8" y="10" width="14" height="40"/><rect x="22" y="14" width="14" height="36"/><rect x="36" y="6" width="14" height="44"/><path d="M12 18 L18 18 M26 22 L32 22 M40 14 L46 14"/></svg></div>
+        <h3 class="lens-card__title">Economics at Scale</h3>
+        <p class="lens-card__desc">Unit costs, gross margin, and the second-order effects of letting agents run your processes</p>
+      </a><a class="lens-card reveal" data-tone="copper" href="chapters/39-the-failure-postmortem.html">
+        <div class="lens-card__index"><span class="ch-num">39</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M6 14 L50 14 M6 46 L50 46"/><rect x="10" y="14" width="6" height="32"/><rect x="22" y="14" width="6" height="32"/><rect x="34" y="14" width="6" height="32"/><rect x="44" y="14" width="6" height="32"/></svg></div>
+        <h3 class="lens-card__title">The Failure Postmortem</h3>
+        <p class="lens-card__desc">Three case studies of agentic deployments that broke — and what they teach</p>
+      </a><a class="lens-card reveal" data-tone="copper" href="chapters/40-the-next-decade.html">
+        <div class="lens-card__index"><span class="ch-num">40</span></div>
+        <div class="lens-card__icon"><svg viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M12 8 L40 8 a6 6 0 0 1 6 6 L46 48 L18 48 a6 6 0 0 1 -6 -6 Z"/><path d="M40 8 L40 42 L46 48"/><path d="M18 18 L36 18 M18 26 L36 26 M18 34 L30 34"/></svg></div>
+        <h3 class="lens-card__title">The Next Decade</h3>
+        <p class="lens-card__desc">What ready looks like in 2030, and how to recognize it from where you stand today</p>
+      </a></div>
+
+  <section class="section-head reveal" style="margin-top:var(--space-16);">
+    <div class="section-head__num">¶</div>
+    <h2 class="section-head__title">A note before you begin</h2>
+    <p style="max-width:62ch;">Most organizations do not have an agentic AI problem. They have a readiness problem. The technology is available; the governance, orchestration, use case discipline, and integration plumbing to absorb it are not. This report is a working field guide for the people who have to close that gap on a quarterly clock — CIOs, CISOs, AI leads, and the boards that hold them accountable. Read in order for the full arc, jump to the scorecard if you came for the assessment, or treat the glossary and bibliography as the working reference. Bring patience. Bring evidence. The first chapter starts with a shift.</p>
+    <p style="margin-top:var(--space-4);"><a href="chapters/01-the-shift.html" style="color:var(--color-primary);text-decoration:none;font-family:var(--font-mono);font-size:var(--text-sm);text-transform:uppercase;letter-spacing:0.1em;">Begin Chapter 01 — The Shift →</a></p>
+  </section>
+</main>
+<button class="tutor-launcher" data-tutor-open type="button" aria-label="Open AI Tutor"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg><span>Ask the tutor</span></button>
+<div class="search-modal" data-search aria-hidden="true" data-base="">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters, the glossary, and the bibliography. Try <em>NIST</em>, <em>orchestration</em>, <em>guardrails</em>, or <em>EU AI Act</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does the NIST AI RMF apply to agentic AI?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">The Agentic Enterprise</strong><br>
+      A long-form readiness field guide for agentic AI in the enterprise.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="js/app.js" defer></script>
+</body></html>

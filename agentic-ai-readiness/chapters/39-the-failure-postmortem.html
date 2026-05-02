@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 39 · The Failure Postmortem — The Agentic Enterprise</title>
+<meta name="description" content="Three case studies of agentic deployments that broke — and what they teach">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="39-the-failure-postmortem" data-chapter-title="The Failure Postmortem" data-base="../">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-shift", "title": "The Shift", "subtitle": "From copilots to colleagues \u2014 what changes when software starts to act"}, {"num": "02", "slug": "02-anatomy-of-an-agent", "title": "Anatomy of an Agent", "subtitle": "Plan, act, observe, remember \u2014 the four moving parts"}, {"num": "03", "slug": "03-spectrum-of-autonomy", "title": "The Spectrum of Autonomy", "subtitle": "Five rungs from automation to autonomy, and where most enterprises actually live"}, {"num": "04", "slug": "04-from-models-to-systems", "title": "From Models to Systems", "subtitle": "Why agentic AI is a systems problem, not a model problem"}, {"num": "05", "slug": "05-tool-use-and-grounding", "title": "Tool Use and Grounding", "subtitle": "How an agent reaches into the world \u2014 APIs, retrieval, and the limits of context"}, {"num": "06", "slug": "06-multi-agent-and-swarm", "title": "Multi-Agent and Swarm", "subtitle": "When one mind isn't enough \u2014 coordination, delegation, and emergent failure modes"}, {"num": "07", "slug": "07-the-economics", "title": "The Economics of an Agent", "subtitle": "Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI"}, {"num": "08", "slug": "08-failure-modes", "title": "Failure Modes", "subtitle": "Hallucinated calls, prompt injection, runaway loops, and the cost of being wrong at scale"}, {"num": "09", "slug": "09-threat-landscape", "title": "The Threat Landscape", "subtitle": "OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do"}, {"num": "10", "slug": "10-regulatory-perimeter", "title": "The Regulatory Perimeter", "subtitle": "EU AI Act, US executive orders, sectoral rules \u2014 what bites and what doesn't"}, {"num": "11", "slug": "11-frameworks-landscape", "title": "The Frameworks Landscape", "subtitle": "NIST, ISO, OECD, OWASP, the analyst maturity models \u2014 ranked by what actually moves the needle"}, {"num": "12", "slug": "12-the-four-pillars", "title": "The Four Pillars", "subtitle": "A readiness model: governance, orchestration, use case identification, integration"}, {"num": "13", "slug": "13-governance-charter", "title": "The Governance Charter", "subtitle": "Pillar I \u2014 who owns the agents, who answers when they fail"}, {"num": "14", "slug": "14-policy-stack", "title": "The Policy Stack", "subtitle": "Acceptable use, model risk, data classification, third-party AI, incident response"}, {"num": "15", "slug": "15-nist-rmf-walk", "title": "Walking the NIST AI RMF", "subtitle": "Govern, Map, Measure, Manage \u2014 applied to a real agent program"}, {"num": "16", "slug": "16-iso-42001-and-eu", "title": "ISO/IEC 42001 and the EU AI Act", "subtitle": "Certification, conformity assessment, and the audit trail of an autonomous system"}, {"num": "17", "slug": "17-orchestration-stack", "title": "The Orchestration Stack", "subtitle": "Pillar II \u2014 frameworks, runtimes, and the plumbing of multi-step work"}, {"num": "18", "slug": "18-memory-and-state", "title": "Memory and State", "subtitle": "Short-term, long-term, episodic \u2014 what an agent needs to remember to be useful"}, {"num": "19", "slug": "19-evals-and-observability", "title": "Evals and Observability", "subtitle": "Traces, replays, scorecards \u2014 the dashboards that keep agents honest"}, {"num": "20", "slug": "20-guardrails-and-policy", "title": "Guardrails and Policy Engines", "subtitle": "From input filters to runtime policy \u2014 defense in depth for autonomous systems"}, {"num": "21", "slug": "21-use-case-portfolio", "title": "The Use Case Portfolio", "subtitle": "Pillar III \u2014 picking the right work for an agent to do"}, {"num": "22", "slug": "22-value-and-feasibility", "title": "Value and Feasibility", "subtitle": "Scoring use cases on a 2\u00d72 \u2014 and the trap of doing the easy ones first"}, {"num": "23", "slug": "23-human-in-the-loop", "title": "Human in the Loop", "subtitle": "Where supervision belongs, where it doesn't, and how to design the handoff"}, {"num": "24", "slug": "24-pilot-to-production", "title": "From Pilot to Production", "subtitle": "The valley of death \u2014 and how a use case earns the right to scale"}, {"num": "25", "slug": "25-integration-spine", "title": "The Integration Spine", "subtitle": "Pillar IV \u2014 APIs, identity, data, and the enterprise systems an agent must touch"}, {"num": "26", "slug": "26-identity-for-agents", "title": "Identity for Agents", "subtitle": "Service accounts, scoped tokens, on-behalf-of \u2014 auth for non-human actors"}, {"num": "27", "slug": "27-data-readiness", "title": "Data Readiness", "subtitle": "Lineage, freshness, classification, and why your data lake is not a vector store"}, {"num": "28", "slug": "28-mcp-a2a-protocols", "title": "MCP, A2A, and the Interop Layer", "subtitle": "Model Context Protocol, Agent2Agent, and the protocols that let agents share work"}, {"num": "29", "slug": "29-the-maturity-model", "title": "The Maturity Model", "subtitle": "Five levels \u2014 Initial, Repeatable, Defined, Managed, Optimized \u2014 across all four pillars"}, {"num": "30", "slug": "30-the-scorecard-method", "title": "The Scorecard Method", "subtitle": "How to assess your organization in a half-day, with evidence"}, {"num": "\u2605", "slug": "scorecard", "title": "Interactive Scorecard", "subtitle": "Score yourself across four pillars \u00b7 five levels \u00b7 40 questions \u00b7 share your results"}, {"num": "31", "slug": "31-reading-the-radar", "title": "Reading the Radar", "subtitle": "What a four-pillar profile tells you about where to invest first"}, {"num": "32", "slug": "32-the-thirty-sixty-ninety", "title": "The 30/60/90", "subtitle": "What an enterprise can credibly accomplish in the first ninety days"}, {"num": "33", "slug": "33-the-twelve-month-roadmap", "title": "The Twelve-Month Roadmap", "subtitle": "From scattered pilots to a governed agent platform \u2014 by quarter"}, {"num": "34", "slug": "34-the-operating-model", "title": "The Operating Model", "subtitle": "Center of excellence, hub-and-spoke, federated \u2014 pick one and live with it"}, {"num": "35", "slug": "35-roles-and-careers", "title": "Roles and Careers", "subtitle": "AI product managers, agent engineers, evals leads \u2014 the jobs the org didn't have last year"}, {"num": "36", "slug": "36-procurement-and-vendors", "title": "Procurement and Vendors", "subtitle": "Buy, build, or rent \u2014 and the contract clauses you'll wish you had insisted on"}, {"num": "37", "slug": "37-change-management", "title": "Change Management", "subtitle": "How to roll agents into a workforce without losing the workforce"}, {"num": "38", "slug": "38-economics-at-scale", "title": "Economics at Scale", "subtitle": "Unit costs, gross margin, and the second-order effects of letting agents run your processes"}, {"num": "39", "slug": "39-the-failure-postmortem", "title": "The Failure Postmortem", "subtitle": "Three case studies of agentic deployments that broke \u2014 and what they teach"}, {"num": "40", "slug": "40-the-next-decade", "title": "The Next Decade", "subtitle": "What ready looks like in 2030, and how to recognize it from where you stand today"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>The Agentic Enterprise<span class="brand__sub"> — a readiness field guide</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/scorecard.html">Scorecard</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">The Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 39</div>
+    <div class="ch-header__num">Chapter 39</div>
+    <h1 class="ch-header__title">The Failure Postmortem</h1>
+    <p class="ch-header__dek">Three case studies of agentic deployments that broke — and what they teach</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">value<em>note</em></div><div class="stat__label">label</div></div><div class="stat"><div class="stat__num">value<em>note</em></div><div class="stat__label">label</div></div></div>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#case-1-the-retailer">Case 1: Retail prompt injection</a></li><li><a href="#case-2-the-bank">Case 2: Bank research auto-send</a></li><li><a href="#case-3-the-saas">Case 3: SaaS code-merge regression</a></li></ul></aside>
+    <article class="prose">
+      <p class="lede">The most instructive documents in any engineering discipline are not the success stories; they are the post-mortems. What failed, why it failed, and what was done about it — these are the sentences that contain the lessons. This chapter presents three composite case studies, drawn from real failure patterns in agentic AI deployments. The organisations are fictional aggregates; the failure modes are not. Each case study names what failed across the four pillars — Governance, Orchestration, Use Case selection, and Integration — because that is the structure that makes a failure legible, remediable, and most importantly, preventable in the next deployment.</p>
+
+<h2 id="case-1-the-retailer">Case study 1: A regional retailer whose customer-service agent was prompt-injected into issuing refunds</h2>
+<p>A regional retailer with significant e-commerce volume deployed a customer-service agent in late 2024. The agent was integrated with the order management system and authorised to issue refunds for orders below a defined threshold. The deployment was considered a success: deflection rates were high, customer satisfaction scores were positive, and the engineering team had instrumented the agent with basic logging. The incident occurred four months after launch.</p>
+<p>A small number of customers had discovered — and shared on a public forum — that the agent could be prompted to issue refunds beyond its authorised threshold if the user included specific phrasing in their message. The phrasing exploited the agent's instruction following behaviour: by framing the refund request as an instruction from a "store manager override," customers were able to cause the agent to treat their message as an authoritative command rather than a user request. By the time the fraud team identified the pattern, it had been active for eleven days and produced material unauthorised refunds.</p>
+<p><strong>What failed, by pillar:</strong></p>
+<p><em>Governance:</em> the agent's authorisation scope was defined in the deployment specification but was not operationalised as a runtime constraint. The governance policy said the agent could not issue refunds above a threshold; the orchestration layer did not enforce that threshold independently of the agent's own reasoning. A policy that exists only in a document and is enforced only by the model's judgment is not a policy; it is a hope.</p>
+<p><em>Orchestration:</em> the agent had no prompt-injection detection layer. The <a href="https://genai.owasp.org/initiatives/#agenticsecurity">OWASP Agentic AI guidance</a> identifies indirect prompt injection — where adversarial instructions are embedded in content the agent processes — as a top-ranked threat. The retailer's orchestration framework processed user messages without sanitisation or a secondary validation step for instructions that changed the agent's authorised behaviour.</p>
+<p><em>Use Case:</em> the kill criterion for the deployment was defined as "customer satisfaction score drops below threshold" — a lagging indicator that measures experience quality, not financial integrity. A kill criterion for a financially authorised agent should include real-time anomaly detection on the distribution of refund amounts and frequencies, not only customer experience metrics.</p>
+<p><em>Integration:</em> the agent's integration with the order management system did not include a second-factor confirmation for refunds that approached the authorisation limit. A simple check — "refund amount is within 20% of the authorisation ceiling, escalate to human" — would have interrupted the majority of the fraudulent transactions.</p>
+<blockquote><p>The retailer's remediation included: a runtime refund ceiling enforced by the integration layer, independent of the model's reasoning; a prompt-injection detection wrapper on all user inputs; revised kill criteria that included financial anomaly detection; and a quarterly red-team exercise targeting the agent's authorisation model.</p></blockquote>
+
+<h2 id="case-2-the-bank">Case study 2: A mid-sized commercial bank whose internal research agent escalated a flawed analyst note via auto-send email</h2>
+<p>A mid-sized commercial bank deployed an internal research agent to assist the equity research team. The agent was designed to aggregate data from multiple internal and external sources, draft an analyst note based on a structured template, and — once approved by the analyst — send the note to a distribution list of institutional clients. The "once approved" step was implemented as a confirmation dialogue in the orchestration interface.</p>
+<p>The incident occurred when an analyst, under deadline pressure, approved a note that the agent had generated based on a stale data source. The stale source contained a material error in the revenue projection for a covered company. The agent sent the note to 340 institutional clients before the error was identified. The bank faced regulatory inquiry and client relationship damage.</p>
+<p><strong>What failed, by pillar:</strong></p>
+<p><em>Governance:</em> the agent was classified as a research-assistance tool, not as a communications tool. This classification determined its risk tier and its review process: a research tool needs analyst review; a communications tool needs compliance review. Because the agent both drafted and sent the note, it straddled two risk categories, but the governance process treated it as only one. The <a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST RMF</a> map function requires that the risk profile of an AI system be assessed for all its functions, not just its primary one.</p>
+<p><em>Orchestration:</em> the confirmation dialogue was a single click — a binary yes/no that provided no friction proportional to the action's consequence. Sending a research note to 340 institutional clients is a materially consequential action. The confirmation step should have included a summary of the data sources used, the date of each source, and a flag for any source that had not been updated within a defined freshness window. The orchestration layer had the information to generate this summary; it did not surface it.</p>
+<p><em>Use Case:</em> the use case had been scoped as "draft assistance," but the agent had been extended by the engineering team to include the "send" action because the analysts found the workflow more efficient. This scope extension was not reviewed against the original risk assessment. Use case scope must be version-controlled and any extension must trigger a re-assessment.</p>
+<p><em>Integration:</em> the agent's integration with the external data provider did not include a data-freshness check. A staleness flag on the data source would have been trivial to implement and would have surfaced the error before the analyst's confirmation step.</p>
+<aside class="aside" data-tone="copper"><p><strong>The confirmation click problem:</strong> a confirmation step that provides no additional information reduces to a speed bump. Users under time pressure treat it as noise and click through. The confirmation step for a consequential action must present the information the user needs to make the decision — not ask for a decision without evidence.</p></aside>
+
+<h2 id="case-3-the-saas">Case study 3: A SaaS company whose code-fixing agent merged a regression that brought down billing for four hours</h2>
+<p>A SaaS company with a developer-productivity culture deployed a code-fixing agent integrated with its CI/CD pipeline. The agent was authorised to open pull requests, address review comments automatically, and — for PRs that passed all automated tests — merge directly to the main branch without human review. The engineering team had high confidence in their test suite; the agent had resolved several hundred PRs without incident over six weeks.</p>
+<p>The incident occurred when a billing-service dependency was updated upstream. The agent, responding to a failing test caused by the dependency change, generated a fix that changed an API call signature. The fix passed all automated tests because the billing-service integration tests had a coverage gap: they did not test the specific code path affected by the signature change. The agent merged. Billing stopped processing for four hours until a human engineer identified and reverted the change.</p>
+<p><strong>What failed, by pillar:</strong></p>
+<p><em>Governance:</em> the agent had merge authority — an irreversible, high-consequence action — without a tiered authorisation model. The policy should have distinguished between low-risk merge categories (documentation, test additions, dependency pinning) and high-risk categories (changes to payment processing, billing, authentication). The agent should have had direct merge authority only for the former.</p>
+<p><em>Orchestration:</em> the agent had no blast-radius estimate before merging. A well-instrumented orchestration layer for a code-change agent should include a dependency graph analysis that identifies which downstream systems are affected by a proposed change, and should escalate to human review for changes that affect systems above a defined criticality threshold.</p>
+<p><em>Use Case:</em> the kill criterion for the agent was "merge error rate above threshold" — but a merge error that causes a production incident is not captured by an error rate metric measured at merge time. The kill criterion should have included post-merge production incident correlation: if a production incident is identified within a defined window after an agent-merged PR, the agent's merge authority is automatically suspended pending review.</p>
+<p><em>Integration:</em> the CI/CD integration did not include a coverage-gap analysis before granting the agent merge authority. If the test suite coverage for the affected code path was below a defined threshold, the agent should have been required to escalate to human review rather than merging autonomously. Test coverage is an integration-layer signal; routing merge decisions through a coverage gate is an integration-layer control.</p>
+<p>The SaaS company's remediation included: tiered merge authority based on affected system criticality; automated dependency-graph analysis before merge; post-merge incident correlation as an automated kill criterion; and a coverage-gate integration that required human review for any PR touching code with less than 80% test coverage.</p>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="38-economics-at-scale.html"><span class="ch-nav-link__label">← Chapter 38</span><span class="ch-nav-link__title">Economics at Scale</span></a>
+      <a class="ch-nav-link" data-dir="next" href="40-the-next-decade.html"><span class="ch-nav-link__label">Chapter 40 →</span><span class="ch-nav-link__title">The Next Decade</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters, the glossary, and the bibliography. Try <em>NIST</em>, <em>orchestration</em>, <em>guardrails</em>, or <em>EU AI Act</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does the NIST AI RMF apply to agentic AI?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">The Agentic Enterprise</strong><br>
+      A long-form readiness field guide for agentic AI in the enterprise.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

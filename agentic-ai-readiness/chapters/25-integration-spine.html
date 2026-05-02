@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 25 · The Integration Spine — The Agentic Enterprise</title>
+<meta name="description" content="Pillar IV — APIs, identity, data, and the enterprise systems an agent must touch">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="25-integration-spine" data-chapter-title="The Integration Spine" data-base="../">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-shift", "title": "The Shift", "subtitle": "From copilots to colleagues \u2014 what changes when software starts to act"}, {"num": "02", "slug": "02-anatomy-of-an-agent", "title": "Anatomy of an Agent", "subtitle": "Plan, act, observe, remember \u2014 the four moving parts"}, {"num": "03", "slug": "03-spectrum-of-autonomy", "title": "The Spectrum of Autonomy", "subtitle": "Five rungs from automation to autonomy, and where most enterprises actually live"}, {"num": "04", "slug": "04-from-models-to-systems", "title": "From Models to Systems", "subtitle": "Why agentic AI is a systems problem, not a model problem"}, {"num": "05", "slug": "05-tool-use-and-grounding", "title": "Tool Use and Grounding", "subtitle": "How an agent reaches into the world \u2014 APIs, retrieval, and the limits of context"}, {"num": "06", "slug": "06-multi-agent-and-swarm", "title": "Multi-Agent and Swarm", "subtitle": "When one mind isn't enough \u2014 coordination, delegation, and emergent failure modes"}, {"num": "07", "slug": "07-the-economics", "title": "The Economics of an Agent", "subtitle": "Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI"}, {"num": "08", "slug": "08-failure-modes", "title": "Failure Modes", "subtitle": "Hallucinated calls, prompt injection, runaway loops, and the cost of being wrong at scale"}, {"num": "09", "slug": "09-threat-landscape", "title": "The Threat Landscape", "subtitle": "OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do"}, {"num": "10", "slug": "10-regulatory-perimeter", "title": "The Regulatory Perimeter", "subtitle": "EU AI Act, US executive orders, sectoral rules \u2014 what bites and what doesn't"}, {"num": "11", "slug": "11-frameworks-landscape", "title": "The Frameworks Landscape", "subtitle": "NIST, ISO, OECD, OWASP, the analyst maturity models \u2014 ranked by what actually moves the needle"}, {"num": "12", "slug": "12-the-four-pillars", "title": "The Four Pillars", "subtitle": "A readiness model: governance, orchestration, use case identification, integration"}, {"num": "13", "slug": "13-governance-charter", "title": "The Governance Charter", "subtitle": "Pillar I \u2014 who owns the agents, who answers when they fail"}, {"num": "14", "slug": "14-policy-stack", "title": "The Policy Stack", "subtitle": "Acceptable use, model risk, data classification, third-party AI, incident response"}, {"num": "15", "slug": "15-nist-rmf-walk", "title": "Walking the NIST AI RMF", "subtitle": "Govern, Map, Measure, Manage \u2014 applied to a real agent program"}, {"num": "16", "slug": "16-iso-42001-and-eu", "title": "ISO/IEC 42001 and the EU AI Act", "subtitle": "Certification, conformity assessment, and the audit trail of an autonomous system"}, {"num": "17", "slug": "17-orchestration-stack", "title": "The Orchestration Stack", "subtitle": "Pillar II \u2014 frameworks, runtimes, and the plumbing of multi-step work"}, {"num": "18", "slug": "18-memory-and-state", "title": "Memory and State", "subtitle": "Short-term, long-term, episodic \u2014 what an agent needs to remember to be useful"}, {"num": "19", "slug": "19-evals-and-observability", "title": "Evals and Observability", "subtitle": "Traces, replays, scorecards \u2014 the dashboards that keep agents honest"}, {"num": "20", "slug": "20-guardrails-and-policy", "title": "Guardrails and Policy Engines", "subtitle": "From input filters to runtime policy \u2014 defense in depth for autonomous systems"}, {"num": "21", "slug": "21-use-case-portfolio", "title": "The Use Case Portfolio", "subtitle": "Pillar III \u2014 picking the right work for an agent to do"}, {"num": "22", "slug": "22-value-and-feasibility", "title": "Value and Feasibility", "subtitle": "Scoring use cases on a 2\u00d72 \u2014 and the trap of doing the easy ones first"}, {"num": "23", "slug": "23-human-in-the-loop", "title": "Human in the Loop", "subtitle": "Where supervision belongs, where it doesn't, and how to design the handoff"}, {"num": "24", "slug": "24-pilot-to-production", "title": "From Pilot to Production", "subtitle": "The valley of death \u2014 and how a use case earns the right to scale"}, {"num": "25", "slug": "25-integration-spine", "title": "The Integration Spine", "subtitle": "Pillar IV \u2014 APIs, identity, data, and the enterprise systems an agent must touch"}, {"num": "26", "slug": "26-identity-for-agents", "title": "Identity for Agents", "subtitle": "Service accounts, scoped tokens, on-behalf-of \u2014 auth for non-human actors"}, {"num": "27", "slug": "27-data-readiness", "title": "Data Readiness", "subtitle": "Lineage, freshness, classification, and why your data lake is not a vector store"}, {"num": "28", "slug": "28-mcp-a2a-protocols", "title": "MCP, A2A, and the Interop Layer", "subtitle": "Model Context Protocol, Agent2Agent, and the protocols that let agents share work"}, {"num": "29", "slug": "29-the-maturity-model", "title": "The Maturity Model", "subtitle": "Five levels \u2014 Initial, Repeatable, Defined, Managed, Optimized \u2014 across all four pillars"}, {"num": "30", "slug": "30-the-scorecard-method", "title": "The Scorecard Method", "subtitle": "How to assess your organization in a half-day, with evidence"}, {"num": "\u2605", "slug": "scorecard", "title": "Interactive Scorecard", "subtitle": "Score yourself across four pillars \u00b7 five levels \u00b7 40 questions \u00b7 share your results"}, {"num": "31", "slug": "31-reading-the-radar", "title": "Reading the Radar", "subtitle": "What a four-pillar profile tells you about where to invest first"}, {"num": "32", "slug": "32-the-thirty-sixty-ninety", "title": "The 30/60/90", "subtitle": "What an enterprise can credibly accomplish in the first ninety days"}, {"num": "33", "slug": "33-the-twelve-month-roadmap", "title": "The Twelve-Month Roadmap", "subtitle": "From scattered pilots to a governed agent platform \u2014 by quarter"}, {"num": "34", "slug": "34-the-operating-model", "title": "The Operating Model", "subtitle": "Center of excellence, hub-and-spoke, federated \u2014 pick one and live with it"}, {"num": "35", "slug": "35-roles-and-careers", "title": "Roles and Careers", "subtitle": "AI product managers, agent engineers, evals leads \u2014 the jobs the org didn't have last year"}, {"num": "36", "slug": "36-procurement-and-vendors", "title": "Procurement and Vendors", "subtitle": "Buy, build, or rent \u2014 and the contract clauses you'll wish you had insisted on"}, {"num": "37", "slug": "37-change-management", "title": "Change Management", "subtitle": "How to roll agents into a workforce without losing the workforce"}, {"num": "38", "slug": "38-economics-at-scale", "title": "Economics at Scale", "subtitle": "Unit costs, gross margin, and the second-order effects of letting agents run your processes"}, {"num": "39", "slug": "39-the-failure-postmortem", "title": "The Failure Postmortem", "subtitle": "Three case studies of agentic deployments that broke \u2014 and what they teach"}, {"num": "40", "slug": "40-the-next-decade", "title": "The Next Decade", "subtitle": "What ready looks like in 2030, and how to recognize it from where you stand today"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>The Agentic Enterprise<span class="brand__sub"> — a readiness field guide</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/scorecard.html">Scorecard</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">The Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 25</div>
+    <div class="ch-header__num">Chapter 25</div>
+    <h1 class="ch-header__title">The Integration Spine</h1>
+    <p class="ch-header__dek">Pillar IV — APIs, identity, data, and the enterprise systems an agent must touch</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">3</div><div class="stat__label">problems solved by the integration spine: duplication, inconsistency, fragility</div></div></div>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#what-the-integration-spine-solves">What the Integration Spine Solves</a></li><li><a href="#api-layer-and-contract-management">API Layer and Contract Management</a></li><li><a href="#identity-and-authentication-in-the-spine">Identity and Authentication in the Spine</a></li><li><a href="#event-driven-integration-and-triggers">Event-Driven Integration and Triggers</a></li><li><a href="#the-spine-as-governance-surface">The Spine as Governance Surface</a></li></ul></aside>
+    <article class="prose">
+      <p class="lede">An agent without integrations is a language model with a system prompt — capable of answering questions about its training data but unable to do anything that matters in the real world. The integrations are the agent's limbs: the connections to the systems, services, and data sources that allow it to act. But integrations are also the most common source of production failures in agentic deployments — not because integration is technically difficult, but because the accumulation of bespoke, undocumented, inconsistently secured integration code creates a substrate of fragility and risk that becomes harder to manage as the agent program scales. The integration spine is the architectural antidote: a systematic, standardized, centrally governed layer that treats integration as infrastructure rather than as per-agent customization.</p>
+
+<figure class="figure figure--wide reveal">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 320" role="img" aria-label="Integration spine">
+  <text x="60" y="36" font-family="var(--font-display)" font-size="18" fill="var(--color-text)">The integration spine</text>
+  <text x="60" y="56" font-family="var(--font-mono)" font-size="11" fill="var(--color-text-muted)">An enterprise agent without integration is a chatbot. With it, it is a colleague.</text>
+  <g>
+    <rect x="80" y="130" width="640" height="60" rx="8" fill="var(--color-primary-highlight)" stroke="var(--color-primary)" stroke-width="1.4"/>
+    <text x="400" y="160" text-anchor="middle" font-family="var(--font-display)" font-size="15" fill="var(--color-text)">Agent runtime</text>
+    <text x="400" y="180" text-anchor="middle" font-family="var(--font-mono)" font-size="10" fill="var(--color-text-muted)">orchestrator · evals · guardrails · audit log</text>
+  </g>
+  <g font-family="var(--font-mono)" font-size="10" fill="var(--color-text)" text-anchor="middle">
+    <g transform="translate(135,250)"><rect x="-50" y="0" width="100" height="40" rx="4" fill="var(--color-accent-copper-soft)" stroke="var(--color-accent-copper)"/><text x="0" y="18">Identity</text><text x="0" y="32" font-size="9" fill="var(--color-text-muted)">OAuth · OBO</text></g>
+    <g transform="translate(270,250)"><rect x="-50" y="0" width="100" height="40" rx="4" fill="var(--color-accent-quartz)" fill-opacity="0.35" stroke="var(--color-accent-copper)"/><text x="0" y="18">ERP / CRM</text><text x="0" y="32" font-size="9" fill="var(--color-text-muted)">SAP · Salesforce</text></g>
+    <g transform="translate(405,250)"><rect x="-50" y="0" width="100" height="40" rx="4" fill="var(--color-primary-highlight)" stroke="var(--color-primary)"/><text x="0" y="18">Data</text><text x="0" y="32" font-size="9" fill="var(--color-text-muted)">lakehouse · vectors</text></g>
+    <g transform="translate(540,250)"><rect x="-50" y="0" width="100" height="40" rx="4" fill="var(--color-accent-euv-soft)" stroke="var(--color-accent-euv)"/><text x="0" y="18">MCP / A2A</text><text x="0" y="32" font-size="9" fill="var(--color-text-muted)">tool + agent bus</text></g>
+    <g transform="translate(675,250)"><rect x="-50" y="0" width="100" height="40" rx="4" fill="var(--color-surface-offset)" stroke="var(--color-border)"/><text x="0" y="18">Apps</text><text x="0" y="32" font-size="9" fill="var(--color-text-muted)">collab · ITSM</text></g>
+  </g>
+  <g stroke="var(--color-primary)" stroke-width="0.8" fill="none">
+    <path d="M135 250 L135 200"/>
+    <path d="M270 250 L270 200"/>
+    <path d="M405 250 L405 200"/>
+    <path d="M540 250 L540 200"/>
+    <path d="M675 250 L675 200"/>
+  </g>
+  <g font-family="var(--font-mono)" font-size="10" fill="var(--color-text-muted)">
+    <text x="80" y="120">model providers</text>
+    <text x="720" y="120" text-anchor="end">policy engines</text>
+  </g>
+  <line x1="80" y1="100" x2="200" y2="100" stroke="var(--color-text-muted)" stroke-width="0.4"/>
+  <line x1="600" y1="100" x2="720" y2="100" stroke="var(--color-text-muted)" stroke-width="0.4"/>
+  <path d="M150 100 L150 130" stroke="var(--color-text-muted)" stroke-width="0.4" fill="none"/>
+  <path d="M650 100 L650 130" stroke="var(--color-text-muted)" stroke-width="0.4" fill="none"/>
+</svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 25.1</span><span class="text">The integration spine. Five plugs and one runtime — everything else is decoration.</span></figcaption>
+</figure>
+
+<h2 id="what-the-integration-spine-solves">What the Integration Spine Solves</h2>
+<p>The integration spine concept addresses a problem that becomes visible at a specific scale threshold: when an organization has more than a handful of deployed agents and the number of integration points has grown beyond what a single team can track and maintain. Below that threshold, bespoke integration code is a reasonable approach — each agent gets the connections it needs, built by the team that knows the task. Above it, bespoke integration creates three distinct problems. <strong>Duplication</strong>: multiple agents building separate integrations to the same downstream system, each with slightly different authentication logic, error handling, and retry policies. <strong>Inconsistency</strong>: the same system accessed through different integrations with different security configurations, making it impossible to audit the agent program's access profile as a whole. And <strong>fragility</strong>: a change in the downstream system's API breaks multiple integrations simultaneously, with no single owner responsible for fixing them all.</p>
+<p>The integration spine solves all three problems by centralizing the integration layer: a single, standardized set of connectors for each downstream system, with consistent authentication, logging, rate limiting, and error handling, maintained by a platform team that is responsible for the entire integration surface. Agent teams consume integrations from the spine rather than building their own, which means they get the security and reliability properties of the spine automatically, and the platform team can make improvements to a single connector that benefit all agents simultaneously.</p>
+
+<h2 id="api-layer-and-contract-management">API Layer and Contract Management</h2>
+<p>The API layer of the integration spine is the set of interfaces through which agents interact with downstream systems. Each API connection in the spine should be governed by an <strong>API contract</strong>: a formal specification of the API's inputs, outputs, error modes, rate limits, and SLA. The contract is the integration's source of truth — it defines what the agent can expect from the integration and what the integration requires from the agent. When the downstream system's API changes, the contract is updated and the agent teams that depend on it are notified through a formal change management process.</p>
+<p>API contract management is particularly important for agentic systems because agents make API calls autonomously, often in sequences and combinations that the integration developer did not anticipate. An agent that encounters an unexpected API error — a rate limit it did not know about, an error response it was not told to handle, a data format that differs from the specification — may fail silently, produce an incorrect output, or enter a retry loop that amplifies the load on the downstream system. A well-managed API contract that accurately documents the system's behavior under all conditions, including edge cases and error states, dramatically reduces the frequency of these failure modes.</p>
+
+<h2 id="identity-and-authentication-in-the-spine">Identity and Authentication in the Spine</h2>
+<p>Authentication is the security-critical dimension of the integration spine. Every agent that calls a downstream system must authenticate to that system with credentials that are appropriately scoped — granting the agent only the permissions it needs for the specific task it is performing, and no more. This is the principle of least privilege applied to integrations, and it requires both an identity architecture (how agents authenticate to systems) and a credential management infrastructure (how credentials are provisioned, stored, rotated, and revoked).</p>
+<p>The identity architecture for agents is discussed in detail in Chapter 26. From the integration spine's perspective, the key requirement is that every API call made through the spine must be associated with a specific agent identity, with a specific permission scope, and with a specific request context that allows the call to be attributed to a particular agent run for audit purposes. This attribution chain — from the API call back to the agent run back to the agent identity back to the human who initiated the task — is the foundation of the forensic trail that governance and compliance require.</p>
+
+<blockquote>
+<p>"The integration spine is the difference between an agent program that scales and one that ossifies. Without it, every new agent adds to a debt load of bespoke integration code that eventually becomes too expensive to maintain and too risky to change."</p>
+</blockquote>
+
+<h2 id="event-driven-integration-and-triggers">Event-Driven Integration and Triggers</h2>
+<p>The integration spine is not just about agents calling systems; it is also about systems calling agents. An agent that can only be initiated by a human request misses a large class of high-value use cases: automated monitoring, event-driven response, scheduled analysis, and proactive alerting all require the agent to be triggered by system events rather than human instructions. The integration spine should therefore include an event bus — a publish-subscribe infrastructure that allows downstream systems to emit events that trigger agent workflows.</p>
+<p>The event bus architecture has important security implications. A system that can trigger an agent workflow by emitting an event is, in effect, an entity with the ability to initiate autonomous action on the organization's behalf. Every event source connected to the event bus must be authenticated and authorized — the event bus should not accept triggering events from unauthenticated sources — and the events themselves should be validated against a schema before they are used to initiate an agent run. An attacker who can inject events into the event bus has effectively bypassed the input filter layer of the guardrail stack, making the event bus one of the highest-priority targets for security hardening in the integration spine.</p>
+
+<h2 id="the-spine-as-governance-surface">The Spine as Governance Surface</h2>
+<p>A well-instrumented integration spine is one of the most valuable governance assets in an agentic program. Because every agent-to-system interaction passes through the spine, the spine's logs constitute a near-complete record of every action every agent has taken in production — which systems were accessed, with what credentials, with what parameters, at what time, as part of what agent run, initiated by what human request. This record is exactly what auditors and incident responders need, and the organizations that have built it at the infrastructure level — so that it is generated automatically and comprehensively, rather than assembled laboriously after the fact — have a significant advantage over those that have not.</p>
+
+<aside class="aside" data-tone="copper">
+  <div class="aside__label">Platform Team or Agent Team?</div>
+  <p>A common organizational question in agentic programs is whether integration development should be owned by the agent teams (who understand the task requirements) or by a central platform team (who can maintain consistency and security). The answer that experience favors is a hybrid: the platform team owns the integration spine — the core connectors, the authentication infrastructure, the event bus, and the audit logging — while the agent teams own the agent-specific configuration that uses those connectors. This division of responsibility prevents both the fragmentation that results from fully decentralized integration and the bottleneck that results from fully centralized development.</p>
+</aside>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="24-pilot-to-production.html"><span class="ch-nav-link__label">← Chapter 24</span><span class="ch-nav-link__title">From Pilot to Production</span></a>
+      <a class="ch-nav-link" data-dir="next" href="26-identity-for-agents.html"><span class="ch-nav-link__label">Chapter 26 →</span><span class="ch-nav-link__title">Identity for Agents</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters, the glossary, and the bibliography. Try <em>NIST</em>, <em>orchestration</em>, <em>guardrails</em>, or <em>EU AI Act</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does the NIST AI RMF apply to agentic AI?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">The Agentic Enterprise</strong><br>
+      A long-form readiness field guide for agentic AI in the enterprise.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

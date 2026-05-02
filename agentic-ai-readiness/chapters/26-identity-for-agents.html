@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 26 · Identity for Agents — The Agentic Enterprise</title>
+<meta name="description" content="Service accounts, scoped tokens, on-behalf-of — auth for non-human actors">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="26-identity-for-agents" data-chapter-title="Identity for Agents" data-base="../">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-shift", "title": "The Shift", "subtitle": "From copilots to colleagues \u2014 what changes when software starts to act"}, {"num": "02", "slug": "02-anatomy-of-an-agent", "title": "Anatomy of an Agent", "subtitle": "Plan, act, observe, remember \u2014 the four moving parts"}, {"num": "03", "slug": "03-spectrum-of-autonomy", "title": "The Spectrum of Autonomy", "subtitle": "Five rungs from automation to autonomy, and where most enterprises actually live"}, {"num": "04", "slug": "04-from-models-to-systems", "title": "From Models to Systems", "subtitle": "Why agentic AI is a systems problem, not a model problem"}, {"num": "05", "slug": "05-tool-use-and-grounding", "title": "Tool Use and Grounding", "subtitle": "How an agent reaches into the world \u2014 APIs, retrieval, and the limits of context"}, {"num": "06", "slug": "06-multi-agent-and-swarm", "title": "Multi-Agent and Swarm", "subtitle": "When one mind isn't enough \u2014 coordination, delegation, and emergent failure modes"}, {"num": "07", "slug": "07-the-economics", "title": "The Economics of an Agent", "subtitle": "Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI"}, {"num": "08", "slug": "08-failure-modes", "title": "Failure Modes", "subtitle": "Hallucinated calls, prompt injection, runaway loops, and the cost of being wrong at scale"}, {"num": "09", "slug": "09-threat-landscape", "title": "The Threat Landscape", "subtitle": "OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do"}, {"num": "10", "slug": "10-regulatory-perimeter", "title": "The Regulatory Perimeter", "subtitle": "EU AI Act, US executive orders, sectoral rules \u2014 what bites and what doesn't"}, {"num": "11", "slug": "11-frameworks-landscape", "title": "The Frameworks Landscape", "subtitle": "NIST, ISO, OECD, OWASP, the analyst maturity models \u2014 ranked by what actually moves the needle"}, {"num": "12", "slug": "12-the-four-pillars", "title": "The Four Pillars", "subtitle": "A readiness model: governance, orchestration, use case identification, integration"}, {"num": "13", "slug": "13-governance-charter", "title": "The Governance Charter", "subtitle": "Pillar I \u2014 who owns the agents, who answers when they fail"}, {"num": "14", "slug": "14-policy-stack", "title": "The Policy Stack", "subtitle": "Acceptable use, model risk, data classification, third-party AI, incident response"}, {"num": "15", "slug": "15-nist-rmf-walk", "title": "Walking the NIST AI RMF", "subtitle": "Govern, Map, Measure, Manage \u2014 applied to a real agent program"}, {"num": "16", "slug": "16-iso-42001-and-eu", "title": "ISO/IEC 42001 and the EU AI Act", "subtitle": "Certification, conformity assessment, and the audit trail of an autonomous system"}, {"num": "17", "slug": "17-orchestration-stack", "title": "The Orchestration Stack", "subtitle": "Pillar II \u2014 frameworks, runtimes, and the plumbing of multi-step work"}, {"num": "18", "slug": "18-memory-and-state", "title": "Memory and State", "subtitle": "Short-term, long-term, episodic \u2014 what an agent needs to remember to be useful"}, {"num": "19", "slug": "19-evals-and-observability", "title": "Evals and Observability", "subtitle": "Traces, replays, scorecards \u2014 the dashboards that keep agents honest"}, {"num": "20", "slug": "20-guardrails-and-policy", "title": "Guardrails and Policy Engines", "subtitle": "From input filters to runtime policy \u2014 defense in depth for autonomous systems"}, {"num": "21", "slug": "21-use-case-portfolio", "title": "The Use Case Portfolio", "subtitle": "Pillar III \u2014 picking the right work for an agent to do"}, {"num": "22", "slug": "22-value-and-feasibility", "title": "Value and Feasibility", "subtitle": "Scoring use cases on a 2\u00d72 \u2014 and the trap of doing the easy ones first"}, {"num": "23", "slug": "23-human-in-the-loop", "title": "Human in the Loop", "subtitle": "Where supervision belongs, where it doesn't, and how to design the handoff"}, {"num": "24", "slug": "24-pilot-to-production", "title": "From Pilot to Production", "subtitle": "The valley of death \u2014 and how a use case earns the right to scale"}, {"num": "25", "slug": "25-integration-spine", "title": "The Integration Spine", "subtitle": "Pillar IV \u2014 APIs, identity, data, and the enterprise systems an agent must touch"}, {"num": "26", "slug": "26-identity-for-agents", "title": "Identity for Agents", "subtitle": "Service accounts, scoped tokens, on-behalf-of \u2014 auth for non-human actors"}, {"num": "27", "slug": "27-data-readiness", "title": "Data Readiness", "subtitle": "Lineage, freshness, classification, and why your data lake is not a vector store"}, {"num": "28", "slug": "28-mcp-a2a-protocols", "title": "MCP, A2A, and the Interop Layer", "subtitle": "Model Context Protocol, Agent2Agent, and the protocols that let agents share work"}, {"num": "29", "slug": "29-the-maturity-model", "title": "The Maturity Model", "subtitle": "Five levels \u2014 Initial, Repeatable, Defined, Managed, Optimized \u2014 across all four pillars"}, {"num": "30", "slug": "30-the-scorecard-method", "title": "The Scorecard Method", "subtitle": "How to assess your organization in a half-day, with evidence"}, {"num": "\u2605", "slug": "scorecard", "title": "Interactive Scorecard", "subtitle": "Score yourself across four pillars \u00b7 five levels \u00b7 40 questions \u00b7 share your results"}, {"num": "31", "slug": "31-reading-the-radar", "title": "Reading the Radar", "subtitle": "What a four-pillar profile tells you about where to invest first"}, {"num": "32", "slug": "32-the-thirty-sixty-ninety", "title": "The 30/60/90", "subtitle": "What an enterprise can credibly accomplish in the first ninety days"}, {"num": "33", "slug": "33-the-twelve-month-roadmap", "title": "The Twelve-Month Roadmap", "subtitle": "From scattered pilots to a governed agent platform \u2014 by quarter"}, {"num": "34", "slug": "34-the-operating-model", "title": "The Operating Model", "subtitle": "Center of excellence, hub-and-spoke, federated \u2014 pick one and live with it"}, {"num": "35", "slug": "35-roles-and-careers", "title": "Roles and Careers", "subtitle": "AI product managers, agent engineers, evals leads \u2014 the jobs the org didn't have last year"}, {"num": "36", "slug": "36-procurement-and-vendors", "title": "Procurement and Vendors", "subtitle": "Buy, build, or rent \u2014 and the contract clauses you'll wish you had insisted on"}, {"num": "37", "slug": "37-change-management", "title": "Change Management", "subtitle": "How to roll agents into a workforce without losing the workforce"}, {"num": "38", "slug": "38-economics-at-scale", "title": "Economics at Scale", "subtitle": "Unit costs, gross margin, and the second-order effects of letting agents run your processes"}, {"num": "39", "slug": "39-the-failure-postmortem", "title": "The Failure Postmortem", "subtitle": "Three case studies of agentic deployments that broke \u2014 and what they teach"}, {"num": "40", "slug": "40-the-next-decade", "title": "The Next Decade", "subtitle": "What ready looks like in 2030, and how to recognize it from where you stand today"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>The Agentic Enterprise<span class="brand__sub"> — a readiness field guide</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/scorecard.html">Scorecard</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">The Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 26</div>
+    <div class="ch-header__num">Chapter 26</div>
+    <h1 class="ch-header__title">Identity for Agents</h1>
+    <p class="ch-header__dek">Service accounts, scoped tokens, on-behalf-of — auth for non-human actors</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">3</div><div class="stat__label">extensions required for service accounts in agentic systems</div></div></div>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-problem-with-human-credentials">The Problem with Human Credentials</a></li><li><a href="#service-accounts-and-workload-identity">Service Accounts and Workload Identity</a></li><li><a href="#oauth-2-and-on-behalf-of-flows">OAuth 2.0 and On-Behalf-Of Flows</a></li><li><a href="#credential-lifecycle-management">Credential Lifecycle Management</a></li><li><a href="#the-principle-of-minimal-identity-surface">The Principle of Minimal Identity Surface</a></li></ul></aside>
+    <article class="prose">
+      <p class="lede">When a human employee logs into a corporate system, their identity is established through a combination of credentials, device trust, and contextual signals — and that identity determines what they are permitted to do. When an agent accesses the same system, none of those signals are available: the agent has no human presence, no device, and no behavioral baseline that a conventional identity system knows how to interpret. Yet the actions the agent takes under an assumed identity can be as consequential as any human action — or more so, given that agents can act at a speed and scale that humans cannot. Identity for agents is not a marginal extension of existing IAM practices; it is a rearchitecting of the identity model for a world in which the actor is autonomous software rather than a human being.</p>
+
+<h2 id="the-problem-with-human-credentials">The Problem with Human Credentials</h2>
+<p>The most common anti-pattern in early agentic deployments is the use of human credentials to authenticate the agent to downstream systems. A developer configures the agent with their own username and password, or their personal API key, and the agent acts with the developer's full permissions in every system it accesses. This is dangerous for several reasons. The credential scope is almost certainly too broad: the developer has permissions that were granted for their human work, not for the specific task the agent is performing. The credential is not rotated on a schedule appropriate for an automated system: a compromised agent with a long-lived human credential gives an attacker persistent, broad access. And the audit trail is contaminated: actions taken by the agent are attributed to the human in the system logs, making it impossible to distinguish the human's actions from the agent's.</p>
+<p>The correct approach is to provision a dedicated identity for each agent — not a human identity with reduced permissions, but a <strong>service account</strong> that is designed specifically for autonomous, programmatic use. <a href="https://aws.amazon.com/iam/">AWS IAM</a> and equivalent services in Azure and Google Cloud provide the infrastructure for this: roles with explicitly defined permission sets, time-limited credentials that are automatically rotated, and audit logging that attributes every action to the specific role that took it. The service account for an agent should be provisioned with only the permissions required for the agent's defined scope of action — nothing more — and those permissions should be reviewed and recertified periodically.</p>
+
+<h2 id="service-accounts-and-workload-identity">Service Accounts and Workload Identity</h2>
+<p>A service account is a non-human identity — an account in an identity provider that represents a workload rather than a person. Service accounts have existed in enterprise IT for decades, primarily for batch jobs, scheduled tasks, and system-to-system integrations. The adaptation of this model to agentic systems requires three extensions. First, <strong>dynamic scoping</strong>: an agent's permission scope should vary based on the task it is executing, not be fixed at account creation time. An agent processing low-sensitivity documents should have narrower permissions than the same agent processing high-sensitivity documents, even though the underlying identity is the same. Dynamic scoping requires a permission management system that can issue time-limited, task-specific credentials at runtime rather than providing a single set of standing permissions.</p>
+<p>Second, <strong>task attribution</strong>: every credential issued to an agent should be associated with a specific task context — the agent run ID, the human who initiated the run, the use case the run belongs to — so that every action taken with the credential can be attributed back through the chain to the human instruction that originated it. This task attribution chain is required by both the EU AI Act's Article 12 logging obligations and the forensic needs of the incident response process. Third, <strong>cross-tenant isolation</strong>: an agent that handles data for multiple customers or organizational units must be prevented from allowing data from one customer to be accessible to another, even within the same agent run. This requires credential isolation between tasks, not just between agents.</p>
+
+<h2 id="oauth-2-and-on-behalf-of-flows">OAuth 2.0 and On-Behalf-Of Flows</h2>
+<p>Many enterprise systems use <a href="https://datatracker.ietf.org/doc/html/rfc8693">OAuth 2.0</a> for authorization, and the agent's interaction with those systems must be mediated through OAuth token flows that express the correct relationship between the agent, the human user, and the resource being accessed. The standard OAuth flows were designed for human users delegating access to applications; agentic systems require a variation that is sometimes called the <strong>on-behalf-of</strong> (OBO) flow: the agent acts on behalf of a named human user, with the human's authorization, but with permissions that are further scoped by the agent's own permission set.</p>
+<p>The RFC 8693 token exchange specification provides the technical foundation for OBO flows in agentic contexts: a subject token representing the human user is exchanged for an actor token representing the agent, with the resulting access token scoped to the intersection of the human's permissions and the agent's permitted scope. This token structure preserves the human attribution chain — the access token records both who authorized the action and which agent executed it — while enforcing the principle of least privilege on both dimensions simultaneously. Implementing OBO flows correctly requires cooperation between the identity provider, the integration spine, and the orchestration framework, which is one reason why identity for agents is best addressed at the infrastructure level rather than in per-agent code.</p>
+
+<blockquote>
+<p>"The identity of an agent is not an afterthought — it is the fulcrum on which the entire access control model balances. Get it wrong, and every other security control in the stack is weakened."</p>
+</blockquote>
+
+<h2 id="credential-lifecycle-management">Credential Lifecycle Management</h2>
+<p>The credential lifecycle for an agent is different from the credential lifecycle for a human in one critical respect: the agent cannot self-serve. A human whose password is about to expire receives a notification, logs in, and changes it. An agent whose credential is about to expire will either fail silently — producing incorrect outputs because it can no longer access the data it needs — or fail noisily — throwing authentication errors that alert the monitoring system but interrupt the task in progress. Agent credential lifecycle management must therefore be fully automated: credentials should be rotated on a defined schedule, the new credentials should be delivered to the agent through a secrets management system (AWS Secrets Manager, HashiCorp Vault, Azure Key Vault), and the rotation should be transparent to the agent's operation.</p>
+<p>Revocation is the other critical lifecycle event. When an agent is decommissioned, its credentials must be revoked immediately — not deprecated, not allowed to expire naturally, but actively revoked so that they cannot be used by an attacker who has retained a copy. The governance charter should specify the maximum time between an agent's decommissioning decision and the revocation of its credentials; for high-privileged agents, that window should be measured in hours, not days.</p>
+
+<h2 id="the-principle-of-minimal-identity-surface">The Principle of Minimal Identity Surface</h2>
+<p>The sum of all the identities in an agent program — every service account, every OAuth token, every API key — constitutes the program's <em>identity surface</em>: the attack surface that an adversary can target through credential theft, token injection, or privilege escalation. A program that has minimized its identity surface — through careful permission scoping, short credential lifetimes, and aggressive decommissioning of unused identities — presents a significantly smaller target than one that has accumulated credentials without discipline. The principle of minimal identity surface is the aggregate expression of least privilege: applied not just to individual credentials but to the entire population of credentials that exists in the program at any given time.</p>
+
+<aside class="aside" data-tone="euv">
+  <div class="aside__label">The Service Account Sprawl Problem</div>
+  <p>Organizations that have deployed agents for more than a year without a systematic identity governance process typically discover, when they conduct a credential audit, that the number of active service accounts significantly exceeds the number of active agent deployments. The surplus accounts are the residue of pilots that ended without proper decommissioning, experiments that were never cleaned up, and integrations that were replaced without revoking the credentials of their predecessors. Each surplus account is a potential foothold for an attacker who obtains its credentials — and the organization typically has no monitoring in place for accounts it has forgotten about. A quarterly credential audit that identifies and revokes all accounts not associated with an active, governed deployment is a minimum hygiene requirement for any serious agentic program.</p>
+</aside>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="25-integration-spine.html"><span class="ch-nav-link__label">← Chapter 25</span><span class="ch-nav-link__title">The Integration Spine</span></a>
+      <a class="ch-nav-link" data-dir="next" href="27-data-readiness.html"><span class="ch-nav-link__label">Chapter 27 →</span><span class="ch-nav-link__title">Data Readiness</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters, the glossary, and the bibliography. Try <em>NIST</em>, <em>orchestration</em>, <em>guardrails</em>, or <em>EU AI Act</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does the NIST AI RMF apply to agentic AI?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">The Agentic Enterprise</strong><br>
+      A long-form readiness field guide for agentic AI in the enterprise.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

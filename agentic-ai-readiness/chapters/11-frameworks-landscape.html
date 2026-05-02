@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 11 · The Frameworks Landscape — The Agentic Enterprise</title>
+<meta name="description" content="NIST, ISO, OECD, OWASP, the analyst maturity models — ranked by what actually moves the needle">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="11-frameworks-landscape" data-chapter-title="The Frameworks Landscape" data-base="../">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-shift", "title": "The Shift", "subtitle": "From copilots to colleagues \u2014 what changes when software starts to act"}, {"num": "02", "slug": "02-anatomy-of-an-agent", "title": "Anatomy of an Agent", "subtitle": "Plan, act, observe, remember \u2014 the four moving parts"}, {"num": "03", "slug": "03-spectrum-of-autonomy", "title": "The Spectrum of Autonomy", "subtitle": "Five rungs from automation to autonomy, and where most enterprises actually live"}, {"num": "04", "slug": "04-from-models-to-systems", "title": "From Models to Systems", "subtitle": "Why agentic AI is a systems problem, not a model problem"}, {"num": "05", "slug": "05-tool-use-and-grounding", "title": "Tool Use and Grounding", "subtitle": "How an agent reaches into the world \u2014 APIs, retrieval, and the limits of context"}, {"num": "06", "slug": "06-multi-agent-and-swarm", "title": "Multi-Agent and Swarm", "subtitle": "When one mind isn't enough \u2014 coordination, delegation, and emergent failure modes"}, {"num": "07", "slug": "07-the-economics", "title": "The Economics of an Agent", "subtitle": "Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI"}, {"num": "08", "slug": "08-failure-modes", "title": "Failure Modes", "subtitle": "Hallucinated calls, prompt injection, runaway loops, and the cost of being wrong at scale"}, {"num": "09", "slug": "09-threat-landscape", "title": "The Threat Landscape", "subtitle": "OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do"}, {"num": "10", "slug": "10-regulatory-perimeter", "title": "The Regulatory Perimeter", "subtitle": "EU AI Act, US executive orders, sectoral rules \u2014 what bites and what doesn't"}, {"num": "11", "slug": "11-frameworks-landscape", "title": "The Frameworks Landscape", "subtitle": "NIST, ISO, OECD, OWASP, the analyst maturity models \u2014 ranked by what actually moves the needle"}, {"num": "12", "slug": "12-the-four-pillars", "title": "The Four Pillars", "subtitle": "A readiness model: governance, orchestration, use case identification, integration"}, {"num": "13", "slug": "13-governance-charter", "title": "The Governance Charter", "subtitle": "Pillar I \u2014 who owns the agents, who answers when they fail"}, {"num": "14", "slug": "14-policy-stack", "title": "The Policy Stack", "subtitle": "Acceptable use, model risk, data classification, third-party AI, incident response"}, {"num": "15", "slug": "15-nist-rmf-walk", "title": "Walking the NIST AI RMF", "subtitle": "Govern, Map, Measure, Manage \u2014 applied to a real agent program"}, {"num": "16", "slug": "16-iso-42001-and-eu", "title": "ISO/IEC 42001 and the EU AI Act", "subtitle": "Certification, conformity assessment, and the audit trail of an autonomous system"}, {"num": "17", "slug": "17-orchestration-stack", "title": "The Orchestration Stack", "subtitle": "Pillar II \u2014 frameworks, runtimes, and the plumbing of multi-step work"}, {"num": "18", "slug": "18-memory-and-state", "title": "Memory and State", "subtitle": "Short-term, long-term, episodic \u2014 what an agent needs to remember to be useful"}, {"num": "19", "slug": "19-evals-and-observability", "title": "Evals and Observability", "subtitle": "Traces, replays, scorecards \u2014 the dashboards that keep agents honest"}, {"num": "20", "slug": "20-guardrails-and-policy", "title": "Guardrails and Policy Engines", "subtitle": "From input filters to runtime policy \u2014 defense in depth for autonomous systems"}, {"num": "21", "slug": "21-use-case-portfolio", "title": "The Use Case Portfolio", "subtitle": "Pillar III \u2014 picking the right work for an agent to do"}, {"num": "22", "slug": "22-value-and-feasibility", "title": "Value and Feasibility", "subtitle": "Scoring use cases on a 2\u00d72 \u2014 and the trap of doing the easy ones first"}, {"num": "23", "slug": "23-human-in-the-loop", "title": "Human in the Loop", "subtitle": "Where supervision belongs, where it doesn't, and how to design the handoff"}, {"num": "24", "slug": "24-pilot-to-production", "title": "From Pilot to Production", "subtitle": "The valley of death \u2014 and how a use case earns the right to scale"}, {"num": "25", "slug": "25-integration-spine", "title": "The Integration Spine", "subtitle": "Pillar IV \u2014 APIs, identity, data, and the enterprise systems an agent must touch"}, {"num": "26", "slug": "26-identity-for-agents", "title": "Identity for Agents", "subtitle": "Service accounts, scoped tokens, on-behalf-of \u2014 auth for non-human actors"}, {"num": "27", "slug": "27-data-readiness", "title": "Data Readiness", "subtitle": "Lineage, freshness, classification, and why your data lake is not a vector store"}, {"num": "28", "slug": "28-mcp-a2a-protocols", "title": "MCP, A2A, and the Interop Layer", "subtitle": "Model Context Protocol, Agent2Agent, and the protocols that let agents share work"}, {"num": "29", "slug": "29-the-maturity-model", "title": "The Maturity Model", "subtitle": "Five levels \u2014 Initial, Repeatable, Defined, Managed, Optimized \u2014 across all four pillars"}, {"num": "30", "slug": "30-the-scorecard-method", "title": "The Scorecard Method", "subtitle": "How to assess your organization in a half-day, with evidence"}, {"num": "\u2605", "slug": "scorecard", "title": "Interactive Scorecard", "subtitle": "Score yourself across four pillars \u00b7 five levels \u00b7 40 questions \u00b7 share your results"}, {"num": "31", "slug": "31-reading-the-radar", "title": "Reading the Radar", "subtitle": "What a four-pillar profile tells you about where to invest first"}, {"num": "32", "slug": "32-the-thirty-sixty-ninety", "title": "The 30/60/90", "subtitle": "What an enterprise can credibly accomplish in the first ninety days"}, {"num": "33", "slug": "33-the-twelve-month-roadmap", "title": "The Twelve-Month Roadmap", "subtitle": "From scattered pilots to a governed agent platform \u2014 by quarter"}, {"num": "34", "slug": "34-the-operating-model", "title": "The Operating Model", "subtitle": "Center of excellence, hub-and-spoke, federated \u2014 pick one and live with it"}, {"num": "35", "slug": "35-roles-and-careers", "title": "Roles and Careers", "subtitle": "AI product managers, agent engineers, evals leads \u2014 the jobs the org didn't have last year"}, {"num": "36", "slug": "36-procurement-and-vendors", "title": "Procurement and Vendors", "subtitle": "Buy, build, or rent \u2014 and the contract clauses you'll wish you had insisted on"}, {"num": "37", "slug": "37-change-management", "title": "Change Management", "subtitle": "How to roll agents into a workforce without losing the workforce"}, {"num": "38", "slug": "38-economics-at-scale", "title": "Economics at Scale", "subtitle": "Unit costs, gross margin, and the second-order effects of letting agents run your processes"}, {"num": "39", "slug": "39-the-failure-postmortem", "title": "The Failure Postmortem", "subtitle": "Three case studies of agentic deployments that broke \u2014 and what they teach"}, {"num": "40", "slug": "40-the-next-decade", "title": "The Next Decade", "subtitle": "What ready looks like in 2030, and how to recognize it from where you stand today"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>The Agentic Enterprise<span class="brand__sub"> — a readiness field guide</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/scorecard.html">Scorecard</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">The Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 11</div>
+    <div class="ch-header__num">Chapter 11</div>
+    <h1 class="ch-header__title">The Frameworks Landscape</h1>
+    <p class="ch-header__dek">NIST, ISO, OECD, OWASP, the analyst maturity models — ranked by what actually moves the needle</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">48+</div><div class="stat__label">Published AI governance frameworks, standards, and guidelines (2026)</div></div><div class="stat"><div class="stat__num">Jan 2026</div><div class="stat__label">Singapore MGF for Agentic AI published — first agentic-specific governance framework</div></div><div class="stat"><div class="stat__num">15</div><div class="stat__label">OWASP Agentic AI threat categories (v1.0, April 2025)</div></div></div>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-mandatory-baseline">The Mandatory Baseline</a></li><li><a href="#the-operational-layer">The Operational Layer: Singapore and OWASP</a></li><li><a href="#a-tier-frameworks">A-Tier: High Value, Specific Applications</a></li><li><a href="#what-not-to-do">What Not to Do</a></li><li><a href="#ranked-conclusion">The Ranking Conclusion</a></li></ul></aside>
+    <article class="prose">
+      <p class="lede">The frameworks landscape for agentic AI governance is, in mid-2026, simultaneously overcrowded and underbuilt. There are more than forty published frameworks, standards, guidelines, maturity models, and codes of practice claiming relevance to enterprise AI governance. Most of them were written before agentic systems existed at scale. Several are excellent for the problem they were designed for and deeply inadequate for the problem enterprises now face. A handful are genuinely essential. Navigating this landscape efficiently — knowing which frameworks to adopt, in what combination, with what investment — is one of the highest-leverage decisions in an enterprise agentic readiness program.</p>
+
+<h2 id="the-mandatory-baseline">The Mandatory Baseline</h2>
+<p>Three frameworks constitute the mandatory baseline for any enterprise operating at scale with agentic AI. They are mandatory not because they are the most technically sophisticated but because they are the ones that regulators, auditors, procurement officers, and boards will ask about — and the ones whose absence will create a defensibility problem in any governance conversation.</p>
+<p>The <a href="https://www.nist.gov/itl/ai-risk-management-framework">NIST AI Risk Management Framework</a> (AI 100-1, January 2023) is the de facto governance vocabulary for AI risk management in the United States and increasingly globally. Its four functions — Govern, Map, Measure, Manage — provide the structural skeleton around which an enterprise AI governance program should be built. Its companion document, <a href="https://airc.nist.gov/Docs/1">NIST AI 600-1</a> (the Generative AI Profile, July 2024), maps 200+ suggested actions to LLM-specific risk areas. The NIST AI RMF's limitation — what the Cloud Security Alliance has termed the "agentic fitness gap" — is that neither document was written with autonomous agents in mind. The GOVERN function lacks autonomy tier concepts; the MAP function stops at the model boundary; AI 600-1 is content-generation–centric. NIST has acknowledged these gaps with its February 2026 AI Agent Standards Initiative, with an AI Agent Interoperability Profile planned for Q4 2026. Until that profile arrives, the CSA's proposed Agentic Profile extension provides the most rigorous bridge.</p>
+<p>The <a href="https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32024R1689">EU AI Act</a> is, for any enterprise serving EU markets, the highest-stakes mandatory framework. Its phased enforcement creates a false sense of runway; the technical documentation, risk management, and human oversight obligations of Articles 9–14 require organizational readiness that takes twelve to eighteen months to build from scratch. Enterprises that have not begun their AI Act compliance programs should treat August 2026 — the high-risk enforcement date — as a hard deadline for a program that should have started in early 2025. The Act's extraterritorial reach means that headquarters location is irrelevant; what matters is whether the AI system affects EU residents.</p>
+<p><a href="https://www.iso.org/standard/42001">ISO/IEC 42001:2023</a> is the first certifiable AI management system standard, and it is becoming a procurement requirement at the same pace that ISO 27001 became a procurement requirement for cybersecurity. Its Plan-Do-Check-Act structure integrates naturally with existing GRC programs; organizations that have already achieved ISO 27001 certification will find 42001 familiar and incrementally achievable. Like the NIST AI RMF, 42001 provides an organizational governance shell rather than specific technical controls for autonomous agents — the standard does not tell you what to audit in an agentic deployment, only that you should have a management system. The gap must be filled by more technically specific frameworks.</p>
+
+<h2 id="the-operational-layer">The Operational Layer: Singapore and OWASP</h2>
+<p>The mandatory baseline frameworks tell organizations how to organize their governance programs. The operational layer frameworks tell them what, specifically, to govern in agentic deployments. Two frameworks stand out as essential for this purpose.</p>
+<p>The Singapore <a href="https://www.imda.gov.sg/">Model AI Governance Framework for Agentic AI</a>, published in January 2026, is the world's first governance framework dedicated specifically to autonomous AI agents. Its four governance dimensions — risk assessment and bounding, human oversight checkpoints, technical safeguards, and transparency and user education — map precisely to the operational challenges of enterprise agentic deployment. It requires organizations to inventory deployed agents, define per-agent safety boundaries, implement human-override mechanisms proportional to risk, and maintain end-to-end audit trails for agent decisions and actions. The framework's voluntary status does not diminish its operational value; it is the most directly actionable governance template available for agentic deployments, and it is already influencing regulatory expectations across ASEAN and beyond.</p>
+<p>The <a href="https://genai.owasp.org/initiatives/#agenticsecurity">OWASP Agentic AI Threats and Mitigations</a> document (v1.0, April 2025) provides the threat taxonomy that the Singapore framework's technical safeguard requirements implicitly reference. Its fifteen threat categories — memory poisoning, tool misuse, privilege compromise, cascading hallucinations, rogue agents, agent communication poisoning, human manipulation, goal hijacking, and others — are the specific threat classes that security controls must address. Used in conjunction with the <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/">OWASP LLM Top 10 v2025</a> (which covers the broader LLM application context, including Excessive Agency at LLM06), OWASP ASI provides the most complete security threat model available for enterprise agentic systems. It is free, practitioner-oriented, and continuously updated — the combination of attributes that made OWASP's security work indispensable in web application security applies equally here.</p>
+<p>The <a href="https://www.gartner.com/en/articles/what-it-takes-to-make-ai-safe-and-effective">Gartner AI TRiSM</a> framework — AI Trust, Risk, and Security Management — serves a different function from the technical frameworks above. Its four pillars (AI Governance, Explainability, ModelOps, Application Security) are most useful as an executive communication framework and a vendor evaluation lens. The TRiSM label has driven a generation of AI governance tooling; the Market Guide format helps organizations understand the vendor landscape. The 2025 TRiSM update explicitly addresses agentic AI governance requirements. TRiSM is most valuable not as a primary implementation guide but as the language for communicating AI governance investments to boards and procurement teams who are already familiar with Gartner's framing.</p>
+
+<h2 id="a-tier-frameworks">A-Tier: High Value, Specific Applications</h2>
+<p>Several A-tier frameworks deliver significant value for specific applications within the enterprise agentic governance program. <a href="https://atlas.mitre.org/">MITRE ATLAS</a> is essential for security teams building threat models and red team exercises; its ATT&CK-style structure is familiar and its case studies ground abstract techniques in reality. The CSA AI Controls Matrix (AICM, July 2025) provides 243 control objectives across eighteen security domains, mapping to NIST AI RMF, ISO 42001, and the EU AI Act — a valuable cross-referencing resource for organizations that need to demonstrate compliance with multiple frameworks simultaneously.</p>
+<p>The vendor Responsible Scaling Policies — <a href="https://www.anthropic.com/news/anthropic-responsible-scaling-policy">Anthropic's RSP</a>, Google DeepMind's Frontier Safety Framework, OpenAI's Preparedness Framework — are relevant to enterprise procurement risk assessment. They specify the capability thresholds at which providers will pause deployment, the safety evaluations conducted before model release, and the escalation mechanisms for safety incidents. Reading them before signing an enterprise model contract is, in the current environment, a reasonable due diligence standard. The <a href="https://modelcontextprotocol.io/">Model Context Protocol</a> and <a href="https://a2aproject.github.io/">Agent2Agent protocol</a> are the interoperability standards that enterprise agentic architectures will be built around; understanding their governance implications — tool trust models, agent identity frameworks, audit trail requirements — is an architectural prerequisite, not an optional enrichment.</p>
+<p>For organizations that need a maturity-based diagnostic — a way to assess where they are and what good looks like — the analyst maturity models serve well. The MIT CISR four-stage model (Experiment → Build Pilots → Industrialize → Future-Ready), Gartner's five-level Agentic AI Maturity Roadmap, and McKinsey's agentic mesh architecture framework are grounded in research and enterprise data respectively, and their diagnostic questions are useful for identifying gaps and sequencing investments. None of them substitute for the operational frameworks above, but they provide the vocabulary for strategy conversations that the technical frameworks do not.</p>
+
+<h2 id="what-not-to-do">What Not to Do</h2>
+<p>The most common mistake in the frameworks landscape is attempting to adopt too many of them simultaneously. An organization that tries to map its governance program to NIST AI RMF, ISO 42001, EU AI Act, Singapore MGF, OWASP ASI, OWASP LLM Top 10, MITRE ATLAS, CSA AICM, and three analyst frameworks at the same time will produce an elaborate mapping document and very little operational governance. Framework fatigue is real, and it is a significant cause of governance programs that look impressive on paper and accomplish nothing in practice.</p>
+<p>The practical approach is a structured stack: NIST AI RMF + ISO 42001 + EU AI Act as the mandatory baseline, adopted in that order of operational priority (NIST for program structure, ISO 42001 for certification readiness, EU AI Act for compliance deadlines). Singapore MGF for Agentic AI + OWASP ASI as the operational layer, applied to each specific agentic deployment. MITRE ATLAS for security threat modeling. Analyst maturity models for diagnostic and communication purposes. Additional frameworks added only when a specific gap — a sectoral regulatory requirement, a procurement qualification, a specific technical control need — is identified that the stack does not address.</p>
+
+<blockquote>
+<p>"A governance program with three frameworks deeply understood and operationally implemented is worth more than one with fifteen frameworks superficially mapped. The frameworks are not the governance. They are the vocabulary in which the governance is written. The governance is the people, the processes, and the decisions."</p>
+</blockquote>
+
+<h2 id="ranked-conclusion">The Ranking Conclusion</h2>
+<p>The clearest guidance that emerges from a careful reading of the full frameworks landscape is this: NIST AI RMF plus ISO/IEC 42001 plus the EU AI Act constitute the mandatory compliance and governance baseline — they are the frameworks every enterprise operating at scale must engage with, regardless of geography or sector. The Singapore Model AI Governance Framework for Agentic AI plus OWASP Agentic AI represent the operational layer — the frameworks that tell you what to actually do when deploying an agent, not just how to organize the program. The analyst maturity models — Gartner's Agentic AI Maturity Roadmap, McKinsey's architecture framework, MIT CISR's four-stage model — serve the diagnostic and communication function, helping organizations understand where they are and explaining it to stakeholders. Everything else is supplementary. Start with the first three, operationalize the next two, use the last three for diagnosis and communication, and add further frameworks only when a specific identified gap requires them.</p>
+
+<aside class="aside" data-tone="copper">
+<div class="aside__label">Program office note</div>
+<p>A practical approach to the frameworks landscape: build a single master control matrix with rows for governance controls (drawn from the NIST AI RMF and ISO 42001 requirements) and columns for each relevant framework (EU AI Act, Singapore MGF, OWASP ASI, sector-specific rules). Map each control once; demonstrate compliance with multiple frameworks through a single evidence set. This approach reduces documentation burden by 40–60% relative to maintaining separate compliance programs for each framework, and it surfaces gaps more clearly than framework-by-framework analysis.</p>
+</aside>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="10-regulatory-perimeter.html"><span class="ch-nav-link__label">← Chapter 10</span><span class="ch-nav-link__title">The Regulatory Perimeter</span></a>
+      <a class="ch-nav-link" data-dir="next" href="12-the-four-pillars.html"><span class="ch-nav-link__label">Chapter 12 →</span><span class="ch-nav-link__title">The Four Pillars</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters, the glossary, and the bibliography. Try <em>NIST</em>, <em>orchestration</em>, <em>guardrails</em>, or <em>EU AI Act</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does the NIST AI RMF apply to agentic AI?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">The Agentic Enterprise</strong><br>
+      A long-form readiness field guide for agentic AI in the enterprise.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

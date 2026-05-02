@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 17 · The Orchestration Stack — The Agentic Enterprise</title>
+<meta name="description" content="Pillar II — frameworks, runtimes, and the plumbing of multi-step work">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="17-orchestration-stack" data-chapter-title="The Orchestration Stack" data-base="../">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-shift", "title": "The Shift", "subtitle": "From copilots to colleagues \u2014 what changes when software starts to act"}, {"num": "02", "slug": "02-anatomy-of-an-agent", "title": "Anatomy of an Agent", "subtitle": "Plan, act, observe, remember \u2014 the four moving parts"}, {"num": "03", "slug": "03-spectrum-of-autonomy", "title": "The Spectrum of Autonomy", "subtitle": "Five rungs from automation to autonomy, and where most enterprises actually live"}, {"num": "04", "slug": "04-from-models-to-systems", "title": "From Models to Systems", "subtitle": "Why agentic AI is a systems problem, not a model problem"}, {"num": "05", "slug": "05-tool-use-and-grounding", "title": "Tool Use and Grounding", "subtitle": "How an agent reaches into the world \u2014 APIs, retrieval, and the limits of context"}, {"num": "06", "slug": "06-multi-agent-and-swarm", "title": "Multi-Agent and Swarm", "subtitle": "When one mind isn't enough \u2014 coordination, delegation, and emergent failure modes"}, {"num": "07", "slug": "07-the-economics", "title": "The Economics of an Agent", "subtitle": "Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI"}, {"num": "08", "slug": "08-failure-modes", "title": "Failure Modes", "subtitle": "Hallucinated calls, prompt injection, runaway loops, and the cost of being wrong at scale"}, {"num": "09", "slug": "09-threat-landscape", "title": "The Threat Landscape", "subtitle": "OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do"}, {"num": "10", "slug": "10-regulatory-perimeter", "title": "The Regulatory Perimeter", "subtitle": "EU AI Act, US executive orders, sectoral rules \u2014 what bites and what doesn't"}, {"num": "11", "slug": "11-frameworks-landscape", "title": "The Frameworks Landscape", "subtitle": "NIST, ISO, OECD, OWASP, the analyst maturity models \u2014 ranked by what actually moves the needle"}, {"num": "12", "slug": "12-the-four-pillars", "title": "The Four Pillars", "subtitle": "A readiness model: governance, orchestration, use case identification, integration"}, {"num": "13", "slug": "13-governance-charter", "title": "The Governance Charter", "subtitle": "Pillar I \u2014 who owns the agents, who answers when they fail"}, {"num": "14", "slug": "14-policy-stack", "title": "The Policy Stack", "subtitle": "Acceptable use, model risk, data classification, third-party AI, incident response"}, {"num": "15", "slug": "15-nist-rmf-walk", "title": "Walking the NIST AI RMF", "subtitle": "Govern, Map, Measure, Manage \u2014 applied to a real agent program"}, {"num": "16", "slug": "16-iso-42001-and-eu", "title": "ISO/IEC 42001 and the EU AI Act", "subtitle": "Certification, conformity assessment, and the audit trail of an autonomous system"}, {"num": "17", "slug": "17-orchestration-stack", "title": "The Orchestration Stack", "subtitle": "Pillar II \u2014 frameworks, runtimes, and the plumbing of multi-step work"}, {"num": "18", "slug": "18-memory-and-state", "title": "Memory and State", "subtitle": "Short-term, long-term, episodic \u2014 what an agent needs to remember to be useful"}, {"num": "19", "slug": "19-evals-and-observability", "title": "Evals and Observability", "subtitle": "Traces, replays, scorecards \u2014 the dashboards that keep agents honest"}, {"num": "20", "slug": "20-guardrails-and-policy", "title": "Guardrails and Policy Engines", "subtitle": "From input filters to runtime policy \u2014 defense in depth for autonomous systems"}, {"num": "21", "slug": "21-use-case-portfolio", "title": "The Use Case Portfolio", "subtitle": "Pillar III \u2014 picking the right work for an agent to do"}, {"num": "22", "slug": "22-value-and-feasibility", "title": "Value and Feasibility", "subtitle": "Scoring use cases on a 2\u00d72 \u2014 and the trap of doing the easy ones first"}, {"num": "23", "slug": "23-human-in-the-loop", "title": "Human in the Loop", "subtitle": "Where supervision belongs, where it doesn't, and how to design the handoff"}, {"num": "24", "slug": "24-pilot-to-production", "title": "From Pilot to Production", "subtitle": "The valley of death \u2014 and how a use case earns the right to scale"}, {"num": "25", "slug": "25-integration-spine", "title": "The Integration Spine", "subtitle": "Pillar IV \u2014 APIs, identity, data, and the enterprise systems an agent must touch"}, {"num": "26", "slug": "26-identity-for-agents", "title": "Identity for Agents", "subtitle": "Service accounts, scoped tokens, on-behalf-of \u2014 auth for non-human actors"}, {"num": "27", "slug": "27-data-readiness", "title": "Data Readiness", "subtitle": "Lineage, freshness, classification, and why your data lake is not a vector store"}, {"num": "28", "slug": "28-mcp-a2a-protocols", "title": "MCP, A2A, and the Interop Layer", "subtitle": "Model Context Protocol, Agent2Agent, and the protocols that let agents share work"}, {"num": "29", "slug": "29-the-maturity-model", "title": "The Maturity Model", "subtitle": "Five levels \u2014 Initial, Repeatable, Defined, Managed, Optimized \u2014 across all four pillars"}, {"num": "30", "slug": "30-the-scorecard-method", "title": "The Scorecard Method", "subtitle": "How to assess your organization in a half-day, with evidence"}, {"num": "\u2605", "slug": "scorecard", "title": "Interactive Scorecard", "subtitle": "Score yourself across four pillars \u00b7 five levels \u00b7 40 questions \u00b7 share your results"}, {"num": "31", "slug": "31-reading-the-radar", "title": "Reading the Radar", "subtitle": "What a four-pillar profile tells you about where to invest first"}, {"num": "32", "slug": "32-the-thirty-sixty-ninety", "title": "The 30/60/90", "subtitle": "What an enterprise can credibly accomplish in the first ninety days"}, {"num": "33", "slug": "33-the-twelve-month-roadmap", "title": "The Twelve-Month Roadmap", "subtitle": "From scattered pilots to a governed agent platform \u2014 by quarter"}, {"num": "34", "slug": "34-the-operating-model", "title": "The Operating Model", "subtitle": "Center of excellence, hub-and-spoke, federated \u2014 pick one and live with it"}, {"num": "35", "slug": "35-roles-and-careers", "title": "Roles and Careers", "subtitle": "AI product managers, agent engineers, evals leads \u2014 the jobs the org didn't have last year"}, {"num": "36", "slug": "36-procurement-and-vendors", "title": "Procurement and Vendors", "subtitle": "Buy, build, or rent \u2014 and the contract clauses you'll wish you had insisted on"}, {"num": "37", "slug": "37-change-management", "title": "Change Management", "subtitle": "How to roll agents into a workforce without losing the workforce"}, {"num": "38", "slug": "38-economics-at-scale", "title": "Economics at Scale", "subtitle": "Unit costs, gross margin, and the second-order effects of letting agents run your processes"}, {"num": "39", "slug": "39-the-failure-postmortem", "title": "The Failure Postmortem", "subtitle": "Three case studies of agentic deployments that broke \u2014 and what they teach"}, {"num": "40", "slug": "40-the-next-decade", "title": "The Next Decade", "subtitle": "What ready looks like in 2030, and how to recognize it from where you stand today"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>The Agentic Enterprise<span class="brand__sub"> — a readiness field guide</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/scorecard.html">Scorecard</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">The Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 17</div>
+    <div class="ch-header__num">Chapter 17</div>
+    <h1 class="ch-header__title">The Orchestration Stack</h1>
+    <p class="ch-header__dek">Pillar II — frameworks, runtimes, and the plumbing of multi-step work</p>
+    
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-orchestration-layer-defined">The Orchestration Layer Defined</a></li><li><a href="#langgraph-directed-graphs-for-complex-workflows">LangGraph: Directed Graphs for Complex Workflows</a></li><li><a href="#autogen-and-crewai-the-multi-agent-dimension">AutoGen and CrewAI: The Multi-Agent Dimension</a></li><li><a href="#runtimes-and-plumbing">Runtimes and Plumbing</a></li><li><a href="#the-orchestration-stack-as-control-surface">The Orchestration Stack as Control Surface</a></li></ul></aside>
+    <article class="prose">
+      <p class="lede">If governance is the organizational layer that defines who owns the agent and what it is permitted to do, orchestration is the technical layer that actually makes it do it. An orchestration stack is the collection of frameworks, runtimes, and plumbing components that translate a goal into a sequence of model calls, tool invocations, and state updates — and that manages the coordination between multiple agents when the task requires more than one. The choice of orchestration architecture is not merely a developer preference; it is a risk architecture decision that determines what kinds of failures the system is capable of, what kinds of interventions are possible at runtime, and how well the system's behavior can be observed and audited.</p>
+
+<h2 id="the-orchestration-layer-defined">The Orchestration Layer Defined</h2>
+<p>The orchestration layer sits between the application that initiates a task and the models and tools that execute it. Its responsibilities include: decomposing the task into subtasks, sequencing those subtasks according to their dependencies, routing each subtask to the appropriate model or tool, managing the shared context that flows between steps, handling errors and retries at the step level, and surfacing the information needed for human review at appropriate checkpoints. In a single-agent system, orchestration is relatively straightforward — essentially a loop over the agent's plan-act-observe-remember cycle. In a multi-agent system, orchestration becomes substantially more complex because it must also manage the communication protocols, trust relationships, and state synchronization between agents that may be running on different runtimes with different capabilities and different permission sets.</p>
+<p>The orchestration layer is where most of the interesting engineering decisions in an agentic deployment are made, and it is where most of the security controls that matter at runtime are implemented. An orchestration framework that provides no hooks for runtime policy enforcement — no way to inspect a tool call before it executes, no way to modify the agent's context based on a policy decision, no way to pause execution for human review — cannot implement the governance charter's decision authority matrix in practice, regardless of how carefully that matrix has been designed.</p>
+
+<h2 id="langgraph-directed-graphs-for-complex-workflows">LangGraph: Directed Graphs for Complex Workflows</h2>
+<p><a href="https://langchain-ai.github.io/langgraph/">LangGraph</a> represents the current state of the art in explicit, graph-based orchestration. Rather than expressing agent behavior as a monolithic loop, LangGraph asks the developer to model it as a directed graph of nodes and edges, where nodes are computation steps (model calls, tool calls, conditional branches) and edges are the transitions between them. This representation makes the agent's possible execution paths explicit and statically analyzable — a significant advantage from a governance perspective, because it means the set of things the agent can do is defined by the graph structure, not emergent from the model's reasoning.</p>
+<p>LangGraph's stateful execution model — where each node in the graph can read and write a typed state object that persists across the entire run — makes it well-suited for complex, multi-step workflows that require careful state management. The framework's support for human-in-the-loop checkpoints, where execution pauses and a human must approve or modify the state before the graph continues, is particularly valuable for agents that operate in high-stakes domains where the governance charter requires human oversight at specific decision points. LangGraph's <strong>persistence layer</strong> can checkpoint the full graph state to an external store, enabling long-running agents that can be interrupted and resumed and providing the forensic trail needed for post-incident analysis.</p>
+
+<h2 id="autogen-and-crewai-the-multi-agent-dimension">AutoGen and CrewAI: The Multi-Agent Dimension</h2>
+<p><a href="https://microsoft.github.io/autogen/">AutoGen</a>, Microsoft's multi-agent orchestration framework, takes a different approach: it models agents as conversational participants in a group chat, where agents exchange messages and the orchestrator routes those messages according to a defined policy. This conversational model makes it easy to build systems where the decomposition of a task emerges from the agents' interaction rather than being specified in advance — useful for exploratory tasks where the right decomposition is not known at design time, but harder to audit because the agent's behavior is less constrained by the framework's structure.</p>
+<p><a href="https://www.crewai.com/">CrewAI</a> offers a higher-level abstraction: agents are defined as <em>roles</em> (Researcher, Writer, Reviewer) with associated tools and goals, and tasks are assigned to roles rather than to specific model instances. The framework handles the coordination — including parallel execution of independent tasks and sequential execution of dependent ones — and provides a structured output format that makes it easier to integrate agent work products into downstream systems. CrewAI's role-based model maps naturally onto organizational structures, which makes it attractive for enterprise teams that want to reason about their agent deployments in familiar terms.</p>
+<p>The choice between LangGraph's explicit graph model, AutoGen's conversational model, and CrewAI's role-based model is ultimately a choice between different tradeoffs on the spectrum from control to flexibility. Organizations with strong governance requirements and well-defined workflows tend toward LangGraph; organizations building exploratory or research agents where the workflow is inherently open-ended tend toward AutoGen; organizations that want to align their agent architecture with their organizational structure tend toward CrewAI.</p>
+
+<blockquote>
+<p>"The orchestration framework you choose is not a neutral technical decision. It determines what you can observe, what you can control, and what you can audit. Choose it with the same deliberateness you would apply to selecting a database architecture."</p>
+</blockquote>
+
+<h2 id="runtimes-and-plumbing">Runtimes and Plumbing</h2>
+<p>Beneath the orchestration framework sit the runtime components that actually execute the agent's actions: the inference API that calls the model, the tool execution environment that runs the functions the agent invokes, and the message broker that routes information between agents in a multi-agent system. Each of these has implications for the security and observability of the overall system that practitioners frequently underestimate when they are focused on the higher-level orchestration logic.</p>
+<p>The <strong>tool execution environment</strong> deserves particular attention. A tool that the agent can call is, by definition, code that executes with some level of privilege in the organization's environment. The principle of least privilege — already well-established in conventional software security — applies to agent tools with additional force, because the agent may call tools in combinations and sequences that the tool developers did not anticipate. Tool execution should be sandboxed wherever possible, with explicit grants of the permissions each tool requires and automatic revocation when the agent's session ends. The <a href="https://aws.amazon.com/iam/">AWS IAM</a> model of fine-grained, time-limited, scope-specific permissions is a useful template for thinking about tool permission architecture.</p>
+
+<h2 id="the-orchestration-stack-as-control-surface">The Orchestration Stack as Control Surface</h2>
+<p>A mature orchestration architecture treats the stack not just as a mechanism for executing tasks but as the primary control surface for runtime risk management. This means instrumenting every layer: traces at the model call level that capture the prompt, the response, the tool calls, and the latency; metrics at the workflow level that track success rates, escalation rates, and cost per run; alerts at the policy level that fire when the agent's behavior approaches or crosses a defined threshold. The orchestration stack that provides this instrumentation out of the box is not just more observable — it is more governable, because the governance charter's escalation thresholds can be implemented as runtime controls rather than as post-hoc audits.</p>
+
+<aside class="aside" data-tone="copper">
+  <div class="aside__label">Framework Selection Checklist</div>
+  <p>Before committing to an orchestration framework for a production agent, answer four questions: Does it support human-in-the-loop checkpoints at arbitrary graph nodes? Does it provide a persistence layer for checkpointing and recovery? Does it expose traces in a format compatible with your observability stack? Does it support runtime modification of tool permissions without redeployment? A framework that cannot answer yes to all four imposes architectural debt that will be expensive to retire.</p>
+</aside>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="16-iso-42001-and-eu.html"><span class="ch-nav-link__label">← Chapter 16</span><span class="ch-nav-link__title">ISO/IEC 42001 and the EU AI Act</span></a>
+      <a class="ch-nav-link" data-dir="next" href="18-memory-and-state.html"><span class="ch-nav-link__label">Chapter 18 →</span><span class="ch-nav-link__title">Memory and State</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters, the glossary, and the bibliography. Try <em>NIST</em>, <em>orchestration</em>, <em>guardrails</em>, or <em>EU AI Act</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does the NIST AI RMF apply to agentic AI?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">The Agentic Enterprise</strong><br>
+      A long-form readiness field guide for agentic AI in the enterprise.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

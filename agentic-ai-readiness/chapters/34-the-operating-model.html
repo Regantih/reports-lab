@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 34 · The Operating Model — The Agentic Enterprise</title>
+<meta name="description" content="Center of excellence, hub-and-spoke, federated — pick one and live with it">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="34-the-operating-model" data-chapter-title="The Operating Model" data-base="../">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-the-shift", "title": "The Shift", "subtitle": "From copilots to colleagues \u2014 what changes when software starts to act"}, {"num": "02", "slug": "02-anatomy-of-an-agent", "title": "Anatomy of an Agent", "subtitle": "Plan, act, observe, remember \u2014 the four moving parts"}, {"num": "03", "slug": "03-spectrum-of-autonomy", "title": "The Spectrum of Autonomy", "subtitle": "Five rungs from automation to autonomy, and where most enterprises actually live"}, {"num": "04", "slug": "04-from-models-to-systems", "title": "From Models to Systems", "subtitle": "Why agentic AI is a systems problem, not a model problem"}, {"num": "05", "slug": "05-tool-use-and-grounding", "title": "Tool Use and Grounding", "subtitle": "How an agent reaches into the world \u2014 APIs, retrieval, and the limits of context"}, {"num": "06", "slug": "06-multi-agent-and-swarm", "title": "Multi-Agent and Swarm", "subtitle": "When one mind isn't enough \u2014 coordination, delegation, and emergent failure modes"}, {"num": "07", "slug": "07-the-economics", "title": "The Economics of an Agent", "subtitle": "Tokens, tools, time, and why agentic ROI looks nothing like SaaS ROI"}, {"num": "08", "slug": "08-failure-modes", "title": "Failure Modes", "subtitle": "Hallucinated calls, prompt injection, runaway loops, and the cost of being wrong at scale"}, {"num": "09", "slug": "09-threat-landscape", "title": "The Threat Landscape", "subtitle": "OWASP Agentic AI Top 10, MITRE ATLAS, and adversaries who know agents better than you do"}, {"num": "10", "slug": "10-regulatory-perimeter", "title": "The Regulatory Perimeter", "subtitle": "EU AI Act, US executive orders, sectoral rules \u2014 what bites and what doesn't"}, {"num": "11", "slug": "11-frameworks-landscape", "title": "The Frameworks Landscape", "subtitle": "NIST, ISO, OECD, OWASP, the analyst maturity models \u2014 ranked by what actually moves the needle"}, {"num": "12", "slug": "12-the-four-pillars", "title": "The Four Pillars", "subtitle": "A readiness model: governance, orchestration, use case identification, integration"}, {"num": "13", "slug": "13-governance-charter", "title": "The Governance Charter", "subtitle": "Pillar I \u2014 who owns the agents, who answers when they fail"}, {"num": "14", "slug": "14-policy-stack", "title": "The Policy Stack", "subtitle": "Acceptable use, model risk, data classification, third-party AI, incident response"}, {"num": "15", "slug": "15-nist-rmf-walk", "title": "Walking the NIST AI RMF", "subtitle": "Govern, Map, Measure, Manage \u2014 applied to a real agent program"}, {"num": "16", "slug": "16-iso-42001-and-eu", "title": "ISO/IEC 42001 and the EU AI Act", "subtitle": "Certification, conformity assessment, and the audit trail of an autonomous system"}, {"num": "17", "slug": "17-orchestration-stack", "title": "The Orchestration Stack", "subtitle": "Pillar II \u2014 frameworks, runtimes, and the plumbing of multi-step work"}, {"num": "18", "slug": "18-memory-and-state", "title": "Memory and State", "subtitle": "Short-term, long-term, episodic \u2014 what an agent needs to remember to be useful"}, {"num": "19", "slug": "19-evals-and-observability", "title": "Evals and Observability", "subtitle": "Traces, replays, scorecards \u2014 the dashboards that keep agents honest"}, {"num": "20", "slug": "20-guardrails-and-policy", "title": "Guardrails and Policy Engines", "subtitle": "From input filters to runtime policy \u2014 defense in depth for autonomous systems"}, {"num": "21", "slug": "21-use-case-portfolio", "title": "The Use Case Portfolio", "subtitle": "Pillar III \u2014 picking the right work for an agent to do"}, {"num": "22", "slug": "22-value-and-feasibility", "title": "Value and Feasibility", "subtitle": "Scoring use cases on a 2\u00d72 \u2014 and the trap of doing the easy ones first"}, {"num": "23", "slug": "23-human-in-the-loop", "title": "Human in the Loop", "subtitle": "Where supervision belongs, where it doesn't, and how to design the handoff"}, {"num": "24", "slug": "24-pilot-to-production", "title": "From Pilot to Production", "subtitle": "The valley of death \u2014 and how a use case earns the right to scale"}, {"num": "25", "slug": "25-integration-spine", "title": "The Integration Spine", "subtitle": "Pillar IV \u2014 APIs, identity, data, and the enterprise systems an agent must touch"}, {"num": "26", "slug": "26-identity-for-agents", "title": "Identity for Agents", "subtitle": "Service accounts, scoped tokens, on-behalf-of \u2014 auth for non-human actors"}, {"num": "27", "slug": "27-data-readiness", "title": "Data Readiness", "subtitle": "Lineage, freshness, classification, and why your data lake is not a vector store"}, {"num": "28", "slug": "28-mcp-a2a-protocols", "title": "MCP, A2A, and the Interop Layer", "subtitle": "Model Context Protocol, Agent2Agent, and the protocols that let agents share work"}, {"num": "29", "slug": "29-the-maturity-model", "title": "The Maturity Model", "subtitle": "Five levels \u2014 Initial, Repeatable, Defined, Managed, Optimized \u2014 across all four pillars"}, {"num": "30", "slug": "30-the-scorecard-method", "title": "The Scorecard Method", "subtitle": "How to assess your organization in a half-day, with evidence"}, {"num": "\u2605", "slug": "scorecard", "title": "Interactive Scorecard", "subtitle": "Score yourself across four pillars \u00b7 five levels \u00b7 40 questions \u00b7 share your results"}, {"num": "31", "slug": "31-reading-the-radar", "title": "Reading the Radar", "subtitle": "What a four-pillar profile tells you about where to invest first"}, {"num": "32", "slug": "32-the-thirty-sixty-ninety", "title": "The 30/60/90", "subtitle": "What an enterprise can credibly accomplish in the first ninety days"}, {"num": "33", "slug": "33-the-twelve-month-roadmap", "title": "The Twelve-Month Roadmap", "subtitle": "From scattered pilots to a governed agent platform \u2014 by quarter"}, {"num": "34", "slug": "34-the-operating-model", "title": "The Operating Model", "subtitle": "Center of excellence, hub-and-spoke, federated \u2014 pick one and live with it"}, {"num": "35", "slug": "35-roles-and-careers", "title": "Roles and Careers", "subtitle": "AI product managers, agent engineers, evals leads \u2014 the jobs the org didn't have last year"}, {"num": "36", "slug": "36-procurement-and-vendors", "title": "Procurement and Vendors", "subtitle": "Buy, build, or rent \u2014 and the contract clauses you'll wish you had insisted on"}, {"num": "37", "slug": "37-change-management", "title": "Change Management", "subtitle": "How to roll agents into a workforce without losing the workforce"}, {"num": "38", "slug": "38-economics-at-scale", "title": "Economics at Scale", "subtitle": "Unit costs, gross margin, and the second-order effects of letting agents run your processes"}, {"num": "39", "slug": "39-the-failure-postmortem", "title": "The Failure Postmortem", "subtitle": "Three case studies of agentic deployments that broke \u2014 and what they teach"}, {"num": "40", "slug": "40-the-next-decade", "title": "The Next Decade", "subtitle": "What ready looks like in 2030, and how to recognize it from where you stand today"}];</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>The Agentic Enterprise<span class="brand__sub"> — a readiness field guide</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/scorecard.html">Scorecard</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">The Agentic Enterprise</a> &nbsp;·&nbsp; Chapter 34</div>
+    <div class="ch-header__num">Chapter 34</div>
+    <h1 class="ch-header__title">The Operating Model</h1>
+    <p class="ch-header__dek">Center of excellence, hub-and-spoke, federated — pick one and live with it</p>
+    
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-coe-model">The Center of Excellence</a></li><li><a href="#hub-and-spoke">Hub-and-spoke</a></li><li><a href="#federated-model">The federated model</a></li><li><a href="#staffing-the-hub">Staffing the hub</a></li><li><a href="#the-operating-model-over-time">The operating model over time</a></li></ul></aside>
+    <article class="prose">
+      <p class="lede">The question of how to organise an agentic AI programme is not, at its root, a technology question. It is an authority question: who decides what an agent is allowed to do, and who is accountable when it does something it should not? The operating model is the answer. Three models have emerged in enterprise practice — the Center of Excellence, hub-and-spoke, and federated — each embodying a different answer to the authority question, and each making a different set of trade-offs between speed, safety, and scale.</p>
+
+<h2 id="the-coe-model">The Center of Excellence</h2>
+<p>In a Center of Excellence model, a central team owns the agent platform, the policy stack, the evals framework, and the vendor relationships. Business units bring use cases to the CoE; the CoE assesses, builds, deploys, and operates them. The authority structure is clear: the CoE says yes or no, and its no is final. This model produces the most consistent governance outcomes and the fastest accumulation of institutional knowledge. It also produces the most friction, the longest queues, and the most frustrated business units.</p>
+<p>The CoE model is appropriate in three situations: the organisation is early in its maturity journey (L1–L2 overall); the risk profile is high (financial services, healthcare, critical infrastructure); or the organisation has a history of decentralised technology decisions producing expensive inconsistencies. The CoE is the right answer when the cost of a governance failure outweighs the cost of a slower deployment cycle.</p>
+<p><a href="https://cisr.mit.edu/">MIT CISR research</a> on enterprise technology governance consistently finds that organisations with high levels of IT centralisation make more consistent risk decisions and worse innovation decisions. The CoE for agentic AI inherits this trade-off. Its job is not to maximise agent deployments; it is to maximise the quality of agent deployments — a subtly different brief.</p>
+
+<h2 id="hub-and-spoke">Hub-and-spoke</h2>
+<p>The hub-and-spoke model distributes execution while centralising standards. The hub — typically the CoE or a platform engineering team — owns the architecture, the policy templates, the identity infrastructure, and the evals platform. The spokes — business unit AI teams, often called guilds or chapters — own the use-case selection, the domain data, and the day-to-day operation of agents within their business unit. The hub sets the floor; the spokes build above it.</p>
+<p>This is the model most enterprises at L3–L4 maturity gravitate toward, because it balances the competing pressures well. Business units move at the speed their domain demands. The hub maintains the institutional knowledge and prevents the fragmentation that kills federated models. The authority is shared: the spoke cannot override the hub's security controls, but the hub cannot block a deployment that meets the standard. <a href="https://www.gartner.com/en/articles/what-it-takes-to-make-ai-safe-and-effective">Gartner's TRiSM framework</a> recommends a hub-and-spoke structure as the target state for enterprise AI governance at scale.</p>
+<blockquote><p>"The hub does not tell the spokes what to build. The hub tells the spokes what they must never skip — and then gets out of the way." — observed at multiple enterprise AI governance workshops, 2024–2025.</p></blockquote>
+
+<h2 id="federated-model">The federated model</h2>
+<p>In a federated model, business units own their agent programmes end-to-end: policy, architecture, evals, vendor selection, and operation. A corporate AI policy exists, but it is implemented differently in each business unit, and there is no central authority with the power to halt a deployment. The federated model moves fast and breaks things — not metaphorically, but literally, because the absence of a shared standard means each business unit learns the same lessons independently and pays for the same mistakes independently.</p>
+<p>Federated is the model that emerges when no one makes the hub-and-spoke decision: it is the default, not a choice. Most organisations that describe themselves as federated are organisations that did not have a CoE early enough. The federated model can work at high maturity — if every business unit is genuinely at L4 or L5 across all four pillars — but reaching that state through federation takes significantly longer than reaching it through a hub-and-spoke with a strong hub.</p>
+<aside class="aside" data-tone="copper"><p><strong>The model you're already in:</strong> most organisations reading this chapter are already in a de facto federated model. Three business units have agents running. Two of them used different frameworks. None of them has an evals harness. The question is not which model to choose from scratch but which model to migrate toward — and migration to hub-and-spoke is significantly easier than migration to CoE.</p></aside>
+
+<h2 id="staffing-the-hub">Staffing the hub</h2>
+<p>A hub-and-spoke model is only as good as its hub. A hub of two people managing an estate of thirty agents across eight business units is not a hub; it is a bottleneck. The staffing model for a functional hub scales with the number of agents in production and the number of business units it serves. At a minimum: an AI governance lead (policy, risk, regulatory liaison); a platform engineer (the orchestration layer, the evals platform, the identity infrastructure); and an evals lead (the test library, the red-team schedule, the incident post-mortem process). Below this minimum, the hub cannot perform its functions; above it, additional roles follow the pattern described in Chapter 35.</p>
+<p>The most important staffing decision for the hub is not the technical roles — those are relatively straightforward to recruit for — but the governance lead. This person must be fluent in both the technology and the regulatory landscape, comfortable saying no to a business unit under commercial pressure, and trusted enough by the technical team to be heard when they identify a risk. Finding this person is the single most important hiring decision in the first year of the programme.</p>
+
+<h2 id="the-operating-model-over-time">The operating model over time</h2>
+<p>Operating models evolve. Most organisations start with a CoE by necessity (small estate, high risk, need for consistency) and migrate toward hub-and-spoke as the estate grows and the business units develop their own AI capability. A few reach a state of informed federation — business units with genuine L4+ maturity operating largely independently within a thin corporate standard — but this takes years and requires sustained investment in capability building at the spoke level.</p>
+<p>The operating model decision should be reviewed annually, as part of the annual Scorecard review. An organisation that chose a CoE in year one because it was at L1–L2 may be ready for hub-and-spoke in year two. An organisation that went hub-and-spoke too early and found its spokes drifting may need to tighten the hub's authority for a period before loosening it again. The operating model is not a one-time architectural decision; it is a governance posture that is calibrated continuously against the maturity evidence.</p>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="33-the-twelve-month-roadmap.html"><span class="ch-nav-link__label">← Chapter 33</span><span class="ch-nav-link__title">The Twelve-Month Roadmap</span></a>
+      <a class="ch-nav-link" data-dir="next" href="35-roles-and-careers.html"><span class="ch-nav-link__label">Chapter 35 →</span><span class="ch-nav-link__title">Roles and Careers</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the report…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all chapters, the glossary, and the bibliography. Try <em>NIST</em>, <em>orchestration</em>, <em>guardrails</em>, or <em>EU AI Act</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does the NIST AI RMF apply to agentic AI?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">The Agentic Enterprise</strong><br>
+      A long-form readiness field guide for agentic AI in the enterprise.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>
