@@ -591,8 +591,11 @@
     // ----- Public API for Learn Mode (Quiz mode rides on this module) -----
     let quizSystemOverride = null;
     let quizBanner = null;
-    const setQuizMode = (override, label) => {
+    let quizCallbacks = null; // { onVerdict: (level, rationale) => void }
+    let quizVerdictSlot = null;
+    const setQuizMode = (override, label, callbacks) => {
       quizSystemOverride = override;
+      quizCallbacks = callbacks || null;
       // Reset the chat history so the quiz starts clean
       history.length = 0;
       log.innerHTML = '';
@@ -600,26 +603,92 @@
       if (quizBanner) quizBanner.remove();
       quizBanner = document.createElement('div');
       quizBanner.className = 'tutor__quiz-banner';
+
+      // Top row: label + actions (Rate me, Exit)
+      const top = document.createElement('div');
+      top.className = 'tutor__quiz-banner-top';
       const lab = document.createElement('span');
       lab.className = 'tutor__quiz-banner-label';
       lab.textContent = label || 'Quiz mode';
+      const actions = document.createElement('div');
+      actions.className = 'tutor__quiz-banner-actions';
+      const rate = document.createElement('button');
+      rate.type = 'button';
+      rate.className = 'tutor__quiz-banner-rate';
+      rate.textContent = 'Rate me';
+      rate.title = 'End the quiz and get a calibrated L1\u2013L4 verdict';
+      rate.addEventListener('click', () => {
+        // Send a synthetic user turn asking for the verdict.
+        const placeholder = append('assistant', '');
+        renderTyping(placeholder);
+        history.push({ role: 'user', content: 'Rate me now. End the quiz and give my L1\u2013L4 verdict in the required format.' });
+        askTutor('Rate me now.', placeholder, 0);
+      });
       const exit = document.createElement('button');
       exit.type = 'button';
       exit.className = 'tutor__quiz-banner-exit';
       exit.textContent = 'Exit quiz';
       exit.addEventListener('click', () => {
         quizSystemOverride = null;
+        quizCallbacks = null;
         if (quizBanner) { quizBanner.remove(); quizBanner = null; }
+        quizVerdictSlot = null;
+        window.__FSTS_TUTOR_SYSTEM_OVERRIDE__ = null;
         history.length = 0;
         log.innerHTML = '';
         append('assistant', 'Back to normal tutor mode. Ask me anything.');
       });
-      quizBanner.appendChild(lab);
-      quizBanner.appendChild(exit);
+      actions.appendChild(rate);
+      actions.appendChild(exit);
+      top.appendChild(lab);
+      top.appendChild(actions);
+      quizBanner.appendChild(top);
+
+      // Verdict slot (initially hidden, populated when **VERDICT: Lx ...** is detected)
+      quizVerdictSlot = document.createElement('div');
+      quizVerdictSlot.className = 'tutor__quiz-verdict';
+      quizVerdictSlot.hidden = true;
+      quizBanner.appendChild(quizVerdictSlot);
+
       log.parentNode.insertBefore(quizBanner, log);
-      // Override the system prompt by patching SYSTEM_PROMPT through a closure.
-      // We do this by monkey-patching askTutor's view via a shared variable read at call time.
       window.__FSTS_TUTOR_SYSTEM_OVERRIDE__ = override;
+    };
+
+    // Verdict parser: looks for **VERDICT: L# Label** anywhere in an assistant turn.
+    const VERDICT_RE = /VERDICT\s*:\s*L\s*([1-4])\s+([A-Za-z\-]+(?:\s+[A-Za-z\-]+)?)/i;
+    const detectAndShowVerdict = (answer) => {
+      if (!quizBanner || !quizVerdictSlot) return;
+      const m = String(answer || '').match(VERDICT_RE);
+      if (!m) return;
+      const level = parseInt(m[1], 10);
+      const label = m[2].trim();
+      // Render the verdict chip with a Save button.
+      quizVerdictSlot.hidden = false;
+      quizVerdictSlot.innerHTML = '';
+      const chip = document.createElement('div');
+      chip.className = 'tutor__quiz-verdict-chip';
+      chip.setAttribute('data-level', String(level));
+      const dot = document.createElement('span');
+      dot.className = 'tutor__quiz-verdict-dot';
+      dot.textContent = 'L' + level;
+      const text = document.createElement('span');
+      text.className = 'tutor__quiz-verdict-text';
+      text.textContent = label;
+      chip.appendChild(dot);
+      chip.appendChild(text);
+      const save = document.createElement('button');
+      save.type = 'button';
+      save.className = 'tutor__quiz-verdict-save';
+      save.textContent = 'Save as my level';
+      save.addEventListener('click', () => {
+        if (quizCallbacks && typeof quizCallbacks.onVerdict === 'function') {
+          quizCallbacks.onVerdict(level, label);
+        }
+        save.textContent = 'Saved \u2713';
+        save.disabled = true;
+      });
+      quizVerdictSlot.appendChild(chip);
+      quizVerdictSlot.appendChild(save);
     };
     // Make askTutor read the override at call time:
     const _origAsk = askTutor;
@@ -661,6 +730,8 @@
         answer = (answer || '').trim() || 'Sorry, I couldn\'t generate a response. Try rephrasing the question.';
         setBody(placeholder, answer);
         history.push({ role: 'assistant', content: answer });
+        // If we are in quiz mode, scan for a verdict line.
+        if (quizSystemOverride) detectAndShowVerdict(answer);
       } catch (err) {
         renderError(placeholder, question, attemptIdx);
       }
@@ -788,6 +859,9 @@
   });
 
   // ===== Maturity ladder =====
+  // Hoisted setter so Quiz Mode (below) can update the ladder when the user
+  // accepts an LLM verdict.
+  let setLadderSelf = null;
   const ladderEl = document.querySelector('[data-ladder]');
   if (ladderEl) {
     const toggle = ladderEl.querySelector('[data-ladder-toggle]');
@@ -814,6 +888,18 @@
 
     if (state.ladder.self) paintSelf(state.ladder.self);
     paintChecks();
+
+    // Expose a setter for Quiz Mode\u2019s verdict-save action.
+    setLadderSelf = (level) => {
+      state.ladder.self = level;
+      saveState(state);
+      paintSelf(level);
+      // Pop the panel open so the user sees the new level locked in.
+      if (panel.hidden) {
+        panel.hidden = false;
+        toggle.setAttribute('aria-expanded', 'true');
+      }
+    };
 
     toggle.addEventListener('click', () => {
       const open = panel.hidden;
@@ -878,29 +964,43 @@
         '\u201cFrom Sand to Superintelligence\u201d.\n\n' +
         anchorBlock + (anchorBlock ? '\n\n' : '') +
         'RULES:\n' +
-        '\u2022 Ask EXACTLY 5 questions, ONE AT A TIME. Wait for the reader\u2019s answer ' +
-        'before asking the next.\n' +
+        '\u2022 Ask ONE question at a time. The reader controls when the quiz ends \u2014 ' +
+        'they will say \u201crate me\u201d or \u201cgive my level\u201d when they want a verdict. ' +
+        'Until then, keep asking another question after each answer. Do NOT cap at any number.\n' +
         '\u2022 Every question must be answerable from the chapter content above. Do NOT ask ' +
-        'about people, dates, or anecdotes unless they appear in the anchors. If you cannot ' +
-        'tie a question to the anchors, pick a different question.\n' +
-        '\u2022 Mix the five types in this order: Q1 factual (a definition or named ' +
-        'mechanism from the spine), Q2 numerical (use one of ~10\u00b9\u2075 / ~50 ms / ~1 J / ' +
-        'embedding shape / ~80 blocks), Q3 conceptual (why does X work \u2014 e.g. KV caching, ' +
-        'softmax, residual stream), Q4 synthetic (\u201cif vocab doubles to 200k, what changes ' +
-        'downstream?\u201d style), Q5 steel-man (\u201cwhat is the strongest argument the ' +
-        'autoregressive picture is incomplete?\u201d).\n' +
+        'about people, dates, or anecdotes unless they appear in the anchors.\n' +
+        '\u2022 Rotate question types across the conversation: factual (definition or named ' +
+        'mechanism), numerical (use one of ~10\u00b9\u2075 / ~50 ms / ~1 J / embedding shape / ' +
+        '~80 blocks), conceptual (why does X work \u2014 KV caching, softmax, residual stream), ' +
+        'synthetic (\u201cif vocab doubles to 200k, what changes downstream?\u201d style), ' +
+        'steel-man (\u201cstrongest argument this picture is incomplete?\u201d). ' +
+        'Do not repeat the same type twice in a row. Increase difficulty as the conversation goes.\n' +
         '\u2022 After each answer, your reply MUST contain TWO parts in this order: ' +
         '(a) a 2-sentence assessment of what is right and what is missing, ' +
         '(b) the NEXT numbered question. Do not stop after the assessment. ' +
-        'Only after Q5 has been answered do you skip the next-question step and ' +
-        'instead give the L1\u2013L4 rating. Be calibrated, not encouraging. No \u201cgreat job\u201d.\n' +
-        '\u2022 After all 5 are answered, propose an L1\u2013L4 rating (L1 Curious, ' +
-        'L2 Practitioner, L3 Expert, L4 Research-grade) with one-sentence reasoning anchored ' +
-        'in their answers.\n' +
-        '\u2022 Format: open each question with **Q1 \u00b7 factual**, **Q2 \u00b7 numerical**, etc. ' +
+        'Be calibrated, not encouraging. No \u201cgreat job\u201d.\n' +
+        '\u2022 When the reader asks for a rating (\u201crate me\u201d, \u201cmy level\u201d, \u201chow did I do\u201d, ' +
+        '\u201cend the quiz\u201d, etc.), STOP asking new questions and give exactly this format: ' +
+        'a one-line verdict on its own line: **VERDICT: L1 Curious** (or L2 Practitioner / ' +
+        'L3 Expert / L4 Research-grade), then a 3-sentence rationale citing specific things ' +
+        'they said or missed. The verdict line must be exactly that format \u2014 it is parsed ' +
+        'by the UI to offer them a save action. Do not give a verdict before they ask.\n' +
+        '\u2022 Format: open each question with **Q\u2099 \u00b7 factual**, **Q\u2099 \u00b7 numerical**, etc. ' +
         'Bold the prompt only. Keep prose tight. No markdown headers (#).';
       tutor.open();
-      tutor.setQuizMode(QUIZ_PROMPT, 'Quiz mode \u00b7 5 questions, calibrated rating');
+      tutor.setQuizMode(
+        QUIZ_PROMPT,
+        'Quiz mode \u00b7 ask for a verdict whenever you\u2019re ready',
+        {
+          onVerdict: (level, label) => {
+            // Persist the verdict alongside the ladder state.
+            state.quiz = { level: level, label: label, ts: Date.now() };
+            if (typeof setLadderSelf === 'function') setLadderSelf(level);
+            else { state.ladder.self = level; saveState(state); }
+            saveState(state);
+          },
+        }
+      );
       // Seed the conversation so the model asks Q1.
       tutor.seedTurn();
     });
