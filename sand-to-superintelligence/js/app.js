@@ -792,9 +792,14 @@
     // (askTutor already references SYSTEM_PROMPT; the simplest hook is to
     //  rebuild the system message via a getter on window. We replace the
     //  function with one that swaps in the override when present.)
+    // Track whether we have already tried a corrective shape-retry on the
+    // current turn, to avoid infinite retries when the model repeatedly
+    // omits the **Feedback:** block.
+    let attemptRetriedForShape = false;
     // eslint-disable-next-line no-func-assign
     askTutor = async function(question, placeholder, attemptIdx) {
       attemptIdx = attemptIdx || 0;
+      if (attemptIdx === 0) attemptRetriedForShape = false;
       const endpoint = ENDPOINTS[Math.min(attemptIdx, ENDPOINTS.length - 1)];
       const baseSystem = window.__FSTS_TUTOR_SYSTEM_OVERRIDE__ || SYSTEM_PROMPT;
       const ctxNote = chapterCtx.chapterTitle
@@ -840,6 +845,35 @@
           }
           renderError(placeholder, question, attemptIdx, finishReason === 'content_filter' ? 'refused' : 'empty');
           return;
+        }
+        // Quiz-mode shape check: after the reader has given at least one
+        // answer, every reply MUST contain a **Feedback:** block. The
+        // gpt-oss-20b model occasionally drops the assessment and jumps
+        // straight to the next question. If we detect that, force one
+        // corrective retry with a system nudge before showing the reply.
+        if (quizSystemOverride && !attemptRetriedForShape) {
+          // history user-turn count; the seed pushes one synthetic
+          // "Begin the quiz" turn, so the reader\u2019s first real answer makes it 2.
+          const userTurns = history.filter(m => m.role === 'user').length;
+          const looksLikeVerdict = /VERDICT\s*:\s*L\s*[1-4]/i.test(answer);
+          const hasFeedback = /\*\*\s*Feedback\s*:/i.test(answer);
+          if (userTurns >= 2 && !hasFeedback && !looksLikeVerdict) {
+            attemptRetriedForShape = true;
+            const corrective = {
+              role: 'system',
+              content: 'Your previous draft was missing the required **Feedback:** ' +
+                'block. Rewrite your reply to start with **Feedback:** assessing ' +
+                'the reader\u2019s last answer (Correct / Partly right / Not quite, ' +
+                'in your own words, second person), THEN the next ' +
+                '**Q\u2099 \u00b7 type:** question. Both blocks are mandatory.',
+            };
+            history.push(corrective);
+            await new Promise(r => setTimeout(r, 300));
+            const result = await askTutor(question, placeholder, attemptIdx);
+            const idx = history.indexOf(corrective);
+            if (idx >= 0) history.splice(idx, 1);
+            return result;
+          }
         }
         setBody(placeholder, answer);
         history.push({ role: 'assistant', content: answer });
@@ -1076,35 +1110,46 @@
         'You are quizzing the reader on the chapter "' + chapterTitle + '" from ' +
         '\u201cFrom Sand to Superintelligence\u201d.\n\n' +
         anchorBlock + (anchorBlock ? '\n\n' : '') +
+        'EVERY REPLY (after the reader\u2019s first answer) MUST USE THIS EXACT TEMPLATE:\n\n' +
+        '**Feedback:** <verdict on the answer in 1\u20132 sentences. Start with \u201cCorrect\u201d, ' +
+        '\u201cPartly right\u201d, or \u201cNot quite\u201d. State the right answer in your own words ' +
+        'and name what they got right or missed. Speak to them as \u201cyou\u201d.>\n\n' +
+        '**Q\u2099 \u00b7 <type>:** <next question>\n\n' +
+        'where <type> is one of: factual, numerical, conceptual, synthetic, steel-man.\n' +
+        'Both blocks are mandatory. A reply with only the next question is a failure. ' +
+        'A reply with only feedback is also a failure (unless the reader asked to be rated).\n\n' +
         'RULES:\n' +
         '\u2022 Ask ONE question at a time. The reader controls when the quiz ends \u2014 ' +
         'they will say \u201crate me\u201d or \u201cgive my level\u201d when they want a verdict. ' +
         'Until then, keep asking another question after each answer. Do NOT cap at any number.\n' +
         '\u2022 Every question must be answerable from the chapter content above. Do NOT ask ' +
         'about people, dates, or anecdotes unless they appear in the anchors.\n' +
-        '\u2022 Rotate question types across the conversation: factual (definition or named ' +
-        'mechanism), numerical (use one of ~10\u00b9\u2075 / ~50 ms / ~1 J / embedding shape / ' +
-        '~80 blocks), conceptual (why does X work \u2014 KV caching, softmax, residual stream), ' +
-        'synthetic (\u201cif vocab doubles to 200k, what changes downstream?\u201d style), ' +
-        'steel-man (\u201cstrongest argument this picture is incomplete?\u201d). ' +
-        'Do not repeat the same type twice in a row. Increase difficulty as the conversation goes.\n' +
-        '\u2022 After each answer, your reply MUST contain TWO parts in this order: ' +
-        '(a) a 2-sentence assessment of what is right and what is missing, ' +
-        '(b) the NEXT numbered question. Do not stop after the assessment. ' +
-        'Be calibrated, not encouraging. No \u201cgreat job\u201d.\n' +
+        '\u2022 Rotate question types. Do not repeat the same type twice in a row. ' +
+        'Increase difficulty as the conversation goes.\n' +
+        '\u2022 Be calibrated, not encouraging. No \u201cgreat job\u201d, no smileys. If they are wrong, ' +
+        'say so plainly and explain.\n' +
         '\u2022 When the reader asks for a rating (\u201crate me\u201d, \u201cmy level\u201d, \u201chow did I do\u201d, ' +
         '\u201cend the quiz\u201d, etc.), STOP asking new questions and give exactly this format: ' +
         'a one-line verdict on its own line: **VERDICT: L1 Curious** (or L2 Practitioner / ' +
         'L3 Expert / L4 Research-grade), then a 3-sentence rationale citing specific things ' +
         'they said or missed. The verdict line must be exactly that format \u2014 it is parsed ' +
         'by the UI to offer them a save action. Do not give a verdict before they ask.\n' +
-        '\u2022 Format: open each question with **Q\u2099 \u00b7 factual**, **Q\u2099 \u00b7 numerical**, etc. ' +
-        'Bold the prompt only. Keep prose tight. No markdown headers (#).\n' +
+        '\u2022 No markdown headers (#). Bold only the **Feedback:** label, the **Q\u2099 \u00b7 type:** label, ' +
+        'and the **VERDICT:** line. Keep prose tight.\n' +
         '\u2022 VOICE: speak directly to the reader in second person ("you"). NEVER write ' +
         'in third person about them ("they said\u2026", "the user wrote\u2026"). NEVER write ' +
         'self-talk or grading notes ("so correct", "missing: \u2026", "so I should\u2026"). ' +
         'These read as raw scratchpad and break the experience. If you catch yourself, ' +
-        'rewrite as a direct reply to the reader.';
+        'rewrite as a direct reply to the reader.\n\n' +
+        'EXAMPLE \u2014 reader answered \u201cautoregressive loop\u201d to a question about the submodule ' +
+        'that performs the weighted sum of value vectors:\n\n' +
+        '**Feedback:** Not quite. The autoregressive loop is the outer process that feeds each ' +
+        'predicted token back as input; the submodule you\u2019re looking for is the attention ' +
+        'head\u2019s weighted-sum step inside the self-attention block. You correctly sensed it ' +
+        'lives at the token-mixing stage, but the name is attention (specifically the value ' +
+        'aggregation), not the loop wrapping it.\n\n' +
+        '**Q\u2082 \u00b7 numerical:** Roughly how many multiply-accumulate operations does a ' +
+        'frontier transformer perform per generated token?';
       tutor.open();
       tutor.setQuizMode(
         QUIZ_PROMPT,
