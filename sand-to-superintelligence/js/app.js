@@ -434,27 +434,96 @@
     }
 
     const history = [];
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const q = input.value.trim();
-      if (!q) return;
-      input.value = '';
-      append('user', q);
-      history.push({ role: 'user', content: q });
-      const placeholder = append('assistant', '');
-      placeholder.innerHTML = '<span class="tutor__typing"><span></span><span></span><span></span></span>';
+    // Pollinations only exposes one anonymous model right now, so retries
+    // just hit the same endpoint again — transient 5xx / network blips clear
+    // on the second or third try. We still keep this as a list in case more
+    // free providers come online later.
+    const ENDPOINTS = [
+      { url: apiUrl, model: 'openai', label: 'primary' },
+      { url: apiUrl, model: 'openai', label: 'retry' },
+      { url: apiUrl, model: 'openai', label: 'retry' },
+    ];
+
+    const renderTyping = (el) => {
+      el.innerHTML = '<span class="tutor__typing"><span></span><span></span><span></span></span>';
+    };
+
+    const renderError = (el, question, attemptIdx) => {
+      const base = document.body.getAttribute('data-base') || '';
+      const next = ENDPOINTS[(attemptIdx + 1) % ENDPOINTS.length];
+      const wrap = document.createElement('div');
+      wrap.className = 'tutor__error';
+      const msg = document.createElement('em');
+      msg.textContent = 'The tutor service didn\u2019t respond. You can retry, or use ';
+      const searchHint = document.createElement('strong');
+      searchHint.textContent = 'search (\u2318/Ctrl + K)';
+      const gloss = document.createElement('a');
+      gloss.href = base + 'glossary.html';
+      gloss.textContent = 'glossary';
+      msg.appendChild(searchHint);
+      msg.appendChild(document.createTextNode(' or the '));
+      msg.appendChild(gloss);
+      msg.appendChild(document.createTextNode('.'));
+      wrap.appendChild(msg);
+
+      const actions = document.createElement('div');
+      actions.className = 'tutor__error-actions';
+
+      const retryBtn = document.createElement('button');
+      retryBtn.type = 'button';
+      retryBtn.className = 'tutor__retry';
+      retryBtn.textContent = 'Retry';
+      retryBtn.addEventListener('click', () => {
+        renderTyping(el);
+        askTutor(question, el, attemptIdx + 1);
+      });
+      actions.appendChild(retryBtn);
+
+      const editBtn = document.createElement('button');
+      editBtn.type = 'button';
+      editBtn.className = 'tutor__retry tutor__retry--ghost';
+      editBtn.textContent = 'Edit question';
+      editBtn.addEventListener('click', () => {
+        input.value = question;
+        input.focus();
+        input.select && input.select();
+        // Drop the failed turn from history so a fresh submit doesn\u2019t double-up.
+        if (history.length && history[history.length - 1].role === 'user' && history[history.length - 1].content === question) {
+          history.pop();
+        }
+        // Remove the user bubble and this error bubble so the log stays clean.
+        const errorMsg = el.closest('.tutor__msg');
+        const userMsg = errorMsg && errorMsg.previousElementSibling;
+        if (userMsg && userMsg.classList.contains('tutor__msg--user')) userMsg.remove();
+        if (errorMsg) errorMsg.remove();
+      });
+      actions.appendChild(editBtn);
+
+      wrap.appendChild(actions);
+      el.innerHTML = '';
+      el.appendChild(wrap);
+    };
+
+    async function askTutor(question, placeholder, attemptIdx) {
+      attemptIdx = attemptIdx || 0;
+      const endpoint = ENDPOINTS[Math.min(attemptIdx, ENDPOINTS.length - 1)];
+      const ctxNote = chapterCtx.chapterTitle
+        ? `The reader is currently on the chapter: "${chapterCtx.chapterTitle}". Lean on that context when relevant.`
+        : 'The reader is on the book index or front matter.';
+      const messages = [
+        { role: 'system', content: SYSTEM_PROMPT + '\n\n' + ctxNote },
+        ...history,
+      ];
       try {
-        const ctxNote = chapterCtx.chapterTitle
-          ? `The reader is currently on the chapter: "${chapterCtx.chapterTitle}". Lean on that context when relevant.`
-          : 'The reader is on the book index or front matter.';
-        const messages = [
-          { role: 'system', content: SYSTEM_PROMPT + '\n\n' + ctxNote },
-          ...history,
-        ];
-        const res = await fetch(apiUrl, {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ model: 'openai', messages, referrer: 'sand-to-superintelligence' })
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 25000);
+        const res = await fetch(endpoint.url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: endpoint.model, messages, referrer: 'sand-to-superintelligence' }),
+          signal: controller.signal,
         });
+        clearTimeout(timeoutId);
         if (!res.ok) throw new Error('http ' + res.status);
         const data = await res.json();
         let answer = '';
@@ -469,8 +538,20 @@
         placeholder.textContent = answer;
         history.push({ role: 'assistant', content: answer });
       } catch (err) {
-        placeholder.innerHTML = '<em>The tutor service is temporarily unreachable. Please try again in a moment. In the meantime, the in-page <strong>search</strong> (⌘/Ctrl + K) and the <a href="' + (document.body.getAttribute('data-base') || '') + 'glossary.html">glossary</a> can answer most quick questions about anything in the book.</em>';
+        renderError(placeholder, question, attemptIdx);
       }
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const q = input.value.trim();
+      if (!q) return;
+      input.value = '';
+      append('user', q);
+      history.push({ role: 'user', content: q });
+      const placeholder = append('assistant', '');
+      renderTyping(placeholder);
+      askTutor(q, placeholder, 0);
     });
   }
 })();
