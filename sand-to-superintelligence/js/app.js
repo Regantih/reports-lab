@@ -417,12 +417,46 @@
     tutorEl.addEventListener('click', (e) => { if (e.target === tutorEl) close(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && tutorEl.getAttribute('aria-hidden') === 'false') close(); });
 
+    // Tiny safe markdown renderer for assistant turns. Escapes HTML first,
+    // then promotes a small whitelist: **bold**, *italic*, `code`, blank-line
+    // paragraphs, single-line breaks. We never inject raw HTML from the LLM.
+    const escapeHtml = (s) => s
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+    const renderMd = (raw) => {
+      let s = escapeHtml(String(raw || ''));
+      // Strip leading markdown headers (we asked the model not to use them, but
+      // some still slip through). Keep the text, drop the # marks.
+      s = s.replace(/^\s*#{1,6}\s+/gm, '');
+      // Inline code first so ** inside it is not interpreted.
+      s = s.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+      // Bold (**) before italic (*) so we do not eat the inner pair.
+      s = s.replace(/\*\*([^*\n][^*]*?)\*\*/g, '<strong>$1</strong>');
+      s = s.replace(/(^|[^*])\*([^*\n][^*]*?)\*(?!\*)/g, '$1<em>$2</em>');
+      // Paragraphs on blank lines, single newlines as line breaks.
+      const blocks = s.split(/\n{2,}/).map(b => '<p>' + b.replace(/\n/g, '<br>') + '</p>').join('');
+      return blocks;
+    };
+    const setBody = (body, text) => {
+      // Used for assistant turns and streaming updates. Renders markdown safely.
+      body.innerHTML = renderMd(text);
+    };
+
     const append = (role, text, isHtml) => {
       const wrap = document.createElement('div');
       wrap.className = 'tutor__msg tutor__msg--' + role;
       const lbl = document.createElement('div'); lbl.className = 'tutor__msg-role'; lbl.textContent = role === 'user' ? 'You' : 'Tutor';
       const body = document.createElement('div'); body.className = 'tutor__msg-body';
-      if (isHtml) body.innerHTML = text; else body.textContent = text;
+      if (isHtml) {
+        body.innerHTML = text;
+      } else if (role === 'assistant') {
+        setBody(body, text);
+      } else {
+        body.textContent = text;
+      }
       wrap.appendChild(lbl); wrap.appendChild(body);
       log.appendChild(wrap);
       log.scrollTop = log.scrollHeight;
@@ -516,7 +550,7 @@
       ];
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 25000);
+        const timeoutId = setTimeout(() => controller.abort(), 45000);
         const res = await fetch(endpoint.url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -535,7 +569,7 @@
           answer = data.reply || data.answer;
         }
         answer = (answer || '').trim() || 'Sorry, I couldn\'t generate a response. Try rephrasing the question.';
-        placeholder.textContent = answer;
+        setBody(placeholder, answer);
         history.push({ role: 'assistant', content: answer });
       } catch (err) {
         renderError(placeholder, question, attemptIdx);
@@ -552,6 +586,323 @@
       const placeholder = append('assistant', '');
       renderTyping(placeholder);
       askTutor(q, placeholder, 0);
+    });
+
+    // ----- Public API for Learn Mode (Quiz mode rides on this module) -----
+    let quizSystemOverride = null;
+    let quizBanner = null;
+    const setQuizMode = (override, label) => {
+      quizSystemOverride = override;
+      // Reset the chat history so the quiz starts clean
+      history.length = 0;
+      log.innerHTML = '';
+      // Render a banner inside the modal
+      if (quizBanner) quizBanner.remove();
+      quizBanner = document.createElement('div');
+      quizBanner.className = 'tutor__quiz-banner';
+      const lab = document.createElement('span');
+      lab.className = 'tutor__quiz-banner-label';
+      lab.textContent = label || 'Quiz mode';
+      const exit = document.createElement('button');
+      exit.type = 'button';
+      exit.className = 'tutor__quiz-banner-exit';
+      exit.textContent = 'Exit quiz';
+      exit.addEventListener('click', () => {
+        quizSystemOverride = null;
+        if (quizBanner) { quizBanner.remove(); quizBanner = null; }
+        history.length = 0;
+        log.innerHTML = '';
+        append('assistant', 'Back to normal tutor mode. Ask me anything.');
+      });
+      quizBanner.appendChild(lab);
+      quizBanner.appendChild(exit);
+      log.parentNode.insertBefore(quizBanner, log);
+      // Override the system prompt by patching SYSTEM_PROMPT through a closure.
+      // We do this by monkey-patching askTutor's view via a shared variable read at call time.
+      window.__FSTS_TUTOR_SYSTEM_OVERRIDE__ = override;
+    };
+    // Make askTutor read the override at call time:
+    const _origAsk = askTutor;
+    // (askTutor already references SYSTEM_PROMPT; the simplest hook is to
+    //  rebuild the system message via a getter on window. We replace the
+    //  function with one that swaps in the override when present.)
+    // eslint-disable-next-line no-func-assign
+    askTutor = async function(question, placeholder, attemptIdx) {
+      attemptIdx = attemptIdx || 0;
+      const endpoint = ENDPOINTS[Math.min(attemptIdx, ENDPOINTS.length - 1)];
+      const baseSystem = window.__FSTS_TUTOR_SYSTEM_OVERRIDE__ || SYSTEM_PROMPT;
+      const ctxNote = chapterCtx.chapterTitle
+        ? `The reader is currently on the chapter: "${chapterCtx.chapterTitle}". Lean on that context when relevant.`
+        : 'The reader is on the book index or front matter.';
+      const messages = [
+        { role: 'system', content: baseSystem + '\n\n' + ctxNote },
+        ...history,
+      ];
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 45000);
+        const res = await fetch(endpoint.url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: endpoint.model, messages, referrer: 'sand-to-superintelligence' }),
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
+        if (!res.ok) throw new Error('http ' + res.status);
+        const data = await res.json();
+        let answer = '';
+        if (data && data.choices && data.choices[0] && data.choices[0].message) {
+          answer = data.choices[0].message.content || '';
+        } else if (typeof data === 'string') {
+          answer = data;
+        } else if (data && (data.reply || data.answer)) {
+          answer = data.reply || data.answer;
+        }
+        answer = (answer || '').trim() || 'Sorry, I couldn\'t generate a response. Try rephrasing the question.';
+        setBody(placeholder, answer);
+        history.push({ role: 'assistant', content: answer });
+      } catch (err) {
+        renderError(placeholder, question, attemptIdx);
+      }
+    };
+
+    const seedTurn = (text) => {
+      // Inject an initial assistant turn (the quiz's first question).
+      const placeholder = append('assistant', '');
+      renderTyping(placeholder);
+      askTutor(text || 'Begin the quiz now. Ask the first question only \u2014 do not list all five upfront.', placeholder, 0);
+      // We push the user-visible "Begin the quiz" as an internal user turn so
+      // the model knows the conversation has started.
+      history.push({ role: 'user', content: 'Begin the quiz. Ask one question at a time.' });
+    };
+
+    window.__FSTS_TUTOR__ = { open, close, setQuizMode, seedTurn };
+  }
+})();
+
+
+// =====================================================================
+// LEARN MODE  (Phase 0 — prototype on Ch 30 only)
+// Activates only on pages with [data-learn-root]. State persists per slug.
+// =====================================================================
+(function () {
+  const root = document.querySelector('[data-learn-root]');
+  if (!root) return;
+  const slug = root.getAttribute('data-learn-root');
+  const KEY = 'fsts.learn.' + slug;
+
+  // ----- State helpers -----
+  function loadState() {
+    try { return JSON.parse(localStorage.getItem(KEY) || '{}') || {}; }
+    catch (e) { return {}; }
+  }
+  function saveState(s) {
+    try { localStorage.setItem(KEY, JSON.stringify(s)); } catch (e) { /* ignore quota */ }
+  }
+  let state = loadState();
+  if (!state.predict) state.predict = null;
+  if (!state.retrieval) state.retrieval = {};
+  if (!state.ladder) state.ladder = { self: null, checks: {} };
+  if (!state.quiz) state.quiz = null;
+
+  // ===== Predict-before-reveal =====
+  const predictEl = document.querySelector('[data-predict]');
+  if (predictEl) {
+    const answerKey = predictEl.getAttribute('data-answer-key');
+    const form = predictEl.querySelector('[data-predict-form]');
+    const revealBtn = predictEl.querySelector('[data-predict-reveal]');
+    const answerEl = predictEl.querySelector('[data-predict-answer]');
+    const statusEl = predictEl.querySelector('[data-predict-status]');
+    const rateBtns = predictEl.querySelectorAll('[data-rate]');
+
+    // Restore prior selection + reveal state if any
+    if (state.predict && state.predict.choice) {
+      const radio = form.querySelector(`input[value="${state.predict.choice}"]`);
+      if (radio) radio.checked = true;
+      revealBtn.disabled = false;
+      if (state.predict.revealed) {
+        answerEl.hidden = false;
+        statusEl.textContent = state.predict.choice === answerKey ? 'You picked the right OOM.' : 'See answer below.';
+      }
+      if (state.predict.rating) {
+        const btn = predictEl.querySelector(`[data-rate="${state.predict.rating}"]`);
+        if (btn) btn.setAttribute('aria-pressed', 'true');
+      }
+    }
+
+    form.addEventListener('change', (e) => {
+      const sel = form.querySelector('input:checked');
+      if (sel) {
+        revealBtn.disabled = false;
+        state.predict = Object.assign({}, state.predict, { choice: sel.value, ts: Date.now() });
+        saveState(state);
+      }
+    });
+    revealBtn.addEventListener('click', () => {
+      const sel = form.querySelector('input:checked');
+      if (!sel) return;
+      answerEl.hidden = false;
+      statusEl.textContent = sel.value === answerKey ? 'You picked the right OOM.' : 'See answer below.';
+      state.predict = Object.assign({}, state.predict, { revealed: true });
+      saveState(state);
+    });
+    rateBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        rateBtns.forEach(b => b.removeAttribute('aria-pressed'));
+        btn.setAttribute('aria-pressed', 'true');
+        state.predict = Object.assign({}, state.predict, { rating: btn.getAttribute('data-rate') });
+        saveState(state);
+      });
+    });
+  }
+
+  // ===== Retrieval prompts =====
+  document.querySelectorAll('[data-retrieval-item]').forEach(item => {
+    const id = item.getAttribute('data-id');
+    const revealBtn = item.querySelector('[data-retrieval-reveal]');
+    const answerEl = item.querySelector('[data-retrieval-answer]');
+    const rateBtns = item.querySelectorAll('[data-rate]');
+    const prior = state.retrieval[id];
+    if (prior && prior.revealed) {
+      answerEl.hidden = false;
+      revealBtn.disabled = true;
+    }
+    if (prior && prior.rating) {
+      const b = item.querySelector(`[data-rate="${prior.rating}"]`);
+      if (b) b.setAttribute('aria-pressed', 'true');
+    }
+    revealBtn.addEventListener('click', () => {
+      answerEl.hidden = false;
+      revealBtn.disabled = true;
+      state.retrieval[id] = Object.assign({}, state.retrieval[id], { revealed: true });
+      saveState(state);
+    });
+    rateBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        rateBtns.forEach(b => b.removeAttribute('aria-pressed'));
+        btn.setAttribute('aria-pressed', 'true');
+        state.retrieval[id] = Object.assign({}, state.retrieval[id], { rating: btn.getAttribute('data-rate'), ts: Date.now() });
+        saveState(state);
+      });
+    });
+  });
+
+  // ===== Maturity ladder =====
+  const ladderEl = document.querySelector('[data-ladder]');
+  if (ladderEl) {
+    const toggle = ladderEl.querySelector('[data-ladder-toggle]');
+    const panel = ladderEl.querySelector('[data-ladder-panel]');
+    const dots = ladderEl.querySelectorAll('[data-ladder-set]');
+    const checks = ladderEl.querySelectorAll('[data-ladder-check]');
+
+    function paintSelf(level) {
+      dots.forEach(d => {
+        const n = parseInt(d.getAttribute('data-ladder-set'), 10);
+        if (n === level) d.setAttribute('aria-current', 'true');
+        else d.removeAttribute('aria-current');
+      });
+    }
+    function paintChecks() {
+      checks.forEach(cb => {
+        const n = cb.getAttribute('data-ladder-check');
+        const passed = !!state.ladder.checks[n];
+        cb.checked = passed;
+        const row = cb.closest('.ladder__row');
+        if (row) row.setAttribute('data-passed', passed ? 'true' : 'false');
+      });
+    }
+
+    if (state.ladder.self) paintSelf(state.ladder.self);
+    paintChecks();
+
+    toggle.addEventListener('click', () => {
+      const open = panel.hidden;
+      panel.hidden = !open;
+      toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    dots.forEach(d => {
+      d.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const n = parseInt(d.getAttribute('data-ladder-set'), 10);
+        state.ladder.self = (state.ladder.self === n) ? null : n;
+        saveState(state);
+        paintSelf(state.ladder.self);
+      });
+    });
+    checks.forEach(cb => {
+      cb.addEventListener('change', () => {
+        const n = cb.getAttribute('data-ladder-check');
+        state.ladder.checks[n] = !!cb.checked;
+        saveState(state);
+        paintChecks();
+      });
+    });
+  }
+
+  // ===== Quiz Mode (rides on existing tutor) =====
+  const quizBtn = document.querySelector('[data-quiz-open]');
+  if (quizBtn) {
+    quizBtn.addEventListener('click', () => {
+      const tutor = window.__FSTS_TUTOR__;
+      if (!tutor || !tutor.setQuizMode) {
+        // Tutor module did not initialise (no [data-tutor] on page). Fail soft.
+        alert('Tutor is not available on this page.');
+        return;
+      }
+      const chapterTitle = document.body.getAttribute('data-chapter-title') || 'this chapter';
+      const slug = document.querySelector('[data-learn-root]');
+      const slugId = slug ? slug.getAttribute('data-learn-root') : '';
+
+      // Per-chapter anchors keep the LLM tethered to what the chapter actually
+      // covers. Without this, models hallucinate \u201cprimary figure referenced\u201d
+      // style questions that have nothing to do with the content.
+      const ANCHORS = {
+        '30-one-thought':
+          'CHAPTER ANCHORS \u2014 the chapter walks one prompt through one inference on a frontier model. ' +
+          'The spine is: tokenize (tiktoken / SentencePiece) \u2192 embedding lookup (vocab \u00d7 hidden_dim, ' +
+          'e.g. ~100k \u00d7 ~16k) \u2192 ~80 transformer blocks, each: LayerNorm \u2192 Q/K/V projections \u2192 ' +
+          'QK\u1d40 attention \u2192 softmax \u2192 weighted sum of V \u2192 output projection \u2192 MLP \u2192 residual ' +
+          '\u2192 unembedding (hidden_dim \u00d7 vocab) \u2192 logits \u2192 softmax \u2192 sample (argmax / top-k / ' +
+          'top-p / temperature). KV caching stores past K and V so only the new token does a fresh forward ' +
+          'pass instead of recomputing the prefix. Numerical anchors: ~10\u00b9\u2075 multiplications per ' +
+          'generated token, ~50 ms wall time per token, ~1 J energy per token on a frontier system. ' +
+          'Author quote: \u201ca quadrillion multiplications happen in roughly the time it takes you to blink.\u201d ' +
+          'Steel-man territory: beam search vs sampling, MoE routing efficiency, speculative decoding, ' +
+          'KV-cache compression. STAY ON THESE TOPICS. Do not invent characters, authors, or anecdotes ' +
+          'that are not part of this content.',
+      };
+      const anchorBlock = ANCHORS[slugId] || '';
+
+      const QUIZ_PROMPT =
+        'You are quizzing the reader on the chapter "' + chapterTitle + '" from ' +
+        '\u201cFrom Sand to Superintelligence\u201d.\n\n' +
+        anchorBlock + (anchorBlock ? '\n\n' : '') +
+        'RULES:\n' +
+        '\u2022 Ask EXACTLY 5 questions, ONE AT A TIME. Wait for the reader\u2019s answer ' +
+        'before asking the next.\n' +
+        '\u2022 Every question must be answerable from the chapter content above. Do NOT ask ' +
+        'about people, dates, or anecdotes unless they appear in the anchors. If you cannot ' +
+        'tie a question to the anchors, pick a different question.\n' +
+        '\u2022 Mix the five types in this order: Q1 factual (a definition or named ' +
+        'mechanism from the spine), Q2 numerical (use one of ~10\u00b9\u2075 / ~50 ms / ~1 J / ' +
+        'embedding shape / ~80 blocks), Q3 conceptual (why does X work \u2014 e.g. KV caching, ' +
+        'softmax, residual stream), Q4 synthetic (\u201cif vocab doubles to 200k, what changes ' +
+        'downstream?\u201d style), Q5 steel-man (\u201cwhat is the strongest argument the ' +
+        'autoregressive picture is incomplete?\u201d).\n' +
+        '\u2022 After each answer, your reply MUST contain TWO parts in this order: ' +
+        '(a) a 2-sentence assessment of what is right and what is missing, ' +
+        '(b) the NEXT numbered question. Do not stop after the assessment. ' +
+        'Only after Q5 has been answered do you skip the next-question step and ' +
+        'instead give the L1\u2013L4 rating. Be calibrated, not encouraging. No \u201cgreat job\u201d.\n' +
+        '\u2022 After all 5 are answered, propose an L1\u2013L4 rating (L1 Curious, ' +
+        'L2 Practitioner, L3 Expert, L4 Research-grade) with one-sentence reasoning anchored ' +
+        'in their answers.\n' +
+        '\u2022 Format: open each question with **Q1 \u00b7 factual**, **Q2 \u00b7 numerical**, etc. ' +
+        'Bold the prompt only. Keep prose tight. No markdown headers (#).';
+      tutor.open();
+      tutor.setQuizMode(QUIZ_PROMPT, 'Quiz mode \u00b7 5 questions, calibrated rating');
+      // Seed the conversation so the model asks Q1.
+      tutor.seedTurn();
     });
   }
 })();

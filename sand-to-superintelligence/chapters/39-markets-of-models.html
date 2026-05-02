@@ -33,13 +33,15 @@
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
-<main class="page">
+<main class="page" data-learn-root="39-markets-of-models">
+  
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 39 of 42</div>
     <div class="ch-header__num">Chapter 39</div>
     <h1 class="ch-header__title">Markets of Models</h1>
     <p class="ch-header__dek">Routing, price-per-token, and the commoditization layer</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">~95%</div><div class="stat__label">drop in inference cost per token, frontier-class quality, 2023-2026</div></div><div class="stat"><div class="stat__num">~12-20</div><div class="stat__label">models a typical production routing layer chooses between</div></div><div class="stat"><div class="stat__num">~30%</div><div class="stat__label">share of API traffic at major aggregators that goes through routers</div></div></div>
+    
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -63,6 +65,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -211,6 +214,7 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 39.1</span><span class="text">A routing layer: incoming requests are tagged with capability and budget requirements, then auctioned across providers on a curve of price, quality, and latency. Different requests hit different models in the same product, second by second.</span></figcaption>
     </figure>
+      
     </article>
   </div>
 

@@ -33,13 +33,43 @@
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
-<main class="page">
+<main class="page" data-learn-root="30-one-thought">
+  <section class="learn predict reveal" data-predict data-slug="30-one-thought" data-answer-key="c">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — about how many multiplications happen in the silicon to generate one token from a frontier model?</h2>
+  <p class="learn__hint">Pick the order of magnitude. The chapter will tell you whether you were close.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-30-one-thought" value="a"><span>~10⁹ (a billion)</span></label><label class="predict__choice"><input type="radio" name="predict-30-one-thought" value="b"><span>~10¹² (a trillion)</span></label><label class="predict__choice"><input type="radio" name="predict-30-one-thought" value="c"><span>~10¹⁵ (a quadrillion)</span></label><label class="predict__choice"><input type="radio" name="predict-30-one-thought" value="d"><span>~10¹⁸ (a quintillion)</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>~10<sup>15</sup> — a quadrillion multiplications</strong> per generated token, on a frontier system. The chapter’s stat row puts it next to ~50 ms of wall time and ~1 J of energy.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 30 of 42</div>
     <div class="ch-header__num">Chapter 30</div>
     <h1 class="ch-header__title">A Thought, Token by Token</h1>
     <p class="ch-header__dek">Tracing one inference through the silicon</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">~10<sup>15</sup></div><div class="stat__label">multiplications per generated token</div></div><div class="stat"><div class="stat__num">~50 <em>ms</em></div><div class="stat__label">wall time, on a frontier system</div></div><div class="stat"><div class="stat__num">~1 <em>J</em></div><div class="stat__label">energy spent producing one token</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="30-one-thought">
+  <button type="button" class="ladder__bar" data-ladder-toggle aria-expanded="false">
+    <span class="ladder__bar-label">My mastery on this chapter</span>
+    <span class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to L1"><span class="ladder__dot-num">L1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to L2"><span class="ladder__dot-num">L2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to L3"><span class="ladder__dot-num">L3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to L4"><span class="ladder__dot-num">L4</span><span class="ladder__dot-name">Research-grade</span></button></span>
+    <span class="ladder__bar-caret" aria-hidden="true">▾</span>
+  </button>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <ol class="ladder__list"><li class="ladder__row" data-level="1"><div class="ladder__row-head"><span class="ladder__row-num">L1 · Curious</span><label class="ladder__check"><input type="checkbox" data-ladder-check="1"><span>I can do this check</span></label></div><p class="ladder__row-text">Read the chapter (or follow the audio). When you hit the autoregressive loop, name the four artifacts produced per step: logits, probability distribution, sampled token, updated KV cache.</p></li><li class="ladder__row" data-level="2"><div class="ladder__row-head"><span class="ladder__row-num">L2 · Practitioner</span><label class="ladder__check"><input type="checkbox" data-ladder-check="2"><span>I can do this check</span></label></div><p class="ladder__row-text">Without looking, explain the autoregressive loop to a peer in 5 minutes. Cover: tokenize → embed → 80 blocks → unembed → softmax → sample → append → repeat. Hit KV caching unprompted.</p></li><li class="ladder__row" data-level="3"><div class="ladder__row-head"><span class="ladder__row-num">L3 · Expert</span><label class="ladder__check"><input type="checkbox" data-ladder-check="3"><span>I can do this check</span></label></div><p class="ladder__row-text">A skeptical interviewer asks: ‘Doesn’t beam search invalidate this whole picture?’ Respond in 90 seconds. Pass: you note that beam search keeps multiple candidate sequences alive, multiplying memory and KV-cache cost per beam, and that production inference systems usually use sampling (not beam search) partly for this reason.</p></li><li class="ladder__row" data-level="4"><div class="ladder__row-head"><span class="ladder__row-num">L4 · Research-grade</span><label class="ladder__check"><input type="checkbox" data-ladder-check="4"><span>I can do this check</span></label></div><p class="ladder__row-text">Pick one open question in inference economics — speculative decoding, MoE routing efficiency, or KV-cache compression. State, in three sentences, what is currently unsettled and what your defensible take is.</p></li></ol>
+    <p class="ladder__note">Self-rating is anchored to the check task, not to a feeling. Tap a dot above to set your level.</p>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -63,6 +93,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -207,6 +238,69 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 30.1</span><span class="text">One thought, end to end. Text becomes tokens, tokens become vectors, vectors flow through eighty transformer blocks, the last vector becomes a probability over the vocabulary, and one token is sampled. Then the loop closes and the cycle repeats.</span></figcaption>
     </figure>
+      <section class="learn retrieval reveal" data-retrieval data-slug="30-one-thought">
+  <div class="learn__eyebrow">Three checks before you move on</div>
+  <h2 class="learn__title">Retrieval</h2>
+  <p class="learn__hint">Try each before you reveal. The friction is the point.</p>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What does the model do <em>first</em> with the user’s prompt text, and what does that step output?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">It <strong>tokenizes</strong> the text using a learned subword scheme like tiktoken or SentencePiece, producing a sequence of integer token IDs (each in the range 0–~vocab_size). Each ID then indexes the embedding table to produce a hidden_dim-sized vector per token. From that point on, the prompt no longer exists as text — only as vectors.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed it</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does key-value caching matter in the autoregressive loop? What would happen without it?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Without KV caching, every new generated token would require a fresh forward pass over the entire growing prefix — the cost per token would scale with context length. With caching, previous tokens’ K and V tensors are reused; only the new token gets a fresh forward pass. This is what makes long generations economically viable. The cost is memory: the KV cache itself can be tens of GB at long context lengths.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed it</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">If the unembedding matrix were doubled in width (vocab size 200,000 instead of 100,000), what would change about the final softmax step, and what downstream effect would you expect on cost-per-token?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The final projection becomes (hidden_dim × 200,000) instead of (hidden_dim × 100,000) — twice the matmul cost in the last layer and twice the memory bandwidth to read those weights. The softmax doubles in work too. Marginal effect on total cost is small (the 80 transformer blocks dominate FLOPs), but bandwidth-bound systems feel it more than compute-bound systems. A wider vocab tends to produce shorter token sequences for the same text, which can cancel some of the per-token cost increase.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed it</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="30-one-thought-drills.html">10 drill cards for spaced repetition →</a>
+  </div>
+</section>
     </article>
   </div>
 

@@ -1,0 +1,10 @@
+What is a 'token' in the context of a frontier LLM?	A vocabulary unit — a subword piece — produced by a learned tokenizer like tiktoken or SentencePiece. Encoded as an integer in the range 0 to ~vocab_size.
+Roughly how many multiplications per generated token on a frontier model?	~10^15 (one quadrillion).
+Roughly how much wall-clock time per token, on a frontier system?	~50 ms.
+Roughly how much energy per generated token?	~1 joule.
+What is the embedding table's shape?	(vocab_size × hidden_dim), e.g. ~100,000 × ~16,000.
+What three tensors does attention compute from the input?	Queries (Q), keys (K), and values (V), each via a linear projection of the input.
+What does the QK^T matrix represent, post-softmax?	A weighted attention pattern: how much each token should attend to every other token.
+What does the unembedding step produce?	Logits — one real number per vocabulary entry — which softmax converts into a probability distribution.
+Why does KV caching speed up the autoregressive loop?	Previous tokens' K and V tensors are cached, so only the new token requires a fresh forward pass instead of recomputing the entire prefix.
+Name 4 sampling rules used at the softmax-to-token step.	Argmax (greedy), top-k, top-p (nucleus), temperature-scaled sampling.
