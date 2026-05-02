@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 12 · CoWoS and the 2.5D Revolution — From Sand to Superintelligence</title>
+<meta name="description" content="TSMC's chip-on-wafer-on-substrate packaging is the unsung hero of modern AI — and the bottleneck holding it back.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="12-cowos-hbm" data-chapter-title="CoWoS and the 2.5D Revolution">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-quartz", "title": "The Mineral", "subtitle": "Quartz, purity, and why ordinary sand can't think"}, {"num": "02", "slug": "02-fire-and-carbon", "title": "Fire and Carbon", "subtitle": "Smelting metallurgical-grade silicon at 1,700\u00b0C"}, {"num": "03", "slug": "03-nine-nines", "title": "The Nine-Nines Problem", "subtitle": "Polysilicon and the Siemens process"}, {"num": "04", "slug": "04-czochralski", "title": "Growing a Perfect Crystal", "subtitle": "The Czochralski dance"}, {"num": "05", "slug": "05-wafers", "title": "From Log to Mirror", "subtitle": "Slicing, lapping, and chemical-mechanical polish"}, {"num": "06", "slug": "06-design", "title": "Designing the Impossible", "subtitle": "EDA, transistors, and 15,000 engineer-years"}, {"num": "07", "slug": "07-deposition", "title": "Painting with Atoms", "subtitle": "CVD, ALD, PVD and the art of thin films"}, {"num": "08", "slug": "08-euv", "title": "Light at 13.5 Nanometers", "subtitle": "EUV lithography \u2014 the most complex machine ever built"}, {"num": "09", "slug": "09-etch-and-implant", "title": "Carving and Doping", "subtitle": "Plasma etch and ion implantation"}, {"num": "10", "slug": "10-interconnects", "title": "The Wiring Sky", "subtitle": "Fifteen layers of copper, dancing on a postage stamp"}, {"num": "11", "slug": "11-test-and-dice", "title": "Test and Dice", "subtitle": "Yield, the industry's most guarded secret"}, {"num": "12", "slug": "12-cowos-hbm", "title": "CoWoS and the 2.5D Revolution", "subtitle": "How HBM4 sits a hair's breadth from the GPU"}, {"num": "13", "slug": "13-vera-rubin-superchip", "title": "The Vera Rubin Superchip", "subtitle": "Two GPUs, one CPU, 1.8 TB/s between them"}, {"num": "14", "slug": "14-nvl72", "title": "The NVL72 Rack", "subtitle": "72 GPUs that move data faster than the internet"}, {"num": "15", "slug": "15-burn-in", "title": "Burn-In and Reliability", "subtitle": "Stress-testing chips into honesty"}, {"num": "16", "slug": "16-ai-factory", "title": "The AI Factory", "subtitle": "SuperPODs, exaflops, and the new economy of intelligence"}, {"num": "17", "slug": "17-electron-choice", "title": "The Electron's Choice", "subtitle": "Band gaps, doping, and what \u201csemiconductor\u201d really means"}, {"num": "18", "slug": "18-transistor-valve", "title": "The Transistor as a Valve", "subtitle": "How a gate voltage opens a channel"}, {"num": "19", "slug": "19-switch-to-logic", "title": "From Switch to Logic", "subtitle": "NAND, NOR, and the universality theorem"}, {"num": "20", "slug": "20-adder-and-memory", "title": "Adders, Latches, Memory", "subtitle": "From half-adder to ALU; the bit that remembers"}, {"num": "21", "slug": "21-the-clock", "title": "The Clock", "subtitle": "Synchrony, pipelining, and the heartbeat that makes a chip go"}, {"num": "22", "slug": "22-fetch-decode-execute", "title": "Fetch, Decode, Execute", "subtitle": "The instruction cycle and a CPU's to-do list"}, {"num": "23", "slug": "23-isa", "title": "From Transistors to ISA", "subtitle": "The contract between hardware and software"}, {"num": "24", "slug": "24-memory-pyramid", "title": "Memory's Pyramid", "subtitle": "Registers, caches, DRAM, and the tyranny of distance"}, {"num": "25", "slug": "25-boot", "title": "Boot", "subtitle": "The first second of a chip's life"}, {"num": "26", "slug": "26-os-conductor", "title": "The OS as Conductor", "subtitle": "Processes, virtual memory, and the illusion of plenty"}, {"num": "27", "slug": "27-compilers", "title": "The Translation Stack", "subtitle": "Python to bytecode to LLVM to silicon"}, {"num": "28", "slug": "28-gpu-mind", "title": "The GPU's Different Mind", "subtitle": "SIMT, warps, and tensor cores"}, {"num": "29", "slug": "29-network-in-numbers", "title": "A Neural Network Lives in Numbers", "subtitle": "Weights as DRAM, thought as matrix multiply"}, {"num": "30", "slug": "30-one-thought", "title": "A Thought, Token by Token", "subtitle": "Tracing one inference through the silicon"}, {"num": "31", "slug": "31-second-wire", "title": "The Second Wire", "subtitle": "When models start talking to each other"}, {"num": "32", "slug": "32-tokens-on-wire", "title": "Tokens on the Wire", "subtitle": "What flows when intelligence is the payload"}, {"num": "33", "slug": "33-latency", "title": "Latency Is Cognition", "subtitle": "Why milliseconds decide what a model can think about"}, {"num": "34", "slug": "34-agents", "title": "Agents", "subtitle": "The loop that turns a model into a worker"}, {"num": "35", "slug": "35-swarm", "title": "Swarm", "subtitle": "Many agents, one outcome"}, {"num": "36", "slug": "36-protocols", "title": "Protocols of Trust", "subtitle": "MCP, A2A, and the standards quietly being negotiated"}, {"num": "37", "slug": "37-memory-commons", "title": "The Memory Commons", "subtitle": "Vector databases and the shared substrate of recall"}, {"num": "38", "slug": "38-browser-worker", "title": "The Browser Becomes the Worker", "subtitle": "When the agent operates the same software you do"}, {"num": "39", "slug": "39-markets-of-models", "title": "Markets of Models", "subtitle": "Routing, price-per-token, and the commoditization layer"}, {"num": "40", "slug": "40-compounding", "title": "The Compounding", "subtitle": "Data, evals, and the flywheels that decide who wins"}, {"num": "41", "slug": "41-value-reroutes", "title": "Where Value Reroutes", "subtitle": "Who wins, who is squeezed, who is materially losing"}, {"num": "42", "slug": "42-loom", "title": "The Loom", "subtitle": "Epilogue II \u2014 networks of intelligence as the new fabric"}]; window.__SIDENOTES__ = {"valence electrons": "Electrons in an atom's outermost shell \u2014 the ones available for chemical bonding.", "eV": "Electron-volt: the energy gained by one electron crossing a 1-volt potential. The natural unit for atomic-scale physics.", "thermal energy": "Random kinetic energy of particles due to temperature. At room temperature, \u2248 0.026 eV per particle.", "p-n junction": "The boundary between p-type and n-type silicon. The building block of every diode and transistor.", "MOSFET": "Metal-Oxide-Semiconductor Field-Effect Transistor \u2014 the dominant kind of transistor in modern chips.", "tensor cores": "Specialized GPU units that multiply small matrix tiles (e.g. 16\u00d716) as a single instruction.", "warp": "A group of 32 GPU threads that execute the same instruction in lockstep.", "MMU": "Memory Management Unit \u2014 the hardware that translates virtual to physical addresses.", "TLB": "Translation Look-aside Buffer \u2014 a small hardware cache of recent address translations.", "cache line": "The unit of memory motion between cache levels \u2014 typically 64 bytes.", "page table": "A tree of mappings from virtual to physical pages, walked by the MMU on every memory access.", "LLVM IR": "An intermediate representation used by Clang, Rust, Swift, and many other compilers.", "system call": "A controlled trap from a user program into the OS kernel.", "context switch": "Saving one process's state and loading another's. Costs a few microseconds.", "BF16": "Brain Floating Point 16 \u2014 a 16-bit format with FP32's exponent range; standard for AI training.", "FP8": "An 8-bit floating-point format used to halve memory and double throughput in modern AI workloads.", "softmax": "A function that turns a vector of real numbers into a probability distribution.", "KV caching": "Storing past Key/Value tensors so an autoregressive model only has to process new tokens.", "autoregressive": "Generating one token at a time, feeding each output back as input for the next step.", "Czochralski": "The process of growing a single silicon crystal by pulling a seed upward from a melt.", "EUV": "Extreme Ultraviolet light at 13.5 nm wavelength, used for the finest chip patterning.", "HBM": "High-Bandwidth Memory \u2014 DRAM dies stacked vertically and bonded next to a GPU.", "CoWoS": "Chip-on-Wafer-on-Substrate \u2014 TSMC's 2.5D packaging that puts GPU and HBM on one interposer.", "NVLink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect, faster than PCIe.", "locality of reference": "The empirical fact that programs reuse recent locations (temporal) and access nearby ones (spatial).", "occupancy": "On a GPU, the ratio of active warps to the maximum possible \u2014 a key metric for hiding latency.", "memory wall": "The widening gap between fast CPU cycles and slow DRAM access \u2014 the central problem of modern architecture.", "SIMT": "Single Instruction, Multiple Threads \u2014 NVIDIA's GPU execution model.", "page fault": "An exception raised when a program touches a virtual address whose physical page isn't present.", "agent": "A model placed in a loop with tools, memory, and a goal \u2014 capable of multi-step action without per-step prompting.", "embedding": "A learned vector representation of text (or other data) where similar meanings sit nearby in vector space.", "RAG": "Retrieval-Augmented Generation \u2014 pulling relevant chunks from a vector store into the prompt before the model answers.", "MCP": "Model Context Protocol \u2014 Anthropic's open standard for letting models talk to external tools and data sources.", "A2A": "Agent-to-Agent protocol \u2014 Google's open standard for letting one agent invoke another over the network.", "vector database": "A datastore (FAISS, pgvector, Pinecone, Weaviate) optimized for nearest-neighbor search over embeddings.", "function calling": "A model's ability to emit a structured tool invocation (name + JSON arguments) instead of free text.", "swarm": "A coordinated group of agents (planner, researchers, writers, critics) that share state and aim at one outcome.", "routing": "Choosing which model to send a request to based on price, latency, or capability \u2014 the new commoditization layer above model APIs.", "latency budget": "The total time an agent has to think and act before the user gives up. Each step in the loop spends part of it.", "context window": "The maximum number of tokens a model can attend to at once. The price of one full window is the unit cost of one 'thought'.", "token": "The unit a language model reads and writes \u2014 roughly three characters of English on average."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Sand to Superintelligence<span class="brand__sub"> — a visual journey</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 12 of 42</div>
+    <div class="ch-header__num">Chapter 12</div>
+    <h1 class="ch-header__title">CoWoS and the 2.5D Revolution</h1>
+    <p class="ch-header__dek">How HBM4 sits a hair's breadth from the GPU</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">288 <em>GB</em></div><div class="stat__label">HBM4 per Rubin GPU</div></div><div class="stat"><div class="stat__num">22.2 <em>TB/s</em></div><div class="stat__label">memory bandwidth per chip</div></div><div class="stat"><div class="stat__num">8</div><div class="stat__label">DRAM dies per HBM4 stack</div></div><div class="stat"><div class="stat__num">2,048-bit</div><div class="stat__label">HBM4 interface width</div></div></div>
+    <div class="toolbar reveal">
+      <button class="toolbar__btn" data-audio-toggle type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#memory-wall">The memory wall</a></li><li><a href="#hbm">HBM — stacking memory like books</a></li><li><a href="#interposer">The silicon interposer</a></li><li><a href="#cowos">TSMC's CoWoS</a></li><li><a href="#the-bottleneck">The packaging bottleneck</a></li></ul></aside>
+    <article class="prose">
+      
+<p class="lede">A modern AI workload is not bottlenecked by computation. It is bottlenecked by <strong>memory</strong>. Training or inferring a large language model means moving billions of parameter values back and forth between compute and storage, again and again, billions of times per second. The compute is fast. The arithmetic is fast. The bottleneck is whether the next batch of weights can arrive at the multiplier in time.</p>
+
+<p>This is the <strong>memory wall</strong>, and it has existed in some form for thirty years. What has changed, in the last decade, is the willingness to break it.</p>
+
+<h2 id="memory-wall">The memory wall</h2>
+
+<p>For most of the history of computing, memory has been a separate chip in a separate package on a separate part of the motherboard, connected to the processor by traces on a printed circuit board. Those traces are inches long. They have parasitic capacitance and inductance. They cannot be made arbitrarily wide because the package only has so many pins. The combination — long, narrow paths between processor and memory — has held memory bandwidth orders of magnitude below what the processor could use.</p>
+
+<p>For AI, this gap became unsupportable. By the late 2010s, GPU compute was outrunning memory bandwidth so badly that frontier models were being designed around memory access patterns rather than compute primitives. The fix had to be radical.</p>
+
+<h2 id="hbm">HBM — stacking memory like books</h2>
+
+<p>The fix was <strong>High-Bandwidth Memory</strong>: instead of putting memory on its own PCB-mounted chip, you stack DRAM dies vertically and place them, as a unit, immediately next to the processor. Eight DRAM dies stacked on a base logic die, all bonded together by tens of thousands of <strong>through-silicon vias</strong> (TSVs) that pierce each die from top to bottom. The whole stack is barely a millimeter thick, contains tens of gigabytes of memory, and exposes a 1,024-bit-wide interface in the original HBM. <a href="https://introl.com/blog/nvidia-vera-rubin-platform-8-exaflops-infrastructure">By HBM4, the interface has doubled to 2,048 bits.</a></p>
+
+<p>For Rubin, each GPU is paired with multiple HBM4 stacks delivering a combined <strong>288 GB of memory at 22.2 TB/s</strong>. That bandwidth — twenty-two terabytes per second, per chip — is roughly one hundred times what a desktop CPU can manage from its DDR5 DIMMs. It is the single most important enabler of frontier AI.</p>
+
+<h2 id="interposer">The silicon interposer</h2>
+
+<p>HBM solves the vertical wiring problem, but you still have to connect the HBM to the GPU. The connection cannot use ordinary package wiring — there are too many signals, and the signals are too fast. The solution is a separate <strong>silicon interposer</strong>: a piece of plain, passive silicon, perhaps 2,500 square millimeters, with thousands of fine wires patterned on its top surface and through-silicon vias piercing it from top to bottom.</p>
+
+<p>The GPU die sits on the interposer. The HBM stacks sit on the interposer beside it. Each is connected to the interposer with thousands of <strong>micro-bumps</strong> — tiny copper-tin pillars that solder die to interposer at extraordinarily fine pitch. Signals between GPU and HBM travel through the interposer's wiring, which behaves electrically like a small piece of silicon chip: low capacitance, low inductance, very high density. The trip from GPU to memory and back is reduced from inches to a few millimeters of silicon.</p>
+
+<h2 id="cowos">TSMC's CoWoS</h2>
+
+<p>The packaging technology that integrates all of this is called <a href="https://anysilicon.com/cowos-package/"><strong>CoWoS</strong></a> — Chip-on-Wafer-on-Substrate. The naming describes the assembly order:</p>
+
+<ul>
+  <li><strong>Chip on Wafer</strong>: the GPU die and the HBM stacks are bonded to a silicon interposer wafer using micro-bumps. After bonding, the interposer wafer carries an array of small chip-stacks across its surface.</li>
+  <li><strong>Wafer on Substrate</strong>: the interposer wafer is then bonded to a larger organic substrate — the part of the package that will eventually attach to a printed circuit board — using a coarser pitch of bumps. The interposer is then thinned (its TSVs are exposed by polishing the back) and the assembled module is cut from the wafer and packaged.</li>
+</ul>
+
+<p>It is a 2.5D architecture: not quite stacked all the way (3D), not quite flat (2D), but a deliberate hybrid that gets most of the benefit of vertical integration without the thermal nightmare of stacking compute on compute.</p>
+
+<h2 id="the-bottleneck">The packaging bottleneck</h2>
+
+<p>For all its sophistication, CoWoS has a problem: it is hard to make. Each interposer is itself a piece of silicon manufacturing. Each HBM stack is its own miniature chip-on-chip assembly. The micro-bump bonding requires alignment to within microns. Yield matters here too — a single bad bond among thousands ruins an entire $30,000 package.</p>
+
+<p>TSMC's CoWoS capacity has, since 2023, been the binding constraint on AI hardware shipments. Adding capacity is slow because every step is custom: new equipment, new process recipes, new training. NVIDIA's allocation of CoWoS capacity is one of the most carefully negotiated quantities in the industry. <a href="https://newsletter.semianalysis.com/p/vera-rubin-extreme-co-design-an-evolution">Roadmaps are paced by it.</a> Frontier model training plans are paced by it.</p>
+
+<p>The quiet truth of modern AI is that the rate-limiting step is not silicon. It is the silicon-on-silicon-on-substrate assembly that comes after silicon. It is, of all things, packaging.</p>
+
+      <figure class="figure figure--wide reveal" id="figure">
+      <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 420" role="img" aria-label="Cross-section of CoWoS package: GPU and HBM dies on a silicon interposer above an organic substrate">
+  <text x="40" y="30" class="label-display" font-size="15">CoWoS — chip on wafer on substrate</text>
+  <text x="40" y="50" font-size="11" fill="var(--color-text-muted)">A silicon interposer welds GPU + memory into a single tile. Wires shrink from millimeters to microns.</text>
+  <!-- substrate (organic) -->
+  <rect x="60" y="320" width="680" height="40" fill="var(--color-accent-copper)" fill-opacity="0.4" stroke="var(--color-text)"/>
+  <text x="74" y="345" font-size="10" font-family="var(--font-mono)" fill="var(--color-text)">organic substrate (FR-4 / build-up)</text>
+  <!-- BGA balls -->
+  <g fill="var(--color-text)"><circle cx="90" cy="380" r="7"/><circle cx="140" cy="380" r="7"/><circle cx="190" cy="380" r="7"/><circle cx="240" cy="380" r="7"/><circle cx="290" cy="380" r="7"/><circle cx="340" cy="380" r="7"/><circle cx="390" cy="380" r="7"/><circle cx="440" cy="380" r="7"/><circle cx="490" cy="380" r="7"/><circle cx="540" cy="380" r="7"/><circle cx="590" cy="380" r="7"/><circle cx="640" cy="380" r="7"/><circle cx="690" cy="380" r="7"/><circle cx="740" cy="380" r="7"/></g>
+  <!-- silicon interposer -->
+  <rect x="100" y="240" width="600" height="80" fill="var(--color-primary)" fill-opacity="0.35" stroke="var(--color-primary)" stroke-width="1"/>
+  <text x="120" y="290" font-size="11" font-family="var(--font-display)" font-style="italic" fill="var(--color-primary)">silicon interposer (passive Si wafer with TSVs + RDL)</text>
+  <!-- TSVs (vertical lines through interposer) -->
+  <g stroke="var(--color-text)" stroke-width="0.8"><line x1="120" y1="240" x2="120" y2="320"/><line x1="142" y1="240" x2="142" y2="320"/><line x1="164" y1="240" x2="164" y2="320"/><line x1="186" y1="240" x2="186" y2="320"/><line x1="208" y1="240" x2="208" y2="320"/><line x1="230" y1="240" x2="230" y2="320"/><line x1="252" y1="240" x2="252" y2="320"/><line x1="274" y1="240" x2="274" y2="320"/><line x1="296" y1="240" x2="296" y2="320"/><line x1="318" y1="240" x2="318" y2="320"/><line x1="340" y1="240" x2="340" y2="320"/><line x1="362" y1="240" x2="362" y2="320"/><line x1="384" y1="240" x2="384" y2="320"/><line x1="406" y1="240" x2="406" y2="320"/><line x1="428" y1="240" x2="428" y2="320"/><line x1="450" y1="240" x2="450" y2="320"/><line x1="472" y1="240" x2="472" y2="320"/><line x1="494" y1="240" x2="494" y2="320"/><line x1="516" y1="240" x2="516" y2="320"/><line x1="538" y1="240" x2="538" y2="320"/><line x1="560" y1="240" x2="560" y2="320"/><line x1="582" y1="240" x2="582" y2="320"/><line x1="604" y1="240" x2="604" y2="320"/><line x1="626" y1="240" x2="626" y2="320"/><line x1="648" y1="240" x2="648" y2="320"/><line x1="670" y1="240" x2="670" y2="320"/></g>
+  <!-- micro-bumps under interposer -->
+  <g fill="var(--color-accent-copper)"><circle cx="120" cy="324" r="3"/><circle cx="142" cy="324" r="3"/><circle cx="164" cy="324" r="3"/><circle cx="186" cy="324" r="3"/><circle cx="208" cy="324" r="3"/><circle cx="230" cy="324" r="3"/><circle cx="252" cy="324" r="3"/><circle cx="274" cy="324" r="3"/><circle cx="296" cy="324" r="3"/><circle cx="318" cy="324" r="3"/><circle cx="340" cy="324" r="3"/><circle cx="362" cy="324" r="3"/><circle cx="384" cy="324" r="3"/><circle cx="406" cy="324" r="3"/><circle cx="428" cy="324" r="3"/><circle cx="450" cy="324" r="3"/><circle cx="472" cy="324" r="3"/><circle cx="494" cy="324" r="3"/><circle cx="516" cy="324" r="3"/><circle cx="538" cy="324" r="3"/><circle cx="560" cy="324" r="3"/><circle cx="582" cy="324" r="3"/><circle cx="604" cy="324" r="3"/><circle cx="626" cy="324" r="3"/><circle cx="648" cy="324" r="3"/><circle cx="670" cy="324" r="3"/></g>
+  <!-- HBM stack 1 -->
+  <g transform="translate(140 100)">
+    <rect x="0" y="0" width="120" height="20" fill="var(--color-accent-euv)" fill-opacity="0.7" stroke="var(--color-text)"/>
+    <rect x="0" y="22" width="120" height="20" fill="var(--color-accent-euv)" fill-opacity="0.7" stroke="var(--color-text)"/>
+    <rect x="0" y="44" width="120" height="20" fill="var(--color-accent-euv)" fill-opacity="0.7" stroke="var(--color-text)"/>
+    <rect x="0" y="66" width="120" height="20" fill="var(--color-accent-euv)" fill-opacity="0.7" stroke="var(--color-text)"/>
+    <rect x="0" y="88" width="120" height="20" fill="var(--color-accent-euv)" fill-opacity="0.7" stroke="var(--color-text)"/>
+    <rect x="0" y="110" width="120" height="20" fill="var(--color-accent-euv)" fill-opacity="0.7" stroke="var(--color-text)"/>
+    <rect x="0" y="132" width="120" height="6" fill="var(--color-accent-copper)" stroke="var(--color-text)"/>
+    <text x="60" y="-6" text-anchor="middle" font-size="11" font-family="var(--font-display)" font-style="italic" fill="var(--color-text)">HBM4 stack</text>
+    <text x="60" y="155" text-anchor="middle" font-size="9" font-family="var(--font-mono)" fill="var(--color-text-muted)">8 DRAM dies + base</text>
+    <!-- TSVs -->
+    <g stroke="var(--color-text)" stroke-width="0.4">
+      <line x1="20" y1="0" x2="20" y2="138"/>
+      <line x1="40" y1="0" x2="40" y2="138"/>
+      <line x1="60" y1="0" x2="60" y2="138"/>
+      <line x1="80" y1="0" x2="80" y2="138"/>
+      <line x1="100" y1="0" x2="100" y2="138"/>
+    </g>
+  </g>
+  <!-- GPU die -->
+  <g transform="translate(300 80)">
+    <rect x="0" y="0" width="200" height="158" fill="var(--color-primary)" stroke="var(--color-text)" stroke-width="1.2"/>
+    <!-- internal grid -->
+    <g fill="var(--color-bg)" opacity="0.15"><rect x="8" y="8" width="14" height="13"/><rect x="8" y="23" width="14" height="13"/><rect x="8" y="38" width="14" height="13"/><rect x="8" y="53" width="14" height="13"/><rect x="8" y="68" width="14" height="13"/><rect x="8" y="83" width="14" height="13"/><rect x="8" y="98" width="14" height="13"/><rect x="8" y="113" width="14" height="13"/><rect x="8" y="128" width="14" height="13"/><rect x="8" y="143" width="14" height="13"/><rect x="24" y="8" width="14" height="13"/><rect x="24" y="23" width="14" height="13"/><rect x="24" y="38" width="14" height="13"/><rect x="24" y="53" width="14" height="13"/><rect x="24" y="68" width="14" height="13"/><rect x="24" y="83" width="14" height="13"/><rect x="24" y="98" width="14" height="13"/><rect x="24" y="113" width="14" height="13"/><rect x="24" y="128" width="14" height="13"/><rect x="24" y="143" width="14" height="13"/><rect x="40" y="8" width="14" height="13"/><rect x="40" y="23" width="14" height="13"/><rect x="40" y="38" width="14" height="13"/><rect x="40" y="53" width="14" height="13"/><rect x="40" y="68" width="14" height="13"/><rect x="40" y="83" width="14" height="13"/><rect x="40" y="98" width="14" height="13"/><rect x="40" y="113" width="14" height="13"/><rect x="40" y="128" width="14" height="13"/><rect x="40" y="143" width="14" height="13"/><rect x="56" y="8" width="14" height="13"/><rect x="56" y="23" width="14" height="13"/><rect x="56" y="38" width="14" height="13"/><rect x="56" y="53" width="14" height="13"/><rect x="56" y="68" width="14" height="13"/><rect x="56" y="83" width="14" height="13"/><rect x="56" y="98" width="14" height="13"/><rect x="56" y="113" width="14" height="13"/><rect x="56" y="128" width="14" height="13"/><rect x="56" y="143" width="14" height="13"/><rect x="72" y="8" width="14" height="13"/><rect x="72" y="23" width="14" height="13"/><rect x="72" y="38" width="14" height="13"/><rect x="72" y="53" width="14" height="13"/><rect x="72" y="68" width="14" height="13"/><rect x="72" y="83" width="14" height="13"/><rect x="72" y="98" width="14" height="13"/><rect x="72" y="113" width="14" height="13"/><rect x="72" y="128" width="14" height="13"/><rect x="72" y="143" width="14" height="13"/><rect x="88" y="8" width="14" height="13"/><rect x="88" y="23" width="14" height="13"/><rect x="88" y="38" width="14" height="13"/><rect x="88" y="53" width="14" height="13"/><rect x="88" y="68" width="14" height="13"/><rect x="88" y="83" width="14" height="13"/><rect x="88" y="98" width="14" height="13"/><rect x="88" y="113" width="14" height="13"/><rect x="88" y="128" width="14" height="13"/><rect x="88" y="143" width="14" height="13"/><rect x="104" y="8" width="14" height="13"/><rect x="104" y="23" width="14" height="13"/><rect x="104" y="38" width="14" height="13"/><rect x="104" y="53" width="14" height="13"/><rect x="104" y="68" width="14" height="13"/><rect x="104" y="83" width="14" height="13"/><rect x="104" y="98" width="14" height="13"/><rect x="104" y="113" width="14" height="13"/><rect x="104" y="128" width="14" height="13"/><rect x="104" y="143" width="14" height="13"/><rect x="120" y="8" width="14" height="13"/><rect x="120" y="23" width="14" height="13"/><rect x="120" y="38" width="14" height="13"/><rect x="120" y="53" width="14" height="13"/><rect x="120" y="68" width="14" height="13"/><rect x="120" y="83" width="14" height="13"/><rect x="120" y="98" width="14" height="13"/><rect x="120" y="113" width="14" height="13"/><rect x="120" y="128" width="14" height="13"/><rect x="120" y="143" width="14" height="13"/><rect x="136" y="8" width="14" height="13"/><rect x="136" y="23" width="14" height="13"/><rect x="136" y="38" width="14" height="13"/><rect x="136" y="53" width="14" height="13"/><rect x="136" y="68" width="14" height="13"/><rect x="136" y="83" width="14" height="13"/><rect x="136" y="98" width="14" height="13"/><rect x="136" y="113" width="14" height="13"/><rect x="136" y="128" width="14" height="13"/><rect x="136" y="143" width="14" height="13"/><rect x="152" y="8" width="14" height="13"/><rect x="152" y="23" width="14" height="13"/><rect x="152" y="38" width="14" height="13"/><rect x="152" y="53" width="14" height="13"/><rect x="152" y="68" width="14" height="13"/><rect x="152" y="83" width="14" height="13"/><rect x="152" y="98" width="14" height="13"/><rect x="152" y="113" width="14" height="13"/><rect x="152" y="128" width="14" height="13"/><rect x="152" y="143" width="14" height="13"/><rect x="168" y="8" width="14" height="13"/><rect x="168" y="23" width="14" height="13"/><rect x="168" y="38" width="14" height="13"/><rect x="168" y="53" width="14" height="13"/><rect x="168" y="68" width="14" height="13"/><rect x="168" y="83" width="14" height="13"/><rect x="168" y="98" width="14" height="13"/><rect x="168" y="113" width="14" height="13"/><rect x="168" y="128" width="14" height="13"/><rect x="168" y="143" width="14" height="13"/><rect x="184" y="8" width="14" height="13"/><rect x="184" y="23" width="14" height="13"/><rect x="184" y="38" width="14" height="13"/><rect x="184" y="53" width="14" height="13"/><rect x="184" y="68" width="14" height="13"/><rect x="184" y="83" width="14" height="13"/><rect x="184" y="98" width="14" height="13"/><rect x="184" y="113" width="14" height="13"/><rect x="184" y="128" width="14" height="13"/><rect x="184" y="143" width="14" height="13"/></g>
+    <text x="100" y="-10" text-anchor="middle" font-size="13" font-family="var(--font-display)" font-style="italic" fill="var(--color-primary)">Rubin GPU die</text>
+    <text x="100" y="172" text-anchor="middle" font-size="9" font-family="var(--font-mono)" fill="var(--color-text-muted)">~800 mm², ~500B transistors</text>
+  </g>
+  <!-- HBM stack 2 -->
+  <g transform="translate(540 100)">
+    <rect x="0" y="0" width="120" height="20" fill="var(--color-accent-euv)" fill-opacity="0.7" stroke="var(--color-text)"/>
+    <rect x="0" y="22" width="120" height="20" fill="var(--color-accent-euv)" fill-opacity="0.7" stroke="var(--color-text)"/>
+    <rect x="0" y="44" width="120" height="20" fill="var(--color-accent-euv)" fill-opacity="0.7" stroke="var(--color-text)"/>
+    <rect x="0" y="66" width="120" height="20" fill="var(--color-accent-euv)" fill-opacity="0.7" stroke="var(--color-text)"/>
+    <rect x="0" y="88" width="120" height="20" fill="var(--color-accent-euv)" fill-opacity="0.7" stroke="var(--color-text)"/>
+    <rect x="0" y="110" width="120" height="20" fill="var(--color-accent-euv)" fill-opacity="0.7" stroke="var(--color-text)"/>
+    <rect x="0" y="132" width="120" height="6" fill="var(--color-accent-copper)" stroke="var(--color-text)"/>
+    <text x="60" y="-6" text-anchor="middle" font-size="11" font-family="var(--font-display)" font-style="italic" fill="var(--color-text)">HBM4 stack</text>
+    <g stroke="var(--color-text)" stroke-width="0.4">
+      <line x1="20" y1="0" x2="20" y2="138"/>
+      <line x1="40" y1="0" x2="40" y2="138"/>
+      <line x1="60" y1="0" x2="60" y2="138"/>
+      <line x1="80" y1="0" x2="80" y2="138"/>
+      <line x1="100" y1="0" x2="100" y2="138"/>
+    </g>
+  </g>
+  <!-- micro-bumps between dies and interposer -->
+  <g fill="var(--color-accent-copper)">
+    <circle cx="146" cy="244" r="2.5"/><circle cx="161" cy="244" r="2.5"/><circle cx="176" cy="244" r="2.5"/><circle cx="191" cy="244" r="2.5"/><circle cx="206" cy="244" r="2.5"/><circle cx="221" cy="244" r="2.5"/><circle cx="236" cy="244" r="2.5"/><circle cx="251" cy="244" r="2.5"/>
+    <circle cx="306" cy="244" r="2.5"/><circle cx="322" cy="244" r="2.5"/><circle cx="338" cy="244" r="2.5"/><circle cx="354" cy="244" r="2.5"/><circle cx="370" cy="244" r="2.5"/><circle cx="386" cy="244" r="2.5"/><circle cx="402" cy="244" r="2.5"/><circle cx="418" cy="244" r="2.5"/><circle cx="434" cy="244" r="2.5"/><circle cx="450" cy="244" r="2.5"/><circle cx="466" cy="244" r="2.5"/><circle cx="482" cy="244" r="2.5"/>
+    <circle cx="546" cy="244" r="2.5"/><circle cx="561" cy="244" r="2.5"/><circle cx="576" cy="244" r="2.5"/><circle cx="591" cy="244" r="2.5"/><circle cx="606" cy="244" r="2.5"/><circle cx="621" cy="244" r="2.5"/><circle cx="636" cy="244" r="2.5"/><circle cx="651" cy="244" r="2.5"/>
+  </g>
+</svg></div>
+      <figcaption class="figure__caption"><span class="label">Figure 12.1</span><span class="text">Cross-section of a CoWoS package. The Rubin GPU and its HBM4 stacks sit side by side on a silicon interposer, which provides ultra-short, ultra-wide connections between them.</span></figcaption>
+    </figure>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="11-test-and-dice.html"><span class="ch-nav-link__label">← Chapter 11</span><span class="ch-nav-link__title">Test and Dice</span></a>
+      <a class="ch-nav-link" data-dir="next" href="13-vera-rubin-superchip.html"><span class="ch-nav-link__label">Chapter 13 →</span><span class="ch-nav-link__title">The Vera Rubin Superchip</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 42 chapters, the epilogue, and the glossary. Try <em>warp</em>, <em>EUV</em>, <em>cache line</em>, or <em>attention</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="../api/tutor">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the book</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does a MOSFET turn on?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Sand to Superintelligence</strong><br>
+      A long-form visual journey through the silicon supply chain.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

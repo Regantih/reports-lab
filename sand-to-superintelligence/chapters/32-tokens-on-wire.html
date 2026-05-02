@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 32 · Tokens on the Wire — From Sand to Superintelligence</title>
+<meta name="description" content="HTTP carried documents. The new wire carries tokens, embeddings, and tool calls — a different shape of traffic with a different economics underneath.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="32-tokens-on-wire" data-chapter-title="Tokens on the Wire">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-quartz", "title": "The Mineral", "subtitle": "Quartz, purity, and why ordinary sand can't think"}, {"num": "02", "slug": "02-fire-and-carbon", "title": "Fire and Carbon", "subtitle": "Smelting metallurgical-grade silicon at 1,700\u00b0C"}, {"num": "03", "slug": "03-nine-nines", "title": "The Nine-Nines Problem", "subtitle": "Polysilicon and the Siemens process"}, {"num": "04", "slug": "04-czochralski", "title": "Growing a Perfect Crystal", "subtitle": "The Czochralski dance"}, {"num": "05", "slug": "05-wafers", "title": "From Log to Mirror", "subtitle": "Slicing, lapping, and chemical-mechanical polish"}, {"num": "06", "slug": "06-design", "title": "Designing the Impossible", "subtitle": "EDA, transistors, and 15,000 engineer-years"}, {"num": "07", "slug": "07-deposition", "title": "Painting with Atoms", "subtitle": "CVD, ALD, PVD and the art of thin films"}, {"num": "08", "slug": "08-euv", "title": "Light at 13.5 Nanometers", "subtitle": "EUV lithography \u2014 the most complex machine ever built"}, {"num": "09", "slug": "09-etch-and-implant", "title": "Carving and Doping", "subtitle": "Plasma etch and ion implantation"}, {"num": "10", "slug": "10-interconnects", "title": "The Wiring Sky", "subtitle": "Fifteen layers of copper, dancing on a postage stamp"}, {"num": "11", "slug": "11-test-and-dice", "title": "Test and Dice", "subtitle": "Yield, the industry's most guarded secret"}, {"num": "12", "slug": "12-cowos-hbm", "title": "CoWoS and the 2.5D Revolution", "subtitle": "How HBM4 sits a hair's breadth from the GPU"}, {"num": "13", "slug": "13-vera-rubin-superchip", "title": "The Vera Rubin Superchip", "subtitle": "Two GPUs, one CPU, 1.8 TB/s between them"}, {"num": "14", "slug": "14-nvl72", "title": "The NVL72 Rack", "subtitle": "72 GPUs that move data faster than the internet"}, {"num": "15", "slug": "15-burn-in", "title": "Burn-In and Reliability", "subtitle": "Stress-testing chips into honesty"}, {"num": "16", "slug": "16-ai-factory", "title": "The AI Factory", "subtitle": "SuperPODs, exaflops, and the new economy of intelligence"}, {"num": "17", "slug": "17-electron-choice", "title": "The Electron's Choice", "subtitle": "Band gaps, doping, and what \u201csemiconductor\u201d really means"}, {"num": "18", "slug": "18-transistor-valve", "title": "The Transistor as a Valve", "subtitle": "How a gate voltage opens a channel"}, {"num": "19", "slug": "19-switch-to-logic", "title": "From Switch to Logic", "subtitle": "NAND, NOR, and the universality theorem"}, {"num": "20", "slug": "20-adder-and-memory", "title": "Adders, Latches, Memory", "subtitle": "From half-adder to ALU; the bit that remembers"}, {"num": "21", "slug": "21-the-clock", "title": "The Clock", "subtitle": "Synchrony, pipelining, and the heartbeat that makes a chip go"}, {"num": "22", "slug": "22-fetch-decode-execute", "title": "Fetch, Decode, Execute", "subtitle": "The instruction cycle and a CPU's to-do list"}, {"num": "23", "slug": "23-isa", "title": "From Transistors to ISA", "subtitle": "The contract between hardware and software"}, {"num": "24", "slug": "24-memory-pyramid", "title": "Memory's Pyramid", "subtitle": "Registers, caches, DRAM, and the tyranny of distance"}, {"num": "25", "slug": "25-boot", "title": "Boot", "subtitle": "The first second of a chip's life"}, {"num": "26", "slug": "26-os-conductor", "title": "The OS as Conductor", "subtitle": "Processes, virtual memory, and the illusion of plenty"}, {"num": "27", "slug": "27-compilers", "title": "The Translation Stack", "subtitle": "Python to bytecode to LLVM to silicon"}, {"num": "28", "slug": "28-gpu-mind", "title": "The GPU's Different Mind", "subtitle": "SIMT, warps, and tensor cores"}, {"num": "29", "slug": "29-network-in-numbers", "title": "A Neural Network Lives in Numbers", "subtitle": "Weights as DRAM, thought as matrix multiply"}, {"num": "30", "slug": "30-one-thought", "title": "A Thought, Token by Token", "subtitle": "Tracing one inference through the silicon"}, {"num": "31", "slug": "31-second-wire", "title": "The Second Wire", "subtitle": "When models start talking to each other"}, {"num": "32", "slug": "32-tokens-on-wire", "title": "Tokens on the Wire", "subtitle": "What flows when intelligence is the payload"}, {"num": "33", "slug": "33-latency", "title": "Latency Is Cognition", "subtitle": "Why milliseconds decide what a model can think about"}, {"num": "34", "slug": "34-agents", "title": "Agents", "subtitle": "The loop that turns a model into a worker"}, {"num": "35", "slug": "35-swarm", "title": "Swarm", "subtitle": "Many agents, one outcome"}, {"num": "36", "slug": "36-protocols", "title": "Protocols of Trust", "subtitle": "MCP, A2A, and the standards quietly being negotiated"}, {"num": "37", "slug": "37-memory-commons", "title": "The Memory Commons", "subtitle": "Vector databases and the shared substrate of recall"}, {"num": "38", "slug": "38-browser-worker", "title": "The Browser Becomes the Worker", "subtitle": "When the agent operates the same software you do"}, {"num": "39", "slug": "39-markets-of-models", "title": "Markets of Models", "subtitle": "Routing, price-per-token, and the commoditization layer"}, {"num": "40", "slug": "40-compounding", "title": "The Compounding", "subtitle": "Data, evals, and the flywheels that decide who wins"}, {"num": "41", "slug": "41-value-reroutes", "title": "Where Value Reroutes", "subtitle": "Who wins, who is squeezed, who is materially losing"}, {"num": "42", "slug": "42-loom", "title": "The Loom", "subtitle": "Epilogue II \u2014 networks of intelligence as the new fabric"}]; window.__SIDENOTES__ = {"valence electrons": "Electrons in an atom's outermost shell \u2014 the ones available for chemical bonding.", "eV": "Electron-volt: the energy gained by one electron crossing a 1-volt potential. The natural unit for atomic-scale physics.", "thermal energy": "Random kinetic energy of particles due to temperature. At room temperature, \u2248 0.026 eV per particle.", "p-n junction": "The boundary between p-type and n-type silicon. The building block of every diode and transistor.", "MOSFET": "Metal-Oxide-Semiconductor Field-Effect Transistor \u2014 the dominant kind of transistor in modern chips.", "tensor cores": "Specialized GPU units that multiply small matrix tiles (e.g. 16\u00d716) as a single instruction.", "warp": "A group of 32 GPU threads that execute the same instruction in lockstep.", "MMU": "Memory Management Unit \u2014 the hardware that translates virtual to physical addresses.", "TLB": "Translation Look-aside Buffer \u2014 a small hardware cache of recent address translations.", "cache line": "The unit of memory motion between cache levels \u2014 typically 64 bytes.", "page table": "A tree of mappings from virtual to physical pages, walked by the MMU on every memory access.", "LLVM IR": "An intermediate representation used by Clang, Rust, Swift, and many other compilers.", "system call": "A controlled trap from a user program into the OS kernel.", "context switch": "Saving one process's state and loading another's. Costs a few microseconds.", "BF16": "Brain Floating Point 16 \u2014 a 16-bit format with FP32's exponent range; standard for AI training.", "FP8": "An 8-bit floating-point format used to halve memory and double throughput in modern AI workloads.", "softmax": "A function that turns a vector of real numbers into a probability distribution.", "KV caching": "Storing past Key/Value tensors so an autoregressive model only has to process new tokens.", "autoregressive": "Generating one token at a time, feeding each output back as input for the next step.", "Czochralski": "The process of growing a single silicon crystal by pulling a seed upward from a melt.", "EUV": "Extreme Ultraviolet light at 13.5 nm wavelength, used for the finest chip patterning.", "HBM": "High-Bandwidth Memory \u2014 DRAM dies stacked vertically and bonded next to a GPU.", "CoWoS": "Chip-on-Wafer-on-Substrate \u2014 TSMC's 2.5D packaging that puts GPU and HBM on one interposer.", "NVLink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect, faster than PCIe.", "locality of reference": "The empirical fact that programs reuse recent locations (temporal) and access nearby ones (spatial).", "occupancy": "On a GPU, the ratio of active warps to the maximum possible \u2014 a key metric for hiding latency.", "memory wall": "The widening gap between fast CPU cycles and slow DRAM access \u2014 the central problem of modern architecture.", "SIMT": "Single Instruction, Multiple Threads \u2014 NVIDIA's GPU execution model.", "page fault": "An exception raised when a program touches a virtual address whose physical page isn't present.", "agent": "A model placed in a loop with tools, memory, and a goal \u2014 capable of multi-step action without per-step prompting.", "embedding": "A learned vector representation of text (or other data) where similar meanings sit nearby in vector space.", "RAG": "Retrieval-Augmented Generation \u2014 pulling relevant chunks from a vector store into the prompt before the model answers.", "MCP": "Model Context Protocol \u2014 Anthropic's open standard for letting models talk to external tools and data sources.", "A2A": "Agent-to-Agent protocol \u2014 Google's open standard for letting one agent invoke another over the network.", "vector database": "A datastore (FAISS, pgvector, Pinecone, Weaviate) optimized for nearest-neighbor search over embeddings.", "function calling": "A model's ability to emit a structured tool invocation (name + JSON arguments) instead of free text.", "swarm": "A coordinated group of agents (planner, researchers, writers, critics) that share state and aim at one outcome.", "routing": "Choosing which model to send a request to based on price, latency, or capability \u2014 the new commoditization layer above model APIs.", "latency budget": "The total time an agent has to think and act before the user gives up. Each step in the loop spends part of it.", "context window": "The maximum number of tokens a model can attend to at once. The price of one full window is the unit cost of one 'thought'.", "token": "The unit a language model reads and writes \u2014 roughly three characters of English on average."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Sand to Superintelligence<span class="brand__sub"> — a visual journey</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 32 of 42</div>
+    <div class="ch-header__num">Chapter 32</div>
+    <h1 class="ch-header__title">Tokens on the Wire</h1>
+    <p class="ch-header__dek">What flows when intelligence is the payload</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">~4 <em>chars</em></div><div class="stat__label">average bytes per English token</div></div><div class="stat"><div class="stat__num">3,072 <em>dims</em></div><div class="stat__label">size of an OpenAI text-embedding-3 vector</div></div><div class="stat"><div class="stat__num">~$0.30</div><div class="stat__label">median price of one million input tokens, end of 2025</div></div></div>
+    <div class="toolbar reveal">
+      <button class="toolbar__btn" data-audio-toggle type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-token-as-unit">The token as the new packet</a></li><li><a href="#embeddings">Embeddings: meaning as geometry</a></li><li><a href="#function-calls">Function calls and structured output</a></li><li><a href="#the-anatomy">The anatomy of a single API call</a></li><li><a href="#what-this-changes">What this changes about networking</a></li></ul></aside>
+    <article class="prose">
+      
+<p class="lede">If the fifth wire is real, what does its packet look like? When one model talks to another, or to a tool, or to a database, what is the literal payload? It is not bytes the way HTTP packets are bytes, and it is not records the way SQL rows are records. It is three closely related objects: tokens, embeddings, and structured calls. This chapter describes each of them, and then walks through the anatomy of a single inference request as it crosses the wire.</p>
+
+<h2 id="the-token-as-unit">The token as the new packet</h2>
+
+<p>A <strong>token</strong> is the smallest unit a language model deals with. Tokens are produced by a tokenizer such as <a href="https://github.com/openai/tiktoken">tiktoken</a> (used by OpenAI) or <a href="https://github.com/google/sentencepiece">SentencePiece</a> (used widely elsewhere). The tokenizer learns, from a large corpus, a vocabulary of around 100,000 subword units — common words like "the" or "model" become single tokens, while rare words or names get broken into pieces. On English text, one token is roughly four characters, or three quarters of a word.</p>
+
+<p>Once you have tokenized a prompt, the wire-level cost of an AI request is no longer measured in bytes. It is measured in tokens. Inference providers price tokens directly: <a href="https://www.anthropic.com/pricing">Anthropic</a>, <a href="https://openai.com/pricing">OpenAI</a>, Google, and the others all publish per-million-token rates for input and output, with output typically four to five times more expensive than input because output requires running the full forward pass token by token.</p>
+
+<p>The token has become, quietly, a unit of economic accounting that did not exist five years ago. Every meaningful AI workload is now budgeted, billed, rate-limited, and compared in tokens. A long-running agent's invoice is a token bill. A model's "context window" — 200,000 tokens for Claude Sonnet 4.6, two million for some Gemini variants — is the maximum prompt the wire can carry in a single request.</p>
+
+<h2 id="embeddings">Embeddings: meaning as geometry</h2>
+
+<p>Tokens are categorical. Two tokens are either the same or they are not; "cat" and "feline" are as far apart as "cat" and "spreadsheet". To build search and retrieval systems on top of language, the field needed a representation in which similar meanings sat close together in some space. That representation is the <strong>embedding</strong>.</p>
+
+<p>An embedding model takes a piece of text — a sentence, a paragraph, a whole document — and emits a fixed-length vector of floating-point numbers, typically 768, 1,536, or 3,072 dimensions. Texts with similar meaning produce vectors with similar directions. <a href="https://platform.openai.com/docs/guides/embeddings">OpenAI's embeddings guide</a> describes the standard recipe; <a href="https://www.sbert.net/">Sentence-Transformers</a> and Cohere's offerings are the open and competing flavours.</p>
+
+<p>Geometrically, embeddings turn the question "is this document relevant to that query?" into "is this vector close to that vector?" — and closeness in a 1,536-dimensional space turns out to capture a remarkable amount of semantic similarity, despite the simplicity of the operation. The dot product of two embeddings is a usable proxy for "do these two pieces of text mean the same thing?", and it can be computed in microseconds. Vector databases (Chapter 37) are built around this primitive.</p>
+
+<h2 id="function-calls">Function calls and structured output</h2>
+
+<p>The third object travelling on the wire is the <strong>structured output</strong>: a model emitting not free text but a JSON document conforming to a schema you specified in the prompt. <a href="https://platform.openai.com/docs/guides/function-calling">OpenAI's function-calling API</a>, <a href="https://docs.anthropic.com/en/docs/build-with-claude/tool-use">Anthropic's tool-use</a>, and Google's equivalent all formalize the same pattern: you describe a set of tools as JSON schemas, the model decides which tool to call and with what arguments, and the runtime executes the call and feeds the result back as another message in the conversation.</p>
+
+<p>This is what changes a chat box into something that can act. A pure chat model has no buttons; a function-calling model has every button you give it a schema for. In production systems, the same model that was answering questions a year ago is now reading documents from S3, posting messages to Slack, opening pull requests, scheduling meetings, and querying SQL warehouses, because somebody wrote a JSON schema for each of those actions and exposed it.</p>
+
+<h2 id="the-anatomy">The anatomy of a single API call</h2>
+
+<p>It is worth tracing one full call, end to end, to ground the abstractions.</p>
+
+<p>A backend server somewhere builds a JSON object: a <code>messages</code> array containing the system prompt and conversation history, a <code>tools</code> array of available functions with their JSON schemas, a <code>model</code> name, and various sampling parameters. The whole thing is perhaps 8 KB on the wire. It is sent over HTTPS to <code>api.anthropic.com</code> or <code>api.openai.com</code>, which terminates TLS at a load balancer, authenticates the API key, applies rate limits, and forwards the request to a regional inference cluster.</p>
+
+<p>Inside the cluster, the request joins a queue. A scheduler picks a free GPU partition, copies the prompt into HBM, and begins generation. With key-value caching (Chapter 30) only the new tokens require a fresh forward pass; previously seen prefixes can be reused across requests in some configurations. As tokens are generated, they are streamed back to the client over a server-sent-events connection, four to thirty bytes at a time, with maybe 50ms of latency per token. The client may or may not display the stream; some agentic systems wait for the whole response before parsing the JSON.</p>
+
+<p>Once generation completes — either because the model hit a stop sequence, exhausted the output budget, or chose to call a tool — the connection closes. The exchange is recorded for billing in tokens, not bytes; the stream is logged for safety review at the provider; and the client now has either text, a JSON object, or a tool-call request to execute.</p>
+
+<h2 id="what-this-changes">What this changes about networking</h2>
+
+<p>None of this requires a new physical wire. The packets are TCP, the bytes are HTTPS, the frames are HTTP/2 or HTTP/3, the encoding is JSON. What is new is the <em>semantic layer</em> built on top: tokens, embeddings, function calls, schemas, streaming. These are not standardized by any single body the way HTTP is; they are conventions hardened through practice and (slowly) draft specs.</p>
+
+<p>The economic implication is that anybody who can speak this dialect — emit valid prompts, parse streamed completions, dispatch tool calls — gains, essentially overnight, the ability to insert AI capability into any product they own. The cost of a basic capability that would have required a research team in 2018 is now the cost of an HTTP client and a credit card. That is what is actually meant by "AI as a service": not magic, but a new packet the existing internet already knows how to deliver.</p>
+
+<p>The next chapter takes one of those packets seriously and asks: how long does the round trip take, and why does the answer matter for what kinds of applications are possible at all?</p>
+
+      <figure class="figure figure--wide reveal" id="figure">
+      <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 380" role="img" aria-label="Three objects travel on the AI wire: tokens, embeddings, and function calls">
+  <text x="40" y="32" class="label-display" font-size="16">Three things travel on the wire</text>
+  <text x="40" y="52" font-size="11" fill="var(--color-text-muted)">Tokens (the unit of thought), embeddings (meaning as a vector), function calls (structured intent).</text>
+
+  <g font-family="var(--font-mono)" font-size="10">
+    <!-- Token panel -->
+    <g transform="translate(40, 90)">
+      <rect x="0" y="0" width="220" height="240" fill="var(--color-surface)" stroke="var(--color-accent-copper)" stroke-width="1.2"/>
+      <text x="14" y="26" class="label-strong" font-size="11" fill="var(--color-text)">TOKEN</text>
+      <text x="14" y="42" font-size="9" fill="var(--color-text-muted)">~4 chars · integer ID</text>
+
+      <g transform="translate(14, 60)">
+        <rect x="0" y="0" width="60" height="22" fill="var(--color-accent-copper)" fill-opacity="0.25"/>
+        <text x="30" y="15" font-size="10" text-anchor="middle" fill="var(--color-text)">"Once"</text>
+        <rect x="64" y="0" width="60" height="22" fill="var(--color-accent-copper)" fill-opacity="0.25"/>
+        <text x="94" y="15" font-size="10" text-anchor="middle" fill="var(--color-text)">"upon"</text>
+        <rect x="128" y="0" width="60" height="22" fill="var(--color-accent-copper)" fill-opacity="0.25"/>
+        <text x="158" y="15" font-size="10" text-anchor="middle" fill="var(--color-text)">"a"</text>
+      </g>
+      <text x="14" y="110" font-size="9" fill="var(--color-text-muted)">→ tokenizer →</text>
+      <g transform="translate(14, 120)" font-size="10" fill="var(--color-text)">
+        <text x="0" y="14">[8298, 2402, 257]</text>
+      </g>
+      <text x="14" y="170" font-size="9" fill="var(--color-text-muted)">cost: priced per million</text>
+      <text x="14" y="184" font-size="9" fill="var(--color-text-muted)">~$0.30 / M input tokens</text>
+      <text x="14" y="220" font-size="8" fill="var(--color-text-muted)">unit of accounting</text>
+    </g>
+
+    <!-- Embedding panel -->
+    <g transform="translate(290, 90)">
+      <rect x="0" y="0" width="220" height="240" fill="var(--color-surface)" stroke="var(--color-accent-euv)" stroke-width="1.2"/>
+      <text x="14" y="26" class="label-strong" font-size="11" fill="var(--color-text)">EMBEDDING</text>
+      <text x="14" y="42" font-size="9" fill="var(--color-text-muted)">meaning as 1,536-dim vector</text>
+
+      <!-- mini vector visualization -->
+      <g transform="translate(14, 56)">
+        <text x="0" y="10" font-size="9" fill="var(--color-text-muted)">"king" -</text>
+        <g>
+          <rect x="60" y="2" width="6" height="10" fill="var(--color-accent-euv)" fill-opacity="0.7"/>
+          <rect x="68" y="0" width="6" height="14" fill="var(--color-accent-euv)" fill-opacity="0.55"/>
+          <rect x="76" y="4" width="6" height="6" fill="var(--color-accent-euv)" fill-opacity="0.4"/>
+          <rect x="84" y="2" width="6" height="10" fill="var(--color-accent-euv)" fill-opacity="0.7"/>
+          <rect x="92" y="6" width="6" height="4" fill="var(--color-accent-euv)" fill-opacity="0.3"/>
+          <rect x="100" y="0" width="6" height="14" fill="var(--color-accent-euv)" fill-opacity="0.6"/>
+          <rect x="108" y="3" width="6" height="8" fill="var(--color-accent-euv)" fill-opacity="0.5"/>
+          <rect x="116" y="2" width="6" height="10" fill="var(--color-accent-euv)" fill-opacity="0.6"/>
+        </g>
+        <text x="130" y="10" font-size="9" fill="var(--color-text-muted)">…+1528</text>
+      </g>
+
+      <!-- 2D scatter showing similarity -->
+      <g transform="translate(40, 90)">
+        <rect x="0" y="0" width="160" height="100" fill="none" stroke="var(--color-divider)"/>
+        <circle cx="48" cy="34" r="3" fill="var(--color-accent-euv)"/>
+        <text x="54" y="32" font-size="8" fill="var(--color-text)">king</text>
+        <circle cx="56" cy="44" r="3" fill="var(--color-accent-euv)"/>
+        <text x="62" y="50" font-size="8" fill="var(--color-text)">queen</text>
+        <circle cx="118" cy="78" r="3" fill="var(--color-accent-copper)"/>
+        <text x="78" y="82" font-size="8" fill="var(--color-text)">spreadsheet</text>
+      </g>
+      <text x="14" y="220" font-size="8" fill="var(--color-text-muted)">geometry of meaning</text>
+    </g>
+
+    <!-- Function call panel -->
+    <g transform="translate(540, 90)">
+      <rect x="0" y="0" width="220" height="240" fill="var(--color-surface)" stroke="var(--color-accent-plasma)" stroke-width="1.2"/>
+      <text x="14" y="26" class="label-strong" font-size="11" fill="var(--color-text)">FUNCTION CALL</text>
+      <text x="14" y="42" font-size="9" fill="var(--color-text-muted)">structured intent · JSON</text>
+
+      <g transform="translate(14, 56)" font-size="9" fill="var(--color-text)">
+        <text x="0" y="10">{</text>
+        <text x="14" y="24">"tool":</text>
+        <text x="58" y="24" fill="var(--color-accent-plasma)">"search_db"</text>
+        <text x="14" y="40">"args": {</text>
+        <text x="28" y="56">"q":</text>
+        <text x="48" y="56" fill="var(--color-accent-plasma)">"orders 2025"</text>
+        <text x="28" y="70">"limit":</text>
+        <text x="80" y="70" fill="var(--color-accent-plasma)">10</text>
+        <text x="14" y="86">}</text>
+        <text x="0" y="100">}</text>
+      </g>
+
+      <text x="14" y="170" font-size="9" fill="var(--color-text-muted)">→ runtime executes</text>
+      <text x="14" y="184" font-size="9" fill="var(--color-text-muted)">→ result fed back</text>
+      <text x="14" y="220" font-size="8" fill="var(--color-text-muted)">unit of action</text>
+    </g>
+  </g>
+</svg></div>
+      <figcaption class="figure__caption"><span class="label">Figure 32.1</span><span class="text">Three things travel between AI systems. Tokens (raw thought-units), embeddings (meaning as a vector), and function calls (structured intent). The protocols described in later chapters are conventions about how to wrap them.</span></figcaption>
+    </figure>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="31-second-wire.html"><span class="ch-nav-link__label">← Chapter 31</span><span class="ch-nav-link__title">The Second Wire</span></a>
+      <a class="ch-nav-link" data-dir="next" href="33-latency.html"><span class="ch-nav-link__label">Chapter 33 →</span><span class="ch-nav-link__title">Latency Is Cognition</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 42 chapters, the epilogue, and the glossary. Try <em>warp</em>, <em>EUV</em>, <em>cache line</em>, or <em>attention</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="../api/tutor">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the book</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does a MOSFET turn on?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Sand to Superintelligence</strong><br>
+      A long-form visual journey through the silicon supply chain.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

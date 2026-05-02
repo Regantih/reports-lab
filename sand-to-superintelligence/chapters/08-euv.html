@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 08 · Light at 13.5 Nanometers — From Sand to Superintelligence</title>
+<meta name="description" content="How ASML's $200M lithography stations vaporize tin droplets with lasers to print circuits at the scale of single molecules.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="08-euv" data-chapter-title="Light at 13.5 Nanometers">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-quartz", "title": "The Mineral", "subtitle": "Quartz, purity, and why ordinary sand can't think"}, {"num": "02", "slug": "02-fire-and-carbon", "title": "Fire and Carbon", "subtitle": "Smelting metallurgical-grade silicon at 1,700\u00b0C"}, {"num": "03", "slug": "03-nine-nines", "title": "The Nine-Nines Problem", "subtitle": "Polysilicon and the Siemens process"}, {"num": "04", "slug": "04-czochralski", "title": "Growing a Perfect Crystal", "subtitle": "The Czochralski dance"}, {"num": "05", "slug": "05-wafers", "title": "From Log to Mirror", "subtitle": "Slicing, lapping, and chemical-mechanical polish"}, {"num": "06", "slug": "06-design", "title": "Designing the Impossible", "subtitle": "EDA, transistors, and 15,000 engineer-years"}, {"num": "07", "slug": "07-deposition", "title": "Painting with Atoms", "subtitle": "CVD, ALD, PVD and the art of thin films"}, {"num": "08", "slug": "08-euv", "title": "Light at 13.5 Nanometers", "subtitle": "EUV lithography \u2014 the most complex machine ever built"}, {"num": "09", "slug": "09-etch-and-implant", "title": "Carving and Doping", "subtitle": "Plasma etch and ion implantation"}, {"num": "10", "slug": "10-interconnects", "title": "The Wiring Sky", "subtitle": "Fifteen layers of copper, dancing on a postage stamp"}, {"num": "11", "slug": "11-test-and-dice", "title": "Test and Dice", "subtitle": "Yield, the industry's most guarded secret"}, {"num": "12", "slug": "12-cowos-hbm", "title": "CoWoS and the 2.5D Revolution", "subtitle": "How HBM4 sits a hair's breadth from the GPU"}, {"num": "13", "slug": "13-vera-rubin-superchip", "title": "The Vera Rubin Superchip", "subtitle": "Two GPUs, one CPU, 1.8 TB/s between them"}, {"num": "14", "slug": "14-nvl72", "title": "The NVL72 Rack", "subtitle": "72 GPUs that move data faster than the internet"}, {"num": "15", "slug": "15-burn-in", "title": "Burn-In and Reliability", "subtitle": "Stress-testing chips into honesty"}, {"num": "16", "slug": "16-ai-factory", "title": "The AI Factory", "subtitle": "SuperPODs, exaflops, and the new economy of intelligence"}, {"num": "17", "slug": "17-electron-choice", "title": "The Electron's Choice", "subtitle": "Band gaps, doping, and what \u201csemiconductor\u201d really means"}, {"num": "18", "slug": "18-transistor-valve", "title": "The Transistor as a Valve", "subtitle": "How a gate voltage opens a channel"}, {"num": "19", "slug": "19-switch-to-logic", "title": "From Switch to Logic", "subtitle": "NAND, NOR, and the universality theorem"}, {"num": "20", "slug": "20-adder-and-memory", "title": "Adders, Latches, Memory", "subtitle": "From half-adder to ALU; the bit that remembers"}, {"num": "21", "slug": "21-the-clock", "title": "The Clock", "subtitle": "Synchrony, pipelining, and the heartbeat that makes a chip go"}, {"num": "22", "slug": "22-fetch-decode-execute", "title": "Fetch, Decode, Execute", "subtitle": "The instruction cycle and a CPU's to-do list"}, {"num": "23", "slug": "23-isa", "title": "From Transistors to ISA", "subtitle": "The contract between hardware and software"}, {"num": "24", "slug": "24-memory-pyramid", "title": "Memory's Pyramid", "subtitle": "Registers, caches, DRAM, and the tyranny of distance"}, {"num": "25", "slug": "25-boot", "title": "Boot", "subtitle": "The first second of a chip's life"}, {"num": "26", "slug": "26-os-conductor", "title": "The OS as Conductor", "subtitle": "Processes, virtual memory, and the illusion of plenty"}, {"num": "27", "slug": "27-compilers", "title": "The Translation Stack", "subtitle": "Python to bytecode to LLVM to silicon"}, {"num": "28", "slug": "28-gpu-mind", "title": "The GPU's Different Mind", "subtitle": "SIMT, warps, and tensor cores"}, {"num": "29", "slug": "29-network-in-numbers", "title": "A Neural Network Lives in Numbers", "subtitle": "Weights as DRAM, thought as matrix multiply"}, {"num": "30", "slug": "30-one-thought", "title": "A Thought, Token by Token", "subtitle": "Tracing one inference through the silicon"}, {"num": "31", "slug": "31-second-wire", "title": "The Second Wire", "subtitle": "When models start talking to each other"}, {"num": "32", "slug": "32-tokens-on-wire", "title": "Tokens on the Wire", "subtitle": "What flows when intelligence is the payload"}, {"num": "33", "slug": "33-latency", "title": "Latency Is Cognition", "subtitle": "Why milliseconds decide what a model can think about"}, {"num": "34", "slug": "34-agents", "title": "Agents", "subtitle": "The loop that turns a model into a worker"}, {"num": "35", "slug": "35-swarm", "title": "Swarm", "subtitle": "Many agents, one outcome"}, {"num": "36", "slug": "36-protocols", "title": "Protocols of Trust", "subtitle": "MCP, A2A, and the standards quietly being negotiated"}, {"num": "37", "slug": "37-memory-commons", "title": "The Memory Commons", "subtitle": "Vector databases and the shared substrate of recall"}, {"num": "38", "slug": "38-browser-worker", "title": "The Browser Becomes the Worker", "subtitle": "When the agent operates the same software you do"}, {"num": "39", "slug": "39-markets-of-models", "title": "Markets of Models", "subtitle": "Routing, price-per-token, and the commoditization layer"}, {"num": "40", "slug": "40-compounding", "title": "The Compounding", "subtitle": "Data, evals, and the flywheels that decide who wins"}, {"num": "41", "slug": "41-value-reroutes", "title": "Where Value Reroutes", "subtitle": "Who wins, who is squeezed, who is materially losing"}, {"num": "42", "slug": "42-loom", "title": "The Loom", "subtitle": "Epilogue II \u2014 networks of intelligence as the new fabric"}]; window.__SIDENOTES__ = {"valence electrons": "Electrons in an atom's outermost shell \u2014 the ones available for chemical bonding.", "eV": "Electron-volt: the energy gained by one electron crossing a 1-volt potential. The natural unit for atomic-scale physics.", "thermal energy": "Random kinetic energy of particles due to temperature. At room temperature, \u2248 0.026 eV per particle.", "p-n junction": "The boundary between p-type and n-type silicon. The building block of every diode and transistor.", "MOSFET": "Metal-Oxide-Semiconductor Field-Effect Transistor \u2014 the dominant kind of transistor in modern chips.", "tensor cores": "Specialized GPU units that multiply small matrix tiles (e.g. 16\u00d716) as a single instruction.", "warp": "A group of 32 GPU threads that execute the same instruction in lockstep.", "MMU": "Memory Management Unit \u2014 the hardware that translates virtual to physical addresses.", "TLB": "Translation Look-aside Buffer \u2014 a small hardware cache of recent address translations.", "cache line": "The unit of memory motion between cache levels \u2014 typically 64 bytes.", "page table": "A tree of mappings from virtual to physical pages, walked by the MMU on every memory access.", "LLVM IR": "An intermediate representation used by Clang, Rust, Swift, and many other compilers.", "system call": "A controlled trap from a user program into the OS kernel.", "context switch": "Saving one process's state and loading another's. Costs a few microseconds.", "BF16": "Brain Floating Point 16 \u2014 a 16-bit format with FP32's exponent range; standard for AI training.", "FP8": "An 8-bit floating-point format used to halve memory and double throughput in modern AI workloads.", "softmax": "A function that turns a vector of real numbers into a probability distribution.", "KV caching": "Storing past Key/Value tensors so an autoregressive model only has to process new tokens.", "autoregressive": "Generating one token at a time, feeding each output back as input for the next step.", "Czochralski": "The process of growing a single silicon crystal by pulling a seed upward from a melt.", "EUV": "Extreme Ultraviolet light at 13.5 nm wavelength, used for the finest chip patterning.", "HBM": "High-Bandwidth Memory \u2014 DRAM dies stacked vertically and bonded next to a GPU.", "CoWoS": "Chip-on-Wafer-on-Substrate \u2014 TSMC's 2.5D packaging that puts GPU and HBM on one interposer.", "NVLink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect, faster than PCIe.", "locality of reference": "The empirical fact that programs reuse recent locations (temporal) and access nearby ones (spatial).", "occupancy": "On a GPU, the ratio of active warps to the maximum possible \u2014 a key metric for hiding latency.", "memory wall": "The widening gap between fast CPU cycles and slow DRAM access \u2014 the central problem of modern architecture.", "SIMT": "Single Instruction, Multiple Threads \u2014 NVIDIA's GPU execution model.", "page fault": "An exception raised when a program touches a virtual address whose physical page isn't present.", "agent": "A model placed in a loop with tools, memory, and a goal \u2014 capable of multi-step action without per-step prompting.", "embedding": "A learned vector representation of text (or other data) where similar meanings sit nearby in vector space.", "RAG": "Retrieval-Augmented Generation \u2014 pulling relevant chunks from a vector store into the prompt before the model answers.", "MCP": "Model Context Protocol \u2014 Anthropic's open standard for letting models talk to external tools and data sources.", "A2A": "Agent-to-Agent protocol \u2014 Google's open standard for letting one agent invoke another over the network.", "vector database": "A datastore (FAISS, pgvector, Pinecone, Weaviate) optimized for nearest-neighbor search over embeddings.", "function calling": "A model's ability to emit a structured tool invocation (name + JSON arguments) instead of free text.", "swarm": "A coordinated group of agents (planner, researchers, writers, critics) that share state and aim at one outcome.", "routing": "Choosing which model to send a request to based on price, latency, or capability \u2014 the new commoditization layer above model APIs.", "latency budget": "The total time an agent has to think and act before the user gives up. Each step in the loop spends part of it.", "context window": "The maximum number of tokens a model can attend to at once. The price of one full window is the unit cost of one 'thought'.", "token": "The unit a language model reads and writes \u2014 roughly three characters of English on average."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Sand to Superintelligence<span class="brand__sub"> — a visual journey</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 08 of 42</div>
+    <div class="ch-header__num">Chapter 08</div>
+    <h1 class="ch-header__title">Light at 13.5 Nanometers</h1>
+    <p class="ch-header__dek">EUV lithography — the most complex machine ever built</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">13.5 <em>nm</em></div><div class="stat__label">EUV wavelength</div></div><div class="stat"><div class="stat__num">50,000<em>/s</em></div><div class="stat__label">tin droplets vaporized</div></div><div class="stat"><div class="stat__num">~$200<em>M</em></div><div class="stat__label">cost of a single EUV scanner</div></div><div class="stat"><div class="stat__num">250 <em>kW</em></div><div class="stat__label">power per scanner</div></div></div>
+    <div class="toolbar reveal">
+      <button class="toolbar__btn" data-audio-toggle type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-problem-of-light">The problem of light</a></li><li><a href="#euv-source">Vaporizing tin droplets</a></li><li><a href="#the-mirrors">All mirrors, all the way down</a></li><li><a href="#the-mask">The mask is the negative</a></li><li><a href="#multi-patterning">Multi-patterning, and why N2 doesn't need high-NA</a></li></ul></aside>
+    <article class="prose">
+      
+<p class="lede">The most complex machine human beings have ever built is not a particle accelerator. It is not a fusion reactor. It is not the James Webb Space Telescope. It is, by a wide margin, an <strong>EUV lithography scanner</strong>, and there is exactly one company in the world that builds them: ASML, in the small Dutch town of Veldhoven. The machines weigh on the order of two hundred tons. They cost roughly two hundred million dollars each. There are perhaps two hundred of them in use across the entire planet. Without them, no chip below seven nanometers exists.</p>
+
+<p>This chapter explains what they do.</p>
+
+<h2 id="the-problem-of-light">The problem of light</h2>
+
+<p>All optical lithography is the same idea: you shine light through a stencil onto a light-sensitive coating, and where the light lands, the coating changes. Then you wash off the unchanged parts. The pattern of the stencil becomes the pattern on the wafer.</p>
+
+<p>The catch is resolution. The smallest feature you can print is roughly proportional to the wavelength of the light you use. <a href="https://www.uprtek.com/en/blogs/photolithography">Decades of lithography</a> have used progressively shorter wavelengths — visible, then ultraviolet at 365 nm, then deep ultraviolet at 248 nm, then 193 nm — to print progressively smaller features. By 2010, 193 nm light combined with elaborate immersion-fluid tricks and multi-patterning had been pushed to an absurd extreme to print features at 14 nm.</p>
+
+<p>Going smaller required a wavelength jump that the industry had been dreading for decades: to <strong>13.5 nanometers</strong>, deep into the extreme ultraviolet. The problem with EUV is not subtle. <strong>Everything absorbs it.</strong> Glass absorbs it. Air absorbs it. Photoresist absorbs it. To make a lithography system at 13.5 nm, every traditional optical assumption has to be replaced.</p>
+
+<h2 id="euv-source">Vaporizing tin droplets</h2>
+
+<p>The first hurdle is producing the light. There is no laser at 13.5 nm. There is no light bulb. The only reliable EUV source we know how to build involves the most baroque physics in any factory anywhere.</p>
+
+<p>Fifty thousand times per second, a tiny droplet of molten tin — perhaps thirty micrometers across — falls through vacuum. Just before each droplet reaches a target point, a <em>pre-pulse</em> from a CO₂ laser flattens it into a small disc. A microsecond later, a <em>main pulse</em> from the same laser, focused into the disc, deposits enough energy to vaporize it instantly into a plasma at <strong>over 200,000°C</strong>. That plasma, briefly, emits exactly the spectrum of light that humanity has spent decades trying to produce: a sharp peak at 13.5 nanometers.</p>
+
+<p>The light is collected by a single curved mirror, focused, and sent into the optics column. <a href="https://eureka.patsnap.com/report-what-challenges-do-euv-lithography-processes-face-today">The whole process is repeated fifty thousand times per second</a>, all day, every day, for years.</p>
+
+<h2 id="the-mirrors">All mirrors, all the way down</h2>
+
+<p>From here forward, every optical element is a mirror. There are no lenses. Glass would absorb the light. Even the mirrors are not normal mirrors — they are stacks of forty alternating layers of molybdenum and silicon, each layer a few nanometers thick, designed so that EUV reflects from each interface coherently. The entire stack manages about 70% reflectivity at 13.5 nm. That sounds high. It is in fact appalling.</p>
+
+<p>By the time the light has bounced off six mirrors — collector, illumination, mask, projection — only a small fraction of the original photons make it to the wafer. The rest end up as heat, in metal mirror surfaces that must be held flat to fractions of a nanometer despite being slowly cooked by the most energetic photons their owners can produce.</p>
+
+<h2 id="the-mask">The mask is the negative</h2>
+
+<p>In EUV, even the photomask is a mirror. The pattern is etched into the absorbing top layer of a multilayer reflector. Where the absorber remains, no light bounces. Where it has been removed, the underlying mirror reflects EUV down through the projection optics, where it is shrunk by 4× and projected onto the wafer.</p>
+
+<p>The wafer rides on a stage that, while exposing one die, must hold position to within a few atoms. Once that die is done, the stage steps to the next die, and exposes again. <a href="https://www.asml.com/news/stories/2021/semiconductor-manufacturing-process-steps">A modern EUV scanner</a> can step through a 300 mm wafer at perhaps 200 wafers per hour — fast enough to be economically viable, slow enough that fabs run them around the clock.</p>
+
+<h2 id="multi-patterning">Multi-patterning, and why N2 doesn't need high-NA</h2>
+
+<p>Even at 13.5 nm, a single EUV exposure is not always enough to print the smallest features at the highest density. The technique called <strong>multi-patterning</strong> splits a desired layout into two, three, or four masks, exposes each separately, and overlays them with nanometer alignment. It is laborious and expensive, but it is what allows TSMC's <strong>N2</strong> process to push to 2 nm features without yet adopting <a href="https://www.eenewseurope.com/en/tsmc-shuns-high-na-euv-lithography/">high-numerical-aperture EUV</a> — the next-generation tooling that ASML has only begun shipping.</p>
+
+<p>The trade-off is straightforward: more masks means more exposures, more steps, more chances for error. But it also means using machines that already exist and processes that have been characterized to industrial reliability. For the Rubin generation, this is a deliberate choice.</p>
+
+<p>By the time the wafer leaves the EUV scanner, the photoresist has been patterned. The image of the chip — at a thousandth the size of the mask — is sitting on the wafer's surface, invisible to the naked eye. To make it real, we now have to remove material.</p>
+
+      <figure class="figure figure--wide reveal" id="figure">
+      <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 460" role="img" aria-label="EUV lithography light path: laser-pulsed tin droplet, EUV plasma, mirror reflectors, photomask, and wafer">
+  <text x="40" y="30" class="label-display" font-size="15">Light at 13.5 nanometers</text>
+  <text x="40" y="50" font-size="11" fill="var(--color-text-muted)">EUV is so energetic it's absorbed by glass, by air — by everything. The whole machine is mirrors, vacuum, and patience.</text>
+  <!-- vacuum chamber outline -->
+  <rect x="40" y="80" width="720" height="340" fill="none" stroke="var(--color-border)" stroke-dasharray="3 3"/>
+  <text x="50" y="98" font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">VACUUM CHAMBER</text>
+  <!-- 1. CO2 laser -->
+  <g transform="translate(70 200)">
+    <rect x="0" y="0" width="60" height="40" fill="var(--color-text)"/>
+    <text x="30" y="25" text-anchor="middle" font-size="10" fill="var(--color-bg)" font-family="var(--font-mono)">CO₂</text>
+    <text x="30" y="60" text-anchor="middle" font-size="9" font-family="var(--font-mono)" fill="var(--color-text-muted)">pulsed laser</text>
+    <!-- pulse -->
+    <line x1="60" y1="20" x2="160" y2="20" stroke="var(--color-accent-plasma)" stroke-width="2" stroke-dasharray="4 4"/>
+  </g>
+  <!-- 2. tin droplet -->
+  <g transform="translate(240 210)">
+    <circle cx="0" cy="10" r="6" fill="var(--color-accent-quartz)"/>
+    <text x="-30" y="-5" font-size="9" font-family="var(--font-mono)" fill="var(--color-text-muted)">Sn droplet</text>
+    <!-- plasma flash -->
+    <circle cx="0" cy="10" r="22" fill="var(--color-accent-euv)" fill-opacity="0.4"/>
+    <circle cx="0" cy="10" r="14" fill="var(--color-accent-euv)" fill-opacity="0.7"/>
+    <text x="0" y="50" text-anchor="middle" font-size="9" font-family="var(--font-mono)" fill="var(--color-accent-euv)">220,000°C plasma</text>
+  </g>
+  <!-- EUV beam path: bouncing through 6 mirrors -->
+  <g stroke="var(--color-accent-euv)" stroke-width="1.5" fill="none">
+    <!-- collector mirror M1 -->
+    <path d="M 240 220 L 320 180"/>
+    <path d="M 320 180 L 320 320"/>
+    <!-- M2 -->
+    <path d="M 320 320 L 420 320"/>
+    <!-- mask -->
+    <path d="M 420 320 L 420 200"/>
+    <path d="M 420 200 L 520 200"/>
+    <!-- final mirror -->
+    <path d="M 520 200 L 520 360"/>
+    <path d="M 520 360 L 620 360"/>
+  </g>
+  <!-- mirrors -->
+  <g fill="var(--color-primary)">
+    <rect x="316" y="170" width="8" height="22" transform="rotate(-30 320 180)"/>
+    <rect x="316" y="316" width="8" height="22" transform="rotate(60 320 320)"/>
+    <rect x="416" y="316" width="8" height="22" transform="rotate(-60 420 320)"/>
+    <rect x="416" y="196" width="8" height="22" transform="rotate(60 420 200)"/>
+    <rect x="516" y="196" width="8" height="22" transform="rotate(-60 520 200)"/>
+    <rect x="516" y="356" width="8" height="22" transform="rotate(60 520 360)"/>
+  </g>
+  <g font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">
+    <text x="270" y="170">M1 collector</text>
+    <text x="330" y="350">multilayer Mo/Si mirror</text>
+  </g>
+  <!-- photomask -->
+  <g transform="translate(440 130)">
+    <rect x="0" y="0" width="60" height="50" fill="var(--color-surface)" stroke="var(--color-text)" stroke-width="1"/>
+    <!-- pattern -->
+    <rect x="5" y="10" width="6" height="30" fill="var(--color-text)"/>
+    <rect x="15" y="10" width="3" height="30" fill="var(--color-text)"/>
+    <rect x="22" y="20" width="8" height="20" fill="var(--color-text)"/>
+    <rect x="34" y="10" width="4" height="30" fill="var(--color-text)"/>
+    <rect x="42" y="15" width="6" height="25" fill="var(--color-text)"/>
+    <rect x="51" y="10" width="3" height="30" fill="var(--color-text)"/>
+    <text x="30" y="-8" text-anchor="middle" font-size="10" font-family="var(--font-display)" font-style="italic" fill="var(--color-text)">photomask</text>
+  </g>
+  <!-- lens stack (projection optics) -->
+  <g transform="translate(540 320)">
+    <ellipse cx="60" cy="20" rx="18" ry="6" fill="none" stroke="var(--color-primary)"/>
+    <ellipse cx="60" cy="32" rx="18" ry="6" fill="none" stroke="var(--color-primary)"/>
+    <ellipse cx="60" cy="44" rx="18" ry="6" fill="none" stroke="var(--color-primary)"/>
+    <text x="60" y="-2" text-anchor="middle" font-size="9" font-family="var(--font-mono)" fill="var(--color-text-muted)">projection optics</text>
+  </g>
+  <!-- wafer at end -->
+  <g transform="translate(620 350)">
+    <rect x="0" y="0" width="120" height="14" fill="var(--color-primary)" stroke="var(--color-text)"/>
+    <rect x="0" y="-3" width="120" height="3" fill="var(--color-accent-copper)"/>
+    <text x="60" y="32" text-anchor="middle" font-size="10" font-family="var(--font-display)" font-style="italic" fill="var(--color-text)">wafer + photoresist</text>
+    <!-- exposure cone -->
+  </g>
+  <!-- specs -->
+  <g font-family="var(--font-mono)" font-size="9" fill="var(--color-text-muted)">
+    <text x="60" y="430">EUV WAVELENGTH: 13.5 nm</text>
+    <text x="260" y="430">TARGET FEATURE: 14 nm</text>
+    <text x="460" y="430">MIRRORS: 6+, each 99.5% reflective</text>
+    <text x="60" y="445">DROPLET RATE: 50,000/s</text>
+    <text x="260" y="445">LASER PULSES: 50 kHz</text>
+    <text x="460" y="445">MACHINE COST: ~$200M</text>
+  </g>
+</svg></div>
+      <figcaption class="figure__caption"><span class="label">Figure 8.1</span><span class="text">The optical path inside an EUV scanner. A pulsed CO₂ laser vaporizes tin droplets to produce 13.5 nm light, which bounces through six precision mirrors before reaching the wafer.</span></figcaption>
+    </figure>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="07-deposition.html"><span class="ch-nav-link__label">← Chapter 07</span><span class="ch-nav-link__title">Painting with Atoms</span></a>
+      <a class="ch-nav-link" data-dir="next" href="09-etch-and-implant.html"><span class="ch-nav-link__label">Chapter 09 →</span><span class="ch-nav-link__title">Carving and Doping</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 42 chapters, the epilogue, and the glossary. Try <em>warp</em>, <em>EUV</em>, <em>cache line</em>, or <em>attention</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="../api/tutor">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the book</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does a MOSFET turn on?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Sand to Superintelligence</strong><br>
+      A long-form visual journey through the silicon supply chain.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

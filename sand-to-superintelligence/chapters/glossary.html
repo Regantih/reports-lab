@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glossary — From Sand to Superintelligence</title>
+<meta name="description" content="A 103-term reference of the silicon and computation vocabulary used in the book.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body>
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-quartz", "title": "The Mineral", "subtitle": "Quartz, purity, and why ordinary sand can't think"}, {"num": "02", "slug": "02-fire-and-carbon", "title": "Fire and Carbon", "subtitle": "Smelting metallurgical-grade silicon at 1,700\u00b0C"}, {"num": "03", "slug": "03-nine-nines", "title": "The Nine-Nines Problem", "subtitle": "Polysilicon and the Siemens process"}, {"num": "04", "slug": "04-czochralski", "title": "Growing a Perfect Crystal", "subtitle": "The Czochralski dance"}, {"num": "05", "slug": "05-wafers", "title": "From Log to Mirror", "subtitle": "Slicing, lapping, and chemical-mechanical polish"}, {"num": "06", "slug": "06-design", "title": "Designing the Impossible", "subtitle": "EDA, transistors, and 15,000 engineer-years"}, {"num": "07", "slug": "07-deposition", "title": "Painting with Atoms", "subtitle": "CVD, ALD, PVD and the art of thin films"}, {"num": "08", "slug": "08-euv", "title": "Light at 13.5 Nanometers", "subtitle": "EUV lithography \u2014 the most complex machine ever built"}, {"num": "09", "slug": "09-etch-and-implant", "title": "Carving and Doping", "subtitle": "Plasma etch and ion implantation"}, {"num": "10", "slug": "10-interconnects", "title": "The Wiring Sky", "subtitle": "Fifteen layers of copper, dancing on a postage stamp"}, {"num": "11", "slug": "11-test-and-dice", "title": "Test and Dice", "subtitle": "Yield, the industry's most guarded secret"}, {"num": "12", "slug": "12-cowos-hbm", "title": "CoWoS and the 2.5D Revolution", "subtitle": "How HBM4 sits a hair's breadth from the GPU"}, {"num": "13", "slug": "13-vera-rubin-superchip", "title": "The Vera Rubin Superchip", "subtitle": "Two GPUs, one CPU, 1.8 TB/s between them"}, {"num": "14", "slug": "14-nvl72", "title": "The NVL72 Rack", "subtitle": "72 GPUs that move data faster than the internet"}, {"num": "15", "slug": "15-burn-in", "title": "Burn-In and Reliability", "subtitle": "Stress-testing chips into honesty"}, {"num": "16", "slug": "16-ai-factory", "title": "The AI Factory", "subtitle": "SuperPODs, exaflops, and the new economy of intelligence"}, {"num": "17", "slug": "17-electron-choice", "title": "The Electron's Choice", "subtitle": "Band gaps, doping, and what \u201csemiconductor\u201d really means"}, {"num": "18", "slug": "18-transistor-valve", "title": "The Transistor as a Valve", "subtitle": "How a gate voltage opens a channel"}, {"num": "19", "slug": "19-switch-to-logic", "title": "From Switch to Logic", "subtitle": "NAND, NOR, and the universality theorem"}, {"num": "20", "slug": "20-adder-and-memory", "title": "Adders, Latches, Memory", "subtitle": "From half-adder to ALU; the bit that remembers"}, {"num": "21", "slug": "21-the-clock", "title": "The Clock", "subtitle": "Synchrony, pipelining, and the heartbeat that makes a chip go"}, {"num": "22", "slug": "22-fetch-decode-execute", "title": "Fetch, Decode, Execute", "subtitle": "The instruction cycle and a CPU's to-do list"}, {"num": "23", "slug": "23-isa", "title": "From Transistors to ISA", "subtitle": "The contract between hardware and software"}, {"num": "24", "slug": "24-memory-pyramid", "title": "Memory's Pyramid", "subtitle": "Registers, caches, DRAM, and the tyranny of distance"}, {"num": "25", "slug": "25-boot", "title": "Boot", "subtitle": "The first second of a chip's life"}, {"num": "26", "slug": "26-os-conductor", "title": "The OS as Conductor", "subtitle": "Processes, virtual memory, and the illusion of plenty"}, {"num": "27", "slug": "27-compilers", "title": "The Translation Stack", "subtitle": "Python to bytecode to LLVM to silicon"}, {"num": "28", "slug": "28-gpu-mind", "title": "The GPU's Different Mind", "subtitle": "SIMT, warps, and tensor cores"}, {"num": "29", "slug": "29-network-in-numbers", "title": "A Neural Network Lives in Numbers", "subtitle": "Weights as DRAM, thought as matrix multiply"}, {"num": "30", "slug": "30-one-thought", "title": "A Thought, Token by Token", "subtitle": "Tracing one inference through the silicon"}, {"num": "31", "slug": "31-second-wire", "title": "The Second Wire", "subtitle": "When models start talking to each other"}, {"num": "32", "slug": "32-tokens-on-wire", "title": "Tokens on the Wire", "subtitle": "What flows when intelligence is the payload"}, {"num": "33", "slug": "33-latency", "title": "Latency Is Cognition", "subtitle": "Why milliseconds decide what a model can think about"}, {"num": "34", "slug": "34-agents", "title": "Agents", "subtitle": "The loop that turns a model into a worker"}, {"num": "35", "slug": "35-swarm", "title": "Swarm", "subtitle": "Many agents, one outcome"}, {"num": "36", "slug": "36-protocols", "title": "Protocols of Trust", "subtitle": "MCP, A2A, and the standards quietly being negotiated"}, {"num": "37", "slug": "37-memory-commons", "title": "The Memory Commons", "subtitle": "Vector databases and the shared substrate of recall"}, {"num": "38", "slug": "38-browser-worker", "title": "The Browser Becomes the Worker", "subtitle": "When the agent operates the same software you do"}, {"num": "39", "slug": "39-markets-of-models", "title": "Markets of Models", "subtitle": "Routing, price-per-token, and the commoditization layer"}, {"num": "40", "slug": "40-compounding", "title": "The Compounding", "subtitle": "Data, evals, and the flywheels that decide who wins"}, {"num": "41", "slug": "41-value-reroutes", "title": "Where Value Reroutes", "subtitle": "Who wins, who is squeezed, who is materially losing"}, {"num": "42", "slug": "42-loom", "title": "The Loom", "subtitle": "Epilogue II \u2014 networks of intelligence as the new fabric"}]; window.__SIDENOTES__ = {"valence electrons": "Electrons in an atom's outermost shell \u2014 the ones available for chemical bonding.", "eV": "Electron-volt: the energy gained by one electron crossing a 1-volt potential. The natural unit for atomic-scale physics.", "thermal energy": "Random kinetic energy of particles due to temperature. At room temperature, \u2248 0.026 eV per particle.", "p-n junction": "The boundary between p-type and n-type silicon. The building block of every diode and transistor.", "MOSFET": "Metal-Oxide-Semiconductor Field-Effect Transistor \u2014 the dominant kind of transistor in modern chips.", "tensor cores": "Specialized GPU units that multiply small matrix tiles (e.g. 16\u00d716) as a single instruction.", "warp": "A group of 32 GPU threads that execute the same instruction in lockstep.", "MMU": "Memory Management Unit \u2014 the hardware that translates virtual to physical addresses.", "TLB": "Translation Look-aside Buffer \u2014 a small hardware cache of recent address translations.", "cache line": "The unit of memory motion between cache levels \u2014 typically 64 bytes.", "page table": "A tree of mappings from virtual to physical pages, walked by the MMU on every memory access.", "LLVM IR": "An intermediate representation used by Clang, Rust, Swift, and many other compilers.", "system call": "A controlled trap from a user program into the OS kernel.", "context switch": "Saving one process's state and loading another's. Costs a few microseconds.", "BF16": "Brain Floating Point 16 \u2014 a 16-bit format with FP32's exponent range; standard for AI training.", "FP8": "An 8-bit floating-point format used to halve memory and double throughput in modern AI workloads.", "softmax": "A function that turns a vector of real numbers into a probability distribution.", "KV caching": "Storing past Key/Value tensors so an autoregressive model only has to process new tokens.", "autoregressive": "Generating one token at a time, feeding each output back as input for the next step.", "Czochralski": "The process of growing a single silicon crystal by pulling a seed upward from a melt.", "EUV": "Extreme Ultraviolet light at 13.5 nm wavelength, used for the finest chip patterning.", "HBM": "High-Bandwidth Memory \u2014 DRAM dies stacked vertically and bonded next to a GPU.", "CoWoS": "Chip-on-Wafer-on-Substrate \u2014 TSMC's 2.5D packaging that puts GPU and HBM on one interposer.", "NVLink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect, faster than PCIe.", "locality of reference": "The empirical fact that programs reuse recent locations (temporal) and access nearby ones (spatial).", "occupancy": "On a GPU, the ratio of active warps to the maximum possible \u2014 a key metric for hiding latency.", "memory wall": "The widening gap between fast CPU cycles and slow DRAM access \u2014 the central problem of modern architecture.", "SIMT": "Single Instruction, Multiple Threads \u2014 NVIDIA's GPU execution model.", "page fault": "An exception raised when a program touches a virtual address whose physical page isn't present.", "agent": "A model placed in a loop with tools, memory, and a goal \u2014 capable of multi-step action without per-step prompting.", "embedding": "A learned vector representation of text (or other data) where similar meanings sit nearby in vector space.", "RAG": "Retrieval-Augmented Generation \u2014 pulling relevant chunks from a vector store into the prompt before the model answers.", "MCP": "Model Context Protocol \u2014 Anthropic's open standard for letting models talk to external tools and data sources.", "A2A": "Agent-to-Agent protocol \u2014 Google's open standard for letting one agent invoke another over the network.", "vector database": "A datastore (FAISS, pgvector, Pinecone, Weaviate) optimized for nearest-neighbor search over embeddings.", "function calling": "A model's ability to emit a structured tool invocation (name + JSON arguments) instead of free text.", "swarm": "A coordinated group of agents (planner, researchers, writers, critics) that share state and aim at one outcome.", "routing": "Choosing which model to send a request to based on price, latency, or capability \u2014 the new commoditization layer above model APIs.", "latency budget": "The total time an agent has to think and act before the user gives up. Each step in the loop spends part of it.", "context window": "The maximum number of tokens a model can attend to at once. The price of one full window is the unit cost of one 'thought'.", "token": "The unit a language model reads and writes \u2014 roughly three characters of English on average."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Sand to Superintelligence<span class="brand__sub"> — a visual journey</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Reference</div>
+    <div class="ch-header__num">Reference</div>
+    <h1 class="ch-header__title">Glossary</h1>
+    <p class="ch-header__dek">103 terms used in the book — band gaps, MOSFETs, MMUs, tensor cores. Each entry links to the chapter where the idea first appears.</p>
+  </header>
+  <nav class="glossary__index reveal"><a href="#letter-#" class="glossary__jump">#</a><a href="#letter-A" class="glossary__jump">A</a><a href="#letter-B" class="glossary__jump">B</a><a href="#letter-C" class="glossary__jump">C</a><a href="#letter-D" class="glossary__jump">D</a><a href="#letter-E" class="glossary__jump">E</a><a href="#letter-F" class="glossary__jump">F</a><a href="#letter-G" class="glossary__jump">G</a><a href="#letter-H" class="glossary__jump">H</a><a href="#letter-I" class="glossary__jump">I</a><a href="#letter-K" class="glossary__jump">K</a><a href="#letter-L" class="glossary__jump">L</a><a href="#letter-M" class="glossary__jump">M</a><a href="#letter-N" class="glossary__jump">N</a><a href="#letter-O" class="glossary__jump">O</a><a href="#letter-P" class="glossary__jump">P</a><a href="#letter-Q" class="glossary__jump">Q</a><a href="#letter-R" class="glossary__jump">R</a><a href="#letter-S" class="glossary__jump">S</a><a href="#letter-T" class="glossary__jump">T</a><a href="#letter-U" class="glossary__jump">U</a><a href="#letter-V" class="glossary__jump">V</a><a href="#letter-W" class="glossary__jump">W</a><a href="#letter-Y" class="glossary__jump">Y</a></nav>
+  <div class="glossary"><section class="glossary__section reveal" id="letter-#">
+  <h2 class="glossary__letter">#</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>µop (micro-op)</span><a class="glossary__chref" href="27-compilers.html">Ch 27</a></dt>
+<dd class="glossary__defn">An internal sub-instruction a CPU's decoder produces from a machine-code instruction. Modern x86 cores execute these out-of-order.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-A">
+  <h2 class="glossary__letter">A</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>A2A</span><a class="glossary__chref" href="36-protocols.html">Ch 36</a></dt>
+<dd class="glossary__defn">Agent-to-Agent protocol — Google's open standard (2024) for letting one agent invoke another over the network.</dd><dt class="glossary__term"><span>Agent</span><a class="glossary__chref" href="34-agents.html">Ch 34</a></dt>
+<dd class="glossary__defn">A model placed in a loop with tools, memory, and a goal — capable of multi-step action without per-step human prompting.</dd><dt class="glossary__term"><span>ALU</span><a class="glossary__chref" href="20-adder-and-memory.html">Ch 20</a></dt>
+<dd class="glossary__defn">Arithmetic Logic Unit. The part of a CPU that performs arithmetic and bitwise operations.</dd><dt class="glossary__term"><span>ASML</span><a class="glossary__chref" href="08-euv.html">Ch 8</a></dt>
+<dd class="glossary__defn">The Dutch company that builds the world's only EUV lithography machines.</dd><dt class="glossary__term"><span>Assembly</span><a class="glossary__chref" href="27-compilers.html">Ch 27</a></dt>
+<dd class="glossary__defn">A human-readable form of machine code, with named registers and labels.</dd><dt class="glossary__term"><span>AST</span><a class="glossary__chref" href="27-compilers.html">Ch 27</a></dt>
+<dd class="glossary__defn">Abstract Syntax Tree — a tree representation of a program's structure produced by a parser.</dd><dt class="glossary__term"><span>Attention</span><a class="glossary__chref" href="29-network-in-numbers.html">Ch 29</a></dt>
+<dd class="glossary__defn">A neural-network operation that lets each token blend information from every other token via Q, K, V matrices.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-B">
+  <h2 class="glossary__letter">B</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>Band gap</span><a class="glossary__chref" href="17-electron-choice.html">Ch 17</a></dt>
+<dd class="glossary__defn">The energy distance between a material's valence and conduction bands. Silicon's is 1.12 eV.</dd><dt class="glossary__term"><span>BF16</span><a class="glossary__chref" href="29-network-in-numbers.html">Ch 29</a></dt>
+<dd class="glossary__defn">Brain Floating Point 16 — a 16-bit float format with FP32's exponent range and reduced mantissa, used in deep learning.</dd><dt class="glossary__term"><span>BIOS</span><a class="glossary__chref" href="25-boot.html">Ch 25</a></dt>
+<dd class="glossary__defn">Basic Input/Output System — the legacy firmware that boots a PC. Replaced by UEFI on modern systems.</dd><dt class="glossary__term"><span>Bootloader</span><a class="glossary__chref" href="25-boot.html">Ch 25</a></dt>
+<dd class="glossary__defn">A small program (e.g. GRUB) that loads an operating-system kernel into memory and jumps to it.</dd><dt class="glossary__term"><span>Bytecode</span><a class="glossary__chref" href="27-compilers.html">Ch 27</a></dt>
+<dd class="glossary__defn">A compact, platform-independent intermediate representation of a program, executed by a virtual machine.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-C">
+  <h2 class="glossary__letter">C</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>Cache line</span><a class="glossary__chref" href="24-memory-pyramid.html">Ch 24</a></dt>
+<dd class="glossary__defn">The smallest unit a CPU cache moves between memory levels — typically 64 bytes.</dd><dt class="glossary__term"><span>Channel</span><a class="glossary__chref" href="18-transistor-valve.html">Ch 18</a></dt>
+<dd class="glossary__defn">The narrow conducting region under a MOSFET's gate, formed when the gate voltage is high enough to invert the surface.</dd><dt class="glossary__term"><span>Clock</span><a class="glossary__chref" href="21-the-clock.html">Ch 21</a></dt>
+<dd class="glossary__defn">A regular signal that synchronizes all the flip-flops on a chip. Modern CPUs run at ~3-5 GHz.</dd><dt class="glossary__term"><span>CMOS</span><a class="glossary__chref" href="18-transistor-valve.html">Ch 18</a></dt>
+<dd class="glossary__defn">Complementary Metal-Oxide-Semiconductor — the dominant transistor technology, pairing n-MOS and p-MOS for low static power.</dd><dt class="glossary__term"><span>Coalescing</span><a class="glossary__chref" href="28-gpu-mind.html">Ch 28</a></dt>
+<dd class="glossary__defn">On a GPU, the property of a memory access pattern that lets the hardware fold many threads' reads into a single transaction.</dd><dt class="glossary__term"><span>Compiler</span><a class="glossary__chref" href="27-compilers.html">Ch 27</a></dt>
+<dd class="glossary__defn">A program that translates source code into a lower-level language, typically machine code via an IR.</dd><dt class="glossary__term"><span>Conduction band</span><a class="glossary__chref" href="17-electron-choice.html">Ch 17</a></dt>
+<dd class="glossary__defn">The band of energy levels in a solid in which electrons are free to move and conduct current.</dd><dt class="glossary__term"><span>Context switch</span><a class="glossary__chref" href="26-os-conductor.html">Ch 26</a></dt>
+<dd class="glossary__defn">The kernel operation of saving one process's state and loading another's. Costs a few microseconds on modern hardware.</dd><dt class="glossary__term"><span>Context window</span><a class="glossary__chref" href="32-tokens-on-wire.html">Ch 32</a></dt>
+<dd class="glossary__defn">The maximum number of tokens a model can attend to at once. The price of one full window is the unit cost of one 'thought'.</dd><dt class="glossary__term"><span>CoWoS</span><a class="glossary__chref" href="12-cowos-hbm.html">Ch 12</a></dt>
+<dd class="glossary__defn">Chip-on-Wafer-on-Substrate — TSMC's 2.5D packaging that mounts GPU dies and HBM stacks on a silicon interposer.</dd><dt class="glossary__term"><span>CPU</span><a class="glossary__chref" href="22-fetch-decode-execute.html">Ch 22</a></dt>
+<dd class="glossary__defn">Central Processing Unit. A general-purpose processor optimized for branchy, latency-sensitive single-thread work.</dd><dt class="glossary__term"><span>CUDA</span><a class="glossary__chref" href="28-gpu-mind.html">Ch 28</a></dt>
+<dd class="glossary__defn">NVIDIA's parallel-programming model and runtime for GPUs.</dd><dt class="glossary__term"><span>Czochralski</span><a class="glossary__chref" href="04-czochralski.html">Ch 4</a></dt>
+<dd class="glossary__defn">The process of growing a single silicon crystal by dipping a seed into a melt and slowly pulling upward.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-D">
+  <h2 class="glossary__letter">D</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>Diode</span><a class="glossary__chref" href="17-electron-choice.html">Ch 17</a></dt>
+<dd class="glossary__defn">A two-terminal semiconductor device that conducts in one direction only. Formed by a p-n junction.</dd><dt class="glossary__term"><span>Doping</span><a class="glossary__chref" href="17-electron-choice.html">Ch 17</a></dt>
+<dd class="glossary__defn">Deliberately adding impurity atoms (phosphorus, boron) to silicon to create n-type or p-type regions.</dd><dt class="glossary__term"><span>DRAM</span><a class="glossary__chref" href="24-memory-pyramid.html">Ch 24</a></dt>
+<dd class="glossary__defn">Dynamic Random Access Memory — the cheap, dense, off-chip memory that holds most of a program's working set.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-E">
+  <h2 class="glossary__letter">E</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>EDA</span><a class="glossary__chref" href="06-design.html">Ch 6</a></dt>
+<dd class="glossary__defn">Electronic Design Automation — the software (Cadence, Synopsys) used to design integrated circuits.</dd><dt class="glossary__term"><span>Embedding</span><a class="glossary__chref" href="30-one-thought.html">Ch 30</a></dt>
+<dd class="glossary__defn">Mapping a discrete token to a high-dimensional vector via a learned table lookup.</dd><dt class="glossary__term"><span>Embedding</span><a class="glossary__chref" href="32-tokens-on-wire.html">Ch 32</a></dt>
+<dd class="glossary__defn">A learned dense vector that represents a chunk of text (or other data) so that similar meanings sit nearby in vector space.</dd><dt class="glossary__term"><span>Epitaxy</span><a class="glossary__chref" href="07-deposition.html">Ch 7</a></dt>
+<dd class="glossary__defn">Growing a crystalline layer on top of a crystalline substrate, atom by atom.</dd><dt class="glossary__term"><span>EUV</span><a class="glossary__chref" href="08-euv.html">Ch 8</a></dt>
+<dd class="glossary__defn">Extreme Ultraviolet — light of wavelength ~13.5 nm used in the most advanced lithography.</dd><dt class="glossary__term"><span>Eval</span><a class="glossary__chref" href="40-compounding.html">Ch 40</a></dt>
+<dd class="glossary__defn">A scored test that measures how well a model performs a task. Modern eval suites (SWE-bench, MMLU, GPQA) are how progress is tracked.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-F">
+  <h2 class="glossary__letter">F</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>Fab</span><a class="glossary__chref" href="11-test-and-dice.html">Ch 11</a></dt>
+<dd class="glossary__defn">Semiconductor fabrication facility. The most expensive industrial buildings ever made.</dd><dt class="glossary__term"><span>Fetch–Decode–Execute</span><a class="glossary__chref" href="22-fetch-decode-execute.html">Ch 22</a></dt>
+<dd class="glossary__defn">The fundamental instruction cycle: read an instruction, figure out what it does, do it, repeat.</dd><dt class="glossary__term"><span>Flip-flop</span><a class="glossary__chref" href="20-adder-and-memory.html">Ch 20</a></dt>
+<dd class="glossary__defn">A bistable memory element that stores one bit and updates on a clock edge.</dd><dt class="glossary__term"><span>Flywheel</span><a class="glossary__chref" href="40-compounding.html">Ch 40</a></dt>
+<dd class="glossary__defn">A self-reinforcing loop where deployment generates data, data improves the model, and the better model attracts more deployment.</dd><dt class="glossary__term"><span>FP8 / FP16 / FP32</span><a class="glossary__chref" href="29-network-in-numbers.html">Ch 29</a></dt>
+<dd class="glossary__defn">8-, 16-, and 32-bit floating-point formats. Modern AI training uses BF16 or FP8 to save memory and bandwidth.</dd><dt class="glossary__term"><span>Function calling</span><a class="glossary__chref" href="32-tokens-on-wire.html">Ch 32</a></dt>
+<dd class="glossary__defn">A model's ability to emit a structured tool invocation (name + JSON arguments) instead of free text.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-G">
+  <h2 class="glossary__letter">G</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>Gate</span><a class="glossary__chref" href="18-transistor-valve.html">Ch 18</a></dt>
+<dd class="glossary__defn">(1) The control electrode of a transistor. (2) A logic primitive (AND, OR, NAND) built from transistors.</dd><dt class="glossary__term"><span>GPU</span><a class="glossary__chref" href="28-gpu-mind.html">Ch 28</a></dt>
+<dd class="glossary__defn">Graphics Processing Unit. A throughput-oriented processor with thousands of simple ALUs and tensor cores.</dd><dt class="glossary__term"><span>GRUB</span><a class="glossary__chref" href="25-boot.html">Ch 25</a></dt>
+<dd class="glossary__defn">GRand Unified Bootloader — the standard Linux bootloader.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-H">
+  <h2 class="glossary__letter">H</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>HBM</span><a class="glossary__chref" href="12-cowos-hbm.html">Ch 12</a></dt>
+<dd class="glossary__defn">High-Bandwidth Memory — stacked DRAM tightly coupled to a GPU through a silicon interposer.</dd><dt class="glossary__term"><span>Hole</span><a class="glossary__chref" href="17-electron-choice.html">Ch 17</a></dt>
+<dd class="glossary__defn">A missing electron in a semiconductor's bonding lattice; behaves as a positive charge carrier.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-I">
+  <h2 class="glossary__letter">I</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>Inference</span><a class="glossary__chref" href="30-one-thought.html">Ch 30</a></dt>
+<dd class="glossary__defn">Running a trained model forward to produce outputs (e.g., next-token prediction).</dd><dt class="glossary__term"><span>Instruction set (ISA)</span><a class="glossary__chref" href="23-isa.html">Ch 23</a></dt>
+<dd class="glossary__defn">The contract between hardware and software: the menu of operations a CPU promises to execute.</dd><dt class="glossary__term"><span>Interconnect</span><a class="glossary__chref" href="10-interconnects.html">Ch 10</a></dt>
+<dd class="glossary__defn">The miles of copper wiring stacked above the transistors on a chip.</dd><dt class="glossary__term"><span>Interposer</span><a class="glossary__chref" href="12-cowos-hbm.html">Ch 12</a></dt>
+<dd class="glossary__defn">A silicon substrate with fine wiring that connects multiple dies in a 2.5D package.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-K">
+  <h2 class="glossary__letter">K</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>Kernel</span><a class="glossary__chref" href="26-os-conductor.html">Ch 26</a></dt>
+<dd class="glossary__defn">(1) The privileged core of an operating system. (2) A function dispatched to a GPU.</dd><dt class="glossary__term"><span>KV cache</span><a class="glossary__chref" href="30-one-thought.html">Ch 30</a></dt>
+<dd class="glossary__defn">In a transformer, the stored Key and Value tensors that let an autoregressive model avoid recomputing past tokens.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-L">
+  <h2 class="glossary__letter">L</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>L1 / L2 / L3</span><a class="glossary__chref" href="24-memory-pyramid.html">Ch 24</a></dt>
+<dd class="glossary__defn">The three on-chip cache levels above main memory. L1 is fastest and smallest; L3 is largest and slowest.</dd><dt class="glossary__term"><span>Latency budget</span><a class="glossary__chref" href="33-latency.html">Ch 33</a></dt>
+<dd class="glossary__defn">The total time an agent has to think and act before the user gives up. Each step in the loop spends part of it.</dd><dt class="glossary__term"><span>Lithography</span><a class="glossary__chref" href="08-euv.html">Ch 8</a></dt>
+<dd class="glossary__defn">Also called photolithography. Patterning a chip by projecting an image of a circuit onto a photoresist-coated wafer.</dd><dt class="glossary__term"><span>LLVM IR</span><a class="glossary__chref" href="27-compilers.html">Ch 27</a></dt>
+<dd class="glossary__defn">An intermediate representation used by Clang, Rust, Swift, and many other compilers.</dd><dt class="glossary__term"><span>Logic gate</span><a class="glossary__chref" href="19-switch-to-logic.html">Ch 19</a></dt>
+<dd class="glossary__defn">A circuit (AND, OR, NAND, NOR, XOR) that produces a Boolean output from Boolean inputs.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-M">
+  <h2 class="glossary__letter">M</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>Machine code</span><a class="glossary__chref" href="27-compilers.html">Ch 27</a></dt>
+<dd class="glossary__defn">The actual bytes a CPU fetches and executes.</dd><dt class="glossary__term"><span>Matrix multiply (matmul)</span><a class="glossary__chref" href="29-network-in-numbers.html">Ch 29</a></dt>
+<dd class="glossary__defn">The fundamental operation of neural networks. Tensor cores execute it as a hardware primitive.</dd><dt class="glossary__term"><span>MCP</span><a class="glossary__chref" href="36-protocols.html">Ch 36</a></dt>
+<dd class="glossary__defn">Model Context Protocol — Anthropic's open standard (2024) for letting models talk to external tools and data sources.</dd><dt class="glossary__term"><span>MLP</span><a class="glossary__chref" href="29-network-in-numbers.html">Ch 29</a></dt>
+<dd class="glossary__defn">Multi-Layer Perceptron — a stack of linear layers and nonlinearities. The 'feed-forward' half of a transformer block.</dd><dt class="glossary__term"><span>MMU</span><a class="glossary__chref" href="26-os-conductor.html">Ch 26</a></dt>
+<dd class="glossary__defn">Memory Management Unit — the hardware that translates virtual addresses to physical via page tables.</dd><dt class="glossary__term"><span>MOSFET</span><a class="glossary__chref" href="18-transistor-valve.html">Ch 18</a></dt>
+<dd class="glossary__defn">Metal-Oxide-Semiconductor Field-Effect Transistor — the dominant transistor in modern chips.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-N">
+  <h2 class="glossary__letter">N</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>NAND</span><a class="glossary__chref" href="19-switch-to-logic.html">Ch 19</a></dt>
+<dd class="glossary__defn">(1) A logic gate whose output is the negation of AND. (2) Functionally complete: any logic can be built from NAND alone.</dd><dt class="glossary__term"><span>NVL72</span><a class="glossary__chref" href="14-nvl72.html">Ch 14</a></dt>
+<dd class="glossary__defn">NVIDIA's rack-scale system that connects 72 GPUs over a copper midplane.</dd><dt class="glossary__term"><span>NVLink</span><a class="glossary__chref" href="14-nvl72.html">Ch 14</a></dt>
+<dd class="glossary__defn">NVIDIA's high-bandwidth GPU-to-GPU interconnect.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-O">
+  <h2 class="glossary__letter">O</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>Occupancy</span><a class="glossary__chref" href="28-gpu-mind.html">Ch 28</a></dt>
+<dd class="glossary__defn">The ratio of active warps to maximum warps on a GPU streaming multiprocessor. High occupancy hides latency.</dd><dt class="glossary__term"><span>Operating system</span><a class="glossary__chref" href="26-os-conductor.html">Ch 26</a></dt>
+<dd class="glossary__defn">The software that manages hardware resources and provides services (processes, files, networking) to programs.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-P">
+  <h2 class="glossary__letter">P</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>p-n junction</span><a class="glossary__chref" href="17-electron-choice.html">Ch 17</a></dt>
+<dd class="glossary__defn">The boundary between p-type and n-type silicon — the building block of every diode and transistor.</dd><dt class="glossary__term"><span>Page fault</span><a class="glossary__chref" href="26-os-conductor.html">Ch 26</a></dt>
+<dd class="glossary__defn">An exception raised by the MMU when a program accesses a virtual address whose physical page isn't present.</dd><dt class="glossary__term"><span>Page table</span><a class="glossary__chref" href="26-os-conductor.html">Ch 26</a></dt>
+<dd class="glossary__defn">A tree structure in memory that the MMU walks to translate virtual addresses to physical.</dd><dt class="glossary__term"><span>Pipeline</span><a class="glossary__chref" href="21-the-clock.html">Ch 21</a></dt>
+<dd class="glossary__defn">Overlapping the stages of multiple instructions so the CPU completes one per cycle even though each takes several.</dd><dt class="glossary__term"><span>Polysilicon</span><a class="glossary__chref" href="03-nine-nines.html">Ch 3</a></dt>
+<dd class="glossary__defn">Ultra-pure (9N) silicon produced by the Siemens process from trichlorosilane.</dd><dt class="glossary__term"><span>Process</span><a class="glossary__chref" href="26-os-conductor.html">Ch 26</a></dt>
+<dd class="glossary__defn">An OS-level running program with its own address space and identity.</dd><dt class="glossary__term"><span>Program counter</span><a class="glossary__chref" href="22-fetch-decode-execute.html">Ch 22</a></dt>
+<dd class="glossary__defn">The CPU register holding the address of the next instruction to fetch.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-Q">
+  <h2 class="glossary__letter">Q</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>Quartzite</span><a class="glossary__chref" href="01-quartz.html">Ch 1</a></dt>
+<dd class="glossary__defn">A high-purity SiO₂ rock, the geological starting point of the silicon supply chain.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-R">
+  <h2 class="glossary__letter">R</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>RAG</span><a class="glossary__chref" href="37-memory-commons.html">Ch 37</a></dt>
+<dd class="glossary__defn">Retrieval-Augmented Generation — fetching relevant chunks from a vector store and injecting them into the prompt before the model answers.</dd><dt class="glossary__term"><span>Register</span><a class="glossary__chref" href="24-memory-pyramid.html">Ch 24</a></dt>
+<dd class="glossary__defn">A named storage slot inside a CPU, accessed in a single cycle.</dd><dt class="glossary__term"><span>Reset</span><a class="glossary__chref" href="25-boot.html">Ch 25</a></dt>
+<dd class="glossary__defn">The signal that forces all flip-flops on a chip to a known state when power comes up.</dd><dt class="glossary__term"><span>Routing</span><a class="glossary__chref" href="39-markets-of-models.html">Ch 39</a></dt>
+<dd class="glossary__defn">Choosing which model to send a request to based on price, latency, or capability. The new commoditization layer above the model APIs.</dd><dt class="glossary__term"><span>Rubin</span><a class="glossary__chref" href="13-vera-rubin-superchip.html">Ch 13</a></dt>
+<dd class="glossary__defn">NVIDIA's GPU architecture following Blackwell, comprising the Vera Rubin Superchip and the Rubin Ultra rack.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-S">
+  <h2 class="glossary__letter">S</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>Scheduler</span><a class="glossary__chref" href="26-os-conductor.html">Ch 26</a></dt>
+<dd class="glossary__defn">The OS code that decides which process runs next on each CPU core.</dd><dt class="glossary__term"><span>SIMT</span><a class="glossary__chref" href="28-gpu-mind.html">Ch 28</a></dt>
+<dd class="glossary__defn">Single Instruction, Multiple Threads — NVIDIA's GPU execution model. A refinement of SIMD.</dd><dt class="glossary__term"><span>Softmax</span><a class="glossary__chref" href="30-one-thought.html">Ch 30</a></dt>
+<dd class="glossary__defn">A function that turns a vector of real numbers into a probability distribution.</dd><dt class="glossary__term"><span>Swarm</span><a class="glossary__chref" href="35-swarm.html">Ch 35</a></dt>
+<dd class="glossary__defn">A coordinated group of agents (planner, researchers, writers, critics) that share state and aim at one outcome.</dd><dt class="glossary__term"><span>System call</span><a class="glossary__chref" href="26-os-conductor.html">Ch 26</a></dt>
+<dd class="glossary__defn">A controlled trap from a user program into the OS kernel to request a privileged service.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-T">
+  <h2 class="glossary__letter">T</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>Tensor core</span><a class="glossary__chref" href="28-gpu-mind.html">Ch 28</a></dt>
+<dd class="glossary__defn">A specialized GPU unit that performs a small matrix multiply-accumulate as a single instruction.</dd><dt class="glossary__term"><span>Threshold voltage</span><a class="glossary__chref" href="18-transistor-valve.html">Ch 18</a></dt>
+<dd class="glossary__defn">The gate voltage above which a MOSFET starts to conduct. Typically ~0.4-0.7 V.</dd><dt class="glossary__term"><span>TLB</span><a class="glossary__chref" href="24-memory-pyramid.html">Ch 24</a></dt>
+<dd class="glossary__defn">Translation Look-aside Buffer — a small cache of recent virtual-to-physical translations.</dd><dt class="glossary__term"><span>Token</span><a class="glossary__chref" href="30-one-thought.html">Ch 30</a></dt>
+<dd class="glossary__defn">A subword unit of text used by language models. A typical model has ~100,000 tokens in its vocabulary.</dd><dt class="glossary__term"><span>Token</span><a class="glossary__chref" href="32-tokens-on-wire.html">Ch 32</a></dt>
+<dd class="glossary__defn">The unit a language model reads and writes. Roughly three characters of English on average.</dd><dt class="glossary__term"><span>Tool use</span><a class="glossary__chref" href="34-agents.html">Ch 34</a></dt>
+<dd class="glossary__defn">A model's ability to invoke external functions, APIs, browsers, or code interpreters mid-conversation.</dd><dt class="glossary__term"><span>Transformer</span><a class="glossary__chref" href="29-network-in-numbers.html">Ch 29</a></dt>
+<dd class="glossary__defn">A neural-network architecture (Vaswani et al. 2017) built from stacked self-attention and MLP blocks.</dd><dt class="glossary__term"><span>Transistor</span><a class="glossary__chref" href="18-transistor-valve.html">Ch 18</a></dt>
+<dd class="glossary__defn">The fundamental electronic switch. A modern GPU has ~80 billion of them.</dd><dt class="glossary__term"><span>TSMC</span><a class="glossary__chref" href="11-test-and-dice.html">Ch 11</a></dt>
+<dd class="glossary__defn">Taiwan Semiconductor Manufacturing Company — the world's leading contract chip fabricator.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-U">
+  <h2 class="glossary__letter">U</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>UEFI</span><a class="glossary__chref" href="25-boot.html">Ch 25</a></dt>
+<dd class="glossary__defn">Unified Extensible Firmware Interface — the modern PC firmware standard, replacing legacy BIOS.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-V">
+  <h2 class="glossary__letter">V</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>Valence band</span><a class="glossary__chref" href="17-electron-choice.html">Ch 17</a></dt>
+<dd class="glossary__defn">The band of energy levels in a solid in which electrons are bound to atoms.</dd><dt class="glossary__term"><span>Vector database</span><a class="glossary__chref" href="37-memory-commons.html">Ch 37</a></dt>
+<dd class="glossary__defn">A datastore (FAISS, pgvector, Pinecone, Weaviate) optimized for nearest-neighbor search over embeddings.</dd><dt class="glossary__term"><span>Virtual memory</span><a class="glossary__chref" href="26-os-conductor.html">Ch 26</a></dt>
+<dd class="glossary__defn">An OS abstraction that gives every process its own private address space, translated by the MMU.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-W">
+  <h2 class="glossary__letter">W</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>Wafer</span><a class="glossary__chref" href="05-wafers.html">Ch 5</a></dt>
+<dd class="glossary__defn">A thin disk of single-crystal silicon (typically 300 mm diameter) on which chips are fabricated.</dd><dt class="glossary__term"><span>Warp</span><a class="glossary__chref" href="28-gpu-mind.html">Ch 28</a></dt>
+<dd class="glossary__defn">A group of 32 GPU threads that execute the same instruction in lockstep. The atomic unit of GPU work.</dd><dt class="glossary__term"><span>Weight</span><a class="glossary__chref" href="29-network-in-numbers.html">Ch 29</a></dt>
+<dd class="glossary__defn">A learned numerical parameter inside a neural network.</dd>
+  </dl>
+</section><section class="glossary__section reveal" id="letter-Y">
+  <h2 class="glossary__letter">Y</h2>
+  <dl class="glossary__list">
+    <dt class="glossary__term"><span>Yield</span><a class="glossary__chref" href="11-test-and-dice.html">Ch 11</a></dt>
+<dd class="glossary__defn">The fraction of dies on a wafer that pass test. The most-guarded number in the semiconductor industry.</dd>
+  </dl>
+</section></div>
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="../index.html"><span class="ch-nav-link__label">← Cover</span><span class="ch-nav-link__title">Return to the beginning</span></a>
+      <a class="ch-nav-link" data-dir="next" href="bibliography.html"><span class="ch-nav-link__label">Bibliography →</span><span class="ch-nav-link__title">All sources, gathered</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 42 chapters, the epilogue, and the glossary. Try <em>warp</em>, <em>EUV</em>, <em>cache line</em>, or <em>attention</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="../api/tutor">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the book</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does a MOSFET turn on?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Sand to Superintelligence</strong><br>
+      A long-form visual journey through the silicon supply chain.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

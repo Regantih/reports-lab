@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 33 · Latency Is Cognition — From Sand to Superintelligence</title>
+<meta name="description" content="In agent systems, latency stops being a UX concern and becomes a budget for thought. The faster the loop, the more steps an agent can afford before the user gives up.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="33-latency" data-chapter-title="Latency Is Cognition">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-quartz", "title": "The Mineral", "subtitle": "Quartz, purity, and why ordinary sand can't think"}, {"num": "02", "slug": "02-fire-and-carbon", "title": "Fire and Carbon", "subtitle": "Smelting metallurgical-grade silicon at 1,700\u00b0C"}, {"num": "03", "slug": "03-nine-nines", "title": "The Nine-Nines Problem", "subtitle": "Polysilicon and the Siemens process"}, {"num": "04", "slug": "04-czochralski", "title": "Growing a Perfect Crystal", "subtitle": "The Czochralski dance"}, {"num": "05", "slug": "05-wafers", "title": "From Log to Mirror", "subtitle": "Slicing, lapping, and chemical-mechanical polish"}, {"num": "06", "slug": "06-design", "title": "Designing the Impossible", "subtitle": "EDA, transistors, and 15,000 engineer-years"}, {"num": "07", "slug": "07-deposition", "title": "Painting with Atoms", "subtitle": "CVD, ALD, PVD and the art of thin films"}, {"num": "08", "slug": "08-euv", "title": "Light at 13.5 Nanometers", "subtitle": "EUV lithography \u2014 the most complex machine ever built"}, {"num": "09", "slug": "09-etch-and-implant", "title": "Carving and Doping", "subtitle": "Plasma etch and ion implantation"}, {"num": "10", "slug": "10-interconnects", "title": "The Wiring Sky", "subtitle": "Fifteen layers of copper, dancing on a postage stamp"}, {"num": "11", "slug": "11-test-and-dice", "title": "Test and Dice", "subtitle": "Yield, the industry's most guarded secret"}, {"num": "12", "slug": "12-cowos-hbm", "title": "CoWoS and the 2.5D Revolution", "subtitle": "How HBM4 sits a hair's breadth from the GPU"}, {"num": "13", "slug": "13-vera-rubin-superchip", "title": "The Vera Rubin Superchip", "subtitle": "Two GPUs, one CPU, 1.8 TB/s between them"}, {"num": "14", "slug": "14-nvl72", "title": "The NVL72 Rack", "subtitle": "72 GPUs that move data faster than the internet"}, {"num": "15", "slug": "15-burn-in", "title": "Burn-In and Reliability", "subtitle": "Stress-testing chips into honesty"}, {"num": "16", "slug": "16-ai-factory", "title": "The AI Factory", "subtitle": "SuperPODs, exaflops, and the new economy of intelligence"}, {"num": "17", "slug": "17-electron-choice", "title": "The Electron's Choice", "subtitle": "Band gaps, doping, and what \u201csemiconductor\u201d really means"}, {"num": "18", "slug": "18-transistor-valve", "title": "The Transistor as a Valve", "subtitle": "How a gate voltage opens a channel"}, {"num": "19", "slug": "19-switch-to-logic", "title": "From Switch to Logic", "subtitle": "NAND, NOR, and the universality theorem"}, {"num": "20", "slug": "20-adder-and-memory", "title": "Adders, Latches, Memory", "subtitle": "From half-adder to ALU; the bit that remembers"}, {"num": "21", "slug": "21-the-clock", "title": "The Clock", "subtitle": "Synchrony, pipelining, and the heartbeat that makes a chip go"}, {"num": "22", "slug": "22-fetch-decode-execute", "title": "Fetch, Decode, Execute", "subtitle": "The instruction cycle and a CPU's to-do list"}, {"num": "23", "slug": "23-isa", "title": "From Transistors to ISA", "subtitle": "The contract between hardware and software"}, {"num": "24", "slug": "24-memory-pyramid", "title": "Memory's Pyramid", "subtitle": "Registers, caches, DRAM, and the tyranny of distance"}, {"num": "25", "slug": "25-boot", "title": "Boot", "subtitle": "The first second of a chip's life"}, {"num": "26", "slug": "26-os-conductor", "title": "The OS as Conductor", "subtitle": "Processes, virtual memory, and the illusion of plenty"}, {"num": "27", "slug": "27-compilers", "title": "The Translation Stack", "subtitle": "Python to bytecode to LLVM to silicon"}, {"num": "28", "slug": "28-gpu-mind", "title": "The GPU's Different Mind", "subtitle": "SIMT, warps, and tensor cores"}, {"num": "29", "slug": "29-network-in-numbers", "title": "A Neural Network Lives in Numbers", "subtitle": "Weights as DRAM, thought as matrix multiply"}, {"num": "30", "slug": "30-one-thought", "title": "A Thought, Token by Token", "subtitle": "Tracing one inference through the silicon"}, {"num": "31", "slug": "31-second-wire", "title": "The Second Wire", "subtitle": "When models start talking to each other"}, {"num": "32", "slug": "32-tokens-on-wire", "title": "Tokens on the Wire", "subtitle": "What flows when intelligence is the payload"}, {"num": "33", "slug": "33-latency", "title": "Latency Is Cognition", "subtitle": "Why milliseconds decide what a model can think about"}, {"num": "34", "slug": "34-agents", "title": "Agents", "subtitle": "The loop that turns a model into a worker"}, {"num": "35", "slug": "35-swarm", "title": "Swarm", "subtitle": "Many agents, one outcome"}, {"num": "36", "slug": "36-protocols", "title": "Protocols of Trust", "subtitle": "MCP, A2A, and the standards quietly being negotiated"}, {"num": "37", "slug": "37-memory-commons", "title": "The Memory Commons", "subtitle": "Vector databases and the shared substrate of recall"}, {"num": "38", "slug": "38-browser-worker", "title": "The Browser Becomes the Worker", "subtitle": "When the agent operates the same software you do"}, {"num": "39", "slug": "39-markets-of-models", "title": "Markets of Models", "subtitle": "Routing, price-per-token, and the commoditization layer"}, {"num": "40", "slug": "40-compounding", "title": "The Compounding", "subtitle": "Data, evals, and the flywheels that decide who wins"}, {"num": "41", "slug": "41-value-reroutes", "title": "Where Value Reroutes", "subtitle": "Who wins, who is squeezed, who is materially losing"}, {"num": "42", "slug": "42-loom", "title": "The Loom", "subtitle": "Epilogue II \u2014 networks of intelligence as the new fabric"}]; window.__SIDENOTES__ = {"valence electrons": "Electrons in an atom's outermost shell \u2014 the ones available for chemical bonding.", "eV": "Electron-volt: the energy gained by one electron crossing a 1-volt potential. The natural unit for atomic-scale physics.", "thermal energy": "Random kinetic energy of particles due to temperature. At room temperature, \u2248 0.026 eV per particle.", "p-n junction": "The boundary between p-type and n-type silicon. The building block of every diode and transistor.", "MOSFET": "Metal-Oxide-Semiconductor Field-Effect Transistor \u2014 the dominant kind of transistor in modern chips.", "tensor cores": "Specialized GPU units that multiply small matrix tiles (e.g. 16\u00d716) as a single instruction.", "warp": "A group of 32 GPU threads that execute the same instruction in lockstep.", "MMU": "Memory Management Unit \u2014 the hardware that translates virtual to physical addresses.", "TLB": "Translation Look-aside Buffer \u2014 a small hardware cache of recent address translations.", "cache line": "The unit of memory motion between cache levels \u2014 typically 64 bytes.", "page table": "A tree of mappings from virtual to physical pages, walked by the MMU on every memory access.", "LLVM IR": "An intermediate representation used by Clang, Rust, Swift, and many other compilers.", "system call": "A controlled trap from a user program into the OS kernel.", "context switch": "Saving one process's state and loading another's. Costs a few microseconds.", "BF16": "Brain Floating Point 16 \u2014 a 16-bit format with FP32's exponent range; standard for AI training.", "FP8": "An 8-bit floating-point format used to halve memory and double throughput in modern AI workloads.", "softmax": "A function that turns a vector of real numbers into a probability distribution.", "KV caching": "Storing past Key/Value tensors so an autoregressive model only has to process new tokens.", "autoregressive": "Generating one token at a time, feeding each output back as input for the next step.", "Czochralski": "The process of growing a single silicon crystal by pulling a seed upward from a melt.", "EUV": "Extreme Ultraviolet light at 13.5 nm wavelength, used for the finest chip patterning.", "HBM": "High-Bandwidth Memory \u2014 DRAM dies stacked vertically and bonded next to a GPU.", "CoWoS": "Chip-on-Wafer-on-Substrate \u2014 TSMC's 2.5D packaging that puts GPU and HBM on one interposer.", "NVLink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect, faster than PCIe.", "locality of reference": "The empirical fact that programs reuse recent locations (temporal) and access nearby ones (spatial).", "occupancy": "On a GPU, the ratio of active warps to the maximum possible \u2014 a key metric for hiding latency.", "memory wall": "The widening gap between fast CPU cycles and slow DRAM access \u2014 the central problem of modern architecture.", "SIMT": "Single Instruction, Multiple Threads \u2014 NVIDIA's GPU execution model.", "page fault": "An exception raised when a program touches a virtual address whose physical page isn't present.", "agent": "A model placed in a loop with tools, memory, and a goal \u2014 capable of multi-step action without per-step prompting.", "embedding": "A learned vector representation of text (or other data) where similar meanings sit nearby in vector space.", "RAG": "Retrieval-Augmented Generation \u2014 pulling relevant chunks from a vector store into the prompt before the model answers.", "MCP": "Model Context Protocol \u2014 Anthropic's open standard for letting models talk to external tools and data sources.", "A2A": "Agent-to-Agent protocol \u2014 Google's open standard for letting one agent invoke another over the network.", "vector database": "A datastore (FAISS, pgvector, Pinecone, Weaviate) optimized for nearest-neighbor search over embeddings.", "function calling": "A model's ability to emit a structured tool invocation (name + JSON arguments) instead of free text.", "swarm": "A coordinated group of agents (planner, researchers, writers, critics) that share state and aim at one outcome.", "routing": "Choosing which model to send a request to based on price, latency, or capability \u2014 the new commoditization layer above model APIs.", "latency budget": "The total time an agent has to think and act before the user gives up. Each step in the loop spends part of it.", "context window": "The maximum number of tokens a model can attend to at once. The price of one full window is the unit cost of one 'thought'.", "token": "The unit a language model reads and writes \u2014 roughly three characters of English on average."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Sand to Superintelligence<span class="brand__sub"> — a visual journey</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 33 of 42</div>
+    <div class="ch-header__num">Chapter 33</div>
+    <h1 class="ch-header__title">Latency Is Cognition</h1>
+    <p class="ch-header__dek">Why milliseconds decide what a model can think about</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">~80 <em>ms</em></div><div class="stat__label">transcontinental TCP round trip on the public internet</div></div><div class="stat"><div class="stat__num">~30-100 <em>ms</em></div><div class="stat__label">first-token latency from a major frontier model</div></div><div class="stat"><div class="stat__num">~50 <em>ms</em></div><div class="stat__label">time per output token at typical batch sizes</div></div></div>
+    <div class="toolbar reveal">
+      <button class="toolbar__btn" data-audio-toggle type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#rtt-as-budget">Round-trip time as a cognitive budget</a></li><li><a href="#the-budget-is-tight">How tight the budget is</a></li><li><a href="#speculative-execution">Speculative inference and parallelism</a></li><li><a href="#co-location">Co-location and the geography of thought</a></li><li><a href="#the-real-bottleneck">The real bottleneck is no longer FLOPS</a></li></ul></aside>
+    <article class="prose">
+      
+<p class="lede">When two people are talking, one's response is the other's input. The same is true of two models. The instant we start chaining inferences — model A asks model B, which calls a search tool, which returns to model A, which produces an answer — the round-trip times stop being an engineering footnote and become the binding constraint on what the system can do at all. This chapter is about latency as a cognitive budget, and what happens when you blow it.</p>
+
+<h2 id="rtt-as-budget">Round-trip time as a cognitive budget</h2>
+
+<p>Suppose your product target is a three-second response from the moment a user presses enter. That budget has to cover, at minimum: a network round-trip from the client to your backend (~10ms), your backend's own work (~10ms), a network round-trip from your backend to the model provider (~50-100ms across regions), the provider's queuing and pre-processing (~50ms at moderate load), the prompt-processing forward pass (~100-500ms depending on prompt length), and then per-token generation at perhaps 50ms per token. To produce 30 tokens of output, you need roughly 1.5 seconds of pure generation, on top of all the overhead. If you are running a chain of two model calls, you double everything except the client-side overhead.</p>
+
+<p>Three seconds, which feels generous to a human, is often barely enough for a single round-trip, single-tool-call AI response. Five seconds is comfortable for one call; ten seconds for a small chain; thirty seconds is the realistic floor for an agent that wants to take more than a couple of actions. Beyond about a minute, users start abandoning. <a href="https://www.nngroup.com/articles/response-times-3-important-limits/">Nielsen's classic response-time work</a> from 1993 still applies: ten seconds is the limit at which the user's attention starts wandering off.</p>
+
+<h2 id="the-budget-is-tight">How tight the budget is</h2>
+
+<p>The reason the budget is tight is not that any one component is slow; it is that all of them are running at, or near, fundamental limits. Speed-of-light gives you about 200,000 km/s in fibre, so a US-to-Europe round-trip cannot be much under 80ms regardless of how good the engineering is. Token generation is bounded by HBM bandwidth: even on a Rubin GPU at 8 TB/s, reading 200 GB of model weights once per token sets a hard floor under per-token latency, partially mitigated by batching. <a href="https://arxiv.org/abs/2305.13245">Speculative decoding</a>, KV cache reuse, and continuous batching squeeze the constants but cannot break the floor.</p>
+
+<p>What this means in practice is that <strong>compute and bandwidth are not the binding constraint for distributed AI</strong>. They are necessary but routinely available. The binding constraint is geometry: how far apart are the components, and how many round-trips does the workflow require. A team with a worse model that runs in the same data center as its data will, for many real workloads, beat a team with a better model that has to round-trip across continents.</p>
+
+<h2 id="speculative-execution">Speculative inference and parallelism</h2>
+
+<p>The systems response is to do less waiting in series. Several techniques are now standard:</p>
+
+<ul>
+  <li><strong>Speculative decoding.</strong> A small fast "draft" model proposes the next several tokens; the large model verifies them in a single forward pass. When the small model is right, you got several tokens for the cost of one. <a href="https://arxiv.org/abs/2211.17192">Leviathan et al. (2022)</a> introduced the technique; it now ships in production at every major provider.</li>
+  <li><strong>Parallel tool calls.</strong> Modern function-calling APIs let the model emit multiple tool-call requests in one response, executed concurrently rather than sequentially. A naive agent serializes; a competent one parallelizes whenever the calls are independent.</li>
+  <li><strong>Streaming and incremental rendering.</strong> The user starts seeing tokens as they are generated, so the perceived latency is the time-to-first-token (often under 500ms) rather than the time-to-last-token. This buys some grace, but it does not help when the next step depends on the full output.</li>
+</ul>
+
+<h2 id="co-location">Co-location and the geography of thought</h2>
+
+<p>For workloads that chain many calls, the only durable answer is to put the model and the data on the same rack, or at least in the same data center. This has triggered a quiet repositioning across the cloud industry. AWS, Azure, and Google Cloud have spent the last two years standing up <em>regional</em> inference endpoints rather than centralizing inference in one or two locations, because their largest customers were paying serious latency tolls calling out to a model in Virginia from a database in Frankfurt.</p>
+
+<p>The eventual shape is likely to mirror what happened with content delivery networks in the 2000s: a tiered system in which the heaviest models live in a few enormous training-and-flagship data centers, while smaller distilled models, embedding models, and routing logic live in regional points of presence close to the user and the data. Anthropic's Claude is now served from a number of geographic regions; OpenAI moved in the same direction; the open-source models are deployed wherever there is GPU capacity to spare.</p>
+
+<h2 id="the-real-bottleneck">The real bottleneck is no longer FLOPS</h2>
+
+<p>If you talk to engineers building production AI systems in 2026, the FLOPS conversations are no longer the loudest. The training-cluster people care about FLOPS; everybody else cares about <em>tail latency</em>. A median request that takes 1.2 seconds at p50 and 14 seconds at p99 has a user experience problem that no amount of model quality can fix; the seven-minute outage caused by a single slow tool call upstream is the failure mode that actually breaks products.</p>
+
+<p>The latency budget is the real currency of agentic systems. You can spend it on more retrieval, on a smarter model, on more tool calls, on more sub-agents — but you cannot spend it twice, and any architecture that pretends otherwise will eventually meet a user with a stopwatch. Chapter 34, where agents start hiring other agents, is in many ways an exercise in latency-budget management dressed up as autonomy.</p>
+
+<p>So far the wire has been carrying questions and answers between a person and a model. The next chapter is about what happens when the model itself starts answering with not text, but actions.</p>
+
+      <figure class="figure figure--wide reveal" id="figure">
+      <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 380" role="img" aria-label="Stacked breakdown of where latency is spent in a typical AI request">
+  <text x="40" y="32" class="label-display" font-size="16">A 3-second budget</text>
+  <text x="40" y="52" font-size="11" fill="var(--color-text-muted)">Where the milliseconds actually go in a single agent step.</text>
+
+  <g font-family="var(--font-mono)" font-size="10">
+    <!-- horizontal axis -->
+    <g stroke="var(--color-divider)" stroke-width="0.6">
+      <line x1="120" y1="320" x2="720" y2="320"/>
+    </g>
+    <g fill="var(--color-text-muted)" font-size="9" text-anchor="middle">
+      <text x="120" y="338">0 s</text>
+      <text x="320" y="338">1 s</text>
+      <text x="520" y="338">2 s</text>
+      <text x="720" y="338">3 s</text>
+    </g>
+
+    <!-- bars (single chain, sequential) -->
+    <g transform="translate(0, 90)">
+      <text x="40" y="20" font-size="10" fill="var(--color-text)">Client → backend</text>
+      <rect x="120" y="6" width="6" height="20" fill="var(--color-accent-copper)"/>
+      <text x="132" y="20" font-size="9" fill="var(--color-text-muted)">~10 ms</text>
+
+      <text x="40" y="55" font-size="10" fill="var(--color-text)">Backend → provider</text>
+      <rect x="120" y="41" width="20" height="20" fill="var(--color-accent-copper)"/>
+      <text x="146" y="55" font-size="9" fill="var(--color-text-muted)">~80 ms RTT</text>
+
+      <text x="40" y="90" font-size="10" fill="var(--color-text)">Queue + auth</text>
+      <rect x="120" y="76" width="14" height="20" fill="var(--color-accent-copper)"/>
+      <text x="140" y="90" font-size="9" fill="var(--color-text-muted)">~50 ms</text>
+
+      <text x="40" y="125" font-size="10" fill="var(--color-text)">Prompt forward pass</text>
+      <rect x="120" y="111" width="60" height="20" fill="var(--color-primary)" fill-opacity="0.5"/>
+      <text x="186" y="125" font-size="9" fill="var(--color-text-muted)">~250 ms</text>
+
+      <text x="40" y="160" font-size="10" fill="var(--color-text)">Generate 30 tokens</text>
+      <rect x="120" y="146" width="300" height="20" fill="var(--color-accent-euv)" fill-opacity="0.6"/>
+      <text x="426" y="160" font-size="9" fill="var(--color-text-muted)">~1,500 ms (50 ms/token)</text>
+
+      <text x="40" y="195" font-size="10" fill="var(--color-text)">Tool call + return</text>
+      <rect x="120" y="181" width="40" height="20" fill="var(--color-accent-plasma)" fill-opacity="0.5"/>
+      <text x="166" y="195" font-size="9" fill="var(--color-text-muted)">~200 ms</text>
+    </g>
+
+    <!-- total -->
+    <g transform="translate(0, 290)">
+      <rect x="120" y="0" width="6" height="14" fill="var(--color-accent-copper)"/>
+      <rect x="126" y="0" width="20" height="14" fill="var(--color-accent-copper)"/>
+      <rect x="146" y="0" width="14" height="14" fill="var(--color-accent-copper)"/>
+      <rect x="160" y="0" width="60" height="14" fill="var(--color-primary)" fill-opacity="0.5"/>
+      <rect x="220" y="0" width="300" height="14" fill="var(--color-accent-euv)" fill-opacity="0.6"/>
+      <rect x="520" y="0" width="40" height="14" fill="var(--color-accent-plasma)" fill-opacity="0.5"/>
+      <text x="40" y="11" font-size="10" fill="var(--color-text)">Total</text>
+      <text x="568" y="11" font-size="9" fill="var(--color-text-muted)">≈ 2.1 s · one chain step</text>
+    </g>
+  </g>
+</svg></div>
+      <figcaption class="figure__caption"><span class="label">Figure 33.1</span><span class="text">A three-second response budget, broken into pieces. Network round-trips, queue wait, prompt-processing pass, and per-token generation each take a real share. Add a tool call and the budget collapses.</span></figcaption>
+    </figure>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="32-tokens-on-wire.html"><span class="ch-nav-link__label">← Chapter 32</span><span class="ch-nav-link__title">Tokens on the Wire</span></a>
+      <a class="ch-nav-link" data-dir="next" href="34-agents.html"><span class="ch-nav-link__label">Chapter 34 →</span><span class="ch-nav-link__title">Agents</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 42 chapters, the epilogue, and the glossary. Try <em>warp</em>, <em>EUV</em>, <em>cache line</em>, or <em>attention</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="../api/tutor">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the book</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does a MOSFET turn on?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Sand to Superintelligence</strong><br>
+      A long-form visual journey through the silicon supply chain.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 25 · Boot — From Sand to Superintelligence</title>
+<meta name="description" content="From a power-on reset signal to a login screen — the strange, layered ritual by which dead silicon becomes a running computer.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="25-boot" data-chapter-title="Boot">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-quartz", "title": "The Mineral", "subtitle": "Quartz, purity, and why ordinary sand can't think"}, {"num": "02", "slug": "02-fire-and-carbon", "title": "Fire and Carbon", "subtitle": "Smelting metallurgical-grade silicon at 1,700\u00b0C"}, {"num": "03", "slug": "03-nine-nines", "title": "The Nine-Nines Problem", "subtitle": "Polysilicon and the Siemens process"}, {"num": "04", "slug": "04-czochralski", "title": "Growing a Perfect Crystal", "subtitle": "The Czochralski dance"}, {"num": "05", "slug": "05-wafers", "title": "From Log to Mirror", "subtitle": "Slicing, lapping, and chemical-mechanical polish"}, {"num": "06", "slug": "06-design", "title": "Designing the Impossible", "subtitle": "EDA, transistors, and 15,000 engineer-years"}, {"num": "07", "slug": "07-deposition", "title": "Painting with Atoms", "subtitle": "CVD, ALD, PVD and the art of thin films"}, {"num": "08", "slug": "08-euv", "title": "Light at 13.5 Nanometers", "subtitle": "EUV lithography \u2014 the most complex machine ever built"}, {"num": "09", "slug": "09-etch-and-implant", "title": "Carving and Doping", "subtitle": "Plasma etch and ion implantation"}, {"num": "10", "slug": "10-interconnects", "title": "The Wiring Sky", "subtitle": "Fifteen layers of copper, dancing on a postage stamp"}, {"num": "11", "slug": "11-test-and-dice", "title": "Test and Dice", "subtitle": "Yield, the industry's most guarded secret"}, {"num": "12", "slug": "12-cowos-hbm", "title": "CoWoS and the 2.5D Revolution", "subtitle": "How HBM4 sits a hair's breadth from the GPU"}, {"num": "13", "slug": "13-vera-rubin-superchip", "title": "The Vera Rubin Superchip", "subtitle": "Two GPUs, one CPU, 1.8 TB/s between them"}, {"num": "14", "slug": "14-nvl72", "title": "The NVL72 Rack", "subtitle": "72 GPUs that move data faster than the internet"}, {"num": "15", "slug": "15-burn-in", "title": "Burn-In and Reliability", "subtitle": "Stress-testing chips into honesty"}, {"num": "16", "slug": "16-ai-factory", "title": "The AI Factory", "subtitle": "SuperPODs, exaflops, and the new economy of intelligence"}, {"num": "17", "slug": "17-electron-choice", "title": "The Electron's Choice", "subtitle": "Band gaps, doping, and what \u201csemiconductor\u201d really means"}, {"num": "18", "slug": "18-transistor-valve", "title": "The Transistor as a Valve", "subtitle": "How a gate voltage opens a channel"}, {"num": "19", "slug": "19-switch-to-logic", "title": "From Switch to Logic", "subtitle": "NAND, NOR, and the universality theorem"}, {"num": "20", "slug": "20-adder-and-memory", "title": "Adders, Latches, Memory", "subtitle": "From half-adder to ALU; the bit that remembers"}, {"num": "21", "slug": "21-the-clock", "title": "The Clock", "subtitle": "Synchrony, pipelining, and the heartbeat that makes a chip go"}, {"num": "22", "slug": "22-fetch-decode-execute", "title": "Fetch, Decode, Execute", "subtitle": "The instruction cycle and a CPU's to-do list"}, {"num": "23", "slug": "23-isa", "title": "From Transistors to ISA", "subtitle": "The contract between hardware and software"}, {"num": "24", "slug": "24-memory-pyramid", "title": "Memory's Pyramid", "subtitle": "Registers, caches, DRAM, and the tyranny of distance"}, {"num": "25", "slug": "25-boot", "title": "Boot", "subtitle": "The first second of a chip's life"}, {"num": "26", "slug": "26-os-conductor", "title": "The OS as Conductor", "subtitle": "Processes, virtual memory, and the illusion of plenty"}, {"num": "27", "slug": "27-compilers", "title": "The Translation Stack", "subtitle": "Python to bytecode to LLVM to silicon"}, {"num": "28", "slug": "28-gpu-mind", "title": "The GPU's Different Mind", "subtitle": "SIMT, warps, and tensor cores"}, {"num": "29", "slug": "29-network-in-numbers", "title": "A Neural Network Lives in Numbers", "subtitle": "Weights as DRAM, thought as matrix multiply"}, {"num": "30", "slug": "30-one-thought", "title": "A Thought, Token by Token", "subtitle": "Tracing one inference through the silicon"}, {"num": "31", "slug": "31-second-wire", "title": "The Second Wire", "subtitle": "When models start talking to each other"}, {"num": "32", "slug": "32-tokens-on-wire", "title": "Tokens on the Wire", "subtitle": "What flows when intelligence is the payload"}, {"num": "33", "slug": "33-latency", "title": "Latency Is Cognition", "subtitle": "Why milliseconds decide what a model can think about"}, {"num": "34", "slug": "34-agents", "title": "Agents", "subtitle": "The loop that turns a model into a worker"}, {"num": "35", "slug": "35-swarm", "title": "Swarm", "subtitle": "Many agents, one outcome"}, {"num": "36", "slug": "36-protocols", "title": "Protocols of Trust", "subtitle": "MCP, A2A, and the standards quietly being negotiated"}, {"num": "37", "slug": "37-memory-commons", "title": "The Memory Commons", "subtitle": "Vector databases and the shared substrate of recall"}, {"num": "38", "slug": "38-browser-worker", "title": "The Browser Becomes the Worker", "subtitle": "When the agent operates the same software you do"}, {"num": "39", "slug": "39-markets-of-models", "title": "Markets of Models", "subtitle": "Routing, price-per-token, and the commoditization layer"}, {"num": "40", "slug": "40-compounding", "title": "The Compounding", "subtitle": "Data, evals, and the flywheels that decide who wins"}, {"num": "41", "slug": "41-value-reroutes", "title": "Where Value Reroutes", "subtitle": "Who wins, who is squeezed, who is materially losing"}, {"num": "42", "slug": "42-loom", "title": "The Loom", "subtitle": "Epilogue II \u2014 networks of intelligence as the new fabric"}]; window.__SIDENOTES__ = {"valence electrons": "Electrons in an atom's outermost shell \u2014 the ones available for chemical bonding.", "eV": "Electron-volt: the energy gained by one electron crossing a 1-volt potential. The natural unit for atomic-scale physics.", "thermal energy": "Random kinetic energy of particles due to temperature. At room temperature, \u2248 0.026 eV per particle.", "p-n junction": "The boundary between p-type and n-type silicon. The building block of every diode and transistor.", "MOSFET": "Metal-Oxide-Semiconductor Field-Effect Transistor \u2014 the dominant kind of transistor in modern chips.", "tensor cores": "Specialized GPU units that multiply small matrix tiles (e.g. 16\u00d716) as a single instruction.", "warp": "A group of 32 GPU threads that execute the same instruction in lockstep.", "MMU": "Memory Management Unit \u2014 the hardware that translates virtual to physical addresses.", "TLB": "Translation Look-aside Buffer \u2014 a small hardware cache of recent address translations.", "cache line": "The unit of memory motion between cache levels \u2014 typically 64 bytes.", "page table": "A tree of mappings from virtual to physical pages, walked by the MMU on every memory access.", "LLVM IR": "An intermediate representation used by Clang, Rust, Swift, and many other compilers.", "system call": "A controlled trap from a user program into the OS kernel.", "context switch": "Saving one process's state and loading another's. Costs a few microseconds.", "BF16": "Brain Floating Point 16 \u2014 a 16-bit format with FP32's exponent range; standard for AI training.", "FP8": "An 8-bit floating-point format used to halve memory and double throughput in modern AI workloads.", "softmax": "A function that turns a vector of real numbers into a probability distribution.", "KV caching": "Storing past Key/Value tensors so an autoregressive model only has to process new tokens.", "autoregressive": "Generating one token at a time, feeding each output back as input for the next step.", "Czochralski": "The process of growing a single silicon crystal by pulling a seed upward from a melt.", "EUV": "Extreme Ultraviolet light at 13.5 nm wavelength, used for the finest chip patterning.", "HBM": "High-Bandwidth Memory \u2014 DRAM dies stacked vertically and bonded next to a GPU.", "CoWoS": "Chip-on-Wafer-on-Substrate \u2014 TSMC's 2.5D packaging that puts GPU and HBM on one interposer.", "NVLink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect, faster than PCIe.", "locality of reference": "The empirical fact that programs reuse recent locations (temporal) and access nearby ones (spatial).", "occupancy": "On a GPU, the ratio of active warps to the maximum possible \u2014 a key metric for hiding latency.", "memory wall": "The widening gap between fast CPU cycles and slow DRAM access \u2014 the central problem of modern architecture.", "SIMT": "Single Instruction, Multiple Threads \u2014 NVIDIA's GPU execution model.", "page fault": "An exception raised when a program touches a virtual address whose physical page isn't present.", "agent": "A model placed in a loop with tools, memory, and a goal \u2014 capable of multi-step action without per-step prompting.", "embedding": "A learned vector representation of text (or other data) where similar meanings sit nearby in vector space.", "RAG": "Retrieval-Augmented Generation \u2014 pulling relevant chunks from a vector store into the prompt before the model answers.", "MCP": "Model Context Protocol \u2014 Anthropic's open standard for letting models talk to external tools and data sources.", "A2A": "Agent-to-Agent protocol \u2014 Google's open standard for letting one agent invoke another over the network.", "vector database": "A datastore (FAISS, pgvector, Pinecone, Weaviate) optimized for nearest-neighbor search over embeddings.", "function calling": "A model's ability to emit a structured tool invocation (name + JSON arguments) instead of free text.", "swarm": "A coordinated group of agents (planner, researchers, writers, critics) that share state and aim at one outcome.", "routing": "Choosing which model to send a request to based on price, latency, or capability \u2014 the new commoditization layer above model APIs.", "latency budget": "The total time an agent has to think and act before the user gives up. Each step in the loop spends part of it.", "context window": "The maximum number of tokens a model can attend to at once. The price of one full window is the unit cost of one 'thought'.", "token": "The unit a language model reads and writes \u2014 roughly three characters of English on average."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Sand to Superintelligence<span class="brand__sub"> — a visual journey</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 25 of 42</div>
+    <div class="ch-header__num">Chapter 25</div>
+    <h1 class="ch-header__title">Boot</h1>
+    <p class="ch-header__dek">The first second of a chip's life</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">0xFFFFFFF0</div><div class="stat__label">the address an x86 CPU jumps to on reset</div></div><div class="stat"><div class="stat__num">~5 <em>stages</em></div><div class="stat__label">from power-on to login prompt</div></div><div class="stat"><div class="stat__num">~3 <em>seconds</em></div><div class="stat__label">modern UEFI boot to kernel hand-off</div></div></div>
+    <div class="toolbar reveal">
+      <button class="toolbar__btn" data-audio-toggle type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#power-on">Power-on reset</a></li><li><a href="#the-firmware">Firmware: BIOS and UEFI</a></li><li><a href="#the-bootloader">The bootloader</a></li><li><a href="#the-kernel">The kernel takes over</a></li><li><a href="#userspace">Into userspace</a></li></ul></aside>
+    <article class="prose">
+      
+<p class="lede">Press the power button. Voltages stabilize, the clock begins ticking, and a cold piece of silicon is suddenly alive — but blank. It has no operating system in memory, no concept of files, no keyboard driver, no display. What happens in the next three seconds is one of the most carefully choreographed sequences in all of engineering: a relay race in which each runner knows just enough to find and pass the baton to the next.</p>
+
+<h2 id="power-on">Power-on reset</h2>
+
+<p>The first thing the chip does is the simplest. A small circuit detects that the supply voltage has crossed a threshold and asserts the <strong>reset</strong> line. Every flip-flop on the die — and there are billions — slams to a known state. The program counter, the special register holding the address of the next instruction, is set to a fixed boot vector. On x86 CPUs that vector is <a href="https://wiki.osdev.org/Real_mode">0xFFFFFFF0</a>. On ARM, it is configurable but typically zero.</p>
+
+<p>Reset is the only moment in a CPU's life when its starting state is fully predictable. From here on, everything is contingent.</p>
+
+<h2 id="the-firmware">Firmware: BIOS and UEFI</h2>
+
+<p>The boot vector points into <strong>flash memory</strong> — a small chip on the motherboard, separate from the main DRAM and immune to power loss. There lives the system firmware. On modern PCs this is <a href="https://uefi.org/specifications">UEFI</a> (Unified Extensible Firmware Interface); the older standard was BIOS. On Macs it is similar firmware called iBoot. On a Rubin GPU node, the BMC (baseboard management controller) plays a comparable role.</p>
+
+<p>The firmware's job is to inventory and initialize the hardware: detect how much DRAM is installed and run memory training to find optimal timings, enumerate PCIe devices, set up the interrupt controller, initialize the chipset, configure the CPU's microcode, and locate bootable storage. It does this with a tiny, statically linked program that lives in flash and never trusts anything beyond what it has just measured.</p>
+
+<p>Once it has a healthy machine, UEFI's last act is to find a <em>bootloader</em> on disk and jump to it.</p>
+
+<h2 id="the-bootloader">The bootloader</h2>
+
+<p>The bootloader is a small program — <a href="https://www.gnu.org/software/grub/">GRUB</a> on most Linux installs, systemd-boot or rEFInd on others, the Windows Boot Manager on Windows, iBoot Stage 1 on Macs. Its only purpose is to find an operating system kernel on disk, copy it into memory, set up the conditions the kernel expects, and jump to the kernel's entry point.</p>
+
+<p>This is more delicate than it sounds. The kernel image on disk is usually compressed (Linux's <code>vmlinuz</code> is a self-extracting blob), so the bootloader must decompress it into a clean region of RAM. It must also pass the kernel a bundle of facts about the machine — where DRAM lives, which CPUs are present, what the firmware promised — via a structured <strong>boot protocol</strong>. <a href="https://www.kernel.org/doc/html/latest/x86/boot.html">The Linux x86 boot protocol</a> documents this handoff in painstaking detail.</p>
+
+<h2 id="the-kernel">The kernel takes over</h2>
+
+<p>The kernel begins its life single-threaded, in physical-memory mode, on a single CPU core. Its first acts are to set up its own page tables (so it can use virtual memory — Chapter 26), enable interrupts, initialize the scheduler, mount the root filesystem, and bring the other CPU cores online.</p>
+
+<p>The Linux <a href="https://www.kernel.org/doc/html/latest/admin-guide/bootconfig.html">kernel boot</a> is a set of well-named functions: <code>start_kernel()</code> calls <code>setup_arch()</code>, <code>mm_init()</code>, <code>sched_init()</code>, <code>rest_init()</code>. Each one transforms a slightly more limited machine into a slightly less limited one. By the end, the kernel has multitasking, virtual memory, and a primitive process list of exactly one entry: the <strong>init process</strong>, PID 1.</p>
+
+<h2 id="userspace">Into userspace</h2>
+
+<p>The kernel launches PID 1 — historically <code>/sbin/init</code>, today usually <a href="https://systemd.io/">systemd</a> on Linux, launchd on macOS, the Service Control Manager on Windows. PID 1 is the parent of every other process. It reads its configuration, mounts remaining filesystems, brings up networking, starts daemons (sshd, the display manager, audio, Bluetooth), and finally launches your login screen.</p>
+
+<p>The whole sequence — power-on to login — takes about three seconds on a modern system. Behind that small wait is a five-stage relay race, each stage trusting only what it has measured, each stage handing off a slightly more capable machine to the next. None of the runners know the whole route. Together they get you from a dark chip to a working computer.</p>
+
+<p>What they hand to the user is an illusion: that the machine has always been awake, has infinite memory, runs many programs at once, and is one's own. Producing that illusion is the job of the operating system, which we meet next.</p>
+
+      <figure class="figure figure--wide reveal" id="figure">
+      <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="Boot sequence from power-on reset to user shell">
+  <text x="40" y="32" class="label-display" font-size="16">The first second</text>
+  <text x="40" y="52" font-size="11" fill="var(--color-text-muted)">From cold silicon to a login prompt — six handoffs, each handing the chip more autonomy.</text>
+
+  <!-- horizontal flow: 6 stages -->
+  <g font-family="var(--font-mono)" font-size="10">
+    <!-- timeline -->
+    <line x1="60" y1="240" x2="740" y2="240" class="stroke-line"/>
+    <g class="stroke-line--dim">
+      <line x1="60" y1="232" x2="60" y2="248"/>
+      <line x1="200" y1="232" x2="200" y2="248"/>
+      <line x1="340" y1="232" x2="340" y2="248"/>
+      <line x1="480" y1="232" x2="480" y2="248"/>
+      <line x1="620" y1="232" x2="620" y2="248"/>
+      <line x1="740" y1="232" x2="740" y2="248"/>
+    </g>
+    <g fill="var(--color-text-muted)" text-anchor="middle">
+      <text x="60" y="262">0 ms</text>
+      <text x="200" y="262">~10 ms</text>
+      <text x="340" y="262">~200 ms</text>
+      <text x="480" y="262">~500 ms</text>
+      <text x="620" y="262">~1.2 s</text>
+      <text x="740" y="262">~3 s</text>
+    </g>
+
+    <!-- stage cards -->
+    <g>
+      <rect x="20" y="100" width="120" height="100" fill="var(--color-surface)" stroke="var(--color-accent-plasma)" stroke-width="1.2"/>
+      <text x="80" y="124" font-size="11" text-anchor="middle" class="label-strong" fill="var(--color-text)">POWER-ON</text>
+      <text x="80" y="140" font-size="9" text-anchor="middle" fill="var(--color-text-muted)">12 V hits the chip</text>
+      <text x="80" y="156" font-size="9" text-anchor="middle" fill="var(--color-text-muted)">RESET pin held high</text>
+      <text x="80" y="172" font-size="9" text-anchor="middle" fill="var(--color-text-muted)">PLLs lock the clock</text>
+      <text x="80" y="188" font-size="9" text-anchor="middle" fill="var(--color-text-muted)">PC = 0xFFFFFFF0</text>
+    </g>
+    <g>
+      <rect x="160" y="100" width="120" height="100" fill="var(--color-surface)" stroke="var(--color-accent-copper)" stroke-width="1.2"/>
+      <text x="220" y="124" font-size="11" text-anchor="middle" class="label-strong" fill="var(--color-text)">FIRMWARE</text>
+      <text x="220" y="140" font-size="9" text-anchor="middle" fill="var(--color-text-muted)">UEFI / BIOS in flash</text>
+      <text x="220" y="156" font-size="9" text-anchor="middle" fill="var(--color-text-muted)">init RAM, USB, video</text>
+      <text x="220" y="172" font-size="9" text-anchor="middle" fill="var(--color-text-muted)">find boot device</text>
+    </g>
+    <g>
+      <rect x="300" y="100" width="120" height="100" fill="var(--color-surface)" stroke="var(--color-accent-copper)" stroke-width="1.2"/>
+      <text x="360" y="124" font-size="11" text-anchor="middle" class="label-strong" fill="var(--color-text)">BOOTLOADER</text>
+      <text x="360" y="140" font-size="9" text-anchor="middle" fill="var(--color-text-muted)">GRUB / systemd-boot</text>
+      <text x="360" y="156" font-size="9" text-anchor="middle" fill="var(--color-text-muted)">load kernel image</text>
+      <text x="360" y="172" font-size="9" text-anchor="middle" fill="var(--color-text-muted)">jump into it</text>
+    </g>
+    <g>
+      <rect x="440" y="100" width="120" height="100" fill="var(--color-surface)" stroke="var(--color-primary)" stroke-width="1.2"/>
+      <text x="500" y="124" font-size="11" text-anchor="middle" class="label-strong" fill="var(--color-text)">KERNEL</text>
+      <text x="500" y="140" font-size="9" text-anchor="middle" fill="var(--color-text-muted)">decompress, init MMU</text>
+      <text x="500" y="156" font-size="9" text-anchor="middle" fill="var(--color-text-muted)">probe drivers, mount /</text>
+      <text x="500" y="172" font-size="9" text-anchor="middle" fill="var(--color-text-muted)">spawn pid 1</text>
+    </g>
+    <g>
+      <rect x="580" y="100" width="120" height="100" fill="var(--color-surface)" stroke="var(--color-accent-euv)" stroke-width="1.2"/>
+      <text x="640" y="124" font-size="11" text-anchor="middle" class="label-strong" fill="var(--color-text)">INIT / SYSTEMD</text>
+      <text x="640" y="140" font-size="9" text-anchor="middle" fill="var(--color-text-muted)">launch services</text>
+      <text x="640" y="156" font-size="9" text-anchor="middle" fill="var(--color-text-muted)">network, audio, GUI</text>
+      <text x="640" y="172" font-size="9" text-anchor="middle" fill="var(--color-text-muted)">login prompt</text>
+    </g>
+
+    <!-- connecting lines down to timeline -->
+    <g class="stroke-line--dim">
+      <line x1="80" y1="200" x2="80" y2="232"/><line x1="80" y1="232" x2="60" y2="232"/>
+      <line x1="220" y1="200" x2="220" y2="232"/><line x1="220" y1="232" x2="200" y2="232"/>
+      <line x1="360" y1="200" x2="360" y2="232"/><line x1="360" y1="232" x2="340" y2="232"/>
+      <line x1="500" y1="200" x2="500" y2="232"/><line x1="500" y1="232" x2="480" y2="232"/>
+      <line x1="640" y1="200" x2="640" y2="232"/><line x1="640" y1="232" x2="620" y2="232"/>
+    </g>
+  </g>
+
+  <text x="740" y="200" font-size="11" text-anchor="end" fill="var(--color-accent-euv)">→ user shell, ready</text>
+</svg></div>
+      <figcaption class="figure__caption"><span class="label">Figure 25.1</span><span class="text">The boot ladder. Each stage knows just enough to find, load, and verify the next — handing off control like a relay race that ends at your login screen.</span></figcaption>
+    </figure>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="24-memory-pyramid.html"><span class="ch-nav-link__label">← Chapter 24</span><span class="ch-nav-link__title">Memory's Pyramid</span></a>
+      <a class="ch-nav-link" data-dir="next" href="26-os-conductor.html"><span class="ch-nav-link__label">Chapter 26 →</span><span class="ch-nav-link__title">The OS as Conductor</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 42 chapters, the epilogue, and the glossary. Try <em>warp</em>, <em>EUV</em>, <em>cache line</em>, or <em>attention</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="../api/tutor">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the book</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does a MOSFET turn on?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Sand to Superintelligence</strong><br>
+      A long-form visual journey through the silicon supply chain.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>

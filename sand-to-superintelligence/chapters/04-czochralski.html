@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 04 · Growing a Perfect Crystal — From Sand to Superintelligence</title>
+<meta name="description" content="A seed crystal kisses molten silicon and pulls upward for a day. What emerges is the most ordered object in industry.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="04-czochralski" data-chapter-title="Growing a Perfect Crystal">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-quartz", "title": "The Mineral", "subtitle": "Quartz, purity, and why ordinary sand can't think"}, {"num": "02", "slug": "02-fire-and-carbon", "title": "Fire and Carbon", "subtitle": "Smelting metallurgical-grade silicon at 1,700\u00b0C"}, {"num": "03", "slug": "03-nine-nines", "title": "The Nine-Nines Problem", "subtitle": "Polysilicon and the Siemens process"}, {"num": "04", "slug": "04-czochralski", "title": "Growing a Perfect Crystal", "subtitle": "The Czochralski dance"}, {"num": "05", "slug": "05-wafers", "title": "From Log to Mirror", "subtitle": "Slicing, lapping, and chemical-mechanical polish"}, {"num": "06", "slug": "06-design", "title": "Designing the Impossible", "subtitle": "EDA, transistors, and 15,000 engineer-years"}, {"num": "07", "slug": "07-deposition", "title": "Painting with Atoms", "subtitle": "CVD, ALD, PVD and the art of thin films"}, {"num": "08", "slug": "08-euv", "title": "Light at 13.5 Nanometers", "subtitle": "EUV lithography \u2014 the most complex machine ever built"}, {"num": "09", "slug": "09-etch-and-implant", "title": "Carving and Doping", "subtitle": "Plasma etch and ion implantation"}, {"num": "10", "slug": "10-interconnects", "title": "The Wiring Sky", "subtitle": "Fifteen layers of copper, dancing on a postage stamp"}, {"num": "11", "slug": "11-test-and-dice", "title": "Test and Dice", "subtitle": "Yield, the industry's most guarded secret"}, {"num": "12", "slug": "12-cowos-hbm", "title": "CoWoS and the 2.5D Revolution", "subtitle": "How HBM4 sits a hair's breadth from the GPU"}, {"num": "13", "slug": "13-vera-rubin-superchip", "title": "The Vera Rubin Superchip", "subtitle": "Two GPUs, one CPU, 1.8 TB/s between them"}, {"num": "14", "slug": "14-nvl72", "title": "The NVL72 Rack", "subtitle": "72 GPUs that move data faster than the internet"}, {"num": "15", "slug": "15-burn-in", "title": "Burn-In and Reliability", "subtitle": "Stress-testing chips into honesty"}, {"num": "16", "slug": "16-ai-factory", "title": "The AI Factory", "subtitle": "SuperPODs, exaflops, and the new economy of intelligence"}, {"num": "17", "slug": "17-electron-choice", "title": "The Electron's Choice", "subtitle": "Band gaps, doping, and what \u201csemiconductor\u201d really means"}, {"num": "18", "slug": "18-transistor-valve", "title": "The Transistor as a Valve", "subtitle": "How a gate voltage opens a channel"}, {"num": "19", "slug": "19-switch-to-logic", "title": "From Switch to Logic", "subtitle": "NAND, NOR, and the universality theorem"}, {"num": "20", "slug": "20-adder-and-memory", "title": "Adders, Latches, Memory", "subtitle": "From half-adder to ALU; the bit that remembers"}, {"num": "21", "slug": "21-the-clock", "title": "The Clock", "subtitle": "Synchrony, pipelining, and the heartbeat that makes a chip go"}, {"num": "22", "slug": "22-fetch-decode-execute", "title": "Fetch, Decode, Execute", "subtitle": "The instruction cycle and a CPU's to-do list"}, {"num": "23", "slug": "23-isa", "title": "From Transistors to ISA", "subtitle": "The contract between hardware and software"}, {"num": "24", "slug": "24-memory-pyramid", "title": "Memory's Pyramid", "subtitle": "Registers, caches, DRAM, and the tyranny of distance"}, {"num": "25", "slug": "25-boot", "title": "Boot", "subtitle": "The first second of a chip's life"}, {"num": "26", "slug": "26-os-conductor", "title": "The OS as Conductor", "subtitle": "Processes, virtual memory, and the illusion of plenty"}, {"num": "27", "slug": "27-compilers", "title": "The Translation Stack", "subtitle": "Python to bytecode to LLVM to silicon"}, {"num": "28", "slug": "28-gpu-mind", "title": "The GPU's Different Mind", "subtitle": "SIMT, warps, and tensor cores"}, {"num": "29", "slug": "29-network-in-numbers", "title": "A Neural Network Lives in Numbers", "subtitle": "Weights as DRAM, thought as matrix multiply"}, {"num": "30", "slug": "30-one-thought", "title": "A Thought, Token by Token", "subtitle": "Tracing one inference through the silicon"}, {"num": "31", "slug": "31-second-wire", "title": "The Second Wire", "subtitle": "When models start talking to each other"}, {"num": "32", "slug": "32-tokens-on-wire", "title": "Tokens on the Wire", "subtitle": "What flows when intelligence is the payload"}, {"num": "33", "slug": "33-latency", "title": "Latency Is Cognition", "subtitle": "Why milliseconds decide what a model can think about"}, {"num": "34", "slug": "34-agents", "title": "Agents", "subtitle": "The loop that turns a model into a worker"}, {"num": "35", "slug": "35-swarm", "title": "Swarm", "subtitle": "Many agents, one outcome"}, {"num": "36", "slug": "36-protocols", "title": "Protocols of Trust", "subtitle": "MCP, A2A, and the standards quietly being negotiated"}, {"num": "37", "slug": "37-memory-commons", "title": "The Memory Commons", "subtitle": "Vector databases and the shared substrate of recall"}, {"num": "38", "slug": "38-browser-worker", "title": "The Browser Becomes the Worker", "subtitle": "When the agent operates the same software you do"}, {"num": "39", "slug": "39-markets-of-models", "title": "Markets of Models", "subtitle": "Routing, price-per-token, and the commoditization layer"}, {"num": "40", "slug": "40-compounding", "title": "The Compounding", "subtitle": "Data, evals, and the flywheels that decide who wins"}, {"num": "41", "slug": "41-value-reroutes", "title": "Where Value Reroutes", "subtitle": "Who wins, who is squeezed, who is materially losing"}, {"num": "42", "slug": "42-loom", "title": "The Loom", "subtitle": "Epilogue II \u2014 networks of intelligence as the new fabric"}]; window.__SIDENOTES__ = {"valence electrons": "Electrons in an atom's outermost shell \u2014 the ones available for chemical bonding.", "eV": "Electron-volt: the energy gained by one electron crossing a 1-volt potential. The natural unit for atomic-scale physics.", "thermal energy": "Random kinetic energy of particles due to temperature. At room temperature, \u2248 0.026 eV per particle.", "p-n junction": "The boundary between p-type and n-type silicon. The building block of every diode and transistor.", "MOSFET": "Metal-Oxide-Semiconductor Field-Effect Transistor \u2014 the dominant kind of transistor in modern chips.", "tensor cores": "Specialized GPU units that multiply small matrix tiles (e.g. 16\u00d716) as a single instruction.", "warp": "A group of 32 GPU threads that execute the same instruction in lockstep.", "MMU": "Memory Management Unit \u2014 the hardware that translates virtual to physical addresses.", "TLB": "Translation Look-aside Buffer \u2014 a small hardware cache of recent address translations.", "cache line": "The unit of memory motion between cache levels \u2014 typically 64 bytes.", "page table": "A tree of mappings from virtual to physical pages, walked by the MMU on every memory access.", "LLVM IR": "An intermediate representation used by Clang, Rust, Swift, and many other compilers.", "system call": "A controlled trap from a user program into the OS kernel.", "context switch": "Saving one process's state and loading another's. Costs a few microseconds.", "BF16": "Brain Floating Point 16 \u2014 a 16-bit format with FP32's exponent range; standard for AI training.", "FP8": "An 8-bit floating-point format used to halve memory and double throughput in modern AI workloads.", "softmax": "A function that turns a vector of real numbers into a probability distribution.", "KV caching": "Storing past Key/Value tensors so an autoregressive model only has to process new tokens.", "autoregressive": "Generating one token at a time, feeding each output back as input for the next step.", "Czochralski": "The process of growing a single silicon crystal by pulling a seed upward from a melt.", "EUV": "Extreme Ultraviolet light at 13.5 nm wavelength, used for the finest chip patterning.", "HBM": "High-Bandwidth Memory \u2014 DRAM dies stacked vertically and bonded next to a GPU.", "CoWoS": "Chip-on-Wafer-on-Substrate \u2014 TSMC's 2.5D packaging that puts GPU and HBM on one interposer.", "NVLink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect, faster than PCIe.", "locality of reference": "The empirical fact that programs reuse recent locations (temporal) and access nearby ones (spatial).", "occupancy": "On a GPU, the ratio of active warps to the maximum possible \u2014 a key metric for hiding latency.", "memory wall": "The widening gap between fast CPU cycles and slow DRAM access \u2014 the central problem of modern architecture.", "SIMT": "Single Instruction, Multiple Threads \u2014 NVIDIA's GPU execution model.", "page fault": "An exception raised when a program touches a virtual address whose physical page isn't present.", "agent": "A model placed in a loop with tools, memory, and a goal \u2014 capable of multi-step action without per-step prompting.", "embedding": "A learned vector representation of text (or other data) where similar meanings sit nearby in vector space.", "RAG": "Retrieval-Augmented Generation \u2014 pulling relevant chunks from a vector store into the prompt before the model answers.", "MCP": "Model Context Protocol \u2014 Anthropic's open standard for letting models talk to external tools and data sources.", "A2A": "Agent-to-Agent protocol \u2014 Google's open standard for letting one agent invoke another over the network.", "vector database": "A datastore (FAISS, pgvector, Pinecone, Weaviate) optimized for nearest-neighbor search over embeddings.", "function calling": "A model's ability to emit a structured tool invocation (name + JSON arguments) instead of free text.", "swarm": "A coordinated group of agents (planner, researchers, writers, critics) that share state and aim at one outcome.", "routing": "Choosing which model to send a request to based on price, latency, or capability \u2014 the new commoditization layer above model APIs.", "latency budget": "The total time an agent has to think and act before the user gives up. Each step in the loop spends part of it.", "context window": "The maximum number of tokens a model can attend to at once. The price of one full window is the unit cost of one 'thought'.", "token": "The unit a language model reads and writes \u2014 roughly three characters of English on average."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Sand to Superintelligence<span class="brand__sub"> — a visual journey</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 04 of 42</div>
+    <div class="ch-header__num">Chapter 04</div>
+    <h1 class="ch-header__title">Growing a Perfect Crystal</h1>
+    <p class="ch-header__dek">The Czochralski dance</p>
+    <div class="stat-row"><div class="stat"><div class="stat__num">1,421<em>°C</em></div><div class="stat__label">melting point of silicon</div></div><div class="stat"><div class="stat__num">~1 <em>mm/min</em></div><div class="stat__label">ingot pull rate</div></div><div class="stat"><div class="stat__num">200 <em>kg</em></div><div class="stat__label">mass of a modern 300mm ingot</div></div><div class="stat"><div class="stat__num">0</div><div class="stat__label">grain boundaries in the entire crystal</div></div></div>
+    <div class="toolbar reveal">
+      <button class="toolbar__btn" data-audio-toggle type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-problem-with-pure">Pure but disordered</a></li><li><a href="#the-czochralski-method">The Czochralski method</a></li><li><a href="#the-pull">The pull</a></li><li><a href="#after-cz">Float-zone, and the alternatives</a></li></ul></aside>
+    <article class="prose">
+      
+<p class="lede">Pure silicon, as it leaves the Siemens reactor, is the most refined common element in any factory anywhere in the world. It is also, structurally, a mess. Polysilicon is what crystallographers call <em>polycrystalline</em>: an aggregate of countless small crystal grains, each oriented in a different direction, packed together like a wall of tiny cubes that all face slightly different ways. Inside any one grain, the silicon atoms sit on a perfect lattice. Between grains lie boundaries — discontinuities, faults, opportunities for failure.</p>
+
+<p>For solar panels, this is fine; electrons can muscle through. For a transistor whose channel is fifteen atoms wide, a grain boundary is an aircraft carrier crossing a stream. We need a single crystal — billions of atoms, all on the same lattice, with no boundaries anywhere. The technique that produces it is named for a bored Polish chemist who invented it in 1916 by accident.</p>
+
+<h2 id="the-problem-with-pure">Pure but disordered</h2>
+
+<p>Jan Czochralski was studying metallization rates and absent-mindedly dipped his pen into a crucible of molten tin instead of his inkwell. When he pulled the pen back, a thin string of metal followed it — a single crystal, drawn from melt by the simple act of withdrawal. <a href="https://www.waferworld.com/post/silicon-wafer-manufacturing-from-sand-to-silicon">A century later</a>, the technique that bears his name underlies essentially every silicon wafer on earth.</p>
+
+<h2 id="the-czochralski-method">The Czochralski method</h2>
+
+<p>A Czochralski (Cz) puller is a tower the height of a small house. At its base sits a quartz crucible — itself made of high-purity SiO₂, which is why the world cares about Spruce Pine quartz — held inside a graphite susceptor and surrounded by resistance heaters. Polysilicon chunks are loaded into the crucible. The chamber is sealed and pumped down to vacuum, then back-filled with argon to protect the molten silicon from oxygen. The heaters drive the temperature up past <strong>1,421°C</strong>. The polysilicon melts. The melt sits there glowing.</p>
+
+<p>From above, a thin, perfect <strong>seed crystal</strong> — typically a small rod of pre-existing single-crystal silicon, cut to a specific orientation — descends from a chuck on a pulling rod. The seed touches the surface of the melt. Surface tension grabs it. Capillary action sucks molten silicon up to fill any gap.</p>
+
+<h2 id="the-pull">The pull</h2>
+
+<p>Then, slowly, the rod begins to rise.</p>
+
+<p>This is the moment of magic. As the seed lifts away from the melt, molten silicon clings to its underside. Because the seed is a perfect crystal, the silicon atoms freezing onto it have no choice — the path of least energy is to extend the seed's lattice. Atoms in the melt arrange themselves on the seed's existing crystal planes. The single crystal grows downward into the puller, then up along with it. The whole assembly rotates, slowly, to keep the temperature gradient symmetric and the impurity distribution uniform.</p>
+
+<p>The pull rate is on the order of one millimeter per minute. The crucible counter-rotates. The temperature is held constant to within fractions of a degree. Vibration must be suppressed; even a passing truck on the road outside can ruin a boule. Over the course of about a day, what emerges is a cylindrical <strong>ingot</strong> of monocrystalline silicon, perhaps 300 mm across and over a meter long, weighing as much as a small motorcycle.</p>
+
+<blockquote>The completed Cz ingot is one of the most ordered objects industry produces. From end to end — across roughly 10²⁵ atoms — there is exactly one crystal lattice. No grain boundaries. No twins. No interruptions.</blockquote>
+
+<p>It is, by some metrics, the most ordered solid on the planet.</p>
+
+<h2 id="after-cz">Float-zone, and the alternatives</h2>
+
+<p>For the most demanding applications — particularly power electronics and certain detector-grade silicon — there is an even cleaner alternative: <strong>float-zone</strong> growth. A polysilicon rod is held vertically in vacuum, and a radio-frequency coil melts a narrow zone of it. The coil is moved slowly along the rod, and as the molten zone passes, impurities are dragged along with it (impurities prefer to stay in the liquid phase). What is left behind is even purer than what went in. Float-zone silicon, however, is harder to grow at large diameters and is rarely used for logic.</p>
+
+<p>For the kind of wafer that will eventually become a Rubin GPU, Czochralski is the answer. The ingot, still warm, is taken out of the puller and walked next door — to a saw.</p>
+
+      <figure class="figure figure--wide reveal" id="figure">
+      <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 460" role="img" aria-label="Czochralski crystal growth: a seed crystal pulled upward from a molten silicon bath rotates and grows into a cylindrical ingot">
+  <!-- crucible -->
+  <path d="M 280 280 Q 280 380 400 400 Q 520 380 520 280 L 540 280 L 540 410 Q 400 440 260 410 L 260 280 Z" fill="var(--color-surface-offset-2)" stroke="var(--color-text)" stroke-width="1.5"/>
+  <!-- molten Si -->
+  <path d="M 280 290 Q 400 320 520 290 Q 520 380 400 395 Q 280 380 280 290 Z" fill="var(--color-accent-copper)" fill-opacity="0.5"/>
+  <!-- heater coils -->
+  <g stroke="var(--color-accent-plasma)" stroke-width="2" fill="none" opacity="0.6">
+    <path d="M 240 320 Q 250 330 240 340 Q 250 350 240 360"/>
+    <path d="M 560 320 Q 550 330 560 340 Q 550 350 560 360"/>
+  </g>
+  <!-- ingot (in progress) -->
+  <path d="M 380 80 L 420 80 L 425 120 L 430 180 L 430 280 L 370 280 L 370 180 L 375 120 Z" fill="var(--color-primary)" stroke="var(--color-text)" stroke-width="1"/>
+  <!-- pulling rod -->
+  <rect x="395" y="20" width="10" height="60" fill="var(--color-text)"/>
+  <circle cx="400" cy="22" r="10" fill="none" stroke="var(--color-text)" stroke-width="1.5"/>
+  <!-- rotation arrows -->
+  <g stroke="var(--color-text-muted)" fill="none" stroke-width="1">
+    <path d="M 360 60 Q 400 40 440 60" marker-end="url(#arrow)"/>
+    <path d="M 350 380 Q 400 360 450 380" marker-end="url(#arrow)"/>
+  </g>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--color-text-muted)"/>
+    </marker>
+  </defs>
+  <!-- pull arrow -->
+  <path d="M 600 280 L 600 100" class="stroke-arrow" stroke-dasharray="3 3"/>
+  <text x="610" y="200" font-size="11" font-family="var(--font-mono)" fill="var(--color-text)">PULL</text>
+  <text x="610" y="216" font-size="9" font-family="var(--font-mono)" fill="var(--color-text-muted)">~1mm/min</text>
+  <!-- annotations -->
+  <g font-size="10" fill="var(--color-text-muted)" font-family="var(--font-mono)">
+    <text x="60" y="50">SEED CRYSTAL ↑</text>
+    <text x="60" y="64">single-orientation Si</text>
+    <line x1="60" y1="40" x2="395" y2="20" class="stroke-line--dim"/>
+    <text x="60" y="200">GROWING INGOT</text>
+    <text x="60" y="214">solidifies as it cools</text>
+    <line x1="60" y1="190" x2="370" y2="180" class="stroke-line--dim"/>
+    <text x="60" y="350">MOLTEN BATH</text>
+    <text x="60" y="364">~1421 °C, in vacuum</text>
+    <line x1="60" y1="340" x2="280" y2="340" class="stroke-line--dim"/>
+  </g>
+  <!-- title -->
+  <text x="60" y="30" class="label-display" font-size="15">The Czochralski dance</text>
+</svg></div>
+      <figcaption class="figure__caption"><span class="label">Figure 4.1</span><span class="text">The Czochralski crystal-growth process. A seed crystal is dipped into molten silicon and slowly withdrawn while rotating, pulling a single, defect-free crystal upward.</span></figcaption>
+    </figure>
+    </article>
+  </div>
+
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="03-nine-nines.html"><span class="ch-nav-link__label">← Chapter 03</span><span class="ch-nav-link__title">The Nine-Nines Problem</span></a>
+      <a class="ch-nav-link" data-dir="next" href="05-wafers.html"><span class="ch-nav-link__label">Chapter 05 →</span><span class="ch-nav-link__title">From Log to Mirror</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 42 chapters, the epilogue, and the glossary. Try <em>warp</em>, <em>EUV</em>, <em>cache line</em>, or <em>attention</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="../api/tutor">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the book</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does a MOSFET turn on?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Sand to Superintelligence</strong><br>
+      A long-form visual journey through the silicon supply chain.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+</body></html>
