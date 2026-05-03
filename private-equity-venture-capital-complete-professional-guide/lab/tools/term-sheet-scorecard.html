@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tool 13 — Term Sheet Negotiation Scorecard — PE/VC Lab</title>
+<meta name="description" content="Score every major term sheet provision from a founder and investor perspective. Identify red flags, non-standard terms, and compute an overall friendliness rating.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/lab.css">
+<style>
+.ts-grid { display:grid; gap:var(--space-3); margin-top:var(--space-4); }
+.ts-item { background:var(--surface-raised); border:1px solid var(--color-divider); border-radius:8px; padding:var(--space-4); }
+.ts-item__header { display:flex; justify-content:space-between; align-items:flex-start; gap:var(--space-4); }
+.ts-item__title { font-weight:600; font-size:var(--text-sm); }
+.ts-item__desc { font-size:var(--text-xs); color:var(--ink-soft); margin-top:4px; max-width:55ch; }
+.ts-item__score { display:flex; gap:6px; flex-shrink:0; }
+.score-btn { border:1px solid var(--color-divider); border-radius:4px; padding:4px 10px; font-size:12px; font-family:var(--font-mono); cursor:pointer; background:transparent; color:var(--color-text); transition:background 0.15s; }
+.score-btn.active-founder { background:var(--color-accent-good,#2d9f5e); color:#fff; border-color:transparent; }
+.score-btn.active-market  { background:var(--color-accent-copper,#c47b2a); color:#fff; border-color:transparent; }
+.score-btn.active-hostile { background:var(--color-accent-plasma,#c43a3a); color:#fff; border-color:transparent; }
+.ts-verdict { display:inline-block; padding:3px 10px; border-radius:4px; font-family:var(--font-mono); font-size:11px; font-weight:600; margin-top:6px; }
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../../index.html"><span class="brand__mark"></span><span>PE/VC<span class="brand__sub"> &middot; the practitioner&apos;s lab</span></span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../../index.html">Report cover</a>
+  <a class="nav-link" href="../../index.html#chapters">Chapters</a>
+  <a class="nav-link nav-link--active" href="../index.html">Lab</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap">
+<section style="padding: var(--space-10) 0 var(--space-4);">
+  <div class="eyebrow" style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--color-accent-copper);">Tool 13 &middot; <a href="../index.html" style="font-family:inherit;letter-spacing:inherit;color:inherit;">the lab</a> &middot; Read: Ch. 21 &mdash; The Term Sheet</div>
+  <h1 style="font-family:var(--font-display);font-weight:500;font-size:var(--text-2xl);margin:var(--space-2) 0 var(--space-2);">Term Sheet <em>Negotiation</em> Scorecard</h1>
+  <p style="max-width:62ch;color:var(--ink-soft);font-size:var(--text-sm);">Score each of the 16 key term sheet provisions. For each term, select whether it is <strong>Founder-Friendly</strong>, <strong>Market Standard</strong>, or <strong>Investor-Hostile to Founder</strong>. The scorecard generates an overall friendliness rating, flags the most punitive terms, and gives negotiation leverage notes.</p>
+  <p style="font-size:var(--text-xs);color:var(--ink-soft);margin-top:6px;">Sourced from GoingVC Ch. 21 + Sutton Capital Term Sheet analysis framework.</p>
+</section>
+
+<div class="tool reveal">
+  <div id="ts-grid" class="ts-grid"></div>
+  <div id="output" style="margin-top:var(--space-6);"></div>
+  <div id="bridge" style="margin-top:var(--space-4);"></div>
+  <ul class="flag-list" id="flags" style="margin-top:var(--space-4);"></ul>
+</div>
+
+<div class="note" style="margin-top:var(--space-8);">
+  <div class="note__head">Negotiation principles (Sutton Capital framework)</div>
+  <ul style="margin:8px 0 0 18px;padding:0;color:var(--ink-soft);">
+    <li><strong>Economic terms</strong>: Valuation, option pool, pay-to-play &mdash; highest leverage for founders</li>
+    <li><strong>Control terms</strong>: Board seats, protective provisions &mdash; often non-negotiable for top-tier VCs</li>
+    <li><strong>Liquidation stack</strong>: Non-participating preferred is standard; participating preferred with cap is acceptable; uncapped participating = red flag</li>
+    <li><strong>Anti-dilution</strong>: Broad-based weighted average is standard; full ratchet is punitive and rare post-2010</li>
+    <li><strong>Information rights</strong>: Monthly/quarterly financials are standard; audit rights are LP-facing requirements, not negotiable</li>
+    <li><strong>Drag-along</strong>: Should require majority of common + preferred threshold to trigger &mdash; not unilateral investor right</li>
+  </ul>
+</div>
+</main>
+
+<script src="../js/finance.js"></script>
+<script src="../js/site.js"></script>
+<script>
+(function(){
+  const F = window.Fin;
+  const KEY = 'pevc_t13';
+
+  const TERMS = [
+    { id:'valuation',    label:'Valuation / Pre-Money',
+      desc:'Whether entry valuation is at/above market for stage and sector.',
+      founder:'Above-market valuation or thin option pool',
+      market:'Market-clearing price, standard dilution (~15-20% for Seed)',
+      hostile:'Below-market or large pre-money option pool shuffle' },
+    { id:'liqpref',      label:'Liquidation Preference',
+      desc:'Structure of preferred payout at exit before common receives anything.',
+      founder:'1x non-participating preferred',
+      market:'1x non-participating (standard) or 1x participating with cap',
+      hostile:'2x+ participating or uncapped participating preferred' },
+    { id:'antidil',      label:'Anti-Dilution Protection',
+      desc:'How existing investor ownership is protected in a down round.',
+      founder:'No anti-dilution or pay-to-play provision',
+      market:'Broad-based weighted average',
+      hostile:'Full ratchet (punitive; rare post-2010)' },
+    { id:'board',        label:'Board Composition',
+      desc:'Number of investor-controlled vs founder/independent seats.',
+      founder:'Founders control board (majority seats)',
+      market:'Balanced: 2 founders, 1 lead investor, 1-2 independents',
+      hostile:'Investor majority control at Seed/Series A' },
+    { id:'prorata',      label:'Pro-Rata / Follow-On Rights',
+      desc:'Investor right to maintain ownership in future rounds.',
+      founder:'No pro-rata or small threshold (1-2% ownership)',
+      market:'Pro-rata for lead investor(s) only',
+      hostile:'Broad pro-rata for all investors, including small checks' },
+    { id:'drag',         label:'Drag-Along Rights',
+      desc:'Right to force all shareholders to approve a sale.',
+      founder:'Requires majority of common to trigger',
+      market:'Majority of preferred + majority of common',
+      hostile:'Unilateral investor right at any valuation threshold' },
+    { id:'convert',      label:'Conversion Rights',
+      desc:'Conditions under which preferred auto-converts to common.',
+      founder:'Automatic conversion at standard IPO threshold ($50M+)',
+      market:'Automatic at IPO; optional at investor discretion',
+      hostile:'High conversion threshold or blocking rights' },
+    { id:'divs',         label:'Dividends',
+      desc:'Preferred dividend rights accumulating on investment.',
+      founder:'Non-cumulative or no dividends',
+      market:'Non-cumulative (standard SaaS/tech)',
+      hostile:'Cumulative 8%+ compounding dividends' },
+    { id:'info',         label:'Information Rights',
+      desc:'Required financial reporting frequency and audit rights.',
+      founder:'Quarterly reporting only',
+      market:'Quarterly financials + annual audited statements',
+      hostile:'Monthly audited + investor right to inspect books at will' },
+    { id:'rght_first',   label:'Right of First Refusal (ROFR)',
+      desc:'Investor right to match any secondary share sale.',
+      founder:'No ROFR or high-value trigger ($5M+)',
+      market:'ROFR on secondary sales above $500K',
+      hostile:'ROFR on all transfers including small founder liquidity' },
+    { id:'co_sale',      label:'Co-Sale Rights',
+      desc:'Investor right to sell alongside founders in secondary transactions.',
+      founder:'No co-sale or limited to 10% of sale',
+      market:'Pro-rata co-sale participation',
+      hostile:'Full co-sale blocking founder liquidity' },
+    { id:'vest',         label:'Founder Vesting / Acceleration',
+      desc:'Cliff, vesting schedule, and acceleration provisions for founders.',
+      founder:'Single-trigger full acceleration on change of control',
+      market:'Double-trigger acceleration (control + termination)',
+      hostile:'No acceleration + full clawback provisions' },
+    { id:'pay2play',     label:'Pay-to-Play',
+      desc:'Whether existing investors must participate in future rounds to maintain rights.',
+      founder:'No pay-to-play provision',
+      market:'Soft pay-to-play (lose anti-dilution only)',
+      hostile:'Hard pay-to-play (convert to common if not participating)' },
+    { id:'noshop',       label:'No-Shop / Exclusivity Period',
+      desc:'Period during which founders cannot solicit competing term sheets.',
+      founder:'30 days or less',
+      market:'45-60 days standard',
+      hostile:'90+ days with broad carve-outs and automatic extensions' },
+    { id:'protective',   label:'Protective Provisions (Veto Rights)',
+      desc:'Investor veto on key company decisions.',
+      founder:'Limited to major structural changes only',
+      market:'Standard: veto on new preferred, asset sales, charter amendments',
+      hostile:'Broad veto including hiring, budget, new products' },
+    { id:'redemption',   label:'Redemption Rights',
+      desc:'Investor right to force company to buy back shares.',
+      founder:'No redemption rights',
+      market:'Optional redemption after 5+ years (rarely exercised)',
+      hostile:'Mandatory redemption within 3 years at 1.5x+ face value' },
+  ];
+
+  const stored = JSON.parse(localStorage.getItem(KEY) || '{}');
+  // 0 = unset, 1 = founder, 2 = market, 3 = hostile
+  TERMS.forEach(t => { if (!stored[t.id]) stored[t.id] = 0; });
+
+  function save() { localStorage.setItem(KEY, JSON.stringify(stored)); }
+
+  function render() {
+    const grid = document.getElementById('ts-grid');
+    grid.innerHTML = TERMS.map((t,i) => {
+      const v = stored[t.id];
+      return `<div class="ts-item">
+        <div class="ts-item__header">
+          <div>
+            <div class="ts-item__title">${(i+1).toString().padStart(2,'0')}. ${t.label}</div>
+            <div class="ts-item__desc">${t.desc}</div>
+          </div>
+          <div class="ts-item__score">
+            <button class="score-btn${v===1?' active-founder':''}" data-id="${t.id}" data-val="1" title="${t.founder}">Founder-Friendly</button>
+            <button class="score-btn${v===2?' active-market':''}" data-id="${t.id}" data-val="2" title="${t.market}">Market Standard</button>
+            <button class="score-btn${v===3?' active-hostile':''}" data-id="${t.id}" data-val="3" title="${t.hostile}">Investor-Hostile</button>
+          </div>
+        </div>
+        ${v>0?`<div class="ts-item__desc" style="margin-top:6px;font-style:italic;">${v===1?t.founder:v===2?t.market:t.hostile}</div>`:''}
+      </div>`;
+    }).join('');
+
+    // Attach listeners
+    grid.querySelectorAll('.score-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        stored[btn.dataset.id] = parseInt(btn.dataset.val);
+        save();
+        computeScore();
+        render();
+      });
+    });
+  }
+
+  function computeScore() {
+    const vals = TERMS.map(t => stored[t.id]).filter(v => v > 0);
+    const scored = vals.length;
+    const founderCount  = vals.filter(v => v===1).length;
+    const marketCount   = vals.filter(v => v===2).length;
+    const hostileCount  = vals.filter(v => v===3).length;
+    const totalTerms    = TERMS.length;
+
+    // Score: founder=10, market=6, hostile=0
+    const score = scored > 0 ? Math.round((founderCount*10 + marketCount*6) / (scored*10) * 100) : null;
+
+    let verdict, vcolor;
+    if (score === null) { verdict = 'Score your terms above'; vcolor = 'var(--ink-soft)'; }
+    else if (score >= 75) { verdict = 'Founder-Friendly'; vcolor = 'var(--color-accent-good,#2d9f5e)'; }
+    else if (score >= 50) { verdict = 'Balanced / Market Standard'; vcolor = 'var(--color-accent-copper,#c47b2a)'; }
+    else { verdict = 'Investor-Heavy — Negotiate'; vcolor = 'var(--color-accent-plasma,#c43a3a)'; }
+
+    const out = document.getElementById('output');
+    out.innerHTML = [
+      `<div class="output__row"><span class="output__label">Terms Scored</span><span class="output__value output__big mono">${scored} / ${totalTerms}</span></div>`,
+      `<div class="output__row"><span class="output__label">Founder-Friendly Terms</span><span class="output__value" style="color:var(--color-accent-good,#2d9f5e);font-weight:600;">${founderCount}</span></div>`,
+      `<div class="output__row"><span class="output__label">Market Standard Terms</span><span class="output__value">${marketCount}</span></div>`,
+      `<div class="output__row"><span class="output__label">Investor-Hostile Terms</span><span class="output__value" style="color:var(--color-accent-plasma,#c43a3a);font-weight:600;">${hostileCount}</span></div>`,
+      score!==null ? `<div class="output__row" style="border-top:1px solid var(--color-divider);margin-top:8px;padding-top:8px;"><span class="output__label">Overall Friendliness Score</span><span class="output__value output__big" style="color:${vcolor}">${score}/100 &mdash; ${verdict}</span></div>` : '',
+    ].join('');
+
+    // Bridge
+    const maxB = Math.max(founderCount, marketCount, hostileCount, 1);
+    document.getElementById('bridge').innerHTML = [
+      F.bar('Founder-Friendly', founderCount, maxB, 'good', founderCount + ' terms'),
+      F.bar('Market Standard',  marketCount,  maxB, 'neutral', marketCount + ' terms'),
+      F.bar('Investor-Hostile', hostileCount, maxB, 'bad', hostileCount + ' terms'),
+    ].join('');
+
+    // Flags
+    const hostile_terms = TERMS.filter(t => stored[t.id]===3).map(t => t.label);
+    const flags = [];
+    if (hostile_terms.includes('Liquidation Preference')) flags.push('Participating preferred or 2x+ liquidation preference — this single term can wipe out founder economics below $500M exit. Push hard for 1x non-participating.');
+    if (hostile_terms.includes('Anti-Dilution Protection')) flags.push('Full ratchet anti-dilution is extremely punitive. Seen in <5% of post-2010 term sheets. Non-starter for reputable VCs.');
+    if (hostile_terms.includes('Board Composition')) flags.push('Investor board control at Seed/A is a red flag. Founders should retain operational control until Series B at minimum.');
+    if (hostile_terms.includes('Drag-Along Rights')) flags.push('Unilateral investor drag-along could force a low-price sale without founder consent. Require common majority approval.');
+    if (hostile_terms.includes('Redemption Rights')) flags.push('Mandatory redemption is a disguised debt instrument. Reputable early-stage VCs almost never include this.');
+    if (hostileCount >= 5) flags.push('5+ investor-hostile terms signals a predatory term sheet. Benchmark against NVCA model documents and seek a second opinion from a startup attorney.');
+    if (scored < 8) flags.push('Score at least 8 terms to generate a meaningful verdict.');
+    document.getElementById('flags').innerHTML = flags.map(f => '<li>' + f + '</li>').join('');
+  }
+
+  render();
+  computeScore();
+})();
+</script>
+</body>
+</html>
