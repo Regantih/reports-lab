@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Lab — PE/VC Finance Solvers</title>
+<meta name="description" content="Eight working solver tools for private-equity and venture-capital finance — LBO, dilution, liquidation waterfalls, balance sheet checks, QoE, IC memos, case analysis, sector thesis. Browser-native, no API key, no data leaves the page.">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cormorant-garamond@400,500,500i&f[]=jetbrains-mono@400,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/tools.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="brand" href="../"><span class="brand__mark"></span><span>Reports Lab</span></a>
+    <nav class="nav">
+      <a href="../">Cover</a>
+      <a href="../#chapters">Chapters</a>
+      <a href="../../">All reports</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero reveal">
+    <div class="hero__eyebrow">The Lab · Report No. 04</div>
+    <h1 class="hero__title">Eight working <em>solvers</em>.</h1>
+    <p class="hero__lede">Each tool is built for one question that comes up at the close table or in diligence. The math is visible. The guardrails are explicit. Nothing leaves the page. Pick the one that maps to the work in front of you.</p>
+  </section>
+
+  <section class="section-head reveal" id="returns">
+    <div class="section-head__eyebrow">§ Returns &amp; Structure</div>
+    <div class="section-head__body">
+      <h2>The math under the deal.</h2>
+      <p>Three tools that turn a model into a readable answer: LBO returns, the cap table, and the exit waterfall.</p>
+    </div>
+  </section>
+
+  <div class="tool-grid">
+    <a class="tool-card reveal" href="lbo-irr.html">
+      <div class="tool-card__num">Tool 01</div>
+      <div class="tool-card__title">LBO · MOIC · IRR Solver</div>
+      <p class="tool-card__desc">Equity check, exit equity, MOIC, IRR, value-creation bridge. Add management rollover and a debt-amortisation schedule.</p>
+      <span class="tool-card__tag">PE · Buyout</span>
+    </a>
+    <a class="tool-card reveal" href="vc-dilution.html">
+      <div class="tool-card__num">Tool 02</div>
+      <div class="tool-card__title">VC Dilution Solver</div>
+      <p class="tool-card__desc">Pre/post-money, price per share, founder dilution. Models the option-pool shuffle and quantifies what it actually costs.</p>
+      <span class="tool-card__tag">VC · Round</span>
+    </a>
+    <a class="tool-card reveal" href="liquidation-waterfall.html">
+      <div class="tool-card__num">Tool 03</div>
+      <div class="tool-card__title">Liquidation Waterfall</div>
+      <p class="tool-card__desc">Stacked preferences, participation, caps. Sweeps exit value, finds the convert-to-common breakpoint.</p>
+      <span class="tool-card__tag">VC · Exit</span>
+    </a>
+  </div>
+
+  <section class="section-head reveal" id="diligence">
+    <div class="section-head__eyebrow">§ Diligence &amp; Quality</div>
+    <div class="section-head__body">
+      <h2>The questions a junior asks the deal team.</h2>
+      <p>Two checkers that surface the kinds of issues good QoE providers find, and bad ones miss.</p>
+    </div>
+  </section>
+
+  <div class="tool-grid">
+    <a class="tool-card reveal" href="balance-sheet-check.html">
+      <div class="tool-card__num">Tool 04</div>
+      <div class="tool-card__title">3-Statement Consistency Checker</div>
+      <p class="tool-card__desc">Paste IS / BS / CF. Validates the four ties and flags the eleven red flags that point at someone moving things around.</p>
+      <span class="tool-card__tag">Diligence</span>
+    </a>
+    <a class="tool-card reveal" href="qoe-checker.html">
+      <div class="tool-card__num">Tool 05</div>
+      <div class="tool-card__title">QoE &amp; Add-back Checker</div>
+      <p class="tool-card__desc">Tests an adjusted EBITDA bridge. Buckets every add-back into accept / question / reject and explains the rule it applied.</p>
+      <span class="tool-card__tag">QoE</span>
+    </a>
+  </div>
+
+  <section class="section-head reveal" id="process">
+    <div class="section-head__eyebrow">§ Process &amp; Decisions</div>
+    <div class="section-head__body">
+      <h2>The artefacts that survive after the deal.</h2>
+      <p>Three Claude-designed templates: an IC memo, a case analyzer, and a sector thesis canvas.</p>
+    </div>
+  </section>
+
+  <div class="tool-grid" style="margin-bottom:48px;">
+    <a class="tool-card reveal" href="ic-memo.html">
+      <div class="tool-card__num">Tool 06</div>
+      <div class="tool-card__title">IC Memo Builder</div>
+      <p class="tool-card__desc">Structured memo with the seven sections an IC actually reads, live preview, printable HTML export.</p>
+      <span class="tool-card__tag">IC</span>
+    </a>
+    <a class="tool-card reveal" href="case-analyzer.html">
+      <div class="tool-card__num">Tool 07</div>
+      <div class="tool-card__title">Case Study Analyzer</div>
+      <p class="tool-card__desc">Surfaces the five hidden questions inside any PE/VC case prompt. Coaches you through the answer structure.</p>
+      <span class="tool-card__tag">Case</span>
+    </a>
+    <a class="tool-card reveal" href="sector-thesis.html">
+      <div class="tool-card__num">Tool 08</div>
+      <div class="tool-card__title">Sector Thesis Canvas</div>
+      <p class="tool-card__desc">A one-page canvas with kill criteria. Saved locally in your browser. Export as JSON or printable HTML.</p>
+      <span class="tool-card__tag">Thesis</span>
+    </a>
+  </div>
+
+  <div class="note note--vault" style="margin-bottom: 64px;">
+    <span class="note__head">Privacy note</span>
+    Everything runs in your browser. No request leaves the page. The Sector Thesis Canvas uses <span class="mono">localStorage</span> — that's it, and it's optional.
+  </div>
+
+</main>
+
+<footer class="wrap">
+  <span>© 2026 Reports Lab · Report No. 04 · The Lab</span>
+  <span><a href="../">Cover</a> · <a href="https://github.com/Regantih/reports-lab">github</a></span>
+</footer>
+<script src="../js/finance.js"></script>
+</body>
+</html>

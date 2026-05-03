@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ch. 02 · The Buyout, in Cash — The Numbers Behind the Deal</title>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cormorant-garamond@400,500,500i&f[]=jetbrains-mono@400,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/tools.css"></head><body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../"><span class="brand__mark"></span><span>Reports Lab</span></a>
+  <nav class="nav"><a href="../">Cover</a><a href="../tools/">Lab</a><a href="../../">All reports</a></nav>
+</div></header>
+
+<main class="wrap wrap--narrow"><article class="tool reveal">
+  <div class="tool__eyebrow">Chapter 02 · <a href="01-the-game.html">← Prev</a> · <a href="03-cap-tables.html">Next →</a></div>
+  <h1 class="tool__title">The Buyout, <em>in Cash</em>.</h1>
+  <p class="tool__lede">Behind every leveraged buyout sits a simple mechanical claim: the equity check at close, plus the cashflows in and out across the hold, equals the final return. Everything else is bookkeeping.</p>
+
+  <div class="prose">
+    <p>A buyout has three moves. <strong>One:</strong> the sponsor buys the business at an enterprise value that is the product of an EBITDA number and a multiple. <strong>Two:</strong> they fund the deal partly with equity and partly with debt; the equity is the check the fund writes. <strong>Three:</strong> over the next five-or-so years, the company generates cash, that cash pays down debt, and at exit the sponsor gets whatever remains after the lenders are repaid.</p>
+
+    <h2>Sources and uses</h2>
+    <p>The sources column is the money coming into the deal: sponsor equity, term loans, sometimes a revolver and a seller note. The uses column is what it pays for: the purchase price, transaction fees, and (occasionally) a working-capital top-up. The two sides have to balance. If you remember nothing else from PE finance, remember that.</p>
+
+    <h2>The three drivers of value</h2>
+    <p>An LBO creates equity value in three ways, and only three:</p>
+    <ul>
+      <li><strong>EBITDA growth.</strong> The company makes more money. Same multiple, bigger base, bigger enterprise value, bigger equity slice.</li>
+      <li><strong>Multiple expansion.</strong> The market — or the buyer — pays a higher multiple than you did. This is the most fragile of the three and, perversely, often the largest contributor in a hot market.</li>
+      <li><strong>Debt paydown.</strong> Free cash flow services and amortises debt. Less debt at exit means more equity, even if the enterprise value is unchanged.</li>
+    </ul>
+    <p>The <a href="../tools/lbo-irr.html">LBO solver in the lab</a> decomposes any deal into these three sources. If the bridge says &gt;60% of your return comes from multiple expansion, your underwriting is a bet on the market. Your IC is going to want to know why.</p>
+
+    <h2>The covenants nobody wants to talk about</h2>
+    <p>Leverage in an LBO is rarely a single number. There are senior, second-lien and unsecured tranches; covenants on net debt to EBITDA; springing covenants on the revolver; and (lately) increasingly aggressive covenant-lite documents that let sponsors run hotter than would have been allowed a decade ago. The solver assumes a single funded-debt number with a single rate. That's a simplification. In a real model, you would split tranches, schedule mandatory amortisation, and compute interest on a quarterly basis.</p>
+
+    <h2>The honest stress tests</h2>
+    <p>Three sensitivities determine whether an LBO clears the hurdle:</p>
+    <ol>
+      <li><strong>Cash conversion.</strong> Every percentage point of EBITDA-to-FCF that you lose to capex, working capital, or interest comes out of your debt-paydown contribution. Run the deal at 50% and at 70%, see what changes.</li>
+      <li><strong>Exit at entry multiple.</strong> If you can't clear the fund hurdle with no multiple expansion, the deal needs a story for why the buyer pays more.</li>
+      <li><strong>Rates +200bps.</strong> Cash interest goes up, FCF goes down, debt at exit is higher. In 2022-23 this killed deals signed in 2021.</li>
+    </ol>
+  </div>
+
+  <div class="note note--vault">
+    <span class="note__head">Run it</span>
+    Open the <a href="../tools/lbo-irr.html">LBO solver</a> and toggle between the four scenarios. Watch the bridge change. The "multiple-driven" scenario is the one that tends to look great until you stress-test it.
+  </div>
+
+  <p class="muted" style="margin-top:32px;"><a href="03-cap-tables.html" style="color:var(--brass);">Next: Where Founders Lose Their Company →</a></p>
+</article></main>
+
+<footer class="wrap"><span>© 2026 Reports Lab · Report No. 04</span><span><a href="../">Cover</a> · <a href="../tools/">Lab</a></span></footer>
+<script src="../js/finance.js"></script></body></html>

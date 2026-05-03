@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ch. 06 · The Add-Backs That Don't Add Up — The Numbers Behind the Deal</title>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cormorant-garamond@400,500,500i&f[]=jetbrains-mono@400,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/tools.css"></head><body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../"><span class="brand__mark"></span><span>Reports Lab</span></a>
+  <nav class="nav"><a href="../">Cover</a><a href="../tools/">Lab</a><a href="../../">All reports</a></nav>
+</div></header>
+
+<main class="wrap wrap--narrow"><article class="tool reveal">
+  <div class="tool__eyebrow">Chapter 06 · <a href="05-diligence.html">← Prev</a> · <a href="07-ic-memos.html">Next →</a></div>
+  <h1 class="tool__title">The Add-Backs That <em>Don't</em> Add Up.</h1>
+  <p class="tool__lede">"Adjusted EBITDA" is a story the seller tells the buyer about what the business "really" earns. Some of it is true. Some of it is the seller's hopes.</p>
+
+  <div class="prose">
+    <p>EBITDA is a calculated metric, not an accounting one. There is no GAAP definition of EBITDA, and there is certainly no GAAP definition of "adjusted EBITDA". Sellers know this, and a Confidential Information Memorandum will typically present a bridge that walks reported EBITDA up to "adjusted EBITDA" through a stack of add-backs. Some of those add-backs are real. The job in diligence is to figure out which.</p>
+
+    <h2>The eight categories</h2>
+    <p>Most adjustments fall into one of eight categories. The <a href="../tools/qoe-checker.html">QoE checker</a> in the lab applies the rules below to any bridge you paste in.</p>
+    <ol>
+      <li><strong>Owner-comp normalisation.</strong> Most accepted, but only down to a market rate. If the seller is taking a $400k salary in a business where the role would pay $250k, $150k is a legitimate add-back. Anything that takes total compensation to zero is not.</li>
+      <li><strong>Personal expenses run through the business.</strong> Accepted, with documentation. The car, the family travel, the country club, the relative on payroll. Quantify and remove from go-forward run rate.</li>
+      <li><strong>One-time legal / settlement / restructuring.</strong> Accepted if non-recurring. The trick is the word "one-time". If the company has had a "one-time" legal settlement five years in a row, it's recurring. Same for "one-time restructuring".</li>
+      <li><strong>COVID / pandemic / event-driven.</strong> The most abused category. Sellers normalise the bad parts of 2020 (lost revenue, extra cleaning costs) and keep the good parts (PPP loans, supply-chain windfalls). Symmetric treatment is what a QoE will demand.</li>
+      <li><strong>Foregone revenue / pro-forma growth.</strong> Almost always rejected. "We would have made $X if Y hadn't happened" is a story for underwriting, not a number for pro forma EBITDA. Move it to your investment thesis if you believe it.</li>
+      <li><strong>Run-rate price increases / not-yet-realised cost cuts.</strong> Rejected unless the action is taken and the result is demonstrable in the trailing months. "We're going to renegotiate the supply contract next quarter" doesn't count.</li>
+      <li><strong>Stock-based compensation.</strong> Genuinely controversial. Sponsors typically add it back; QoE providers note it; some buyers leave it in. Treat as a flag and align with the buyer's convention before pricing.</li>
+      <li><strong>Capitalisable software / ERP / R&amp;D.</strong> Accepted as one-time when the project is bounded and complete. Rejected when "transformation" is the company's permanent posture.</li>
+    </ol>
+
+    <h2>The QoE provider's job</h2>
+    <p>Quality-of-earnings providers — the Big Four transaction services arms, plus a long tail of boutiques — do two things. First, they validate that reported EBITDA reconciles to the bank statements (cash exists; revenue is real; expenses are recorded). Second, they apply judgement to the adjustments and produce a "QoE-adjusted EBITDA" that buyers anchor pricing to. A buyer who pays based on the seller's adjusted figure, without QoE, is paying for the seller's hopes.</p>
+
+    <h2>What good looks like</h2>
+    <p>A clean QoE bridge has total adjustments of less than 10-15% of reported EBITDA, evenly split between owner comp, true one-times, and accounting normalisations. A bridge with 50% adjustments is either a turnaround or a sales pitch. The <a href="../tools/qoe-checker.html">checker</a> lights up bridges that fail this sanity test.</p>
+  </div>
+
+  <div class="note note--vault">
+    <span class="note__head">Run it</span>
+    Open the <a href="../tools/qoe-checker.html">QoE checker</a> with the default bridge. Add the line <span class="mono">2.0, foregone revenue from pricing reset</span>. Watch how the tool routes it. Now add <span class="mono">1.5, founder above-market salary normalisation</span>. The two items move in opposite directions through the bucketing — one accepted, one rejected.
+  </div>
+
+  <p class="muted" style="margin-top:32px;"><a href="07-ic-memos.html" style="color:var(--brass);">Next: The Memo That Wins the Vote →</a></p>
+</article></main>
+
+<footer class="wrap"><span>© 2026 Reports Lab · Report No. 04</span><span><a href="../">Cover</a> · <a href="../tools/">Lab</a></span></footer>
+<script src="../js/finance.js"></script></body></html>

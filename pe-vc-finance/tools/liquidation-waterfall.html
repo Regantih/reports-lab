@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liquidation Preference Waterfall — PE/VC Finance Lab</title>
+<meta name="description" content="A working liquidation preference waterfall: stacked preferences, multiples, participation, caps, and the convert-to-common decision. Sweeps exit value to find breakpoints.">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cormorant-garamond@400,500,500i&f[]=jetbrains-mono@400,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/tools.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="brand" href="../"><span class="brand__mark"></span><span>Reports Lab</span></a>
+    <nav class="nav">
+      <a href="../">Cover</a>
+      <a href="./">Lab</a>
+      <a href="../../">All reports</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="tool reveal">
+    <div class="tool__eyebrow">Tool 03 · <a href="./">The Lab</a> · <a href="../chapters/04-waterfalls.html">Read: Ch. 04 — Whose Money Comes Out First</a></div>
+    <h1 class="tool__title">Liquidation Preference <em>Waterfall</em></h1>
+    <p class="tool__lede">Stack the preferences. The solver runs the seniority cascade — multiples, participation, caps, and the convert-to-common decision — and returns the proceeds split at the exit value you specify, plus a sweep showing where each holder's share peaks and drops.</p>
+
+    <form id="wf" autocomplete="off" onsubmit="return false;" class="stack">
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>01</strong> Common &amp; exit</h2>
+        <div class="row--3">
+          <div class="field">
+            <label class="field__label" for="commonShares">Common shares (M)</label>
+            <input type="number" id="commonShares" value="10" step="0.5" min="0">
+          </div>
+          <div class="field">
+            <label class="field__label" for="exitVal">Exit value ($M)</label>
+            <input type="number" id="exitVal" value="100" step="5" min="0">
+          </div>
+          <div class="field">
+            <label class="field__label" for="sweepMax">Sweep max ($M)</label>
+            <input type="number" id="sweepMax" value="500" step="50" min="0">
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>02</strong> Preferred stack <span class="muted">(senior at top)</span></h2>
+        <div id="stack"></div>
+        <div class="btn-row" style="margin-top:8px;">
+          <button class="btn btn--ghost" type="button" id="addRound">+ Add round</button>
+          <button class="btn btn--ghost" type="button" id="resetRounds">Reset</button>
+        </div>
+        <div class="assumption" style="margin-top:16px;">
+          <strong>Conventions:</strong> Seniority is top-down (Row 1 paid first). "Multiple" is the preference multiple (1x = invested capital back). "Participating" with no cap = double-dip; with a cap = capped participation. "Non-participating" = take the preference <em>or</em> convert to common, whichever is higher. Pari-passu within a row is not modelled — split into separate rows if needed.
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>03</strong> Proceeds at exit value</h2>
+        <div id="proceeds"></div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>04</strong> Exit-value sweep</h2>
+        <div id="sweep" class="output" style="font-size:12px;"></div>
+        <div class="field__hint" style="margin-top:8px;">Each row shows the share that goes to common (founders + employees) at that exit. Watch for the convert-to-common breakpoint where preferred takes the prefs at low exits and converts at high ones.</div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>05</strong> Red flags</h2>
+        <ul class="flag-list" id="flags"></ul>
+      </div>
+    </form>
+  </section>
+
+  <section class="reveal">
+    <div class="note note--bad">
+      <span class="note__head">Why this matters</span>
+      Founders read pre-money valuations and miss preferences. A $100M pre with a $20M Series B at 2x participating preferred is not the same deal as a 1x non-participating. At a $100M exit, the second deal pays the founders ~$50M; the first pays them closer to $20M. Same headline, different outcome.
+    </div>
+    <div class="note">
+      <span class="note__head">The convert decision, geometrically</span>
+      Non-participating preferred holders take the larger of (a) their preference, or (b) their as-converted common share. At low exits (a) wins, at high exits (b) wins, and at the breakpoint they're equal. Capped participating preferred has two breakpoints: where they stop preferring participation, and where they convert.
+    </div>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <span>© 2026 Reports Lab · Report No. 04 · Tool 03</span>
+  <span><a href="./">Lab</a> · <a href="../">Cover</a></span>
+</footer>
+
+<script src="../js/finance.js"></script>
+<script>
+(function () {
+  const F = window.Fin;
+
+  let rounds = [
+    { name: 'Series B', invested: 20, multiple: 1, shares: 4, type: 'np', cap: 0 },
+    { name: 'Series A', invested: 8, multiple: 1, shares: 2.5, type: 'np', cap: 0 },
+  ];
+
+  function rowHTML(r, i) {
+    return `
+    <div class="row" style="grid-template-columns: 1.4fr 1fr 1fr 1fr 1.2fr 1fr 0.4fr; align-items:end; padding:10px 0; border-top: 1px dashed var(--rule);">
+      <div class="field" style="margin:0;"><label class="field__label">Name</label><input type="text" data-i="${i}" data-k="name" value="${r.name}"></div>
+      <div class="field" style="margin:0;"><label class="field__label">Invested ($M)</label><input type="number" data-i="${i}" data-k="invested" value="${r.invested}" step="0.5" min="0"></div>
+      <div class="field" style="margin:0;"><label class="field__label">Mult.</label><input type="number" data-i="${i}" data-k="multiple" value="${r.multiple}" step="0.5" min="1"></div>
+      <div class="field" style="margin:0;"><label class="field__label">Shares (M)</label><input type="number" data-i="${i}" data-k="shares" value="${r.shares}" step="0.5" min="0"></div>
+      <div class="field" style="margin:0;"><label class="field__label">Type</label>
+        <select data-i="${i}" data-k="type">
+          <option value="np" ${r.type==='np'?'selected':''}>Non-participating</option>
+          <option value="part" ${r.type==='part'?'selected':''}>Participating (uncapped)</option>
+          <option value="cap" ${r.type==='cap'?'selected':''}>Participating (capped)</option>
+        </select>
+      </div>
+      <div class="field" style="margin:0;"><label class="field__label">Cap (× inv)</label><input type="number" data-i="${i}" data-k="cap" value="${r.cap}" step="0.5" min="0"></div>
+      <div class="field" style="margin:0;"><button class="btn btn--ghost" type="button" data-rm="${i}" style="padding:6px 10px;">×</button></div>
+    </div>`;
+  }
+
+  function render() {
+    const stack = F.$('#stack');
+    stack.innerHTML = rounds.map(rowHTML).join('');
+    stack.querySelectorAll('input, select').forEach(el => {
+      el.addEventListener('input', (e) => {
+        const i = +el.dataset.i, k = el.dataset.k;
+        rounds[i][k] = (el.type === 'number') ? F.parse(el.value) : el.value;
+        compute();
+      });
+    });
+    stack.querySelectorAll('[data-rm]').forEach(b => b.addEventListener('click', () => {
+      rounds.splice(+b.dataset.rm, 1);
+      render(); compute();
+    }));
+    compute();
+  }
+
+  // Distribute exit value down the seniority stack
+  function distribute(exitM, common, rounds) {
+    let pool = exitM;
+    let totalAsConvShares = common + rounds.reduce((s, r) => s + r.shares, 0);
+    // For NP / capped: decide convert based on what's better at this exit.
+    // Strategy: each preferred either (a) takes pref, or (b) converts to common.
+    // Decision rule: pick the higher of pref-only vs as-converted share if it converted.
+    // For participating uncapped: always take pref + share of remaining.
+    // We simulate seniority top-down. For non-participating with later rounds, the convert decision depends on residual pool, so we iterate options for non-participating.
+
+    const n = rounds.length;
+    const choices = new Array(n).fill('pref'); // 'pref' or 'conv'
+    // Compute baseline allocation, then try alternative choices and pick higher payoff per holder.
+    function allocate(choices) {
+      let p = exitM;
+      const allocs = rounds.map(() => 0);
+      let convertedShares = common;
+      // Capture conversions: shares that join the common pool
+      rounds.forEach((r, i) => {
+        if (choices[i] === 'conv') convertedShares += r.shares;
+      });
+      // Pay preferences top-down for those choosing 'pref'
+      rounds.forEach((r, i) => {
+        if (choices[i] === 'conv') return;
+        const pref = r.invested * r.multiple;
+        const pay = Math.min(p, pref);
+        allocs[i] += pay;
+        p -= pay;
+      });
+      // After preferences, distribute remainder among participants
+      // Participants = converted preferred (as common) + common + still-preferring participating
+      let participatingPool = p;
+      let participatingShares = convertedShares;
+      rounds.forEach((r, i) => {
+        if (choices[i] !== 'pref') return;
+        if (r.type === 'part' || r.type === 'cap') participatingShares += r.shares;
+      });
+      const commonShare = participatingPool > 0 && participatingShares > 0 ? participatingPool / participatingShares : 0;
+      // Apply caps: a capped participating preferred receives (pref + pro-rata) up to cap × invested.
+      // For uncapped participating, no cap; for capped, cap the total.
+      let leftover = 0;
+      rounds.forEach((r, i) => {
+        if (choices[i] !== 'pref') {
+          // converted: gets share of pool only
+          allocs[i] += commonShare * r.shares;
+          return;
+        }
+        if (r.type === 'np') return;
+        // participating
+        let take = commonShare * r.shares;
+        if (r.type === 'cap' && r.cap > 0) {
+          const capTotal = r.cap * r.invested;
+          const totalSoFar = allocs[i] + take;
+          if (totalSoFar > capTotal) {
+            const excess = totalSoFar - capTotal;
+            take -= excess;
+            leftover += excess;
+          }
+        }
+        allocs[i] += take;
+      });
+      // Common gets its share + any leftover from caps redistributed pro-rata to common pool
+      const commonBaseline = commonShare * common;
+      // Redistribute leftover among non-capped participants (common + uncapped participating + converted)
+      let stillSharing = common + rounds.reduce((s, r, i) => {
+        if (choices[i] === 'conv') return s + r.shares;
+        if (choices[i] === 'pref' && r.type === 'part') return s + r.shares;
+        return s;
+      }, 0);
+      const leftoverPerShare = stillSharing > 0 ? leftover / stillSharing : 0;
+      const commonAlloc = commonBaseline + leftoverPerShare * common;
+      rounds.forEach((r, i) => {
+        if (choices[i] === 'conv') allocs[i] += leftoverPerShare * r.shares;
+        if (choices[i] === 'pref' && r.type === 'part') allocs[i] += leftoverPerShare * r.shares;
+      });
+      return { allocs, commonAlloc };
+    }
+
+    // For non-participating, decide convert per holder by checking both
+    // Iterate a couple of times to converge (later round's choice can affect earlier round's residual).
+    for (let iter = 0; iter < 5; iter++) {
+      let changed = false;
+      for (let i = 0; i < n; i++) {
+        const r = rounds[i];
+        if (r.type === 'part') continue; // always pref
+        // For NP and capped, evaluate alternative
+        const altChoices = choices.slice();
+        const cur = allocate(choices).allocs[i];
+        altChoices[i] = (choices[i] === 'pref') ? 'conv' : 'pref';
+        // capped can convert too if pref+participation < as-conv
+        const alt = allocate(altChoices).allocs[i];
+        if (alt > cur + 1e-9) { choices[i] = altChoices[i]; changed = true; }
+      }
+      if (!changed) break;
+    }
+    return { ...allocate(choices), choices };
+  }
+
+  function compute() {
+    const exitM = F.parse(F.$('#exitVal').value);
+    const common = F.parse(F.$('#commonShares').value);
+    const sweepMax = Math.max(exitM, F.parse(F.$('#sweepMax').value));
+    if (rounds.length === 0) return;
+
+    const { allocs, commonAlloc, choices } = distribute(exitM, common, rounds);
+    const max = Math.max(commonAlloc, ...allocs, 1);
+
+    let html = '';
+    html += F.bar('Common (founders + emp.)', commonAlloc, max, 'good', '$' + commonAlloc.toFixed(1) + 'M');
+    rounds.forEach((r, i) => {
+      const choice = choices[i];
+      const label = `${r.name} <span class="muted" style="font-size:10px;">${choice === 'conv' ? '· converted' : (r.type === 'np' ? '· pref taken' : r.type === 'cap' ? '· capped part.' : '· participating')}</span>`;
+      html += F.bar(label, allocs[i], max, i === 0 ? 'brass' : 'plasma', '$' + allocs[i].toFixed(1) + 'M');
+    });
+    F.$('#proceeds').innerHTML = html;
+
+    // Sweep
+    const steps = 12;
+    let sweepHTML = '<div class="output__row"><span class="output__label">Exit value</span><span class="output__value">% to common</span></div>';
+    for (let s = 1; s <= steps; s++) {
+      const ev = (sweepMax / steps) * s;
+      const out = distribute(ev, common, rounds);
+      const pctCommon = ev > 0 ? (out.commonAlloc / ev) * 100 : 0;
+      const pillCls = pctCommon < 10 ? 'pill--bad' : pctCommon < 30 ? 'pill--warn' : 'pill--good';
+      sweepHTML += `<div class="output__row"><span class="output__label">$${ev.toFixed(0)}M</span><span class="output__value"><span class="pill ${pillCls}">${pctCommon.toFixed(1)}%</span> · $${out.commonAlloc.toFixed(1)}M</span></div>`;
+    }
+    F.$('#sweep').innerHTML = sweepHTML;
+
+    // Flags
+    const flags = [];
+    rounds.forEach((r, i) => {
+      if (r.multiple > 1.5) flags.push(['bad', `${r.name}: ${r.multiple}x preference is aggressive. Anything above 1x signals founder leverage was low when this round closed.`]);
+      if (r.type === 'part' && (!r.cap || r.cap === 0)) flags.push(['bad', `${r.name}: uncapped participating preferred. The investor takes their preference and then shares the upside as if they'd converted to common — a double dip with no ceiling. Push for a cap or non-participating.`]);
+      if (r.type === 'cap' && r.cap > 0 && r.cap < 2) flags.push(['warn', `${r.name}: cap below 2x is unusually founder-friendly for participating preferred.`]);
+    });
+    if (commonAlloc / exitM < 0.20 && exitM > 0) flags.push(['warn', `Common (founders + employees) gets less than 20% of this exit. The preference stack is doing the work. Look at exit values 2-3x higher to find where founders are paid.`]);
+    if (rounds.some(r => r.type === 'np') && choices.some(c => c === 'conv')) flags.push(['info', 'At this exit value, at least one non-participating preferred is better off converting to common. That is the breakpoint you want senior preferred to clear.']);
+    if (!flags.length) flags.push(['good', 'Stack looks conventional. Run the sweep to find your breakpoints.']);
+    F.$('#flags').innerHTML = flags.map(([k, t]) => `<li><span class="pill pill--${k}">${k.toUpperCase()}</span><span>${t}</span></li>`).join('');
+  }
+
+  F.$('#addRound').addEventListener('click', () => {
+    rounds.unshift({ name: 'Series ' + String.fromCharCode(67 + rounds.length - 2), invested: 10, multiple: 1, shares: 2, type: 'np', cap: 0 });
+    render();
+  });
+  F.$('#resetRounds').addEventListener('click', () => {
+    rounds = [
+      { name: 'Series B', invested: 20, multiple: 1, shares: 4, type: 'np', cap: 0 },
+      { name: 'Series A', invested: 8, multiple: 1, shares: 2.5, type: 'np', cap: 0 },
+    ];
+    render();
+  });
+
+  ['#exitVal', '#commonShares', '#sweepMax'].forEach(s => F.$(s).addEventListener('input', compute));
+  render();
+})();
+</script>
+</body>
+</html>

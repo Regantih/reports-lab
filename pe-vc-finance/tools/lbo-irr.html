@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LBO · MOIC · IRR Solver — PE/VC Finance Lab</title>
+<meta name="description" content="A working LBO solver: enter purchase price, debt, EBITDA, growth, multiple expansion, and exit year. Returns equity check, MOIC, IRR, and a value-creation bridge.">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cormorant-garamond@400,500,500i&f[]=jetbrains-mono@400,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/tools.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="brand" href="../"><span class="brand__mark"></span><span>Reports Lab</span></a>
+    <nav class="nav">
+      <a href="../">Cover</a>
+      <a href="./">Lab</a>
+      <a href="../../">All reports</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="tool reveal">
+    <div class="tool__eyebrow">Tool 01 · <a href="./">The Lab</a> · <a href="../chapters/02-buyout-math.html">Read: Ch. 02 — The Buyout, in Cash</a></div>
+    <h1 class="tool__title">LBO · MOIC · <em>IRR</em> Solver</h1>
+    <p class="tool__lede">Enter the deal. The solver returns the equity check, the exit equity to the sponsor, MOIC, IRR, and decomposes the value created across three sources: EBITDA growth, multiple expansion, and debt paydown.</p>
+
+    <div class="chip-row">
+      <button class="chip" data-scenario="vanilla" aria-pressed="true">Vanilla buyout</button>
+      <button class="chip" data-scenario="growth">Growth-led</button>
+      <button class="chip" data-scenario="multiple">Multiple-driven</button>
+      <button class="chip" data-scenario="overlevered">Over-levered</button>
+    </div>
+
+    <form class="solver" id="lbo" autocomplete="off" onsubmit="return false;">
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>01</strong> Sources &amp; Uses</h2>
+
+        <div class="row">
+          <div class="field">
+            <label class="field__label" for="ebitda">Entry EBITDA ($M)</label>
+            <input type="number" id="ebitda" value="50" step="1" min="0">
+          </div>
+          <div class="field">
+            <label class="field__label" for="entryMult">Entry multiple (x EBITDA)</label>
+            <input type="number" id="entryMult" value="10" step="0.5" min="1">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label class="field__label" for="leverage">Debt at close (x EBITDA)</label>
+            <input type="number" id="leverage" value="5.5" step="0.5" min="0">
+            <div class="field__hint">Total funded debt as a multiple of entry EBITDA.</div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="fees">Transaction fees (% EV)</label>
+            <input type="number" id="fees" value="2.5" step="0.5" min="0">
+          </div>
+        </div>
+
+        <h2 class="panel__title" style="margin-top:24px;"><strong>02</strong> Hold &amp; Operations</h2>
+
+        <div class="row">
+          <div class="field">
+            <label class="field__label" for="hold">Hold period (years)</label>
+            <input type="number" id="hold" value="5" step="1" min="1" max="10">
+          </div>
+          <div class="field">
+            <label class="field__label" for="growth">EBITDA growth (CAGR %)</label>
+            <input type="number" id="growth" value="8" step="0.5">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label class="field__label" for="rate">Avg. debt rate (%)</label>
+            <input type="number" id="rate" value="9" step="0.25" min="0">
+          </div>
+          <div class="field">
+            <label class="field__label" for="cashConv">Cash conversion (% EBITDA → FCF)</label>
+            <input type="number" id="cashConv" value="60" step="5" min="0" max="100">
+            <div class="field__hint">Free cash flow available to pay down debt, after capex / WC / tax / interest.</div>
+          </div>
+        </div>
+
+        <h2 class="panel__title" style="margin-top:24px;"><strong>03</strong> Exit</h2>
+
+        <div class="row">
+          <div class="field">
+            <label class="field__label" for="exitMult">Exit multiple (x EBITDA)</label>
+            <input type="number" id="exitMult" value="10" step="0.5" min="1">
+            <div class="field__hint">Default = entry multiple. Pencil expansion when the thesis depends on it.</div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="rollover">Mgmt rollover (% sponsor equity)</label>
+            <input type="number" id="rollover" value="5" step="1" min="0" max="50">
+          </div>
+        </div>
+
+        <div class="assumption">
+          <strong>Model assumptions:</strong> all FCF goes to mandatory + sweep amortisation; no dividend recap; tax shield embedded in cash conversion; no add-on M&amp;A; no working-capital release at exit. To stress these, change the cash-conversion or growth inputs.
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>04</strong> Returns</h2>
+        <div class="output">
+          <div class="output__row"><span class="output__label">Enterprise value at entry</span><span class="output__value" id="o-ev">—</span></div>
+          <div class="output__row"><span class="output__label">Funded debt at close</span><span class="output__value" id="o-debt">—</span></div>
+          <div class="output__row"><span class="output__label">Sponsor equity check</span><span class="output__value" id="o-equity">—</span></div>
+          <div class="output__row"><span class="output__label">Exit EBITDA</span><span class="output__value" id="o-exitEbitda">—</span></div>
+          <div class="output__row"><span class="output__label">Exit enterprise value</span><span class="output__value" id="o-exitEv">—</span></div>
+          <div class="output__row"><span class="output__label">Net debt at exit</span><span class="output__value" id="o-exitDebt">—</span></div>
+          <div class="output__row"><span class="output__label">Sponsor exit equity</span><span class="output__value" id="o-exitEquity">—</span></div>
+        </div>
+
+        <h2 class="panel__title" style="margin-top:24px;"><strong>05</strong> Headlines</h2>
+        <div class="output__big" id="o-moic">—</div>
+        <div class="muted mono" style="font-size:11px; letter-spacing:0.06em; text-transform:uppercase;">MOIC · sponsor cash returned ÷ check</div>
+        <div class="output__big" id="o-irr">—</div>
+        <div class="muted mono" style="font-size:11px; letter-spacing:0.06em; text-transform:uppercase;">IRR · annualised return to sponsor equity</div>
+
+        <h2 class="panel__title" style="margin-top:24px;"><strong>06</strong> Value-creation bridge</h2>
+        <div id="bridge"></div>
+        <div class="field__hint" style="margin-top:8px;">A buyout creates value in three places. If &gt;60% of the answer comes from multiple expansion, your underwriting is a market call.</div>
+
+        <h2 class="panel__title" style="margin-top:24px;"><strong>07</strong> Red flags</h2>
+        <ul class="flag-list" id="flags"></ul>
+      </div>
+    </form>
+  </section>
+
+  <section class="reveal">
+    <div class="note">
+      <span class="note__head">How the math works</span>
+      <strong>Entry:</strong> EV = Entry EBITDA × Entry multiple. Equity check = EV − Debt + fees.<br>
+      <strong>Hold:</strong> EBITDA grows at the specified CAGR. FCF = EBITDA × cash-conv − interest. All FCF sweeps debt. Debt cannot go below zero.<br>
+      <strong>Exit:</strong> Exit EV = Exit EBITDA × Exit multiple. Sponsor exit equity = Exit EV − Net debt at exit, less management rollover.<br>
+      <strong>Bridge:</strong> EBITDA growth = (ΔEBITDA × entry mult). Multiple expansion = (Δmult × exit EBITDA). Debt paydown = (entry debt − exit debt). Residual is rounding/interaction.
+    </div>
+
+    <div class="note note--vault">
+      <span class="note__head">What a senior would ask next</span>
+      <ul style="margin:8px 0 0 18px; padding:0; color:var(--ink-soft);">
+        <li>What part of EBITDA growth is volume vs. price vs. margin?</li>
+        <li>If you assume exit at the entry multiple, does the deal still clear the hurdle?</li>
+        <li>What's the IRR if the cash-conversion is 10 points lower? (the COVID + supply-chain reality test)</li>
+        <li>If interest rates move 200bps, what happens to debt paydown by year 3?</li>
+        <li>Who's the buyer at exit, and at what size do they hit FTC review?</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <h2 style="font-family:var(--font-display); font-weight:500; font-size:28px; margin: 48px 0 12px;">Capability drill</h2>
+    <p class="muted" style="max-width:60ch;">Try these without the solver first. Reach for it only to check.</p>
+
+    <details class="drill"><summary class="drill__q">A 5x EV/EBITDA acquisition with 3x debt, 10% EBITDA growth, 5-year hold, exit at 6x — rough MOIC?</summary>
+      <div class="drill__a"><strong>~3.0x.</strong> Entry equity = 2x EBITDA. Exit EBITDA ≈ 1.61x entry. Exit EV ≈ 1.61 × 6 = 9.66x. Less debt of ~1x (after paydown) gives equity ≈ 8.7x EBITDA. 8.7 ÷ 2 ≈ 4.4x — but interest and incomplete paydown trim it. Plug it into the solver.</div>
+    </details>
+    <details class="drill"><summary class="drill__q">A deal MOICs 2.5x in 4 years. What's the rough IRR?</summary>
+      <div class="drill__a"><strong>~26%.</strong> Rule of thumb: IRR ≈ MOIC^(1/years) − 1. 2.5^(1/4) − 1 = 0.257.</div>
+    </details>
+    <details class="drill"><summary class="drill__q">If your bridge says 65% of the value comes from multiple expansion, what should the IC question be?</summary>
+      <div class="drill__a">"What is the structural reason a strategic / sponsor would pay <em>more</em> than we did, on the same earnings, in five years?" If the answer is "rates" or "the comps will recover," it's a market call disguised as a thesis.</div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <span>© 2026 Reports Lab · Report No. 04 · Tool 01</span>
+  <span><a href="./">Lab</a> · <a href="../">Cover</a></span>
+</footer>
+
+<script src="../js/finance.js"></script>
+<script>
+(function () {
+  const F = window.Fin;
+  const $ = F.$;
+
+  const scenarios = {
+    vanilla:    { ebitda: 50, entryMult: 10, leverage: 5.5, fees: 2.5, hold: 5, growth: 8,  rate: 9, cashConv: 60, exitMult: 10, rollover: 5 },
+    growth:     { ebitda: 50, entryMult: 12, leverage: 4.5, fees: 2.5, hold: 5, growth: 18, rate: 9, cashConv: 55, exitMult: 12, rollover: 5 },
+    multiple:   { ebitda: 50, entryMult: 8,  leverage: 5,   fees: 2.5, hold: 5, growth: 6,  rate: 9, cashConv: 60, exitMult: 12, rollover: 5 },
+    overlevered:{ ebitda: 50, entryMult: 11, leverage: 7,   fees: 3,   hold: 5, growth: 5,  rate: 11, cashConv: 50, exitMult: 9, rollover: 5 },
+  };
+
+  function setScenario(key) {
+    const s = scenarios[key]; if (!s) return;
+    Object.keys(s).forEach((k) => { const el = $('#' + k); if (el) el.value = s[k]; });
+    document.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', c.dataset.scenario === key ? 'true' : 'false'));
+    compute();
+  }
+  document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => setScenario(c.dataset.scenario)));
+
+  function compute() {
+    const ebitda = F.parse($('#ebitda').value);
+    const entryMult = F.parse($('#entryMult').value);
+    const leverage = F.parse($('#leverage').value);
+    const fees = F.parse($('#fees').value) / 100;
+    const hold = Math.max(1, Math.floor(F.parse($('#hold').value)));
+    const growth = F.parse($('#growth').value) / 100;
+    const rate = F.parse($('#rate').value) / 100;
+    const cashConv = F.parse($('#cashConv').value) / 100;
+    const exitMult = F.parse($('#exitMult').value);
+    const rollover = F.parse($('#rollover').value) / 100;
+
+    // Convert from $M to dollars
+    const E = ebitda * 1e6;
+    const ev = E * entryMult;
+    const debt0 = E * leverage;
+    const equity0 = ev - debt0 + ev * fees;
+
+    // Year-by-year
+    let debt = debt0;
+    let yEbitda = E;
+    const cashflows = [-equity0];
+    let cumInterest = 0;
+    for (let y = 1; y <= hold; y++) {
+      yEbitda = yEbitda * (1 + growth);
+      const interest = debt * rate;
+      cumInterest += interest;
+      const fcf = Math.max(0, yEbitda * cashConv - interest);
+      debt = Math.max(0, debt - fcf);
+      // No cashflow to sponsor mid-hold (no dividend recap)
+      cashflows.push(0);
+    }
+
+    const exitEv = yEbitda * exitMult;
+    const exitDebt = debt;
+    const grossExitEquity = Math.max(0, exitEv - exitDebt);
+    const sponsorExitEquity = grossExitEquity * (1 - rollover);
+    cashflows[cashflows.length - 1] += sponsorExitEquity;
+
+    const moic = sponsorExitEquity / equity0;
+    const irr = F.irr(cashflows);
+
+    // Bridge
+    const ebitdaGrowth = (yEbitda - E) * entryMult;
+    const multipleExpansion = (exitMult - entryMult) * yEbitda;
+    const debtPaydown = (debt0 - exitDebt);
+    const totalChange = sponsorExitEquity - equity0 + (rollover * grossExitEquity);
+    const residual = totalChange - ebitdaGrowth - multipleExpansion - debtPaydown;
+    const absMax = Math.max(Math.abs(ebitdaGrowth), Math.abs(multipleExpansion), Math.abs(debtPaydown), 1);
+
+    // Render
+    $('#o-ev').textContent = F.money(ev);
+    $('#o-debt').textContent = F.money(debt0);
+    $('#o-equity').textContent = F.money(equity0);
+    $('#o-exitEbitda').textContent = F.money(yEbitda);
+    $('#o-exitEv').textContent = F.money(exitEv);
+    $('#o-exitDebt').textContent = F.money(exitDebt);
+    $('#o-exitEquity').textContent = F.money(sponsorExitEquity);
+    $('#o-moic').textContent = isFinite(moic) ? F.x(moic) : '—';
+    $('#o-irr').textContent = isFinite(irr) ? F.pct(irr, 1) : '—';
+
+    $('#bridge').innerHTML = [
+      F.bar('EBITDA growth', ebitdaGrowth, absMax, 'good', F.money(ebitdaGrowth)),
+      F.bar('Multiple expansion', multipleExpansion, absMax, 'brass', F.money(multipleExpansion)),
+      F.bar('Debt paydown', debtPaydown, absMax, '', F.money(debtPaydown)),
+      Math.abs(residual) > 1e5 ? F.bar('Interaction / rollover', residual, absMax, 'plasma', F.money(residual)) : ''
+    ].join('');
+
+    // Flags
+    const flags = [];
+    if (leverage > 6.5) flags.push(['bad', `Leverage at ${leverage.toFixed(1)}x EBITDA is above the typical 6x covenant ceiling and the LBO market's recent comfort range. Cash conversion needs to be very high to service this.`]);
+    if (rate > 0.10) flags.push(['warn', `Debt rate of ${(rate*100).toFixed(1)}% is high enough to consume a meaningful share of FCF — pencil this into the cash-conv assumption.`]);
+    if (cashConv < 0.45) flags.push(['warn', `Cash conversion of ${(cashConv*100).toFixed(0)}% is low; double-check capex and WC. If this is a software business, expect higher; if industrial, this may be right.`]);
+    const expansionPct = totalChange > 0 ? Math.max(0, multipleExpansion) / totalChange : 0;
+    if (expansionPct > 0.6) flags.push(['bad', `Multiple expansion accounts for ${(expansionPct*100).toFixed(0)}% of the return. Your IC will read this as a rates / market call. Have a structural reason a future buyer pays more.`]);
+    if (exitMult > entryMult + 2) flags.push(['warn', `Exit multiple is ${(exitMult - entryMult).toFixed(1)}x above entry. Why is a future buyer willing to pay this premium? Stock answer ('the company will be larger and more diversified') needs evidence.`]);
+    if (debt > debt0 * 0.7) flags.push(['warn', `Less than 30% of the debt was paid down across the hold. Either growth is low, cash-conv is poor, or rates are eating FCF — say which.`]);
+    if (irr > 0.40) flags.push(['warn', `IRR > 40% is rare in PE outside venture-style growth. Re-check whether your growth or exit multiple are aggressive.`]);
+    if (irr < 0.15) flags.push(['bad', `IRR below ~15% is below most fund hurdles after fees. The deal as drawn doesn't clear LP expectations.`]);
+    if (growth > 0.20) flags.push(['warn', `EBITDA CAGR of ${(growth*100).toFixed(0)}% is venture-like for a leveraged business. Either this is a genuine growth platform or the model is wishful.`]);
+    if (rollover > 0.20) flags.push(['info', `Management rollover of ${(rollover*100).toFixed(0)}% is on the high end. Strong founder alignment but lower sponsor return on a per-equity-dollar basis.`]);
+    if (!flags.length) flags.push(['good', 'No standard red flags. Stress the cash-conversion and exit-multiple assumptions before IC.']);
+
+    $('#flags').innerHTML = flags.map(([k, t]) => `<li><span class="pill pill--${k}">${k.toUpperCase()}</span><span>${t}</span></li>`).join('');
+  }
+
+  F.bind(document.getElementById('lbo'), compute);
+})();
+</script>
+</body>
+</html>

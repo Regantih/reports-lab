@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ch. 05 · Reading the Three Statements — The Numbers Behind the Deal</title>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cormorant-garamond@400,500,500i&f[]=jetbrains-mono@400,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/tools.css"></head><body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../"><span class="brand__mark"></span><span>Reports Lab</span></a>
+  <nav class="nav"><a href="../">Cover</a><a href="../tools/">Lab</a><a href="../../">All reports</a></nav>
+</div></header>
+
+<main class="wrap wrap--narrow"><article class="tool reveal">
+  <div class="tool__eyebrow">Chapter 05 · <a href="04-waterfalls.html">← Prev</a> · <a href="06-qoe.html">Next →</a></div>
+  <h1 class="tool__title">Reading the Three <em>Statements</em>.</h1>
+  <p class="tool__lede">Income, balance sheet, cash flow. They lock together. When they don't, somebody is moving things around — and that somebody is usually trying to sell you a company.</p>
+
+  <div class="prose">
+    <p>Diligence is not a vibe. It is a small number of mechanical checks done early, plus a small number of qualitative judgements done late. The mechanical checks live in the three financial statements and how they tie together.</p>
+
+    <h2>The four ties</h2>
+    <p>If the deal is real, four things have to be true. If any one of them is false, you stop reading and ask the controller what's going on.</p>
+    <ol>
+      <li><strong>The balance sheet balances.</strong> Total assets equal total liabilities plus equity. Every period.</li>
+      <li><strong>The change in cash on the balance sheet equals the bottom of the cash flow statement.</strong> CFO + CFI + CFF = ΔCash. The cash flow statement explains why cash changed.</li>
+      <li><strong>Retained earnings rolls.</strong> RE at end of period = RE at start + Net Income − Dividends. If something else is moving RE — restatements, share buybacks, comprehensive-income gymnastics — find it in the equity rollforward.</li>
+      <li><strong>CFO reconciles to net income.</strong> Operating cash flow ≈ Net Income + D&amp;A − ΔWorking capital. Some accruals will widen the gap; large unexplained gaps deserve a question.</li>
+    </ol>
+    <p>The <a href="../tools/balance-sheet-check.html">consistency checker</a> in the lab runs all four ties in real time. Drop in two periods and it lights up the gaps with the size of the discrepancy. It also computes the standard operating ratios — DSO, DIO, DPO, the cash conversion cycle — and tells you what's drifting.</p>
+
+    <h2>The eleven flags worth a question</h2>
+    <p>Mechanically tying out the statements is necessary, not sufficient. Once you know they balance, you look for patterns:</p>
+    <ol>
+      <li><strong>A/R growing faster than revenue.</strong> Either DSO is rising (payment terms slipping or customer mix changing) or you're booking revenue you haven't been paid for.</li>
+      <li><strong>Inventory growing faster than revenue.</strong> Either we built ahead of demand that didn't land, or there's a writedown coming.</li>
+      <li><strong>A/P shrinking while revenue grows.</strong> Suppliers tightened terms, or the company is funding growth by paying suppliers earlier — both worth knowing.</li>
+      <li><strong>Capex below D&amp;A for several years.</strong> The asset base is shrinking. Either you're harvesting a mature business or under-investing.</li>
+      <li><strong>CFO &lt;&lt; Net income.</strong> Earnings aren't converting to cash. The gap is the question.</li>
+      <li><strong>Effective tax rate moving sharply.</strong> Discrete items, deferred reversals, jurisdiction changes — all explainable, all worth asking about.</li>
+      <li><strong>"Other" lines growing fast.</strong> The catch-all is doing more work than it should. Ask for a breakdown.</li>
+      <li><strong>Goodwill rising without disclosed M&amp;A.</strong> Unusual; demand the journal.</li>
+      <li><strong>Cash growing while income falls.</strong> Could be a one-off receipt or a financing inflow.</li>
+      <li><strong>Debt rising while interest expense falls.</strong> Mix shift, capitalised interest, or rate change.</li>
+      <li><strong>Operating ratios moving in unison and abruptly.</strong> A real process change or aggressive accounting — find out which.</li>
+    </ol>
+
+    <h2>Where this fits in the deal calendar</h2>
+    <p>Run these checks the day you receive the data room. They take an hour. The list of questions you produce is the first phone call to the seller's CFO. Anything they can't answer cleanly gets handed to the QoE provider, who will spend ten weeks on it. Doing the checks early, before paying for QoE, is how a junior associate earns their keep.</p>
+  </div>
+
+  <div class="note note--vault">
+    <span class="note__head">Run it</span>
+    Open the <a href="../tools/balance-sheet-check.html">consistency checker</a>. Adjust one number to break a tie — make A/R grow 30% while revenue grows 5%, say — and watch what flags. That's the conversation you'd be having with the controller.
+  </div>
+
+  <p class="muted" style="margin-top:32px;"><a href="06-qoe.html" style="color:var(--brass);">Next: The Add-Backs That Don't Add Up →</a></p>
+</article></main>
+
+<footer class="wrap"><span>© 2026 Reports Lab · Report No. 04</span><span><a href="../">Cover</a> · <a href="../tools/">Lab</a></span></footer>
+<script src="../js/finance.js"></script></body></html>

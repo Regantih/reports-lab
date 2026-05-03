@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ch. 03 · Where Founders Lose Their Company — The Numbers Behind the Deal</title>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cormorant-garamond@400,500,500i&f[]=jetbrains-mono@400,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/tools.css"></head><body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../"><span class="brand__mark"></span><span>Reports Lab</span></a>
+  <nav class="nav"><a href="../">Cover</a><a href="../tools/">Lab</a><a href="../../">All reports</a></nav>
+</div></header>
+
+<main class="wrap wrap--narrow"><article class="tool reveal">
+  <div class="tool__eyebrow">Chapter 03 · <a href="02-buyout-math.html">← Prev</a> · <a href="04-waterfalls.html">Next →</a></div>
+  <h1 class="tool__title">Where Founders <em>Lose</em> Their Company.</h1>
+  <p class="tool__lede">A founder who can read a cap table can defend their equity. A founder who reads only the headline pre-money valuation cannot.</p>
+
+  <div class="prose">
+    <p>The mechanics of a venture round are deceptively simple. There's a pre-money valuation. There's an investment. The post-money is one plus the other. The investor's percentage is the investment divided by the post-money. The founder's percentage falls by the same dilution everyone else suffers. That's the cartoon version, and it's wrong about a quarter of the time, because of one provision: the option-pool top-up.</p>
+
+    <h2>The option-pool shuffle</h2>
+    <p>Every venture term sheet asks the company to maintain an option pool — typically 10-15% of post-money — to grant to employees over the next 12-18 months. That's reasonable. What's not reasonable is the question of <em>who pays for the top-up</em>.</p>
+    <p>If the new pool is taken out of the post-money — i.e., everyone shares the dilution — that's the fair version. If the new pool is taken out of the pre-money — i.e., it sits in the cap table before the price-per-share is calculated — the founders pay for the entire thing. The investor still gets their headline percentage; the headline pre-money valuation is preserved; the price-per-share is lower; and the founders' slice silently shrinks.</p>
+    <p>The cost is real and rarely small. The <a href="../tools/vc-dilution.html">dilution solver</a> in the lab quantifies it for any specific round. For a typical Series A — $5M on a $20M pre with a 15% target pool — taking the pool pre-money costs founders roughly two percentage points of post-money ownership versus taking it post. That sounds small. Compounded across three more rounds, it isn't.</p>
+
+    <h2>Why founders accept it anyway</h2>
+    <p>Two reasons. One: the headline pre-money valuation is the number that gets reported to TechCrunch and to the founder's friends. The pre-money pool keeps that number high. Two: founders rarely have the experienced counsel they need at Series A. By Series B and C, they do, but by then the pre-money pool convention is locked in.</p>
+    <p>The defence is to size the pool to the actual hiring plan, not to "industry standard 15%". If you have a hiring plan for the next twelve months and a clean justification for 8%, you can usually negotiate to that. The sponsor wants the cap table to be clean at Series B; you want to keep your equity. There's room.</p>
+
+    <h2>SAFEs, notes, and the as-converted view</h2>
+    <p>Most early-stage rounds today happen on convertible instruments — SAFEs and notes — that don't price equity until a future round. They have caps, discounts, MFN provisions. When the priced round eventually closes, the SAFEs convert in at a price determined by their cap or discount, depending on which is more favourable. The right way to model this is to compute the as-converted shares each SAFE represents and add them to the existing investor count <em>before</em> running the round mechanics. The dilution solver doesn't model SAFEs natively, but if you fold them into the existing-investor-shares input, the math works out.</p>
+
+    <h2>The number that matters at exit</h2>
+    <p>Founder ownership at the time of exit is the number that determines what they actually take home. After three or four rounds, founders typically end up between 10% and 25% — the variance is mostly determined by how aggressively each round was negotiated and whether the option pool was always taken pre-money. Two points per round, compounded across four rounds, is eight points. That's the difference between $20M and $36M on a $200M exit.</p>
+  </div>
+
+  <div class="note note--vault">
+    <span class="note__head">Run it</span>
+    Open the <a href="../tools/vc-dilution.html">dilution solver</a> and toggle the pool timing between pre-money and post-money. Watch the founder's ownership column. That delta is the price tag.
+  </div>
+
+  <p class="muted" style="margin-top:32px;"><a href="04-waterfalls.html" style="color:var(--brass);">Next: Whose Money Comes Out First →</a></p>
+</article></main>
+
+<footer class="wrap"><span>© 2026 Reports Lab · Report No. 04</span><span><a href="../">Cover</a> · <a href="../tools/">Lab</a></span></footer>
+<script src="../js/finance.js"></script></body></html>

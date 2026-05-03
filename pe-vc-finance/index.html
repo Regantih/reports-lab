@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Numbers Behind the Deal — A Working Report on PE/VC Finance</title>
+<meta name="description" content="A practitioner's report on private-equity and venture-capital finance — the formulas, traps, and the working solver tools used to build them. Eight Claude-designed browser tools: LBO/MOIC/IRR, dilution and option pools, liquidation waterfalls, three-statement consistency, QoE inconsistency, IC memo, case analyzer, and a sector thesis canvas.">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cormorant-garamond@400,500,500i&f[]=jetbrains-mono@400,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/tools.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f3a5b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a06820'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="brand" href="../">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span>Reports Lab</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="#tools">Tools</a>
+      <a href="#chapters">Read</a>
+      <a href="tools/">Lab</a>
+      <a href="../">All reports</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero reveal">
+    <div class="hero__eyebrow">Report No. 04 · 2026 · Working tools included</div>
+    <h1 class="hero__title">The Numbers <em>Behind</em> the Deal.</h1>
+    <p class="hero__lede">A working report on private-equity and venture-capital finance. The formulas you need at the close table, the traps that show up in every diligence, and eight browser-native solvers — built for the report, runnable in the page — that turn the math from a slide into a tool you can actually use.</p>
+    <div class="hero__meta">
+      <span><strong>8</strong> solver tools</span>
+      <span><strong>9</strong> chapters</span>
+      <span><strong>0</strong> servers · runs in the browser</span>
+      <span><strong>0</strong> data leaves the page</span>
+    </div>
+  </section>
+
+  <section class="section-head reveal" id="tools">
+    <div class="section-head__eyebrow">§ The Lab</div>
+    <div class="section-head__body">
+      <h2>Eight tools, designed for the work.</h2>
+      <p>These are not calculators. Each one is a Claude-designed workflow: the formula, the guardrails, the red flags a junior associate should look up, and a short capability drill so you don't ship the answer without earning it. Everything runs locally — no server, no API key, no telemetry.</p>
+    </div>
+  </section>
+
+  <div class="tool-grid">
+
+    <a class="tool-card reveal" href="tools/lbo-irr.html">
+      <div class="tool-card__num">Tool 01 — Buyout</div>
+      <div class="tool-card__title">LBO · MOIC · IRR Solver</div>
+      <p class="tool-card__desc">Enter purchase price, debt, EBITDA, multiple expansion, and exit year. Returns equity check, exit equity, MOIC, IRR, and a value-creation bridge: EBITDA growth vs. multiple expansion vs. debt paydown.</p>
+      <span class="tool-card__tag">PE · Buyout</span>
+    </a>
+
+    <a class="tool-card reveal" href="tools/vc-dilution.html">
+      <div class="tool-card__num">Tool 02 — Cap Table</div>
+      <div class="tool-card__title">VC Dilution &amp; Option-Pool Solver</div>
+      <p class="tool-card__desc">Pre-money, investment, option pool top-up. Computes post-money, price per share, founder dilution with and without the option-pool shuffle, and the cost of putting the pool pre-money.</p>
+      <span class="tool-card__tag">VC · Round Mechanics</span>
+    </a>
+
+    <a class="tool-card reveal" href="tools/liquidation-waterfall.html">
+      <div class="tool-card__num">Tool 03 — Exit</div>
+      <div class="tool-card__title">Liquidation Preference Waterfall</div>
+      <p class="tool-card__desc">Stacked preferences with multiples, participation, caps, and conversion logic. Sweeps exit value to show where preferred-converts-to-common kicks in and what the founders actually receive.</p>
+      <span class="tool-card__tag">VC · Exit</span>
+    </a>
+
+    <a class="tool-card reveal" href="tools/balance-sheet-check.html">
+      <div class="tool-card__num">Tool 04 — Diligence</div>
+      <div class="tool-card__title">3-Statement Consistency Checker</div>
+      <p class="tool-card__desc">Paste an income statement, balance sheet, and cash flow. Checks the four ties — A=L+E, ΔCash, retained earnings, and cash-flow reconciliation — and lights up specific red flags with explanations.</p>
+      <span class="tool-card__tag">Diligence · Quality</span>
+    </a>
+
+    <a class="tool-card reveal" href="tools/qoe-checker.html">
+      <div class="tool-card__num">Tool 05 — QoE</div>
+      <div class="tool-card__title">QoE &amp; Add-back Inconsistency Checker</div>
+      <p class="tool-card__desc">Stress-tests an adjusted EBITDA bridge against a list of acceptable add-backs. Flags the moves that QoE providers most often roll back: founder comp, COVID, one-time items that aren't.</p>
+      <span class="tool-card__tag">Diligence · QoE</span>
+    </a>
+
+    <a class="tool-card reveal" href="tools/ic-memo.html">
+      <div class="tool-card__num">Tool 06 — IC</div>
+      <div class="tool-card__title">IC Memo Builder</div>
+      <p class="tool-card__desc">A structured memo with the seven sections an IC actually reads: thesis, sources/uses, returns, key risks, diligence findings, deal team and conditions. Live preview, exports as printable HTML.</p>
+      <span class="tool-card__tag">Process · IC</span>
+    </a>
+
+    <a class="tool-card reveal" href="tools/case-analyzer.html">
+      <div class="tool-card__num">Tool 07 — Case</div>
+      <div class="tool-card__title">Case Study Analyzer</div>
+      <p class="tool-card__desc">Drop in a deal description. The analyzer surfaces the five questions every PE/VC interview hides under the prose: capital structure, exit, returns hurdle, value-creation lever, and the deal-killer risk.</p>
+      <span class="tool-card__tag">Drill · Case</span>
+    </a>
+
+    <a class="tool-card reveal" href="tools/sector-thesis.html">
+      <div class="tool-card__num">Tool 08 — Thesis</div>
+      <div class="tool-card__title">Sector Thesis Canvas</div>
+      <p class="tool-card__desc">A one-page canvas: market geography, the structural why-now, the unit economics that have to be true, the wedge, and the kill criteria. Saved to your browser; export as JSON or printable.</p>
+      <span class="tool-card__tag">Strategy · Thesis</span>
+    </a>
+
+  </div>
+
+  <section class="section-head reveal" id="chapters">
+    <div class="section-head__eyebrow">§ The Report</div>
+    <div class="section-head__body">
+      <h2>The report, in nine chapters.</h2>
+      <p>Read top to bottom or jump to the chapter that covers what you have to do today. Each chapter links into the relevant tool — the math under the page is the math the tool runs.</p>
+    </div>
+  </section>
+
+  <ol class="reports" style="list-style:none; padding:0; margin:0; display:grid; gap:0;">
+    <li><a class="report reveal" href="chapters/01-the-game.html">
+      <div class="report__num">Ch. 01</div>
+      <div class="report__body">
+        <div class="report__tag">Why returns are the only language</div>
+        <h3 class="report__title">The Game in <em>Two</em> Numbers</h3>
+        <p class="report__desc">MOIC and IRR are not interchangeable. A 3.0x over six years is a different deal than a 2.5x over three. This is the spine of the report.</p>
+      </div>
+      <div class="report__cta">Read</div>
+    </a></li>
+    <li><a class="report reveal" href="chapters/02-buyout-math.html">
+      <div class="report__num">Ch. 02</div>
+      <div class="report__body">
+        <div class="report__tag">LBO mechanics</div>
+        <h3 class="report__title">The Buyout, In <em>Cash</em></h3>
+        <p class="report__desc">Sources and uses, equity check, debt paydown, exit. The three drivers of value-creation, ranked by how much they actually contribute.</p>
+      </div>
+      <div class="report__cta">Read</div>
+    </a></li>
+    <li><a class="report reveal" href="chapters/03-cap-tables.html">
+      <div class="report__num">Ch. 03</div>
+      <div class="report__body">
+        <div class="report__tag">Cap tables and dilution</div>
+        <h3 class="report__title">Where Founders <em>Lose</em> Their Company</h3>
+        <p class="report__desc">Pre vs. post-money, price-per-share, the option-pool shuffle. One of the cheapest-looking terms costs founders the most equity.</p>
+      </div>
+      <div class="report__cta">Read</div>
+    </a></li>
+    <li><a class="report reveal" href="chapters/04-waterfalls.html">
+      <div class="report__num">Ch. 04</div>
+      <div class="report__body">
+        <div class="report__tag">Exit waterfalls</div>
+        <h3 class="report__title">Whose Money <em>Comes Out</em> First</h3>
+        <p class="report__desc">Liquidation preferences, participation, caps, the convert-to-common decision. Why a 2x participating preferred kills the founders even when the deal is "good."</p>
+      </div>
+      <div class="report__cta">Read</div>
+    </a></li>
+    <li><a class="report reveal" href="chapters/05-diligence.html">
+      <div class="report__num">Ch. 05</div>
+      <div class="report__body">
+        <div class="report__tag">Diligence</div>
+        <h3 class="report__title">Reading the Three <em>Statements</em></h3>
+        <p class="report__desc">The four ties that have to balance, and the eleven red flags that point at someone hiding something. The QoE provider's job, in a checklist.</p>
+      </div>
+      <div class="report__cta">Read</div>
+    </a></li>
+    <li><a class="report reveal" href="chapters/06-qoe.html">
+      <div class="report__num">Ch. 06</div>
+      <div class="report__body">
+        <div class="report__tag">Quality of earnings</div>
+        <h3 class="report__title">The Add-Backs That <em>Don't</em> Add Up</h3>
+        <p class="report__desc">Adjusted EBITDA is a story. Some of the items in it are real; some never were. The eight categories every QoE rolls back and why.</p>
+      </div>
+      <div class="report__cta">Read</div>
+    </a></li>
+    <li><a class="report reveal" href="chapters/07-ic-memos.html">
+      <div class="report__num">Ch. 07</div>
+      <div class="report__body">
+        <div class="report__tag">Process</div>
+        <h3 class="report__title">The Memo That <em>Wins</em> the Vote</h3>
+        <p class="report__desc">An IC reads the same seven sections in every memo. Get them right and the deal lands; get them wrong and it dies in the first ten minutes.</p>
+      </div>
+      <div class="report__cta">Read</div>
+    </a></li>
+    <li><a class="report reveal" href="chapters/08-cases.html">
+      <div class="report__num">Ch. 08</div>
+      <div class="report__body">
+        <div class="report__tag">Case interviews</div>
+        <h3 class="report__title">The Five Questions <em>Inside</em> the Case</h3>
+        <p class="report__desc">Every PE/VC case prompt is the same five questions wearing a different costume. Once you can find them, the case answers itself.</p>
+      </div>
+      <div class="report__cta">Read</div>
+    </a></li>
+    <li><a class="report reveal" href="chapters/09-thesis.html">
+      <div class="report__num">Ch. 09</div>
+      <div class="report__body">
+        <div class="report__tag">Sector thesis</div>
+        <h3 class="report__title">Why <em>This</em> Sector, Why Now</h3>
+        <p class="report__desc">A thesis is not a deck. It's a single page that says what has to be true, what would prove it wrong, and where the firm makes a non-consensus call.</p>
+      </div>
+      <div class="report__cta">Read</div>
+    </a></li>
+  </ol>
+
+  <section class="section-head reveal">
+    <div class="section-head__eyebrow">§ How it's built</div>
+    <div class="section-head__body">
+      <h2>A solver is not a calculator.</h2>
+      <p>Each tool exposes its formula plainly, names its assumptions, and includes guardrails that point at the most common mistakes. The point is not to do the math for you — it's to make the math visible and then put the harder questions on top of it.</p>
+    </div>
+  </section>
+
+  <div class="note note--vault" style="margin-bottom: 64px;">
+    <span class="note__head">No data leaves your browser</span>
+    Everything in the lab runs client-side. No analytics, no server, no telemetry. Inputs you type are not stored unless the tool is explicitly a canvas (the sector thesis), in which case it uses localStorage on your device only.
+  </div>
+
+</main>
+
+<footer class="wrap">
+  <span>© 2026 Reports Lab · Report No. 04</span>
+  <span><a href="../">All reports</a> · <a href="https://github.com/Regantih/reports-lab">github</a></span>
+</footer>
+
+<script src="js/finance.js"></script>
+</body>
+</html>
