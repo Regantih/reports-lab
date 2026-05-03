@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T1 — Case Study Analyzer · The PE/VC Operator's Lab</title>
+<meta name="description" content="A guided checklist across company, market, unit economics, risks, and thesis. Saves locally; exports to Markdown.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/lab.css">
+</head>
+<body>
+
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../../index.html"><span class="brand__mark"></span><span>PE/VC<span class="brand__sub"> &middot; the practitioner&apos;s lab</span></span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../../index.html">Report cover</a>
+  <a class="nav-link" href="../../index.html#chapters">Chapters</a>
+  <a class="nav-link nav-link--active" href="../index.html">Lab</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap">
+  <section style="padding: var(--space-10) 0 var(--space-4);">
+    <div class="eyebrow" style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-accent-copper);">Tool 09 &middot; <a href="../index.html" style="font-family:inherit; letter-spacing:inherit; color:inherit;">the lab</a> &middot; <a href="../../chapters/14-screening.html">Read: Ch. 14 — Screening</a> &middot; <a href="../../chapters/38-integrated-casework.html">Ch. 38 — Integrated Casework</a></div>
+    <h1 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-2xl); margin: var(--space-2) 0 var(--space-3);">Case Study <em>Analyzer</em></h1>
+    <p class="muted" style="max-width: 60ch;">A guided run through the questions Ch. 01 says an IC will ask. Each answer is saved to your browser only. When you're ready, export everything as a Markdown brief.</p>
+  </section>
+
+  <section class="tool-toolbar">
+    <button class="btn" id="btn-export">Export Markdown</button>
+    <button class="btn" id="btn-copy">Copy as Markdown</button>
+    <button class="btn btn--ghost" id="btn-clear">Clear</button>
+    <span class="nav-spacer" style="flex:1;"></span>
+    <span class="chip" id="status">saved · just now</span>
+  </section>
+
+  <form id="form" autocomplete="off" onsubmit="event.preventDefault();">
+
+    <h2 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-xl); margin: var(--space-6) 0 var(--space-3);">1 · Company</h2>
+    <div class="field"><label>Name &amp; one-liner</label><input type="text" data-persist="name" placeholder="e.g. Foo, Inc. — workflow software for hospital billing"></div>
+    <div class="field"><label>What is the buyer paying for? (be literal — read the contract)</label><textarea data-persist="product" placeholder="The thing customers pay for. Not the marketing. The line on the invoice."></textarea></div>
+    <div class="field"><label>Stage / round / cheque size sought</label><input type="text" data-persist="stage" placeholder="e.g. Series B · $40M raise · $25M lead cheque"></div>
+
+    <h2 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-xl); margin: var(--space-6) 0 var(--space-3);">2 · Market &amp; macro change</h2>
+    <div class="field"><label>What changed in the world that makes this fundable now?</label><textarea data-persist="macro" placeholder="A regulation, cost curve, buyer budget shift. Concrete and recent."></textarea></div>
+    <div class="field"><label>Who is the buyer, concretely (function · budget · sponsor)?</label><textarea data-persist="buyer" placeholder='e.g. "VP Revenue Cycle at a 200-bed hospital · $1M IT budget · CFO-sponsored"'></textarea></div>
+    <div class="field"><label>Bottoms-up TAM (count of buyers × ACV) — show the arithmetic</label><textarea data-persist="tam" placeholder="e.g. 6,200 hospitals × $80k ACV = $496M serviceable; capture 5% in 5y"></textarea></div>
+
+    <h2 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-xl); margin: var(--space-6) 0 var(--space-3);">3 · Unit economics</h2>
+    <div class="field--inline">
+      <div class="field"><label>Contribution margin (%)</label><input type="number" step="0.1" data-persist="cm" placeholder="e.g. 65"></div>
+      <div class="field"><label>Paid CAC ($)</label><input type="number" step="1" data-persist="cac" placeholder="e.g. 8000"></div>
+    </div>
+    <div class="field--inline">
+      <div class="field"><label>Payback (months)</label><input type="number" step="0.1" data-persist="payback" placeholder="e.g. 14"></div>
+      <div class="field"><label>Net revenue retention (%)</label><input type="number" step="0.1" data-persist="nrr" placeholder="e.g. 118"></div>
+    </div>
+    <div class="field"><label>Notes — what's adjusted, blended, or excluded?</label><textarea data-persist="ueNotes" placeholder="Three ways founders dress up the unit economics: see Ch. 02."></textarea></div>
+
+    <h2 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-xl); margin: var(--space-6) 0 var(--space-3);">4 · Risks &amp; failure modes</h2>
+    <div class="field"><label>Top three failure mechanisms (probability × severity, ranked)</label><textarea data-persist="risks" placeholder="1) Buyer budgets get cut → 40% probability · loses 50% of pipeline · mitigant: add CFO-level outcome metric.
+2) ...
+3) ..."></textarea></div>
+    <div class="field"><label>Most-likely "we get our money back but not multiplied" outcome</label><textarea data-persist="downside" placeholder="The 1.0×–1.5× scenario, written down before the deal closes."></textarea></div>
+
+    <h2 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-xl); margin: var(--space-6) 0 var(--space-3);">5 · Thesis &amp; verdict</h2>
+    <div class="field"><label>Your thesis in three sentences</label><textarea data-persist="thesis" placeholder="What the company is. What's changing. Why it wins because of that change."></textarea></div>
+    <div class="field"><label>Recommendation</label>
+      <select data-persist="verdict">
+        <option value="">— choose —</option>
+        <option>Approve</option>
+        <option>Approve with conditions</option>
+        <option>Pass — wrong stage / valuation</option>
+        <option>Pass — thesis mismatch</option>
+        <option>Track for next round</option>
+      </select>
+    </div>
+    <div class="field"><label>Conditions / open diligence (if any)</label><textarea data-persist="conditions" placeholder="Things that must be true at close. Things still to test in week 1."></textarea></div>
+
+    <h2 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-xl); margin: var(--space-6) 0 var(--space-3);">Ask Tutor (optional)</h2>
+    <p class="muted tiny">Sends only the literal question to a free public LLM endpoint. No model inputs above are transmitted. Use for stuck moments, not as an oracle.</p>
+    <div class="field"><label>Your question</label><textarea id="tutor-q" placeholder="e.g. What's a reasonable Series B payback for a vertical SaaS with 70% gross margins?"></textarea></div>
+    <button type="button" class="btn" id="btn-tutor">Ask</button>
+    <div id="tutor-a" class="card" style="margin-top: var(--space-3); display:none;"></div>
+  </form>
+
+  <div style="height: var(--space-16);"></div>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span>&copy; 2026 Reports Lab &middot; Report No. 04 &middot; the lab</span>
+  <span><a href="../index.html">&uarr; lab</a> &middot; <a href="../../index.html">&uarr; report cover</a></span>
+</div></footer>
+
+<script src="../js/site.js"></script>
+<script src="../js/tools.js"></script>
+<script>
+(function () {
+  const SLOT = 'case-analyzer';
+  const form = document.getElementById('form');
+  const status = document.getElementById('status');
+  PEVC.bindPersistence(form, SLOT);
+  form.addEventListener('input', () => { status.textContent = 'saved · ' + new Date().toLocaleTimeString(); });
+
+  function buildMarkdown() {
+    const d = PEVC.load(SLOT, {}) || {};
+    const lines = [];
+    lines.push('# Case brief — ' + (d.name || 'Untitled'));
+    lines.push('');
+    lines.push('## 1. Company');
+    lines.push('- **Product / what is paid for:** ' + (d.product || '—'));
+    lines.push('- **Stage / cheque sought:** ' + (d.stage || '—'));
+    lines.push('');
+    lines.push('## 2. Market & macro change');
+    lines.push('- **What changed in the world:** ' + (d.macro || '—'));
+    lines.push('- **Buyer:** ' + (d.buyer || '—'));
+    lines.push('- **TAM (bottom-up):** ' + (d.tam || '—'));
+    lines.push('');
+    lines.push('## 3. Unit economics');
+    lines.push('- Contribution margin: ' + (d.cm || '—') + '%');
+    lines.push('- Paid CAC: $' + (d.cac || '—'));
+    lines.push('- Payback (months): ' + (d.payback || '—'));
+    lines.push('- Net revenue retention: ' + (d.nrr || '—') + '%');
+    lines.push('- Notes: ' + (d.ueNotes || '—'));
+    lines.push('');
+    lines.push('## 4. Risks & failure modes');
+    lines.push((d.risks || '—'));
+    lines.push('');
+    lines.push('**Downside-but-money-back scenario:** ' + (d.downside || '—'));
+    lines.push('');
+    lines.push('## 5. Thesis & verdict');
+    lines.push('- **Thesis:** ' + (d.thesis || '—'));
+    lines.push('- **Recommendation:** ' + (d.verdict || '—'));
+    lines.push('- **Conditions:** ' + (d.conditions || '—'));
+    lines.push('');
+    lines.push('_Generated locally by The PE/VC Operator\'s Lab — no data transmitted._');
+    return lines.join('\n');
+  }
+
+  document.getElementById('btn-export').addEventListener('click', () => {
+    PEVC.downloadFile('case-brief.md', buildMarkdown(), 'text/markdown;charset=utf-8');
+  });
+  document.getElementById('btn-copy').addEventListener('click', async () => {
+    await PEVC.copyText(buildMarkdown());
+    status.textContent = 'copied';
+  });
+  document.getElementById('btn-clear').addEventListener('click', () => {
+    if (!confirm('Clear all answers on this page? This affects only this device.')) return;
+    PEVC.clear(SLOT);
+    form.querySelectorAll('[data-persist]').forEach((el) => {
+      if (el.type === 'checkbox') el.checked = false; else el.value = '';
+    });
+    status.textContent = 'cleared';
+  });
+
+  const tutorBtn = document.getElementById('btn-tutor');
+  const tutorQ = document.getElementById('tutor-q');
+  const tutorA = document.getElementById('tutor-a');
+  tutorBtn.addEventListener('click', async () => {
+    const q = tutorQ.value.trim();
+    if (!q) return;
+    tutorBtn.disabled = true;
+    const prev = tutorBtn.textContent; tutorBtn.textContent = 'asking…';
+    tutorA.style.display = 'block'; tutorA.textContent = 'Thinking…';
+    try {
+      const a = await PEVC.askTutor(q);
+      tutorA.textContent = a || '(no answer — try again or rephrase)';
+    } catch (e) {
+      tutorA.innerHTML = '<span class="chip chip--bad">offline</span> Could not reach the tutor endpoint. Check your connection.';
+    } finally {
+      tutorBtn.disabled = false; tutorBtn.textContent = prev;
+    }
+  });
+})();
+</script>
+</body></html>

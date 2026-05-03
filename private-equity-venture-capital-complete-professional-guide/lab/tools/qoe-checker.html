@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QoE &amp; Add-back Checker — PE/VC Finance Lab</title>
+<meta name="description" content="A working QoE add-back checker. Buckets every adjusted-EBITDA bridge item into accept / question / reject and explains the rule it applied.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"><link rel="stylesheet" href="../css/lab.css">
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../../index.html"><span class="brand__mark"></span><span>PE/VC<span class="brand__sub"> &middot; the practitioner&apos;s lab</span></span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../../index.html">Report cover</a>
+  <a class="nav-link nav-link--active" href="../index.html">Lab</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap">
+  <section class="tool reveal">
+    <div class="tool__eyebrow">Tool 06 · <a href="../index.html">the lab</a> · <a href="../../chapters/16-financial-diligence-qofe.html">Read: Ch. 16 — Financial Diligence &amp; Quality of Earnings</a></div>
+    <h1 class="tool__title">QoE &amp; Add-back <em>Checker</em></h1>
+    <p class="tool__lede">Paste an adjusted-EBITDA bridge. The checker categorises each add-back, applies the rule a decent QoE provider would apply, and tells you what's likely to come back out of the pro forma.</p>
+
+    <form id="qoe" autocomplete="off" onsubmit="return false;" class="solver">
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>01</strong> Reported earnings</h2>
+        <div class="row">
+          <div class="field"><label class="field__label" for="repEbitda">Reported EBITDA ($M)</label><input type="number" id="repEbitda" value="20" step="0.5"></div>
+          <div class="field"><label class="field__label" for="rev">Revenue, LTM ($M)</label><input type="number" id="rev" value="120" step="1"></div>
+        </div>
+
+        <h2 class="panel__title" style="margin-top:24px;"><strong>02</strong> Adjustments (one per line: <span class="mono">amount, label</span>)</h2>
+        <div class="field">
+          <label class="field__label" for="addbacks">Add-back list</label>
+          <textarea id="addbacks" rows="12" placeholder="2.5, founder above-market salary&#10;1.0, one-time legal settlement&#10;0.4, COVID recovery normalisation&#10;0.6, owner&apos;s personal car &amp; travel&#10;1.2, ERP implementation, capitalisable&#10;0.3, severance, restructuring&#10;0.8, foregone revenue from store closures&#10;-0.5, run-rate price increases not yet realised">2.5, founder above-market salary
+1.0, one-time legal settlement
+0.4, COVID recovery normalisation
+0.6, owner&apos;s personal car &amp; travel
+1.2, ERP implementation, capitalisable
+0.3, severance, restructuring
+0.8, foregone revenue from store closures
+-0.5, run-rate price increases not yet realised</textarea>
+          <div class="field__hint">Negative = downward adjustment. The checker reads the label and applies a rule from the bank below.</div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>03</strong> Bridge, scrubbed</h2>
+        <div class="output">
+          <div class="output__row"><span class="output__label">Reported EBITDA</span><span class="output__value" id="o-rep">—</span></div>
+          <div class="output__row"><span class="output__label">Seller's adjusted EBITDA</span><span class="output__value" id="o-seller">—</span></div>
+          <div class="output__row"><span class="output__label">Likely accepted by QoE</span><span class="output__value output__value--good" id="o-accept">—</span></div>
+          <div class="output__row"><span class="output__label">In question (pending support)</span><span class="output__value output__value--warn" id="o-question">—</span></div>
+          <div class="output__row"><span class="output__label">Likely rejected by QoE</span><span class="output__value output__value--bad" id="o-reject">—</span></div>
+        </div>
+        <div class="output__big" id="o-pf">—</div>
+        <div class="muted mono" style="font-size:11px; letter-spacing:0.06em; text-transform:uppercase;">Pro forma EBITDA · accepted only</div>
+
+        <h2 class="panel__title" style="margin-top:24px;"><strong>04</strong> Item-by-item ruling</h2>
+        <ul class="flag-list" id="rulings"></ul>
+      </div>
+    </form>
+  </section>
+
+  <section class="reveal">
+    <div class="note">
+      <span class="note__head">The eight categories</span>
+      <ol style="margin:8px 0 0 18px; padding:0; color:var(--ink-soft);">
+        <li><strong>Owner comp normalisation</strong> — accepted, but only to a market rate. Don't just delete the salary.</li>
+        <li><strong>Personal expenses run through the business</strong> — accepted, with documentation.</li>
+        <li><strong>One-time legal/settlement/restructuring</strong> — accepted if genuinely non-recurring. "One-time" five years in a row is recurring.</li>
+        <li><strong>COVID / pandemic / event-driven</strong> — accepted carefully. Don't add back foregone revenue without proof of permanence; don't normalise upward and downward selectively.</li>
+        <li><strong>Foregone revenue / pro-forma growth</strong> — usually rejected. Adjusted EBITDA reflects what happened, not what could have.</li>
+        <li><strong>Run-rate price increases / not-yet-realised cost cuts</strong> — usually rejected unless the action is taken and the savings are demonstrable.</li>
+        <li><strong>Stock-based comp</strong> — controversial. Sponsors often add back; QoEs note it. We flag it.</li>
+        <li><strong>Capitalisable software / ERP / R&amp;D</strong> — accepted as add-back if the project is bounded and definitively complete.</li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span>&copy; 2026 Reports Lab &middot; Report No. 04 &middot; the lab</span>
+  <span><a href="../index.html">&uarr; lab</a> &middot; <a href="../../index.html">&uarr; report cover</a></span>
+</div></footer>
+
+<script src="../js/finance.js"></script>
+<script>
+(function () {
+  const F = window.Fin;
+  const $ = F.$;
+
+  // Rule bank: regex, ruling, reasoning
+  const rules = [
+    [/(stock|sbc|equity|rsu)/i, 'question', 'Stock-based compensation. Sponsors often add back; QoE providers note it. Treat as below-the-line in your model unless the buyer\'s convention is to add back.'],
+    [/(founder|owner|ceo|principal).*(salary|comp|wage|bonus)|above[\-\s]?market.*(salary|comp)/i, 'accept', 'Owner-compensation normalisation. Accepted to a market rate; reject anything that takes total comp to zero.'],
+    [/(car|travel|club|family|personal|spouse|child)/i, 'accept', 'Personal expenses run through the business. Accepted with receipts. Quantify and exclude from go-forward run rate.'],
+    [/(legal|settlement|litigation|lawsuit)/i, 'accept', 'Legal / settlement. Accepted if non-recurring and supported by case docs. If the company is in the same kind of dispute every year, treat as recurring.'],
+    [/(restructur|severance|reorg|layoff)/i, 'accept', 'Restructuring / severance. Accepted when the action is bounded and complete; reject if "restructuring" appears every year.'],
+    [/(covid|pandemic|lockdown)/i, 'question', 'COVID / pandemic adjustment. Accepted only if (a) genuinely event-driven and (b) you adjust both upside and downside. Asymmetric COVID add-backs are the most common QoE finding.'],
+    [/(foregone|pro[-\s]?forma|would have|missed|lost)/i, 'reject', 'Foregone revenue / pro-forma growth. Rejected. Adjusted EBITDA reflects what happened, not what could have. Move this to your underwriting.'],
+    [/(run[-\s]?rate|price increase|not yet|to be realised|to be realized|future|planned)/i, 'reject', 'Run-rate / not-yet-realised. Rejected unless action is taken and savings are demonstrable in the trailing months.'],
+    [/(erp|sap|netsuite|software impl|implementation|migration|upgrade|capitaliz|capitalis)/i, 'accept', 'Capitalisable project. Accepted as one-time if bounded and complete; otherwise question.'],
+    [/(audit|consult|advisor|advisor|transaction)/i, 'accept', 'Transaction / audit / advisory fees. Accepted if disclosed and one-time. Sale-process advisors are textbook add-backs.'],
+    [/(rent|related[-\s]?party|owner.*real estate|sublet)/i, 'question', 'Related-party rent or transactions. Accept only if normalised to market and supported.'],
+    [/(write[-\s]?off|impair|inventory)/i, 'question', 'Inventory writedown / impairment. Accept if discrete and disclosed; question if recurring.'],
+    [/(insurance|premium)/i, 'question', 'Insurance adjustment. Look for coverage changes and benchmark against peers.'],
+  ];
+
+  function classify(label) {
+    for (const [re, ruling, reason] of rules) {
+      if (re.test(label)) return { ruling, reason };
+    }
+    return { ruling: 'question', reason: 'No matching rule. Ask the seller for support and the audit/QoE provider for treatment.' };
+  }
+
+  function compute() {
+    const rep = F.parse($('#repEbitda').value);
+    const rev = F.parse($('#rev').value);
+    const lines = $('#addbacks').value.split('\n').map(l => l.trim()).filter(Boolean);
+    const items = lines.map(line => {
+      const m = line.match(/^(-?[0-9]+\.?[0-9]*)\s*[,\-]\s*(.+)$/);
+      if (!m) return null;
+      const amount = F.parse(m[1]);
+      const label = m[2];
+      const { ruling, reason } = classify(label);
+      return { amount, label, ruling, reason };
+    }).filter(Boolean);
+
+    const sumAdj = items.reduce((s, x) => s + x.amount, 0);
+    const seller = rep + sumAdj;
+    const accepted = items.filter(x => x.ruling === 'accept').reduce((s, x) => s + x.amount, 0);
+    const questioned = items.filter(x => x.ruling === 'question').reduce((s, x) => s + x.amount, 0);
+    const rejected = items.filter(x => x.ruling === 'reject').reduce((s, x) => s + x.amount, 0);
+    const proForma = rep + accepted;
+
+    $('#o-rep').textContent = '$' + rep.toFixed(1) + 'M';
+    $('#o-seller').textContent = '$' + seller.toFixed(1) + 'M';
+    $('#o-accept').textContent = '+$' + accepted.toFixed(1) + 'M';
+    $('#o-question').textContent = (questioned >= 0 ? '+' : '') + '$' + questioned.toFixed(1) + 'M';
+    $('#o-reject').textContent = (rejected >= 0 ? '+' : '') + '$' + rejected.toFixed(1) + 'M';
+    $('#o-pf').textContent = '$' + proForma.toFixed(1) + 'M';
+
+    // Quality flags
+    const flags = [];
+    const adjPct = rep > 0 ? sumAdj / rep : 0;
+    if (adjPct > 0.50) flags.push(['bad', `Total seller add-backs are ${(adjPct*100).toFixed(0)}% of reported EBITDA. Anything above 30% deserves a QoE; above 50% is a yellow flag for the deal.`]);
+    if (rejected > rep * 0.15) flags.push(['bad', `Likely-rejected adjustments are >15% of reported EBITDA. The seller's bridge is doing too much work.`]);
+    if (questioned > rep * 0.20) flags.push(['warn', `>20% of EBITDA is in items that need explicit QoE support. Build that into your timeline.`]);
+    if (items.some(x => /covid/i.test(x.label)) && items.filter(x => /covid/i.test(x.label)).every(x => x.amount > 0)) flags.push(['warn', `All COVID adjustments are positive (only normalising downside). Symmetric treatment is what a QoE will demand — model both.`]);
+    if (items.length < 3) flags.push(['info', `Light bridge. Either the business is clean or the seller hasn\'t been pushed yet.`]);
+
+    const rulings = items.map(x => `<li><span class="pill pill--${x.ruling === 'accept' ? 'good' : x.ruling === 'reject' ? 'bad' : 'warn'}">${x.ruling.toUpperCase()}</span><span><strong>$${x.amount.toFixed(1)}M · ${x.label}</strong><br><span class="muted" style="font-size:12px;">${x.reason}</span></span></li>`).join('');
+
+    const flagsHTML = flags.map(([k, t]) => `<li><span class="pill pill--${k}">${k.toUpperCase()}</span><span>${t}</span></li>`).join('');
+    $('#rulings').innerHTML = rulings + (flagsHTML ? '<li style="border-top:2px solid var(--rule-strong); padding-top:14px;"><span class="pill pill--info">SUMMARY</span><span><strong>Bridge quality assessment</strong></span></li>' + flagsHTML : '');
+  }
+
+  F.bind(document.getElementById('qoe'), compute);
+})();
+</script>
+<script src="../js/site.js"></script>
+</body>
+</html>

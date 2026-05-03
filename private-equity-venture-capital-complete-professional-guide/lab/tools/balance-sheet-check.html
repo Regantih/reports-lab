@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T3 — Balance-sheet checker · The PE/VC Operator's Lab</title>
+<meta name="description" content="Enter a few rows; verifies the accounting identity and runs eight red-flag heuristics.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/lab.css">
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../../index.html"><span class="brand__mark"></span><span>PE/VC<span class="brand__sub"> &middot; the practitioner&apos;s lab</span></span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../../index.html">Report cover</a>
+  <a class="nav-link" href="../../index.html#chapters">Chapters</a>
+  <a class="nav-link nav-link--active" href="../index.html">Lab</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap">
+  <section style="padding: var(--space-10) 0 var(--space-4);">
+    <div class="eyebrow" style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-accent-copper);">Tool 05 &middot; <a href="../index.html" style="font-family:inherit; letter-spacing:inherit; color:inherit;">the lab</a> &middot; <a href="../../chapters/16-financial-diligence-qofe.html">Read: Ch. 16 — Financial Diligence &amp; Quality of Earnings</a></div>
+    <h1 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-2xl); margin: var(--space-2) 0 var(--space-3);">Balance-sheet <em>checker</em></h1>
+    <p class="muted" style="max-width: 60ch;">Enter the prior-year and current-year balance sheet rows you have. We check the accounting identity (A = L + E) and run eight red-flag heuristics against the deltas.</p>
+  </section>
+
+  <section class="tool-toolbar">
+    <button class="btn" id="btn-run" type="button">Recompute</button>
+    <button class="btn btn--ghost" id="btn-clear" type="button">Clear</button>
+  </section>
+
+  <div class="row">
+    <div class="card">
+      <h3 style="font-family: var(--font-display); font-weight: 500; margin-bottom: var(--space-3);">Prior year ($M)</h3>
+      <div class="field"><label>Cash</label><input type="number" step="0.1" data-persist="p_cash"></div>
+      <div class="field"><label>Accounts receivable</label><input type="number" step="0.1" data-persist="p_ar"></div>
+      <div class="field"><label>Inventory</label><input type="number" step="0.1" data-persist="p_inv"></div>
+      <div class="field"><label>Capitalised software / intangibles</label><input type="number" step="0.1" data-persist="p_capSw"></div>
+      <div class="field"><label>Goodwill</label><input type="number" step="0.1" data-persist="p_gw"></div>
+      <div class="field"><label>Other assets</label><input type="number" step="0.1" data-persist="p_otherA"></div>
+      <hr style="border:none; border-top: 1px solid var(--color-divider); margin: var(--space-3) 0;"/>
+      <div class="field"><label>Accounts payable</label><input type="number" step="0.1" data-persist="p_ap"></div>
+      <div class="field"><label>Short-term debt</label><input type="number" step="0.1" data-persist="p_std"></div>
+      <div class="field"><label>Long-term debt</label><input type="number" step="0.1" data-persist="p_ltd"></div>
+      <div class="field"><label>Deferred revenue</label><input type="number" step="0.1" data-persist="p_def"></div>
+      <div class="field"><label>Related-party debt</label><input type="number" step="0.1" data-persist="p_rpd"></div>
+      <div class="field"><label>Other liabilities</label><input type="number" step="0.1" data-persist="p_otherL"></div>
+      <div class="field"><label>Total equity</label><input type="number" step="0.1" data-persist="p_eq"></div>
+      <hr style="border:none; border-top: 1px solid var(--color-divider); margin: var(--space-3) 0;"/>
+      <div class="field"><label>Revenue (P&amp;L) — prior</label><input type="number" step="0.1" data-persist="p_rev"></div>
+      <div class="field"><label>COGS — prior</label><input type="number" step="0.1" data-persist="p_cogs"></div>
+      <div class="field"><label>Total R&amp;D — prior</label><input type="number" step="0.1" data-persist="p_rd"></div>
+      <div class="field"><label>Monthly burn — prior</label><input type="number" step="0.1" data-persist="p_burn"></div>
+      <div class="field"><label>Reported runway (months)</label><input type="number" step="0.5" data-persist="p_runway"></div>
+    </div>
+
+    <div class="card">
+      <h3 style="font-family: var(--font-display); font-weight: 500; margin-bottom: var(--space-3);">Current year ($M)</h3>
+      <div class="field"><label>Cash</label><input type="number" step="0.1" data-persist="c_cash"></div>
+      <div class="field"><label>Accounts receivable</label><input type="number" step="0.1" data-persist="c_ar"></div>
+      <div class="field"><label>Inventory</label><input type="number" step="0.1" data-persist="c_inv"></div>
+      <div class="field"><label>Capitalised software / intangibles</label><input type="number" step="0.1" data-persist="c_capSw"></div>
+      <div class="field"><label>Goodwill</label><input type="number" step="0.1" data-persist="c_gw"></div>
+      <div class="field"><label>Other assets</label><input type="number" step="0.1" data-persist="c_otherA"></div>
+      <hr style="border:none; border-top: 1px solid var(--color-divider); margin: var(--space-3) 0;"/>
+      <div class="field"><label>Accounts payable</label><input type="number" step="0.1" data-persist="c_ap"></div>
+      <div class="field"><label>Short-term debt</label><input type="number" step="0.1" data-persist="c_std"></div>
+      <div class="field"><label>Long-term debt</label><input type="number" step="0.1" data-persist="c_ltd"></div>
+      <div class="field"><label>Deferred revenue</label><input type="number" step="0.1" data-persist="c_def"></div>
+      <div class="field"><label>Related-party debt</label><input type="number" step="0.1" data-persist="c_rpd"></div>
+      <div class="field"><label>Other liabilities</label><input type="number" step="0.1" data-persist="c_otherL"></div>
+      <div class="field"><label>Total equity</label><input type="number" step="0.1" data-persist="c_eq"></div>
+      <hr style="border:none; border-top: 1px solid var(--color-divider); margin: var(--space-3) 0;"/>
+      <div class="field"><label>Revenue (P&amp;L)</label><input type="number" step="0.1" data-persist="c_rev"></div>
+      <div class="field"><label>COGS</label><input type="number" step="0.1" data-persist="c_cogs"></div>
+      <div class="field"><label>Total R&amp;D</label><input type="number" step="0.1" data-persist="c_rd"></div>
+      <div class="field"><label>Monthly burn</label><input type="number" step="0.1" data-persist="c_burn"></div>
+      <div class="field"><label>Reported runway (months)</label><input type="number" step="0.5" data-persist="c_runway"></div>
+    </div>
+  </div>
+
+  <h2 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-xl); margin: var(--space-10) 0 var(--space-3);">Findings</h2>
+  <div id="findings"></div>
+
+  <div style="height: var(--space-16);"></div>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span>&copy; 2026 Reports Lab &middot; Report No. 04 &middot; the lab</span>
+  <span><a href="../index.html">&uarr; lab</a> &middot; <a href="../../index.html">&uarr; report cover</a></span>
+</div></footer>
+
+<script src="../js/site.js"></script>
+<script src="../js/tools.js"></script>
+<script>
+(function () {
+  const SLOT = 'balance-sheet-check';
+  const root = document.querySelector('main');
+  PEVC.bindPersistence(root, SLOT);
+
+  function v(d, k) { return PEVC.num(d[k], 0); }
+  function totalsFor(d, prefix) {
+    const A = v(d, prefix + 'cash') + v(d, prefix + 'ar') + v(d, prefix + 'inv') + v(d, prefix + 'capSw') + v(d, prefix + 'gw') + v(d, prefix + 'otherA');
+    const L = v(d, prefix + 'ap') + v(d, prefix + 'std') + v(d, prefix + 'ltd') + v(d, prefix + 'def') + v(d, prefix + 'rpd') + v(d, prefix + 'otherL');
+    const E = v(d, prefix + 'eq');
+    return { A, L, E };
+  }
+  function pctChange(prev, cur) {
+    if (prev === 0) return cur === 0 ? 0 : Infinity;
+    return (cur - prev) / Math.abs(prev);
+  }
+  function dso(rev, ar) {
+    if (rev <= 0) return null;
+    return (ar / rev) * 365;
+  }
+  function chip(kind, label) {
+    return `<span class="chip chip--${kind}">${label}</span>`;
+  }
+
+  function run() {
+    const d = PEVC.load(SLOT, {}) || {};
+    const p = totalsFor(d, 'p_');
+    const c = totalsFor(d, 'c_');
+    const out = [];
+
+    // identity check
+    function ident(year, t) {
+      const lhs = t.A; const rhs = t.L + t.E;
+      const diff = lhs - rhs;
+      if (lhs === 0 && rhs === 0) return null;
+      const tol = Math.max(0.05, Math.abs(lhs) * 0.005);
+      const ok = Math.abs(diff) <= tol;
+      return `<div class="card"><strong>${year}: A = L + E</strong> &nbsp; ${ok ? chip('good','balanced') : chip('bad','off by ' + diff.toFixed(2) + 'M')} <div class="muted tiny">A=${t.A.toFixed(2)}M · L=${t.L.toFixed(2)}M · E=${t.E.toFixed(2)}M</div></div>`;
+    }
+    const id1 = ident('Prior year', p); if (id1) out.push(id1);
+    const id2 = ident('Current year', c); if (id2) out.push(id2);
+
+    // 1. AR / revenue creeping
+    const dsoP = dso(v(d,'p_rev'), v(d,'p_ar'));
+    const dsoC = dso(v(d,'c_rev'), v(d,'c_ar'));
+    if (dsoP !== null && dsoC !== null) {
+      const delta = dsoC - dsoP;
+      const kind = delta > 30 ? 'bad' : delta > 10 ? 'warn' : 'good';
+      out.push(`<div class="card"><strong>1. Days sales outstanding</strong> ${chip(kind, delta >= 0 ? '+' + delta.toFixed(0) + 'd' : delta.toFixed(0) + 'd')} <div class="muted tiny">prior ${dsoP.toFixed(0)}d → current ${dsoC.toFixed(0)}d. >+30d YoY suggests revenue pull-forward or stretching customers.</div></div>`);
+    }
+    // 2. Inventory growing faster than COGS
+    if (v(d,'p_inv') > 0 && v(d,'c_inv') > 0 && v(d,'p_cogs') > 0 && v(d,'c_cogs') > 0) {
+      const invG = pctChange(v(d,'p_inv'), v(d,'c_inv'));
+      const cogsG = pctChange(v(d,'p_cogs'), v(d,'c_cogs'));
+      const gap = invG - cogsG;
+      const kind = gap > 0.20 ? 'bad' : gap > 0.05 ? 'warn' : 'good';
+      out.push(`<div class="card"><strong>2. Inventory vs COGS growth</strong> ${chip(kind, (gap*100).toFixed(0) + 'pp gap')} <div class="muted tiny">inv ${(invG*100).toFixed(0)}% vs COGS ${(cogsG*100).toFixed(0)}%. Gap >5pp suggests channel stuffing or obsolescence.</div></div>`);
+    }
+    // 3. Capitalised software ballooning
+    if (v(d,'c_rd') > 0 && v(d,'c_capSw') > 0) {
+      const ratio = v(d,'c_capSw') / v(d,'c_rd');
+      const kind = ratio > 0.6 ? 'bad' : ratio > 0.35 ? 'warn' : 'good';
+      out.push(`<div class="card"><strong>3. Capitalised software / R&amp;D</strong> ${chip(kind, (ratio*100).toFixed(0) + '%')} <div class="muted tiny">>35% is unusual for SaaS; >60% defers a lot of expense off the P&amp;L.</div></div>`);
+    }
+    // 4. Goodwill > tangible book
+    {
+      const tangible = c.A - v(d,'c_gw') - v(d,'c_capSw') - c.L;
+      const gw = v(d,'c_gw');
+      if (gw > 0) {
+        const kind = gw > Math.max(0, tangible) ? 'warn' : 'good';
+        out.push(`<div class="card"><strong>4. Goodwill vs tangible book</strong> ${chip(kind, '$' + gw.toFixed(1) + 'M GW · $' + tangible.toFixed(1) + 'M tangible')} <div class="muted tiny">Goodwill > tangible book → business is mostly acquisitions, not organic growth.</div></div>`);
+      }
+    }
+    // 5. Deferred revenue collapsing
+    if (v(d,'p_def') > 0) {
+      const drG = pctChange(v(d,'p_def'), v(d,'c_def'));
+      const kind = drG < -0.15 ? 'bad' : drG < -0.05 ? 'warn' : 'good';
+      out.push(`<div class="card"><strong>5. Deferred revenue trend</strong> ${chip(kind, (drG*100).toFixed(0) + '%')} <div class="muted tiny">A drop &gt;15% suggests bookings have stalled even if revenue still looks fine.</div></div>`);
+    }
+    // 6. Related-party debt
+    if (v(d,'c_rpd') > 0) {
+      const tot = c.L; const share = v(d,'c_rpd') / Math.max(1e-9, tot);
+      const kind = share > 0.10 ? 'bad' : 'warn';
+      out.push(`<div class="card"><strong>6. Related-party debt</strong> ${chip(kind, (share*100).toFixed(0) + '% of liabilities')} <div class="muted tiny">Loans from founder/affiliate often signal liquidity pressure or non-arm's-length terms.</div></div>`);
+    }
+    // 7. Cash & runway reconciliation
+    if (v(d,'c_cash') > 0 && v(d,'c_burn') > 0 && v(d,'c_runway') > 0) {
+      const implied = (v(d,'c_cash') - v(d,'c_std')) / v(d,'c_burn');
+      const claimed = v(d,'c_runway');
+      const gap = claimed - implied;
+      const kind = gap > 6 ? 'bad' : gap > 2 ? 'warn' : 'good';
+      out.push(`<div class="card"><strong>7. Runway reconciliation</strong> ${chip(kind, gap.toFixed(1) + ' month gap')} <div class="muted tiny">Claimed runway ${claimed.toFixed(1)}m vs implied (cash − ST debt) ÷ burn = ${implied.toFixed(1)}m.</div></div>`);
+    }
+    // 8. Working-capital trend
+    {
+      const wcP = (v(d,'p_ar') + v(d,'p_inv')) - v(d,'p_ap');
+      const wcC = (v(d,'c_ar') + v(d,'c_inv')) - v(d,'c_ap');
+      if (wcP !== 0 || wcC !== 0) {
+        const arG = pctChange(v(d,'p_ar'), v(d,'c_ar'));
+        const apG = pctChange(v(d,'p_ap'), v(d,'c_ap'));
+        const worsening = (wcC < wcP) && (arG > apG);
+        const kind = worsening ? 'warn' : 'good';
+        out.push(`<div class="card"><strong>8. Working capital</strong> ${chip(kind, worsening ? 'AR rising faster than AP' : 'stable')} <div class="muted tiny">Prior WC ${wcP.toFixed(1)}M → current ${wcC.toFixed(1)}M. Negative WC is fine if structural; problem if trend is worsening.</div></div>`);
+      }
+    }
+
+    document.getElementById('findings').innerHTML = out.join('') || '<p class="muted">Enter at least the current-year balance sheet to see findings.</p>';
+  }
+
+  document.getElementById('btn-run').addEventListener('click', run);
+  document.getElementById('btn-clear').addEventListener('click', () => {
+    if (!confirm('Clear all entries?')) return;
+    PEVC.clear(SLOT); location.reload();
+  });
+  document.querySelectorAll('input').forEach(el => el.addEventListener('input', run));
+  run();
+})();
+</script>
+</body></html>

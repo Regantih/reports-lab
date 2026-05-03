@@ -9,6 +9,7 @@ A workshop for long-form, image-first essays on the systems behind modern intell
 | № | Title | Chapters | Status |
 |---|---|---:|---|
 | 01 | [From Sand to Superintelligence](./sand-to-superintelligence/) | 42 | Published · 2026 |
+| 04 | [Private Equity and Venture Capital — A Complete Professional Guide](./private-equity-venture-capital-complete-professional-guide/) | 38 + [11-tool lab](./private-equity-venture-capital-complete-professional-guide/lab/) | Published · 2026 |
 
 ## Structure
 

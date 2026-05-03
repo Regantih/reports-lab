@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T8 — Capability Drills · The PE/VC Operator's Lab</title>
+<meta name="description" content="Beginner / intermediate / expert drills mapped to each tool, with self-assessment.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/lab.css">
+<style>
+.drill { display:grid; grid-template-columns: 90px 1fr 220px; gap: var(--space-4); padding: var(--space-4) 0; border-top: 1px solid var(--color-divider); align-items: start; }
+.drill:first-child { border-top: none; }
+.drill__lvl { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; padding-top:4px; }
+.drill__lvl--b { color: var(--color-accent-good); }
+.drill__lvl--i { color: var(--color-accent-copper); }
+.drill__lvl--e { color: var(--color-accent-plasma); }
+.drill__title { font-weight: 600; }
+.drill__desc { color: var(--color-text-muted); font-size: var(--text-sm); margin-top: 4px; }
+.drill__pick label { display: inline-flex; align-items: center; gap: 4px; margin-right: var(--space-2); font-family: var(--font-mono); text-transform: none; letter-spacing: 0; font-size: 12px; color: var(--color-text); }
+.drill__related { display:inline-block; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--color-accent-copper); margin-top: 4px; }
+.section-tag { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-accent-copper); margin-top: var(--space-8); margin-bottom: var(--space-2); }
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../../index.html"><span class="brand__mark"></span><span>PE/VC<span class="brand__sub"> &middot; the practitioner&apos;s lab</span></span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../../index.html">Report cover</a>
+  <a class="nav-link" href="../../index.html#chapters">Chapters</a>
+  <a class="nav-link nav-link--active" href="../index.html">Lab</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap">
+  <section style="padding: var(--space-10) 0 var(--space-4);">
+    <div class="eyebrow" style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-accent-copper);">Tool 11 &middot; <a href="../index.html" style="font-family:inherit; letter-spacing:inherit; color:inherit;">the lab</a> &middot; <a href="../../chapters/38-integrated-casework.html">Read: Ch. 38 — Integrated Expert Casework</a></div>
+    <h1 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-2xl); margin: var(--space-2) 0 var(--space-3);">Capability <em>drills</em></h1>
+    <p class="muted" style="max-width: 60ch;">Thirty drills, three per other tool, graded beginner / intermediate / expert. Mark each as not-started / attempted / passed. Your progress is saved locally.</p>
+  </section>
+
+  <section class="tool-toolbar">
+    <button class="btn btn--ghost" id="btn-clear" type="button">Reset</button>
+    <span class="nav-spacer" style="flex:1;"></span>
+    <span class="chip" id="status">—</span>
+  </section>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi__label">Beginner passed</div><div class="kpi__value kpi__value--good" id="kpi-b">0 / 10</div></div>
+    <div class="kpi"><div class="kpi__label">Intermediate passed</div><div class="kpi__value kpi__value--warn" id="kpi-i">0 / 10</div></div>
+    <div class="kpi"><div class="kpi__label">Expert passed</div><div class="kpi__value kpi__value--bad" id="kpi-e">0 / 10</div></div>
+  </div>
+
+  <div id="drills"></div>
+
+  <div style="height: var(--space-16);"></div>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span>&copy; 2026 Reports Lab &middot; Report No. 04 &middot; the lab</span>
+  <span><a href="../index.html">&uarr; lab</a> &middot; <a href="../../index.html">&uarr; report cover</a></span>
+</div></footer>
+
+<script src="../js/site.js"></script>
+<script src="../js/tools.js"></script>
+<script>
+(function () {
+  const SLOT = 'capability-drills';
+  // 10 tools × 3 levels = 30 drills
+  const DRILLS = [
+    { tool: 'Tool 01 — LBO · MOIC · IRR Solver', href: 'lbo-irr.html', items: [
+      { id: 't1b', lvl: 'b', title: 'Reproduce a known LBO MOIC', desc: 'Pick a documented sponsor exit (e.g., Hilton, Burger King, Refinitiv). Use the four chip scenarios to get within ±20% of the reported MOIC. Pass: name which lever (growth, expansion, or paydown) explains most of it.' },
+      { id: 't1i', lvl: 'i', title: 'Build a sensitivity that breaks the deal', desc: 'Find a credible (exit-multiple, growth, cash-conv) combination that turns a 2.5x MOIC into 1.3x. Defend the realism in two sentences.' },
+      { id: 't1e', lvl: 'e', title: 'Reverse-engineer a competitor\'s bid', desc: 'Given a published winning bid, work backwards to the entry multiple, leverage, and exit assumptions that justify it. Identify which lever they\'re leaning on and what would have to be true.' },
+    ]},
+    { tool: 'Tool 02 — VC Dilution & Option-Pool', href: 'vc-dilution.html', items: [
+      { id: 't2b', lvl: 'b', title: 'Compute pre vs post pool top-up', desc: 'For a 20pre / 5inv / 15% pool round, quantify the founder cost of pre-money pool vs post-money pool. Pass: state the dollar value to founders.' },
+      { id: 't2i', lvl: 'i', title: 'Model your own next round', desc: 'If you have a founder/employee equity stake, model your dilution through the next two rounds at realistic valuations. Confirm against the last 409A or board deck.' },
+      { id: 't2e', lvl: 'e', title: 'Negotiate the option-pool line', desc: 'Take a real term-sheet negotiation: what would you propose to halve the pool-shuffle cost while still hiring the next year of plan? Defend the answer.' },
+    ]},
+    { tool: 'Tool 03 — Cap Table & Waterfall', href: 'cap-table.html', items: [
+      { id: 't3b', lvl: 'b', title: 'Model a 3-round company', desc: 'Build a Seed/A/B cap table from a public press release. Confirm post-money percentages match what the company disclosed.' },
+      { id: 't3i', lvl: 'i', title: 'Find the indifference exit', desc: 'For a 1× participating Series B, identify the exit value at which the founder return is materially worse than under 1× non-participating. Quantify in basis points.' },
+      { id: 't3e', lvl: 'e', title: 'Down-round / anti-dilution', desc: 'Model a flat-to-down Series C with broad-based weighted-average anti-dilution. Document what the tool would need to support full ratchet.' },
+    ]},
+    { tool: 'Tool 04 — Liquidation Waterfall', href: 'liquidation-waterfall.html', items: [
+      { id: 't4b', lvl: 'b', title: 'Stack three rounds and sweep', desc: 'Stack a Seed (1× NP), A (1× participating), B (1× NP). Sweep exit from $10M to $500M. Pass: identify the price where founder economics flip from zero to material.' },
+      { id: 't4i', lvl: 'i', title: 'Cap on participating preference', desc: 'Add a 3× cap on the Series A participating right. Find the exit at which the cap binds and the holder is forced to choose between participating and converting.' },
+      { id: 't4e', lvl: 'e', title: 'Stress under a recap', desc: 'Construct a recap that wipes out all junior preferred. Show the math from both the senior and the founder side, and write the email you\'d send to the board.' },
+    ]},
+    { tool: 'Tool 05 — Balance-sheet Checker', href: 'balance-sheet-check.html', items: [
+      { id: 't5b', lvl: 'b', title: 'Plug a 10-K and verify identity', desc: 'Enter the most recent and prior-year balance sheets from any public 10-K; confirm the A = L + E identity check passes within rounding.' },
+      { id: 't5i', lvl: 'i', title: 'Spot two of the tells', desc: 'On a real 10-K, identify and explain at least two of the heuristics the tool flags. Confirm by reading the MD&A.' },
+      { id: 't5e', lvl: 'e', title: 'Find a tell the tool missed', desc: 'Identify a balance-sheet inconsistency the tool does NOT flag. Document it well enough that a junior analyst would catch it next time.' },
+    ]},
+    { tool: 'Tool 06 — QoE Add-back Checker', href: 'qoe-checker.html', items: [
+      { id: 't6b', lvl: 'b', title: 'Score a CIM bridge', desc: 'Take an EBITDA bridge from a public CIM (or one you\'ve seen recently). Categorize each add-back. Pass: each label is grounded in a footnote.' },
+      { id: 't6i', lvl: 'i', title: 'Argue both sides on three add-backs', desc: 'Pick three add-backs and write the seller\'s defense and the buyer\'s challenge — three sentences each.' },
+      { id: 't6e', lvl: 'e', title: 'Build a sector-specific rubric', desc: 'For one sector you cover, draft three add-back rules not in the default rubric (e.g., software-RSU, consumer-CAC capitalised). Submit upstream.' },
+    ]},
+    { tool: 'Tool 07 — Diligence Red Flags', href: 'diligence-redflags.html', items: [
+      { id: 't7b', lvl: 'b', title: 'Score a deal you know well', desc: 'Score a deal you\'ve already closed or passed on; verify the verdict band roughly matches the actual decision.' },
+      { id: 't7i', lvl: 'i', title: 'Pre-mortem a pipeline deal', desc: 'Before management presents, score the deal blind. Compare with the IC outcome a week later.' },
+      { id: 't7e', lvl: 'e', title: 'Build a sector overlay', desc: 'For one sector you cover, write five additional flags not in the standard list. Validate against three deals you\'ve seen.' },
+    ]},
+    { tool: 'Tool 08 — IC Memo Builder', href: 'ic-memo.html', items: [
+      { id: 't8b', lvl: 'b', title: 'One-page memo from a deck', desc: 'Pick a public pitch deck. Write all blocks in under 90 minutes; export to Markdown.' },
+      { id: 't8i', lvl: 'i', title: 'Approve and Pass on the same deal', desc: 'Author both a credible Approve memo and a credible Pass memo for the same target. Notice which block is hardest to flip.' },
+      { id: 't8e', lvl: 'e', title: 'Stand it up at IC', desc: 'Present a memo at your next IC. The pass criterion is that block 1 (Recommendation) is unchanged after the meeting.' },
+    ]},
+    { tool: 'Tool 09 — Case Study Analyzer', href: 'case-analyzer.html', items: [
+      { id: 't9b', lvl: 'b', title: 'The five questions on an S-1', desc: 'Pick a recent S-1; complete each block in ≤ 3 sentences, grounded in a page reference.' },
+      { id: 't9i', lvl: 'i', title: 'Name the buyer, concretely', desc: 'For three private companies, fill the Buyer field with function · budget line · sponsor — and validate two via reference call.' },
+      { id: 't9e', lvl: 'e', title: 'Write the contrarian thesis', desc: 'Pick a deal your firm passed on. Use the analyzer to argue the opposite of the firm\'s view; share with one partner for critique.' },
+    ]},
+    { tool: 'Tool 10 — Sector Thesis Canvas', href: 'sector-canvas.html', items: [
+      { id: 't10b', lvl: 'b', title: 'Fill a template end-to-end', desc: 'Start from the AI / deep-tech / space template, replace every line with your own view; defend each in writing.' },
+      { id: 't10i', lvl: 'i', title: 'Predict three companies for 18 months', desc: 'List three real companies you believe will surface that fit the thesis. Revisit in 6 / 12 / 18 months and grade yourself.' },
+      { id: 't10e', lvl: 'e', title: 'Publish the thesis', desc: 'Expand the canvas into a 1,500-word memo and circulate to LPs or at least one outside critic. Track which disqualifier ends up wrong.' },
+    ]},
+  ];
+
+  const stored = PEVC.load(SLOT, {}) || {};
+  const root = document.getElementById('drills');
+  function render() {
+    root.innerHTML = '';
+    DRILLS.forEach(group => {
+      const tag = document.createElement('div');
+      tag.className = 'section-tag';
+      tag.innerHTML = `${group.tool} · <a href="${group.href}" style="font-family:inherit;letter-spacing:inherit;">open tool →</a>`;
+      root.appendChild(tag);
+      group.items.forEach(it => {
+        const cur = stored[it.id] || '';
+        const div = document.createElement('div');
+        div.className = 'drill';
+        const lvlLabel = { b: 'beginner', i: 'intermediate', e: 'expert' }[it.lvl];
+        div.innerHTML = `
+          <div class="drill__lvl drill__lvl--${it.lvl}">${lvlLabel}</div>
+          <div>
+            <div class="drill__title">${it.title}</div>
+            <div class="drill__desc">${it.desc}</div>
+          </div>
+          <div class="drill__pick">
+            <label><input type="radio" name="${it.id}" value="" ${cur===''?'checked':''}> not started</label>
+            <label><input type="radio" name="${it.id}" value="a" ${cur==='a'?'checked':''}> attempted</label>
+            <label><input type="radio" name="${it.id}" value="p" ${cur==='p'?'checked':''}> passed</label>
+          </div>`;
+        root.appendChild(div);
+      });
+    });
+    root.querySelectorAll('input[type="radio"]').forEach(el => el.addEventListener('change', () => {
+      stored[el.name] = el.value;
+      PEVC.save(SLOT, stored);
+      summarize();
+    }));
+    summarize();
+  }
+  function summarize() {
+    let bP = 0, iP = 0, eP = 0;
+    DRILLS.forEach(g => g.items.forEach(it => {
+      if (stored[it.id] === 'p') {
+        if (it.lvl === 'b') bP++; else if (it.lvl === 'i') iP++; else eP++;
+      }
+    }));
+    document.getElementById('kpi-b').textContent = bP + ' / 10';
+    document.getElementById('kpi-i').textContent = iP + ' / 10';
+    document.getElementById('kpi-e').textContent = eP + ' / 10';
+    const total = bP + iP + eP;
+    document.getElementById('status').textContent = total === 0 ? 'unscored' : (total + ' / 30 passed');
+  }
+  document.getElementById('btn-clear').addEventListener('click', () => {
+    if (!confirm('Reset all drill progress?')) return;
+    PEVC.clear(SLOT); for (const k in stored) delete stored[k]; render();
+  });
+  render();
+})();
+</script>
+</body></html>

@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T7 — Sector Thesis Canvas · The PE/VC Operator's Lab</title>
+<meta name="description" content="Six-field canvases for AI, deep-tech, and space; loadable templates plus blank.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/lab.css">
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../../index.html"><span class="brand__mark"></span><span>PE/VC<span class="brand__sub"> &middot; the practitioner&apos;s lab</span></span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../../index.html">Report cover</a>
+  <a class="nav-link" href="../../index.html#chapters">Chapters</a>
+  <a class="nav-link nav-link--active" href="../index.html">Lab</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap">
+  <section style="padding: var(--space-10) 0 var(--space-4);">
+    <div class="eyebrow" style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-accent-copper);">Tool 10 &middot; <a href="../index.html" style="font-family:inherit; letter-spacing:inherit; color:inherit;">the lab</a> &middot; <a href="../../chapters/34-sector-investing.html">Read: Ch. 34 — Sector Investing: AI, Deep Tech, Space</a></div>
+    <h1 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-2xl); margin: var(--space-2) 0 var(--space-3);">Sector thesis <em>canvas</em></h1>
+    <p class="muted" style="max-width: 60ch;">Pick a template (AI applications, deep-tech, space) or start blank. The six fields force a thesis to be falsifiable — what's changing, who pays, what stops a fast follower, and what we won't fund.</p>
+  </section>
+
+  <section class="tool-toolbar">
+    <button class="btn" data-tpl="ai" type="button">Load AI applications</button>
+    <button class="btn" data-tpl="deeptech" type="button">Load deep-tech</button>
+    <button class="btn" data-tpl="space" type="button">Load space</button>
+    <button class="btn btn--ghost" data-tpl="blank" type="button">Blank</button>
+    <span class="nav-spacer" style="flex:1;"></span>
+    <button class="btn" id="btn-export" type="button">Export Markdown</button>
+    <button class="btn" id="btn-copy" type="button">Copy</button>
+  </section>
+
+  <div class="field"><label>Sector / thesis name</label><input type="text" data-persist="sector" placeholder="e.g. AI applications for revenue-cycle management"></div>
+
+  <h3 style="font-family: var(--font-display); font-weight: 500; margin: var(--space-6) 0 var(--space-2);">1 · Macro change</h3>
+  <p class="muted tiny">The thing that's actually different in the world. Concrete and recent.</p>
+  <div class="field"><textarea data-persist="f1"></textarea></div>
+
+  <h3 style="font-family: var(--font-display); font-weight: 500; margin: var(--space-6) 0 var(--space-2);">2 · Buyer</h3>
+  <p class="muted tiny">Who pays. Function · budget line · internal sponsor.</p>
+  <div class="field"><textarea data-persist="f2"></textarea></div>
+
+  <h3 style="font-family: var(--font-display); font-weight: 500; margin: var(--space-6) 0 var(--space-2);">3 · Business model</h3>
+  <p class="muted tiny">How the buyer is charged. Recurring? Per-use? Take-rate?</p>
+  <div class="field"><textarea data-persist="f3"></textarea></div>
+
+  <h3 style="font-family: var(--font-display); font-weight: 500; margin: var(--space-6) 0 var(--space-2);">4 · Defensibility</h3>
+  <p class="muted tiny">What stops a fast follower or a hyperscaler from eating the category.</p>
+  <div class="field"><textarea data-persist="f4"></textarea></div>
+
+  <h3 style="font-family: var(--font-display); font-weight: 500; margin: var(--space-6) 0 var(--space-2);">5 · Disqualifiers</h3>
+  <p class="muted tiny">What we will not invest in, even if it looks adjacent.</p>
+  <div class="field"><textarea data-persist="f5"></textarea></div>
+
+  <h3 style="font-family: var(--font-display); font-weight: 500; margin: var(--space-6) 0 var(--space-2);">6 · The next 18 months</h3>
+  <p class="muted tiny">Two or three companies we expect to surface that fit the thesis.</p>
+  <div class="field"><textarea data-persist="f6"></textarea></div>
+
+  <div style="height: var(--space-16);"></div>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span>&copy; 2026 Reports Lab &middot; Report No. 04 &middot; the lab</span>
+  <span><a href="../index.html">&uarr; lab</a> &middot; <a href="../../index.html">&uarr; report cover</a></span>
+</div></footer>
+
+<script src="../js/site.js"></script>
+<script src="../js/tools.js"></script>
+<script>
+(function () {
+  const SLOT = 'sector-canvas';
+  const root = document.querySelector('main');
+  PEVC.bindPersistence(root, SLOT);
+
+  const TEMPLATES = {
+    ai: {
+      sector: 'AI applications — vertical workflow software',
+      f1: 'Foundation models crossed a quality threshold in 2023–24 where they can complete entire knowledge-worker tasks rather than assist with steps. Buyer expectations followed: in regulated verticals (healthcare RCM, insurance claims, legal billing), CFOs are willing to fund full-task automation if a vendor takes outcome accountability.',
+      f2: 'Function: revenue-cycle / claims / billing operations leadership. Budget: existing BPO or in-house ops headcount line, not "AI". Internal sponsor: CFO or COO seeking double-digit cost-out, with a CIO co-sponsor for security.',
+      f3: 'Outcome-based pricing — % of recovered revenue, per-resolved-claim, or per-completed-task. Avoid pure seat licenses; they cap with adoption. Hybrid (platform fee + outcome) is acceptable.',
+      f4: 'Vertical-specific data network effects (each customer\'s denials/playbooks improve the next). Embedded into payer/EHR systems via certified integrations. Multi-year contracts with switching costs in workflow rebuilding.',
+      f5: 'Horizontal copilots dependent on Microsoft/Google distribution. Pure prompt-engineering wrappers without proprietary data or workflow. Founders who cannot articulate the buyer\'s budget line.',
+      f6: '— A US RCM player using LLMs for denial appeals, NRR > 130%, raising at $80M post.\n— A claims-automation platform expanding from a single payer to a multi-payer network.\n— A certified-integration vendor that has unlocked one of the top-3 EHRs.'
+    },
+    deeptech: {
+      sector: 'Deep-tech — hardware-rich industrial AI',
+      f1: 'Government industrial-policy spend (CHIPS, IRA, EU Chips Act) has reset the cost of deploying physical infrastructure in the US/EU. Combined with falling sensor and edge-compute costs, capital-intensive industrial automation has a 5-year tailwind it didn\'t have in the 2010s.',
+      f2: 'Function: plant manager / operations director at a Tier-1/Tier-2 manufacturer. Budget: capex + reliability/quality opex line. Internal sponsor: COO or VP Manufacturing with a 24-month payback target.',
+      f3: 'Hardware + software bundle. Per-line, per-machine, or per-output pricing. Avoid pure license models — capex/opex distinction matters at the buyer.',
+      f4: 'Embedded sensor or hardware that is hard to rip out, paired with proprietary process data. Regulatory or safety certification. Reference-customer logos in conservative industries.',
+      f5: 'Pure software plays in industrial spaces without a hardware moat. Solutions that require data the customer can\'t legally provide. Founders without industrial-domain depth.',
+      f6: '— A predictive-maintenance vendor with a paid pilot at three Tier-1 OEMs.\n— A robotics startup with a successful 12-month deployment in food processing.\n— A vision-AI inspection platform certified by a major automotive OEM.'
+    },
+    space: {
+      sector: 'Space — downstream commercial applications',
+      f1: 'Launch cost has collapsed to <$2k/kg to LEO and is still falling; small-sat constellations are now economic. The downstream — applications using satellite data — is where most value will accrue this decade, similar to how the internet\'s value moved up the stack.',
+      f2: 'Function: ESG/risk officer at insurers, agribusiness ops, defense intelligence buyers. Budget: existing analytics or risk-modeling line. Internal sponsor: head of underwriting / head of ops with a clear data-coverage gap.',
+      f3: 'Data-as-a-service subscription, with API-call or coverage-area pricing. Government contracts via prime-contractor pass-through.',
+      f4: 'Exclusive sensor coverage (frequency band, revisit rate). Government certification (e.g., NGA, EUSPA) and ITAR-compliant ops. Long-term data licensing arrangements.',
+      f5: 'Pure rocket / launch-vehicle plays without offtake commitments. Earth-observation startups with no clear vertical buyer. Constellations dependent on one government as anchor without commercial revenue.',
+      f6: '— A geospatial-analytics company moving from defense to insurance underwriting.\n— A SAR (synthetic-aperture radar) constellation hitting a 24h global revisit cadence.\n— A vertically-integrated space-data + AI/ML company with multi-year insurance contracts.'
+    },
+    blank: { sector: '', f1: '', f2: '', f3: '', f4: '', f5: '', f6: '' }
+  };
+
+  document.querySelectorAll('button[data-tpl]').forEach(btn => btn.addEventListener('click', () => {
+    const tpl = TEMPLATES[btn.dataset.tpl];
+    if (!tpl) return;
+    if (!confirm('Replace the canvas with the ' + btn.dataset.tpl + ' template? This overwrites your current entries.')) return;
+    PEVC.save(SLOT, tpl);
+    Object.entries(tpl).forEach(([k, v]) => {
+      const el = root.querySelector(`[data-persist="${k}"]`);
+      if (el) el.value = v;
+    });
+  }));
+
+  function build() {
+    const d = PEVC.load(SLOT, {}) || {};
+    const lines = [];
+    lines.push('# Sector thesis — ' + (d.sector || 'Untitled'));
+    lines.push('');
+    const labels = [
+      ['1. Macro change', 'f1'],
+      ['2. Buyer', 'f2'],
+      ['3. Business model', 'f3'],
+      ['4. Defensibility', 'f4'],
+      ['5. Disqualifiers', 'f5'],
+      ['6. The next 18 months', 'f6'],
+    ];
+    labels.forEach(([t, k]) => {
+      lines.push('## ' + t);
+      lines.push((d[k] && d[k].trim()) ? d[k].trim() : '_to fill_');
+      lines.push('');
+    });
+    return lines.join('\n');
+  }
+  document.getElementById('btn-export').addEventListener('click', () => PEVC.downloadFile('sector-canvas.md', build(), 'text/markdown;charset=utf-8'));
+  document.getElementById('btn-copy').addEventListener('click', () => PEVC.copyText(build()));
+})();
+</script>
+</body></html>

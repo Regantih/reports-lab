@@ -22,6 +22,7 @@
     <span class="nav-spacer"></span>
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../lab/index.html">Lab</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
     <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
@@ -72,6 +73,11 @@
 <p>Conversion math: if a SAFE has a $10M cap and the next round prices the company at $20M, the SAFE converts at $10M — the SAFE-holder gets twice the shares per dollar that new investors get. The post-money cap structure (vs. pre-money) determines whether dilution from SAFEs falls on founders or on new investors.</p>
 <h2 id="rounds">Modelling a new round</h2>
 <p>To model a new round: take the pre-money valuation, add any convertibles at their conversion terms, add the option-pool top-up, then compute new investor ownership as (new investment) ÷ (post-money including all of the above). Re-balance the table; reconcile every share class to a final share count. Sophisticated cap-table tools (Carta, Pulley) automate this; the underlying math is something every Series-A and later founder must understand.</p>
+    
+    <aside class="aside" data-tone="copper">
+      <span class="aside__label">Take it to the lab</span>
+      <p>Model your own (or a target's) cap table through Seed/A/B/C in <a href="../lab/tools/cap-table.html">Tool 03 — Cap Table &amp; Waterfall</a>. Confirm post-money percentages match what the company has disclosed, then check exits against the waterfall.</p>
+    </aside>
     </article>
   </div>
 
