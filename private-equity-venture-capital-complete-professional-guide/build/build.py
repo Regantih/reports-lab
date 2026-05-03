@@ -50,6 +50,7 @@ SITE_HEADER = """<header class="site-header" data-header>
     <span class="nav-spacer"></span>
     <a class="nav-link{a_cover}" href="{home}">Cover</a>
     <a class="nav-link{a_chapters}" href="{home}#chapters">Chapters</a>
+    <a class="nav-link" href="{lab}">Lab</a>
     <a class="nav-link{a_ref}" href="{glossary}">Reference</a>
     <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
@@ -137,6 +138,7 @@ def render_chapter(num, slug, title, subtitle, part_idx):
         report_title=esc(REPORT["title"]),
         report_sub="a complete professional guide",
         glossary="../chapters/glossary.html",
+        lab="../lab/index.html",
         a_cover="",
         a_chapters=" nav-link--active",
         a_ref="",
@@ -290,6 +292,7 @@ def render_index():
         report_title=esc(REPORT["title"]),
         report_sub="a complete professional guide",
         glossary="chapters/glossary.html",
+        lab="lab/index.html",
         a_cover=" nav-link--active",
         a_chapters="",
         a_ref="",
@@ -480,6 +483,7 @@ def render_reference(kind):
         report_title=esc(REPORT["title"]),
         report_sub="a complete professional guide",
         glossary="../chapters/glossary.html",
+        lab="../lab/index.html",
         a_cover="",
         a_chapters="",
         a_ref=" nav-link--active",
