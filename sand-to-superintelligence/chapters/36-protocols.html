@@ -40,7 +40,7 @@
     <div class="ch-header__num">Chapter 36</div>
     <h1 class="ch-header__title">Protocols of Trust</h1>
     <p class="ch-header__dek">MCP, A2A, and the standards quietly being negotiated</p>
-    <div class="stat-row"><div class="stat"><div class="stat__num">Nov 2024</div><div class="stat__label">Anthropic open-sources Model Context Protocol</div></div><div class="stat"><div class="stat__num">~3,000+</div><div class="stat__label">MCP servers published in the first year</div></div><div class="stat"><div class="stat__num">0</div><div class="stat__label">widely-deployed protocols for cross-vendor agent identity, end of 2025</div></div></div>
+    <div class="stat-row"><div class="stat"><div class="stat__num">Nov 2024</div><div class="stat__label">Anthropic open-sources Model Context Protocol</div></div><div class="stat"><div class="stat__num">thousands</div><div class="stat__label">MCP servers published in the registry's first year, with broader ecosystem listings already in the tens of thousands</div></div><div class="stat"><div class="stat__num">0</div><div class="stat__label">widely-deployed protocols for cross-vendor agent identity, end of 2025</div></div></div>
     
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
@@ -92,7 +92,7 @@
 
 <p>The most consequential agent protocol shipped to date is the <a href="https://modelcontextprotocol.io/">Model Context Protocol</a>, open-sourced by Anthropic in November 2024. MCP separates the model from the tool it is calling, so any MCP-compliant client (Claude Desktop, IDE plugins, custom agents) can talk to any MCP-compliant server (a database connector, a filesystem reader, a Slack integration). The protocol covers tool discovery, invocation, and structured responses; it is transport-agnostic, runs over standard JSON-RPC, and is genuinely portable.</p>
 
-<p>By the end of 2025, the MCP server registry passed 3,000 published integrations: filesystems, databases, version-control hosts, communication tools, internal corporate APIs, vertical SaaS products. The pattern resembles <a href="https://en.wikipedia.org/wiki/Open_Database_Connectivity">ODBC</a> in the 1990s — a standard adapter layer that decouples capability from vendor — and the network effects look comparable. Every model vendor, including those who would have preferred to keep their tool ecosystem captive, has now shipped MCP support.</p>
+<p>By the end of 2025, the MCP server registry had grown into the thousands of published integrations, with community directories listing tens of thousands more across: filesystems, databases, version-control hosts, communication tools, internal corporate APIs, vertical SaaS products. The pattern resembles <a href="https://en.wikipedia.org/wiki/Open_Database_Connectivity">ODBC</a> in the 1990s — a standard adapter layer that decouples capability from vendor — and the network effects look comparable. Every model vendor, including those who would have preferred to keep their tool ecosystem captive, has now shipped MCP support.</p>
 
 <p>What MCP is not, and does not pretend to be, is a solution to the cross-organizational trust problem. An MCP server still has to authenticate its caller, sign its responses, log its actions, and answer to its operator's policies. MCP standardizes the shape of the conversation; it does not standardize the social contract beneath it.</p>
 

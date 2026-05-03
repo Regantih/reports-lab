@@ -98,7 +98,7 @@
 
 <p>Instead, divide the chip into four stages, separated by flip-flops. While stage 1 fetches instruction <em>n+3</em>, stage 2 decodes <em>n+2</em>, stage 3 executes <em>n+1</em>, stage 4 writes back <em>n</em>. After the pipeline is full, every cycle, one instruction finishes and one new instruction begins. The latency per instruction is still four cycles, but the throughput is one instruction per cycle.</p>
 
-<p>This trick — pipelining — is the single most important architectural invention in CPU design. It is also why CPUs grew so deep through the 1990s and early 2000s: the <a href="https://en.wikipedia.org/wiki/Pentium_4">Pentium 4 had a 31-stage pipeline</a>, and could clock above 3 GHz on a process where logic gates were still hundreds of nanometers. Modern CPUs are shallower (10-20 stages) — the marginal benefits ran out — but every modern processor pipelines aggressively.</p>
+<p>This trick — pipelining — is the single most important architectural invention in CPU design. It is also why CPUs grew so deep through the 1990s and early 2000s: the <a href="https://en.wikipedia.org/wiki/Pentium_4">Pentium 4 Prescott (2004) ran a 31-stage pipeline</a>, up from the original P4's twenty stages, and could clock above 3 GHz on a process where logic gates were still hundreds of nanometers. Modern CPUs are shallower (10-20 stages) — the marginal benefits ran out — but every modern processor pipelines aggressively.</p>
 
 <blockquote>Pipelining is the assembly line applied to logic. The same instruction goes through the same stages — but at any given moment, dozens of instructions are partway through, riding the same chip like cars on a Ford line.</blockquote>
 

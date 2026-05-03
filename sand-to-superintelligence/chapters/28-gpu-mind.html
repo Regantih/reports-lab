@@ -40,7 +40,7 @@
     <div class="ch-header__num">Chapter 28</div>
     <h1 class="ch-header__title">The GPU's Different Mind</h1>
     <p class="ch-header__dek">SIMT, warps, and tensor cores</p>
-    <div class="stat-row"><div class="stat"><div class="stat__num">32</div><div class="stat__label">threads in a warp — the GPU's atom of work</div></div><div class="stat"><div class="stat__num">16×16×16</div><div class="stat__label">matrix shape one tensor-core instruction multiplies</div></div><div class="stat"><div class="stat__num">~10<sup>4</sup></div><div class="stat__label">active threads on a single Hopper SM</div></div></div>
+    <div class="stat-row"><div class="stat"><div class="stat__num">32</div><div class="stat__label">threads in a warp — the GPU's atom of work</div></div><div class="stat"><div class="stat__num">16×16×16</div><div class="stat__label">matrix shape one tensor-core instruction multiplies</div></div><div class="stat"><div class="stat__num">~2,048</div><div class="stat__label">max resident threads on a single Hopper-class SM</div></div></div>
     
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
@@ -96,7 +96,7 @@
 
 <h2 id="memory-coalescing">Memory coalescing</h2>
 
-<p>GPUs are bandwidth machines. A single Rubin GPU pulls roughly 8 TB/s from its HBM stacks. To use that bandwidth, the threads in a warp must access memory in a pattern the hardware can fold into a single transaction — adjacent threads reading adjacent words. This is called <strong>coalescing</strong>. Random or strided access patterns waste bandwidth dramatically.</p>
+<p>GPUs are bandwidth machines. A single Rubin GPU pulls roughly 22 TB/s from its HBM4 stacks. To use that bandwidth, the threads in a warp must access memory in a pattern the hardware can fold into a single transaction — adjacent threads reading adjacent words. This is called <strong>coalescing</strong>. Random or strided access patterns waste bandwidth dramatically.</p>
 
 <p>The deepest art of GPU programming is laying out data so that the natural access pattern is coalesced. Frameworks like <a href="https://github.com/openai/triton">Triton</a> and the inner kernels of <a href="https://github.com/Dao-AILab/flash-attention">FlashAttention</a> exist largely to engineer this layout for the most common neural-network operations.</p>
 

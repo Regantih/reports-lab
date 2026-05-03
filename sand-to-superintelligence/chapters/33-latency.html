@@ -40,7 +40,7 @@
     <div class="ch-header__num">Chapter 33</div>
     <h1 class="ch-header__title">Latency Is Cognition</h1>
     <p class="ch-header__dek">Why milliseconds decide what a model can think about</p>
-    <div class="stat-row"><div class="stat"><div class="stat__num">~80 <em>ms</em></div><div class="stat__label">transcontinental TCP round trip on the public internet</div></div><div class="stat"><div class="stat__num">~30-100 <em>ms</em></div><div class="stat__label">first-token latency from a major frontier model</div></div><div class="stat"><div class="stat__num">~50 <em>ms</em></div><div class="stat__label">time per output token at typical batch sizes</div></div></div>
+    <div class="stat-row"><div class="stat"><div class="stat__num">~80 <em>ms</em></div><div class="stat__label">transatlantic TCP round trip on the public internet</div></div><div class="stat"><div class="stat__num">~30-100 <em>ms</em></div><div class="stat__label">first-token latency from a major frontier model</div></div><div class="stat"><div class="stat__num">~50 <em>ms</em></div><div class="stat__label">time per output token at typical batch sizes</div></div></div>
     
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
@@ -84,7 +84,7 @@
 
 <h2 id="the-budget-is-tight">How tight the budget is</h2>
 
-<p>The reason the budget is tight is not that any one component is slow; it is that all of them are running at, or near, fundamental limits. Speed-of-light gives you about 200,000 km/s in fibre, so a US-to-Europe round-trip cannot be much under 80ms regardless of how good the engineering is. Token generation is bounded by HBM bandwidth: even on a Rubin GPU at 8 TB/s, reading 200 GB of model weights once per token sets a hard floor under per-token latency, partially mitigated by batching. <a href="https://arxiv.org/abs/2305.13245">Speculative decoding</a>, KV cache reuse, and continuous batching squeeze the constants but cannot break the floor.</p>
+<p>The reason the budget is tight is not that any one component is slow; it is that all of them are running at, or near, fundamental limits. Speed-of-light gives you about 200,000 km/s in fibre, so a US-to-Europe round-trip cannot be much under 80ms regardless of how good the engineering is. Token generation is bounded by HBM bandwidth: even on a Rubin GPU at roughly 22 TB/s of HBM4 bandwidth, reading hundreds of GB of model weights once per token sets a hard floor under per-token latency, partially mitigated by batching. <a href="https://arxiv.org/abs/2305.13245">Speculative decoding</a>, KV cache reuse, and continuous batching squeeze the constants but cannot break the floor.</p>
 
 <p>What this means in practice is that <strong>compute and bandwidth are not the binding constraint for distributed AI</strong>. They are necessary but routinely available. The binding constraint is geometry: how far apart are the components, and how many round-trips does the workflow require. A team with a worse model that runs in the same data center as its data will, for many real workloads, beat a team with a better model that has to round-trip across continents.</p>
 

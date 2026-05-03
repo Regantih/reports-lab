@@ -82,7 +82,7 @@
 
 <ol>
   <li><strong>The illusion of CPU plenty.</strong> Every process feels like it has a CPU to itself. In reality, a few cores are time-sliced across thousands of processes by the scheduler.</li>
-  <li><strong>The illusion of memory plenty.</strong> Every process has its own clean, contiguous address space — typically 256 TB of it on 64-bit systems — even though physical RAM is a few dozen gigabytes shared by all.</li>
+  <li><strong>The illusion of memory plenty.</strong> Every process has its own clean, contiguous address space — typically 128 TB for user code on Linux x86-64 with 4-level paging — even though physical RAM is a few dozen gigabytes shared by all.</li>
   <li><strong>The illusion of safety.</strong> Programs cannot read each other's memory, cannot stomp on each other's files, cannot crash the machine. Misbehaviour is contained.</li>
 </ol>
 

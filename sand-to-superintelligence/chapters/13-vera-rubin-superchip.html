@@ -86,7 +86,7 @@
 
 <h2 id="two-gpus-and-a-cpu">Two GPUs and a CPU</h2>
 
-<p>The two Rubin GPUs are essentially identical, each fabricated on TSMC N2 with around 500 billion transistors and 288 GB of HBM4 attached. Each delivers about 50 petaflops of FP4 inference compute on its own. Together, they double that.</p>
+<p>The two Rubin GPUs are essentially identical, each fabricated on TSMC N3P with the package totaling about 336 billion transistors across both dies and 288 GB of HBM4 attached. Each delivers about 50 petaflops of FP4 inference compute on its own. Together, they double that.</p>
 
 <p>The Vera CPU is the system's host. It is a custom NVIDIA design — built around 88 cores of NVIDIA's <a href="https://developer.nvidia.com/blog/inside-the-nvidia-rubin-platform-six-new-chips-one-ai-supercomputer/"><strong>Olympus</strong> Arm v9 architecture</a> — and its job is not raw arithmetic but coordination: managing the GPU's memory, dispatching kernels, handling I/O, running the operating system, talking to other Superchips through the rack's network.</p>
 
@@ -94,7 +94,7 @@
 
 <h2 id="nvlink-c2c">NVLink-C2C, the chip-to-chip bus</h2>
 
-<p>The connections that hold this together are not PCIe. PCIe Gen6 — the latest fully ratified standard at the time of Rubin's design — offers about 256 GB/s in each direction at x16. That is too slow.</p>
+<p>The connections that hold this together are not PCIe. PCIe Gen6 — the latest fully ratified standard at the time of Rubin's design — offers about 256 GB/s of total bidirectional bandwidth at x16 (128 GB/s in each direction). That is too slow.</p>
 
 <p>The bus that links the GPUs and the CPU within a Superchip is called <strong>NVLink-C2C</strong> (Chip-to-Chip), and it runs at <strong>1.8 TB/s bidirectional</strong> — roughly seven times the bandwidth of PCIe Gen6, and at much lower latency. It is implemented as a die-to-die signaling protocol, with serializer/deserializer circuits on both ends, hundreds of differential pairs running at multi-tens of gigabits per second each.</p>
 

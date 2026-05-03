@@ -58,7 +58,7 @@
     <div class="ch-header__num">Chapter 30</div>
     <h1 class="ch-header__title">A Thought, Token by Token</h1>
     <p class="ch-header__dek">Tracing one inference through the silicon</p>
-    <div class="stat-row"><div class="stat"><div class="stat__num">~10<sup>15</sup></div><div class="stat__label">multiplications per generated token</div></div><div class="stat"><div class="stat__num">~50 <em>ms</em></div><div class="stat__label">wall time, on a frontier system</div></div><div class="stat"><div class="stat__num">~1 <em>J</em></div><div class="stat__label">energy spent producing one token</div></div></div>
+    <div class="stat-row"><div class="stat"><div class="stat__num">~10<sup>11</sup></div><div class="stat__label">multiplications per generated token</div></div><div class="stat"><div class="stat__num">~50 <em>ms</em></div><div class="stat__label">wall time, on a frontier system</div></div><div class="stat"><div class="stat__num">~1 <em>J</em></div><div class="stat__label">energy spent producing one token</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="30-one-thought">
   <div class="ladder__bar">
     <div class="ladder__bar-head">
@@ -104,7 +104,7 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-prompt">The prompt arrives</a></li><li><a href="#tokenize-and-embed">Tokenize and embed</a></li><li><a href="#the-stack">Through eighty blocks</a></li><li><a href="#sampling">Softmax and sampling</a></li><li><a href="#the-loop">The autoregressive loop</a></li><li><a href="#what-just-happened">What just happened</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">We have spent twenty-nine chapters building, atom by atom, a machine capable of having a thought. In this last chapter we follow one. A user types a prompt, presses enter, and a sentence appears. Between those events, a quadrillion multiplications happen in roughly the time it takes you to blink. We will trace what those multiplications are, in order, on the silicon we have built.</p>
+<p class="lede">We have spent twenty-nine chapters building, atom by atom, a machine capable of having a thought. In this last chapter we follow one. A user types a prompt, presses enter, and a sentence appears. Between those events, a few hundred billion multiplications happen in roughly the time it takes you to blink — once per token, repeated for every token the model emits. We will trace what those multiplications are, in order, on the silicon we have built.</p>
 
 <h2 id="the-prompt">The prompt arrives</h2>
 
@@ -138,7 +138,7 @@
 
 <p>The model now appends "Silver" to the prompt and runs the whole stack again — except, with key-value caching, it only has to run the new token through the network, reusing the K and V tensors computed earlier. It produces a probability over the next token; samples one; appends; runs again.</p>
 
-<p>This loop continues. "Silver" → "moon" → "above" → "still" → "pond". At every step a quadrillion multiplications, fifty milliseconds, one joule of electricity. After ten or twenty iterations, the model emits an end-of-sequence token, the loop terminates, and the resulting string is detokenized back into UTF-8.</p>
+<p>This loop continues. "Silver" → "moon" → "above" → "still" → "pond". At every step a few hundred billion multiplications, fifty milliseconds, one joule of electricity. After ten or twenty iterations, the model emits an end-of-sequence token, the loop terminates, and the resulting string is detokenized back into UTF-8. Tally a complete response of a few thousand tokens and the total compute climbs into the quadrillions — ~10<sup>15</sup> multiplications for one paragraph of generated language.</p>
 
 <p>"Silver moon above / still pond drinks the night sky in / one ripple, one breath."</p>
 

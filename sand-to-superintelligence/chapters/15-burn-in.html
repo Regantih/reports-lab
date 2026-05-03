@@ -40,7 +40,7 @@
     <div class="ch-header__num">Chapter 15</div>
     <h1 class="ch-header__title">Burn-In and Reliability</h1>
     <p class="ch-header__dek">Stress-testing chips into honesty</p>
-    <div class="stat-row"><div class="stat"><div class="stat__num">125<em>°C</em></div><div class="stat__label">burn-in temperature</div></div><div class="stat"><div class="stat__num">100s <em>hrs</em></div><div class="stat__label">burn-in duration</div></div><div class="stat"><div class="stat__num">&lt;1 <em>FIT</em></div><div class="stat__label">target failures per billion device-hours</div></div></div>
+    <div class="stat-row"><div class="stat"><div class="stat__num">125<em>°C</em></div><div class="stat__label">burn-in temperature</div></div><div class="stat"><div class="stat__num">48–168 <em>hrs</em></div><div class="stat__label">burn-in duration</div></div><div class="stat"><div class="stat__num">&lt;1 <em>FIT</em></div><div class="stat__label">target failures per billion device-hours</div></div></div>
     
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
@@ -86,7 +86,7 @@
 
 <h2 id="burn-in">Burn-in</h2>
 
-<p>The trick is to make those hours, days, and months happen before the chip leaves the factory. <a href="https://resources.system-analysis.cadence.com/blog/msa2020-conduct-burn-in-testing-in-semiconductor-devices-to-ensure-reliability">Burn-in</a> exposes chips to elevated temperature (typically 125°C) and elevated voltage for hundreds of hours, in chambers that hold thousands of devices simultaneously. Under these stresses, the failure mechanisms that cause infant mortality accelerate by orders of magnitude. A defect that would have failed at month three of normal operation now fails on day two of burn-in.</p>
+<p>The trick is to make those hours, days, and months happen before the chip leaves the factory. <a href="https://resources.system-analysis.cadence.com/blog/msa2020-conduct-burn-in-testing-in-semiconductor-devices-to-ensure-reliability">Burn-in</a> exposes chips to elevated temperature (typically 125°C) and elevated voltage for tens to hundreds of hours — a typical recipe runs 48 to 168 hours — in chambers that hold thousands of devices simultaneously. Under these stresses, the failure mechanisms that cause infant mortality accelerate by orders of magnitude. A defect that would have failed at month three of normal operation now fails on day two of burn-in.</p>
 
 <p>Failed devices are caught and discarded. Surviving devices are now past the infant-mortality phase. They are, statistically, the chips with the longest expected lifetimes — and they are the ones that ship.</p>
 

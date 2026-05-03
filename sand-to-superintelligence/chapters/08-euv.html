@@ -40,7 +40,7 @@
     <div class="ch-header__num">Chapter 08</div>
     <h1 class="ch-header__title">Light at 13.5 Nanometers</h1>
     <p class="ch-header__dek">EUV lithography — the most complex machine ever built</p>
-    <div class="stat-row"><div class="stat"><div class="stat__num">13.5 <em>nm</em></div><div class="stat__label">EUV wavelength</div></div><div class="stat"><div class="stat__num">50,000<em>/s</em></div><div class="stat__label">tin droplets vaporized</div></div><div class="stat"><div class="stat__num">~$200<em>M</em></div><div class="stat__label">cost of a single EUV scanner</div></div><div class="stat"><div class="stat__num">250 <em>kW</em></div><div class="stat__label">power per scanner</div></div></div>
+    <div class="stat-row"><div class="stat"><div class="stat__num">13.5 <em>nm</em></div><div class="stat__label">EUV wavelength</div></div><div class="stat"><div class="stat__num">50,000<em>/s</em></div><div class="stat__label">tin droplets vaporized</div></div><div class="stat"><div class="stat__num">~$200<em>M</em></div><div class="stat__label">cost of a single EUV scanner</div></div><div class="stat"><div class="stat__num">~1.2 <em>MW</em></div><div class="stat__label">power per scanner</div></div></div>
     
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
@@ -74,7 +74,7 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-problem-of-light">The problem of light</a></li><li><a href="#euv-source">Vaporizing tin droplets</a></li><li><a href="#the-mirrors">All mirrors, all the way down</a></li><li><a href="#the-mask">The mask is the negative</a></li><li><a href="#multi-patterning">Multi-patterning, and why N2 doesn't need high-NA</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">The most complex machine human beings have ever built is not a particle accelerator. It is not a fusion reactor. It is not the James Webb Space Telescope. It is, by a wide margin, an <strong>EUV lithography scanner</strong>, and there is exactly one company in the world that builds them: ASML, in the small Dutch town of Veldhoven. The machines weigh on the order of two hundred tons. They cost roughly two hundred million dollars each. There are perhaps two hundred of them in use across the entire planet. Without them, no chip below seven nanometers exists.</p>
+<p class="lede">The most complex machine human beings have ever built is not a particle accelerator. It is not a fusion reactor. It is not the James Webb Space Telescope. It is, by a wide margin, an <strong>EUV lithography scanner</strong>, and there is exactly one company in the world that builds them: ASML, in the small Dutch town of Veldhoven. The machines weigh on the order of one hundred and fifty metric tons. They cost roughly two hundred million dollars each. There are perhaps two hundred of them in use across the entire planet. Without them, no chip below seven nanometers exists.</p>
 
 <p>This chapter explains what they do.</p>
 
@@ -96,9 +96,9 @@
 
 <h2 id="the-mirrors">All mirrors, all the way down</h2>
 
-<p>From here forward, every optical element is a mirror. There are no lenses. Glass would absorb the light. Even the mirrors are not normal mirrors — they are stacks of forty alternating layers of molybdenum and silicon, each layer a few nanometers thick, designed so that EUV reflects from each interface coherently. The entire stack manages about 70% reflectivity at 13.5 nm. That sounds high. It is in fact appalling.</p>
+<p>From here forward, every optical element is a mirror. There are no lenses. Glass would absorb the light. Even the mirrors are not normal mirrors — they are stacks of about fifty alternating bilayers of molybdenum and silicon, each layer a few nanometers thick (so the full stack is roughly a hundred individual films), designed so that EUV reflects from each interface coherently. The entire stack manages about 70% reflectivity at 13.5 nm. That sounds high. It is in fact appalling.</p>
 
-<p>By the time the light has bounced off six mirrors — collector, illumination, mask, projection — only a small fraction of the original photons make it to the wafer. The rest end up as heat, in metal mirror surfaces that must be held flat to fractions of a nanometer despite being slowly cooked by the most energetic photons their owners can produce.</p>
+<p>By the time the light has bounced off more than ten mirrors on the way from source to wafer — collector optics, illuminator, mask, projection optics — only a small fraction of the original photons make it through. The rest end up as heat, in metal mirror surfaces that must be held flat to fractions of a nanometer despite being slowly cooked by the most energetic photons their owners can produce.</p>
 
 <h2 id="the-mask">The mask is the negative</h2>
 
@@ -108,11 +108,11 @@
 
 <h2 id="multi-patterning">Multi-patterning, and why N2 doesn't need high-NA</h2>
 
-<p>Even at 13.5 nm, a single EUV exposure is not always enough to print the smallest features at the highest density. The technique called <strong>multi-patterning</strong> splits a desired layout into two, three, or four masks, exposes each separately, and overlays them with nanometer alignment. It is laborious and expensive, but it is what allows TSMC's <strong>N2</strong> process to push to 2 nm features without yet adopting <a href="https://www.eenewseurope.com/en/tsmc-shuns-high-na-euv-lithography/">high-numerical-aperture EUV</a> — the next-generation tooling that ASML has only begun shipping.</p>
+<p>Even at 13.5 nm, a single EUV exposure is not always enough to print the smallest features at the highest density. The technique called <strong>multi-patterning</strong> splits a desired layout into two, three, or four masks, exposes each separately, and overlays them with nanometer alignment. It is laborious and expensive, but it is what allows TSMC's <strong>N3P</strong> to print Rubin — and what will let its successor, <strong>N2</strong>, push to 2 nm features without yet adopting <a href="https://www.eenewseurope.com/en/tsmc-shuns-high-na-euv-lithography/">high-numerical-aperture EUV</a>, the next-generation tooling that ASML has only begun shipping.</p>
 
 <p>The trade-off is straightforward: more masks means more exposures, more steps, more chances for error. But it also means using machines that already exist and processes that have been characterized to industrial reliability. For the Rubin generation, this is a deliberate choice.</p>
 
-<p>By the time the wafer leaves the EUV scanner, the photoresist has been patterned. The image of the chip — at a thousandth the size of the mask — is sitting on the wafer's surface, invisible to the naked eye. To make it real, we now have to remove material.</p>
+<p>By the time the wafer leaves the EUV scanner, the photoresist has been patterned. The image of the chip — at one-quarter the size of the mask, the standard 4× demagnification of EUV projection optics — is sitting on the wafer's surface, invisible to the naked eye. To make it real, we now have to remove material.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 460" role="img" aria-label="EUV lithography light path: laser-pulsed tin droplet, EUV plasma, mirror reflectors, photomask, and wafer">

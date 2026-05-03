@@ -40,7 +40,7 @@
     <div class="ch-header__num">Chapter 10</div>
     <h1 class="ch-header__title">The Wiring Sky</h1>
     <p class="ch-header__dek">Fifteen layers of copper, dancing on a postage stamp</p>
-    <div class="stat-row"><div class="stat"><div class="stat__num">15+</div><div class="stat__label">metal layers in a Rubin GPU</div></div><div class="stat"><div class="stat__num">~70 <em>km</em></div><div class="stat__label">of copper wiring per chip</div></div><div class="stat"><div class="stat__num">Cu</div><div class="stat__label">the metal that replaced aluminum in 1997</div></div></div>
+    <div class="stat-row"><div class="stat"><div class="stat__num">15+</div><div class="stat__label">metal layers in a Rubin GPU</div></div><div class="stat"><div class="stat__num">tens of <em>km</em></div><div class="stat__label">of copper wiring per chip</div></div><div class="stat"><div class="stat__num">Cu</div><div class="stat__label">the metal that replaced aluminum in 1997</div></div></div>
     
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
@@ -74,7 +74,7 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#after-the-transistors">After the transistors</a></li><li><a href="#damascene">The dual-damascene process</a></li><li><a href="#the-stack">The stack, in detail</a></li><li><a href="#scaling-pain">Why interconnects became the bottleneck</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">The transistors at the bottom of a finished chip are extraordinary, but they are also useless on their own. A transistor is just a switch. To make it compute, you have to wire its outputs into the inputs of other transistors, and those into others, until you have built up the structures we recognize as adders, registers, caches, multipliers, tensor cores. A modern GPU contains roughly half a trillion transistors. The wiring that connects them is its own miracle.</p>
+<p class="lede">The transistors at the bottom of a finished chip are extraordinary, but they are also useless on their own. A transistor is just a switch. To make it compute, you have to wire its outputs into the inputs of other transistors, and those into others, until you have built up the structures we recognize as adders, registers, caches, multipliers, tensor cores. A modern GPU contains hundreds of billions of transistors — Rubin’s package alone holds roughly 336 billion. The wiring that connects them is its own miracle.</p>
 
 <p>This wiring lives above the transistors, in a layer cake of copper and insulator that is, by volume, the majority of the chip. The whole stack is called the <strong>back-end-of-line</strong>, or BEOL.</p>
 

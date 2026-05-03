@@ -82,7 +82,7 @@
 
 <p>Once you have tokenized a prompt, the wire-level cost of an AI request is no longer measured in bytes. It is measured in tokens. Inference providers price tokens directly: <a href="https://www.anthropic.com/pricing">Anthropic</a>, <a href="https://openai.com/pricing">OpenAI</a>, Google, and the others all publish per-million-token rates for input and output, with output typically four to five times more expensive than input because output requires running the full forward pass token by token.</p>
 
-<p>The token has become, quietly, a unit of economic accounting that did not exist five years ago. Every meaningful AI workload is now budgeted, billed, rate-limited, and compared in tokens. A long-running agent's invoice is a token bill. A model's "context window" — 200,000 tokens for Claude Sonnet 4.6, two million for some Gemini variants — is the maximum prompt the wire can carry in a single request.</p>
+<p>The token has become, quietly, a unit of economic accounting that did not exist five years ago. Every meaningful AI workload is now budgeted, billed, rate-limited, and compared in tokens. A long-running agent's invoice is a token bill. A model's "context window" — up to about a million tokens for the long-context Claude Sonnet 4.5 and 4.6 settings, two million for some Gemini variants — is the maximum prompt the wire can carry in a single request.</p>
 
 <h2 id="embeddings">Embeddings: meaning as geometry</h2>
 

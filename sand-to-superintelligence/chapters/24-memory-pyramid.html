@@ -100,7 +100,7 @@
   <li><strong>Registers (~256 B, 1 cycle).</strong> Sixteen to thirty-two named slots inside the CPU itself, holding the values currently being operated on. They are not addressed; the compiler decides which value lives in which register.</li>
   <li><strong>L1 cache (~64 KB, 3-4 cycles).</strong> Split into instruction and data caches, sitting inside the core. Holds the inner loop and its most recent values.</li>
   <li><strong>L2 cache (~1 MB, ~12 cycles).</strong> Per-core, larger but slower. Catches what L1 evicts.</li>
-  <li><strong>L3 cache (~64 MB, ~40 cycles).</strong> Shared across all cores. The last line of defense before main memory.</li>
+  <li><strong>L3 cache (8–64 MB, ~40 cycles).</strong> Shared across all cores. The last line of defense before main memory; consumer CPUs land in the 8–32 MB range, server-class parts at the high end of this band.</li>
   <li><strong>DRAM (~32 GB, ~300 cycles).</strong> Cheap, dense, off-chip. Where most of your program lives. <a href="https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html">Intel's optimization manual</a> warns repeatedly that a single DRAM miss can stall a core for a hundred instruction-issue slots.</li>
   <li><strong>SSD/HDD (~1 TB+, ~150,000 cycles).</strong> Files, the OS image, model weights at rest. Persistent — survives a power cycle.</li>
 </ul>
@@ -109,9 +109,9 @@
 
 <h2 id="cache-lines">Cache lines and the TLB</h2>
 
-<p>Caches do not move data byte by byte. They move <strong>cache lines</strong> — typically <a href="https://en.wikipedia.org/wiki/CPU_cache#Cache_entries">64 bytes</a> on x86 and ARM. Asking for one byte pulls in its sixty-three neighbours, on the bet that you will want them too. This is the architectural bet on spatial locality.</p>
+<p>Caches do not move data byte by byte. They move <strong>cache lines</strong> — typically <a href="https://en.wikipedia.org/wiki/CPU_cache#Cache_entries">64 bytes</a> on x86 and most ARM cores (Apple Silicon uses 128). Asking for one byte pulls in its sixty-three neighbours, on the bet that you will want them too. This is the architectural bet on spatial locality.</p>
 
-<p>Caches are also indexed by physical address, but programs use virtual addresses (we will meet virtual memory in Chapter 26). So every memory access requires translating virtual to physical, which itself would require a memory access — a vicious circle. The way out is the <strong>TLB</strong> (translation look-aside buffer), a tiny cache, often just sixty-four entries, that holds the most recent translations. A TLB miss is one of the most expensive routine events in modern computing; an entire <a href="https://en.wikipedia.org/wiki/Translation_lookaside_buffer">subfield of OS performance work</a> exists to keep the TLB happy.</p>
+<p>Caches are also indexed by physical address, but programs use virtual addresses (we will meet virtual memory in Chapter 26). So every memory access requires translating virtual to physical, which itself would require a memory access — a vicious circle. The way out is the <strong>TLB</strong> (translation look-aside buffer), a hierarchy of tiny caches: an L1 TLB of often just sixty-four entries that holds the very hottest translations, backed by an L2 TLB of hundreds to a few thousand. A TLB miss is one of the most expensive routine events in modern computing; an entire <a href="https://en.wikipedia.org/wiki/Translation_lookaside_buffer">subfield of OS performance work</a> exists to keep the TLB happy.</p>
 
 <p>Almost everything that distinguishes "fast code" from "slow code" on the same hardware is, in the end, a question of staying high in this pyramid. Profile any serious program and you will find: the inner loop fits in L1, the working set fits in L3, and the rare accesses to DRAM are <em>prefetched</em> long before they are needed. The CPU is a sprinter chained to a tortoise, and modern systems are the elaborate harness that keeps the sprinter from feeling the chain.</p>
 

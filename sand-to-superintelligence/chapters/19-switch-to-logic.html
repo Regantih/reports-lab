@@ -106,7 +106,7 @@
 
 <div class="aside" data-tone="primary">
   <span class="aside__label">Why NAND, specifically?</span>
-  <p>NOR is also functionally complete. So is the combination AND+NOT, or OR+NOT. NAND just turned out to be cheapest in CMOS — fewer transistors than NOR for the same function, and friendlier to layout. A whole industry's standard cell libraries grew around it. There is nothing fundamentally special about NAND; it just won the implementation lottery.</p>
+  <p>NOR is also functionally complete. So is the combination AND+NOT, or OR+NOT. In CMOS, both two-input NAND and two-input NOR use the same four transistors — the difference is which devices sit in series. NAND won because <em>NMOS in series is faster than PMOS in series</em>: electrons in NMOS channels are roughly twice as mobile as holes in PMOS channels, so a NAND's series-NMOS pull-down switches faster than a NOR's series-PMOS pull-up. A whole industry's standard cell libraries grew around that small physical advantage.</p>
 </div>
 
 <p>One transistor became one bit of decision. A handful of transistors became one logical operation. We are climbing fast. In the next chapter we will use logic to build arithmetic, and arithmetic to build memory, and memory to build the first true unit of computation: the <em>register</em>.</p>
@@ -193,7 +193,7 @@
     </g>
   </g>
 </svg></div>
-      <figcaption class="figure__caption"><span class="label">Figure 19.1</span><span class="text">A two-input NAND gate built from four transistors: two PMOS in parallel, two NMOS in series. Output is low only when both inputs are high.</span></figcaption>
+      <figcaption class="figure__caption"><span class="label">Figure 19.1</span><span class="text">A two-input NAND gate built from four transistors: two PMOS in parallel, two NMOS in series. Output is low only when both inputs are high. NOR uses the same four-transistor count but with the series/parallel arrangement swapped.</span></figcaption>
     </figure>
       
     </article>

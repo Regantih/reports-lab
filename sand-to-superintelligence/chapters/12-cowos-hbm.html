@@ -40,7 +40,7 @@
     <div class="ch-header__num">Chapter 12</div>
     <h1 class="ch-header__title">CoWoS and the 2.5D Revolution</h1>
     <p class="ch-header__dek">How HBM4 sits a hair's breadth from the GPU</p>
-    <div class="stat-row"><div class="stat"><div class="stat__num">288 <em>GB</em></div><div class="stat__label">HBM4 per Rubin GPU</div></div><div class="stat"><div class="stat__num">22.2 <em>TB/s</em></div><div class="stat__label">memory bandwidth per chip</div></div><div class="stat"><div class="stat__num">8</div><div class="stat__label">DRAM dies per HBM4 stack</div></div><div class="stat"><div class="stat__num">2,048-bit</div><div class="stat__label">HBM4 interface width</div></div></div>
+    <div class="stat-row"><div class="stat"><div class="stat__num">288 <em>GB</em></div><div class="stat__label">HBM4 per Rubin GPU</div></div><div class="stat"><div class="stat__num">22.2 <em>TB/s</em></div><div class="stat__label">memory bandwidth per chip</div></div><div class="stat"><div class="stat__num">12–16</div><div class="stat__label">DRAM dies per HBM4 stack</div></div><div class="stat"><div class="stat__num">2,048-bit</div><div class="stat__label">HBM4 interface width</div></div></div>
     
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
@@ -86,13 +86,13 @@
 
 <h2 id="hbm">HBM — stacking memory like books</h2>
 
-<p>The fix was <strong>High-Bandwidth Memory</strong>: instead of putting memory on its own PCB-mounted chip, you stack DRAM dies vertically and place them, as a unit, immediately next to the processor. Eight DRAM dies stacked on a base logic die, all bonded together by tens of thousands of <strong>through-silicon vias</strong> (TSVs) that pierce each die from top to bottom. The whole stack is barely a millimeter thick, contains tens of gigabytes of memory, and exposes a 1,024-bit-wide interface in the original HBM. <a href="https://introl.com/blog/nvidia-vera-rubin-platform-8-exaflops-infrastructure">By HBM4, the interface has doubled to 2,048 bits.</a></p>
+<p>The fix was <strong>High-Bandwidth Memory</strong>: instead of putting memory on its own PCB-mounted chip, you stack DRAM dies vertically and place them, as a unit, immediately next to the processor. Twelve to sixteen DRAM dies stacked on a base logic die for HBM4, all bonded together by tens of thousands of <strong>through-silicon vias</strong> (TSVs) that pierce each die from top to bottom. The whole stack is barely a millimeter thick, contains tens of gigabytes of memory, and exposes a 1,024-bit-wide interface in the original HBM. <a href="https://introl.com/blog/nvidia-vera-rubin-platform-8-exaflops-infrastructure">By HBM4, the interface has doubled to 2,048 bits.</a></p>
 
 <p>For Rubin, each GPU is paired with multiple HBM4 stacks delivering a combined <strong>288 GB of memory at 22.2 TB/s</strong>. That bandwidth — twenty-two terabytes per second, per chip — is roughly one hundred times what a desktop CPU can manage from its DDR5 DIMMs. It is the single most important enabler of frontier AI.</p>
 
 <h2 id="interposer">The silicon interposer</h2>
 
-<p>HBM solves the vertical wiring problem, but you still have to connect the HBM to the GPU. The connection cannot use ordinary package wiring — there are too many signals, and the signals are too fast. The solution is a separate <strong>silicon interposer</strong>: a piece of plain, passive silicon, perhaps 2,500 square millimeters, with thousands of fine wires patterned on its top surface and through-silicon vias piercing it from top to bottom.</p>
+<p>HBM solves the vertical wiring problem, but you still have to connect the HBM to the GPU. The connection cannot use ordinary package wiring — there are too many signals, and the signals are too fast. The solution is a separate <strong>interposer</strong> — originally a slab of plain, passive silicon (~2,500 mm² in the H100 generation’s CoWoS-S), and in Rubin’s newer CoWoS-L variant a hybrid of organic substrate with embedded silicon bridges spanning closer to 4,700 mm² — with thousands of fine wires patterned on its top surface and through-silicon vias where silicon is present.</p>
 
 <p>The GPU die sits on the interposer. The HBM stacks sit on the interposer beside it. Each is connected to the interposer with thousands of <strong>micro-bumps</strong> — tiny copper-tin pillars that solder die to interposer at extraordinarily fine pitch. Signals between GPU and HBM travel through the interposer's wiring, which behaves electrically like a small piece of silicon chip: low capacitance, low inductance, very high density. The trip from GPU to memory and back is reduced from inches to a few millimeters of silicon.</p>
 
