@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tool 18 · Live Deal Evaluation Worksheet · PE/VC Lab</title>
+<meta name="description" content="A structured intake form for live deal flow — captures the cohort's six-step evaluation framework and produces a Go / Watch / Pass verdict with an IC memo scaffold pre-fill.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/lab.css">
+<style>
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3)}
+@media (max-width:720px){.grid-2{grid-template-columns:1fr}}
+.step{border:1px solid var(--color-border);border-radius:8px;padding:var(--space-4);margin:var(--space-3) 0;background:var(--color-surface)}
+.step h3{margin:0 0 var(--space-2);font-family:var(--font-display);font-weight:500;font-size:1.05rem}
+.step__num{font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--color-accent-copper)}
+.verdict-card{margin-top:var(--space-4);padding:var(--space-5);border-radius:10px;border:1px solid var(--color-border);background:var(--color-surface-offset)}
+.verdict-card .v-line{font-family:var(--font-display);font-size:1.5rem;margin:.25rem 0}
+.verdict-card .v-line.go{color:#1a8c4a}
+.verdict-card .v-line.watch{color:#b88012}
+.verdict-card .v-line.pass{color:#a02d24}
+.bar{height:8px;border-radius:4px;background:rgba(0,0,0,.08);overflow:hidden;margin-top:.35rem}
+.bar > span{display:block;height:100%;background:var(--color-accent-copper)}
+.tally{display:flex;gap:var(--space-3);flex-wrap:wrap;margin-top:var(--space-2);font-family:var(--font-mono);font-size:.85rem;color:var(--color-text-soft)}
+.tally span strong{color:var(--color-text)}
+.flag{border-left:3px solid var(--color-accent-copper);padding:.5rem .75rem;margin:.4rem 0;background:var(--color-surface);font-size:.88rem;border-radius:0 4px 4px 0}
+.flag.warn{border-left-color:#b88012}
+.flag.fail{border-left-color:#a02d24}
+.flag.ok{border-left-color:#1a8c4a}
+.memo-pre{white-space:pre-wrap;background:var(--color-surface-offset);border:1px solid var(--color-border);border-radius:6px;padding:var(--space-3);font-family:var(--font-mono);font-size:.82rem;line-height:1.55;max-height:540px;overflow:auto}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../../index.html"><span class="brand__mark"></span><span>PE/VC<span class="brand__sub"> &middot; the practitioner&apos;s lab</span></span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../../index.html">Report cover</a>
+  <a class="nav-link" href="../../index.html#chapters">Chapters</a>
+  <a class="nav-link nav-link--active" href="../index.html">Lab</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap">
+  <section style="padding: var(--space-10) 0 var(--space-4);">
+    <div class="eyebrow" style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-accent-copper);">Tool 18 &middot; <a href="../index.html" style="font-family:inherit; letter-spacing:inherit; color:inherit;">the lab</a> &middot; <a href="../../chapters/13-deal-sourcing.html">Read: Ch. 13–15 — Sourcing &amp; evaluation</a></div>
+    <h1 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-2xl); margin: var(--space-2) 0 var(--space-3);">Live deal evaluation <em>worksheet</em></h1>
+    <p class="muted" style="max-width: 64ch;">Walk a single live deal through the cohort's six-step evaluation: what it does → market → competitors → round → traction → verdict. Outputs a Go / Watch / Pass with a pre-filled IC memo scaffold you can paste into Tool 08.</p>
+  </section>
+
+  <section class="tool-toolbar">
+    <button class="btn" id="btn-eval" type="button">Score &amp; build memo</button>
+    <button class="btn btn--ghost" id="btn-clear" type="button">Clear</button>
+    <span class="nav-spacer" style="flex:1;"></span>
+    <button class="btn" id="btn-pass" type="button">Draft pass email</button>
+    <button class="btn" id="btn-followup" type="button">Draft follow-up email</button>
+    <button class="btn" id="btn-copy" type="button">Copy memo</button>
+    <button class="btn" id="btn-export" type="button">Export Markdown</button>
+  </section>
+
+  <div class="grid-2">
+    <div class="field"><label>Company name</label><input type="text" data-persist="name" placeholder="e.g. Privateer Series B"></div>
+    <div class="field"><label>Sector / vertical</label><input type="text" data-persist="sector" placeholder="e.g. Defense intelligence, Healthcare RCM"></div>
+    <div class="field"><label>Stage</label>
+      <select data-persist="stage">
+        <option value="">— select —</option>
+        <option>Pre-seed</option><option>Seed</option><option>Series A</option><option>Series B</option><option>Series C+</option>
+        <option>Growth equity</option><option>Buyout</option><option>Secondary</option>
+      </select>
+    </div>
+    <div class="field"><label>Round size ($M)</label><input type="number" min="0" step="0.1" data-persist="raise" placeholder="10"></div>
+    <div class="field"><label>Pre-money valuation ($M)</label><input type="number" min="0" step="0.1" data-persist="preMoney" placeholder="40"></div>
+    <div class="field"><label>Lead / co-investors</label><input type="text" data-persist="lead" placeholder="e.g. Andreessen, with Sequoia"></div>
+    <div class="field"><label>Cohort vertical</label>
+      <select data-persist="vertical">
+        <option value="">— select —</option>
+        <option>B2B</option><option>Consumer</option><option>Deep Tech</option><option>Impact</option>
+      </select>
+    </div>
+    <div class="field"><label>Founder name (for emails)</label><input type="text" data-persist="founderName" placeholder="e.g. Avinash"></div>
+  </div>
+
+  <div class="step">
+    <div class="step__num">Step 1</div>
+    <h3>What does it do?</h3>
+    <p class="muted tiny">One sentence. If it can't be said in one sentence, that's the first flag.</p>
+    <textarea data-persist="s1" rows="3" placeholder="One-sentence pitch in plain English…"></textarea>
+    <label style="margin-top:.5rem;display:block;">Clarity score (1–5)
+      <select data-persist="clarity"><option value="0">— not scored —</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+    </label>
+  </div>
+
+  <div class="step">
+    <div class="step__num">Step 2</div>
+    <h3>TAM / SAM / SOM</h3>
+    <p class="muted tiny">Sanity rule: SAM must be smaller than TAM, SOM smaller than SAM. We'll check.</p>
+    <div class="grid-2">
+      <div class="field"><label>TAM ($B)</label><input type="number" min="0" step="0.1" data-persist="tam" placeholder="50"></div>
+      <div class="field"><label>SAM ($B)</label><input type="number" min="0" step="0.1" data-persist="sam" placeholder="8"></div>
+      <div class="field"><label>SOM ($B, 5-yr realistic)</label><input type="number" min="0" step="0.01" data-persist="som" placeholder="0.6"></div>
+      <div class="field"><label>Market growth rate (%/yr)</label><input type="number" min="-50" step="0.5" data-persist="mktGrowth" placeholder="22"></div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step__num">Step 3</div>
+    <h3>Competitors &amp; differentiation</h3>
+    <textarea data-persist="competitors" rows="3" placeholder="Name 3–5 closest competitors, one line each."></textarea>
+    <label style="margin-top:.5rem;display:block;">Moat strength (1–5)
+      <select data-persist="moat"><option value="0">— not scored —</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+    </label>
+  </div>
+
+  <div class="step">
+    <div class="step__num">Step 4</div>
+    <h3>Raise &amp; valuation logic</h3>
+    <textarea data-persist="terms" rows="3" placeholder="Instrument (SAFE / priced / convertible), discount, MFN, board seats, pro-rata, why this number?"></textarea>
+    <label style="margin-top:.5rem;display:block;">Pricing reasonableness (1–5)
+      <select data-persist="pricing"><option value="0">— not scored —</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+    </label>
+  </div>
+
+  <div class="step">
+    <div class="step__num">Step 5</div>
+    <h3>Traction</h3>
+    <div class="grid-2">
+      <div class="field"><label>ARR / revenue ($M)</label><input type="number" min="0" step="0.01" data-persist="arr" placeholder="2.4"></div>
+      <div class="field"><label>MoM growth (%)</label><input type="number" min="-100" step="0.5" data-persist="growth" placeholder="18"></div>
+      <div class="field"><label>Net retention (%)</label><input type="number" min="0" step="1" data-persist="nrr" placeholder="115"></div>
+      <div class="field"><label>Logos / customers</label><input type="number" min="0" step="1" data-persist="logos" placeholder="42"></div>
+    </div>
+    <textarea data-persist="tractionNotes" rows="2" placeholder="Quality of revenue, churn, NPS, anchor logos, contract length…" style="margin-top:.5rem;"></textarea>
+  </div>
+
+  <div class="step">
+    <div class="step__num">Step 6</div>
+    <h3>Founder background</h3>
+    <textarea data-persist="founders" rows="3" placeholder="Domain depth, prior wins, why-now, why-them, completeness of team."></textarea>
+    <label style="margin-top:.5rem;display:block;">Founder quality (1–5)
+      <select data-persist="founderScore"><option value="0">— not scored —</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+    </label>
+  </div>
+
+  <div class="verdict-card" id="verdict" style="display:none;">
+    <div class="step__num">Verdict</div>
+    <div class="v-line" id="v-line">—</div>
+    <p class="muted" id="v-summary"></p>
+    <div class="tally" id="tally"></div>
+    <div id="flags" style="margin-top:var(--space-2);"></div>
+  </div>
+
+  <h3 style="font-family: var(--font-display); font-weight: 500; margin: var(--space-6) 0 var(--space-2);">IC memo scaffold</h3>
+  <p class="muted tiny">Auto-built from your inputs. Paste into Tool 08 (IC Memo Builder) for full revision.</p>
+  <pre class="memo-pre" id="memo">Run "Score &amp; build memo" to generate the scaffold.</pre>
+
+  <h3 style="font-family: var(--font-display); font-weight: 500; margin: var(--space-6) 0 var(--space-2);">Cohort emails</h3>
+  <p class="muted tiny">Drafts a theoretical pass email and a follow-up outreach email — directly serves the weekly cohort goal of "draft a pass email + handle lingering questions".</p>
+  <pre class="memo-pre" id="emails">Press "Draft pass email" or "Draft follow-up email" to generate.</pre>
+
+  <div style="height: var(--space-16);"></div>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span>&copy; 2026 Reports Lab &middot; Report No. 04 &middot; the lab</span>
+  <span><a href="../index.html">&uarr; lab</a> &middot; <a href="../../index.html">&uarr; report cover</a></span>
+</div></footer>
+
+<script src="../js/site.js"></script>
+<script src="../js/tools.js"></script>
+<script>
+(function(){
+  const SLOT = 'live-deal-eval';
+  const root = document.querySelector('main');
+  PEVC.bindPersistence(root, SLOT);
+
+  function n(k){ return PEVC.num(d()[k], 0); }
+  function d(){ return PEVC.load(SLOT, {}) || {}; }
+
+  function compute(){
+    const x = d();
+    const clarity = +x.clarity||0, moat=+x.moat||0, pricing=+x.pricing||0, founder=+x.founderScore||0;
+    const arr=+x.arr||0, growth=+x.growth||0, nrr=+x.nrr||0, logos=+x.logos||0;
+    // Traction sub-score
+    let tractionScore = 0;
+    if(arr >= 5) tractionScore += 2; else if(arr >= 1) tractionScore += 1;
+    if(growth >= 15) tractionScore += 2; else if(growth >= 7) tractionScore += 1;
+    if(nrr >= 110) tractionScore += 1;
+    if(logos >= 20) tractionScore += 1;
+    tractionScore = Math.min(5, tractionScore);
+    // Market sub-score
+    const tam=+x.tam||0, sam=+x.sam||0, som=+x.som||0, mg=+x.mktGrowth||0;
+    let marketScore = 0;
+    if(tam >= 10) marketScore += 2; else if(tam >= 1) marketScore += 1;
+    if(sam > 0 && sam < tam) marketScore += 1;
+    if(som > 0 && som < sam) marketScore += 1;
+    if(mg >= 15) marketScore += 1;
+    marketScore = Math.min(5, marketScore);
+
+    // Weighted composite (out of 100)
+    const weights = { clarity:1, market:3, moat:3, pricing:2, traction:3, founder:3 };
+    const totalW = Object.values(weights).reduce((a,b)=>a+b,0);
+    const num = clarity*weights.clarity + marketScore*weights.market + moat*weights.moat
+              + pricing*weights.pricing + tractionScore*weights.traction + founder*weights.founder;
+    const pct = num / (5*totalW);
+    return { pct, clarity, marketScore, moat, pricing, tractionScore, founder, x };
+  }
+
+  function flagsFor(r){
+    const f=[]; const x=r.x;
+    if(+x.tam>0 && +x.sam>0 && +x.sam>=+x.tam) f.push({c:'fail', m:'Market sanity: SAM ≥ TAM. The numbers don\'t roll up — re-segment the market.'});
+    if(+x.sam>0 && +x.som>0 && +x.som>=+x.sam) f.push({c:'warn', m:'Market sanity: SOM ≥ SAM. SOM is a 5-yr realistic share — keep it well below SAM.'});
+    if(r.clarity>0 && r.clarity<=2) f.push({c:'warn', m:'Step 1 clarity ≤ 2/5. If you can\'t say what the company does in one sentence, IC won\'t either.'});
+    if(r.founder>0 && r.founder<=2) f.push({c:'fail', m:'Founder score ≤ 2/5. For VC, the team is the #1 signal. Hard pass unless you have a strong reason to override.'});
+    if(r.moat>0 && r.moat<=2) f.push({c:'warn', m:'Moat ≤ 2/5. Without defensibility, even a winning category gets re-priced down by fast-followers.'});
+    if(+x.arr>0 && +x.growth<3 && (x.stage||'').includes('Series')) f.push({c:'warn', m:'Growth < 3% MoM at a priced stage. Re-check whether this is product-market fit or paid-acquisition extension.'});
+    if(r.pct >= 0.72) f.push({c:'ok', m:'Composite ≥ 72% — bring to partner meeting. Use the memo scaffold below as the first IC draft.'});
+    return f;
+  }
+
+  function buildMemo(r){
+    const x = r.x;
+    const verdictTxt = r.pct >= 0.72 ? 'GO (recommend)' : r.pct >= 0.50 ? 'WATCH (conditional)' : 'PASS';
+    const lines = [];
+    lines.push('# IC Memo — ' + (x.name || 'Untitled deal'));
+    lines.push('');
+    lines.push('**Sector:** ' + (x.sector || '—') + '  ');
+    lines.push('**Stage:** ' + (x.stage || '—') + '  ');
+    lines.push('**Round:** $' + (x.raise||'—') + 'M at $' + (x.preMoney||'—') + 'M pre-money  ');
+    lines.push('**Lead / co-investors:** ' + (x.lead || '—') + '  ');
+    lines.push('**Composite score:** ' + (r.pct*100).toFixed(0) + '%  ');
+    lines.push('**Recommendation:** ' + verdictTxt);
+    lines.push('');
+    lines.push('## 1. What does it do');
+    lines.push((x.s1||'_to fill_').trim());
+    lines.push('');
+    lines.push('## 2. Market');
+    lines.push('- TAM: $' + (x.tam||'—') + 'B · SAM: $' + (x.sam||'—') + 'B · SOM: $' + (x.som||'—') + 'B');
+    lines.push('- Market growth: ' + (x.mktGrowth||'—') + '% / yr');
+    lines.push('');
+    lines.push('## 3. Competitors & moat');
+    lines.push((x.competitors||'_to fill_').trim());
+    lines.push('');
+    lines.push('## 4. Round terms');
+    lines.push((x.terms||'_to fill_').trim());
+    lines.push('');
+    lines.push('## 5. Traction');
+    lines.push('- ARR: $' + (x.arr||'—') + 'M · MoM growth: ' + (x.growth||'—') + '% · NRR: ' + (x.nrr||'—') + '% · Logos: ' + (x.logos||'—'));
+    lines.push((x.tractionNotes||'').trim());
+    lines.push('');
+    lines.push('## 6. Founders');
+    lines.push((x.founders||'_to fill_').trim());
+    lines.push('');
+    lines.push('## 7. Risks & next steps');
+    lines.push('- _Top 3 diligence questions for next meeting._');
+    lines.push('- _Reference calls — at least two ex-customers._');
+    lines.push('- _Term sheet redlines if applicable._');
+    lines.push('');
+    lines.push('---');
+    lines.push('_Generated by Tool 18 · Live Deal Evaluation Worksheet._');
+    return lines.join('\n');
+  }
+
+  function render(){
+    const r = compute();
+    const card = document.getElementById('verdict');
+    card.style.display = 'block';
+    const v = document.getElementById('v-line');
+    if(r.pct >= 0.72){ v.textContent = 'GO · ' + (r.pct*100).toFixed(0) + '% conviction'; v.className = 'v-line go'; }
+    else if(r.pct >= 0.50){ v.textContent = 'WATCH · ' + (r.pct*100).toFixed(0) + '% — conditional'; v.className = 'v-line watch'; }
+    else { v.textContent = 'PASS · ' + (r.pct*100).toFixed(0) + '%'; v.className = 'v-line pass'; }
+    document.getElementById('v-summary').textContent = 'Composite weighted across clarity, market, moat, pricing, traction, founders.';
+    document.getElementById('tally').innerHTML = [
+      ['Clarity', r.clarity], ['Market', r.marketScore], ['Moat', r.moat],
+      ['Pricing', r.pricing], ['Traction', r.tractionScore], ['Founders', r.founder]
+    ].map(([k,v]) => '<span>'+k+': <strong>'+v+'/5</strong></span>').join('');
+    const fl = flagsFor(r);
+    document.getElementById('flags').innerHTML = fl.map(f => '<div class="flag '+f.c+'">'+f.m+'</div>').join('');
+    document.getElementById('memo').textContent = buildMemo(r);
+  }
+
+  document.getElementById('btn-eval').addEventListener('click', render);
+  document.getElementById('btn-clear').addEventListener('click', () => {
+    if(!confirm('Clear all fields for this deal?')) return;
+    PEVC.clear(SLOT);
+    root.querySelectorAll('[data-persist]').forEach(el => { if(el.tagName==='SELECT') el.value=''; else el.value=''; });
+    document.getElementById('verdict').style.display='none';
+    document.getElementById('memo').textContent = 'Run "Score & build memo" to generate the scaffold.';
+  });
+  document.getElementById('btn-copy').addEventListener('click', () => {
+    const r = compute();
+    PEVC.copyText(buildMemo(r));
+  });
+  document.getElementById('btn-export').addEventListener('click', () => {
+    const r = compute();
+    PEVC.downloadFile('live-deal-eval-memo.md', buildMemo(r), 'text/markdown;charset=utf-8');
+  });
+
+  function buildPassEmail(r){
+    const x = r.x;
+    const founder = (x.founderName||'').trim() || 'team';
+    const co = (x.name||'your company').trim();
+    // Pick the most concrete reason among the soft signals.
+    const reasons = [];
+    if(r.clarity > 0 && r.clarity <= 2) reasons.push('the one-sentence framing of what ' + co + ' does didn\'t land cleanly enough for our IC.');
+    if(r.marketScore <= 2) reasons.push('the SAM and SOM as currently sized are below where we need to underwrite a fund-returner at this stage.');
+    if(r.moat <= 2) reasons.push('we couldn\'t get conviction on the durable moat versus fast followers and incumbent bundling.');
+    if(r.tractionScore <= 2) reasons.push('traction signals (growth rate, retention, anchor logos) were earlier than our entry point.');
+    if(r.founder <= 2) reasons.push('we\'d want to see more domain depth or a more complete founding team before underwriting at this round.');
+    if(r.pricing <= 2) reasons.push('the round terms looked rich relative to where we usually pay in for this stage.');
+    if(reasons.length === 0) reasons.push('this one didn\'t fit our current portfolio construction — the gap is on us, not on the team.');
+    const verticalLine = (x.vertical) ? '\n\nFor context, we run this through our '+x.vertical+' track, so our bar there is narrower than it might otherwise be.' : '';
+    const lines = [
+      'Subject: Update on ' + co,
+      '',
+      'Hi ' + founder + ',',
+      '',
+      'Thanks again for taking the time to walk us through ' + co + '. I appreciated the depth of the conversation and the candor around the early data.',
+      '',
+      'After running this through our internal review, we\'re going to pass on this round. Specifically, ' + reasons[0] + (reasons[1] ? ' Beyond that, ' + reasons[1] : ''),
+      verticalLine,
+      '',
+      'A few things to flag in case they\'re useful:',
+      '— I\'d be glad to make warm intros to investors I think are a better fit for this stage and thesis if helpful.',
+      '— Please keep us on the update list. We\'d like to track progress and revisit at the next round if the metrics develop the way you expect.',
+      '— If any of the points above are wrong, please push back — I\'d rather be told I missed something than have you take this at face value.',
+      '',
+      'Wishing you the best with the round and the next 12 months.',
+      '',
+      'Best,',
+      '[Your name]'
+    ].filter(Boolean);
+    return lines.join('\n');
+  }
+
+  function buildFollowupEmail(r){
+    const x = r.x;
+    const founder = (x.founderName||'').trim() || 'team';
+    const co = (x.name||'your company').trim();
+    const qs = [];
+    if((+x.tam||0) > 0 && (+x.sam||0) === 0) qs.push('Could you share how you size SAM today and the assumptions behind it?');
+    if((+x.arr||0) > 0 && (+x.nrr||0) === 0) qs.push('What is your gross and net revenue retention over the trailing 12 months, and how do those split by cohort?');
+    if(r.moat > 0 && r.moat <= 3) qs.push('What\'s the strongest version of the moat case as you see it 24 months out, and what would have to be true for that to break?');
+    if((+x.raise||0) > 0 && (+x.preMoney||0) > 0) qs.push('How did you and the lead arrive at $' + x.raise + 'M at $' + x.preMoney + 'M pre, and what use of funds gets you to the next inflection?');
+    if((+x.logos||0) > 0) qs.push('Could we speak with two existing customers — one champion and one with the hardest implementation — for reference calls?');
+    if(qs.length < 3) qs.push('What\'s the single biggest risk you\'d underwrite for a Series ' + ((x.stage||'').replace(/[^A-Z+]/g,'')||'next') + ' investor in this round?');
+    if(qs.length < 4) qs.push('What changed in the last 90 days that gave you the most conviction in the plan?');
+    const lines = [
+      'Subject: Quick follow-ups on ' + co,
+      '',
+      'Hi ' + founder + ',',
+      '',
+      'Thanks again for the conversation. Before our next sync, a handful of things I\'d love to get on paper so we can make this productive on your time:',
+      '',
+      ...qs.map((q, i) => (i+1) + '. ' + q),
+      '',
+      'Happy to take any of these in writing or to schedule 30 minutes if that\'s easier. If anything is off-base, please redirect me.',
+      '',
+      'Best,',
+      '[Your name]'
+    ];
+    return lines.join('\n');
+  }
+
+  document.getElementById('btn-pass').addEventListener('click', () => {
+    const r = compute();
+    document.getElementById('emails').textContent = buildPassEmail(r);
+  });
+  document.getElementById('btn-followup').addEventListener('click', () => {
+    const r = compute();
+    document.getElementById('emails').textContent = buildFollowupEmail(r);
+  });
+})();
+</script>
+</body></html>

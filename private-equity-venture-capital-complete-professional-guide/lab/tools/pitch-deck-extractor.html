@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tool 22 · Pitch Deck Data Extractor · PE/VC Lab</title>
+<meta name="description" content="Structured intake for any pitch deck. Stage benchmarks, four-vertical Q&A model (B2B / Consumer / Deep Tech / Impact), and auto-populated IC memo, deal scorecard, and valuation comparator handoffs. Built for the cohort's weekly deal review.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/lab.css">
+<style>
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3)}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-3)}
+.grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:var(--space-3)}
+@media (max-width:720px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
+.section{border:1px solid var(--color-border);border-radius:8px;padding:var(--space-4);margin:var(--space-3) 0;background:var(--color-surface)}
+.section h3{margin:0 0 var(--space-2);font-family:var(--font-display);font-weight:500;font-size:1.1rem}
+.section__num{font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--color-accent-copper)}
+.flag{border-left:3px solid var(--color-accent-copper);padding:.5rem .75rem;margin:.4rem 0;background:var(--color-surface);font-size:.88rem;border-radius:0 4px 4px 0}
+.flag.warn{border-left-color:#b88012}
+.flag.fail{border-left-color:#a02d24}
+.flag.ok{border-left-color:#1a8c4a}
+.kit{white-space:pre-wrap;background:var(--color-surface-offset);border:1px solid var(--color-border);border-radius:6px;padding:var(--space-3);font-family:var(--font-mono);font-size:.82rem;line-height:1.55;max-height:560px;overflow:auto}
+.score-big{font-family:var(--font-display);font-size:2.2rem;margin:.25rem 0}
+.bench{display:flex;align-items:center;gap:.6rem;font-size:.88rem;margin:.3rem 0}
+.bench .pill{font-family:var(--font-mono);font-size:11px;padding:2px 8px;border-radius:99px;background:var(--color-surface-offset);border:1px solid var(--color-border)}
+.bench .pill.ok{background:rgba(26,140,74,.10);border-color:rgba(26,140,74,.35);color:#1a8c4a}
+.bench .pill.warn{background:rgba(184,128,18,.10);border-color:rgba(184,128,18,.35);color:#b88012}
+.bench .pill.fail{background:rgba(160,45,36,.10);border-color:rgba(160,45,36,.35);color:#a02d24}
+.q-block{border:1px solid var(--color-border);border-radius:6px;padding:var(--space-3);margin:.5rem 0;background:var(--color-surface-offset)}
+.q-block h4{margin:0 0 .3rem;font-family:var(--font-display);font-weight:500;font-size:1rem}
+.q-block .q-prompt{font-size:.85rem;color:var(--color-text-soft);margin:0 0 .4rem}
+.handoff{display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-2);margin-top:var(--space-3)}
+@media (max-width:720px){.handoff{grid-template-columns:1fr}}
+.handoff a{display:block;padding:var(--space-3);border:1px solid var(--color-border);border-radius:6px;text-decoration:none;color:inherit;background:var(--color-surface)}
+.handoff a:hover{border-color:var(--color-accent-copper)}
+.handoff .h-num{font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--color-accent-copper)}
+.handoff .h-title{font-family:var(--font-display);font-weight:500;margin:.25rem 0}
+.handoff .h-desc{font-size:.82rem;color:var(--color-text-soft);margin:0}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../../index.html"><span class="brand__mark"></span><span>PE/VC<span class="brand__sub"> &middot; the practitioner&apos;s lab</span></span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../../index.html">Report cover</a>
+  <a class="nav-link" href="../../index.html#chapters">Chapters</a>
+  <a class="nav-link nav-link--active" href="../index.html">Lab</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap">
+  <section style="padding: var(--space-10) 0 var(--space-4);">
+    <div class="eyebrow" style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-accent-copper);">Tool 22 &middot; <a href="../index.html" style="font-family:inherit; letter-spacing:inherit; color:inherit;">the lab</a> &middot; <a href="../../chapters/14-screening.html">Read: Ch. 14 — Screening</a> &middot; <a href="../../chapters/19-the-data-room.html">Ch. 19 — Data room</a></div>
+    <h1 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-2xl); margin: var(--space-2) 0 var(--space-3);">Pitch deck <em>data extractor</em> &amp; quick-score</h1>
+    <p class="muted" style="max-width: 64ch;">Built for the cohort's weekly cadence: source one deal, review it across the four verticals (B2B / Consumer / Deep Tech / Impact), and hand off a clean structured record to the IC memo, deal scorecard, and valuation comparator. Stage benchmarks light up where the deck is thin.</p>
+  </section>
+
+  <section class="tool-toolbar">
+    <button class="btn" id="btn-score" type="button">Extract &amp; score</button>
+    <button class="btn btn--ghost" id="btn-clear" type="button">Clear</button>
+    <span class="nav-spacer" style="flex:1;"></span>
+    <button class="btn" id="btn-copy" type="button">Copy record</button>
+    <button class="btn" id="btn-export" type="button">Export Markdown</button>
+  </section>
+
+  <div class="section">
+    <div class="section__num">Module 1</div>
+    <h3>Company &amp; round</h3>
+    <div class="grid-3">
+      <div class="field"><label>Company</label><input type="text" data-persist="company" placeholder="e.g. Helio Logistics"></div>
+      <div class="field"><label>Founded</label><input type="text" data-persist="founded" placeholder="2023"></div>
+      <div class="field"><label>HQ</label><input type="text" data-persist="hq" placeholder="Austin, TX"></div>
+      <div class="field"><label>Stage</label>
+        <select data-persist="stage">
+          <option value="preseed">Pre-seed</option>
+          <option value="seed" selected>Seed</option>
+          <option value="seriesa">Series A</option>
+          <option value="seriesb">Series B</option>
+          <option value="seriesc">Series C+</option>
+          <option value="growth">Growth / late</option>
+          <option value="pe">PE buyout / control</option>
+        </select>
+      </div>
+      <div class="field"><label>Vertical</label>
+        <select data-persist="vertical">
+          <option value="b2b" selected>B2B / SaaS</option>
+          <option value="consumer">Consumer</option>
+          <option value="deeptech">Deep Tech</option>
+          <option value="impact">Impact</option>
+        </select>
+      </div>
+      <div class="field"><label>Instrument</label>
+        <select data-persist="instrument">
+          <option value="safe">SAFE (post-money)</option>
+          <option value="convertible">Convertible note</option>
+          <option value="priced" selected>Priced equity</option>
+          <option value="ltp">LP secondary / SPV</option>
+        </select>
+      </div>
+      <div class="field"><label>Round size ($)</label><input type="number" data-persist="round" placeholder="3000000"></div>
+      <div class="field"><label>Pre-money / cap ($)</label><input type="number" data-persist="pre" placeholder="12000000"></div>
+      <div class="field"><label>Lead investor</label><input type="text" data-persist="lead" placeholder="—"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section__num">Module 2</div>
+    <h3>Problem · solution · market</h3>
+    <div class="grid-2">
+      <div class="field"><label>Problem (one sentence)</label><textarea data-persist="problem" rows="3" placeholder="Who hurts, how often, what does it cost them today?"></textarea></div>
+      <div class="field"><label>Solution &amp; wedge</label><textarea data-persist="solution" rows="3" placeholder="What is the product, and what is the entry wedge that gets the first 10 customers?"></textarea></div>
+    </div>
+    <div class="grid-3">
+      <div class="field"><label>TAM ($M)</label><input type="number" data-persist="tam" placeholder="5000"></div>
+      <div class="field"><label>SAM ($M)</label><input type="number" data-persist="sam" placeholder="800"></div>
+      <div class="field"><label>SOM 5yr ($M)</label><input type="number" data-persist="som" placeholder="120"></div>
+    </div>
+    <div class="field"><label>How was TAM built? (top-down vs. bottom-up)</label><textarea data-persist="tamMethod" rows="2" placeholder="Bottom-up: 12,000 mid-market accounts × $40k ACV = $480M SAM…"></textarea></div>
+  </div>
+
+  <div class="section">
+    <div class="section__num">Module 3</div>
+    <h3>Traction &amp; unit economics</h3>
+    <div class="grid-4">
+      <div class="field"><label>ARR / revenue ($)</label><input type="number" data-persist="arr" placeholder="600000"></div>
+      <div class="field"><label>MoM growth (%)</label><input type="number" step="0.1" data-persist="mom" placeholder="18"></div>
+      <div class="field"><label>Gross margin (%)</label><input type="number" step="0.1" data-persist="gm" placeholder="72"></div>
+      <div class="field"><label>Net revenue retention (%)</label><input type="number" step="0.1" data-persist="nrr" placeholder="115"></div>
+      <div class="field"><label>Logo churn (% / yr)</label><input type="number" step="0.1" data-persist="churn" placeholder="8"></div>
+      <div class="field"><label>CAC ($)</label><input type="number" data-persist="cac" placeholder="4500"></div>
+      <div class="field"><label>LTV ($)</label><input type="number" data-persist="ltv" placeholder="22000"></div>
+      <div class="field"><label>Payback (months)</label><input type="number" step="0.1" data-persist="payback" placeholder="14"></div>
+    </div>
+    <div class="field"><label>Notable customers / design partners</label><textarea data-persist="customers" rows="2" placeholder="3 Fortune 500 logos in pilot; 2 paying at $80k ACV"></textarea></div>
+  </div>
+
+  <div class="section">
+    <div class="section__num">Module 4</div>
+    <h3>Team &amp; financials</h3>
+    <div class="grid-2">
+      <div class="field"><label>Founders &amp; domain edge</label><textarea data-persist="team" rows="3" placeholder="CEO: 8 yrs at incumbent. CTO: ex-FAANG. Domain: 12 yrs combined."></textarea></div>
+      <div class="field"><label>Prior outcomes</label><textarea data-persist="priorOutcomes" rows="3" placeholder="One $40M acquihire; two product leadership roles."></textarea></div>
+      <div class="field"><label>Burn ($/mo)</label><input type="number" data-persist="burn" placeholder="180000"></div>
+      <div class="field"><label>Cash on hand ($)</label><input type="number" data-persist="cash" placeholder="2200000"></div>
+      <div class="field"><label>Runway (months — auto)</label><input type="text" id="runway" readonly></div>
+      <div class="field"><label>Use of proceeds (one line)</label><input type="text" data-persist="useOf" placeholder="Hire 4 AEs, 2 eng; reach $2M ARR in 18 months"></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section__num">Module 5</div>
+    <h3>Vertical Q&amp;A · four-vertical model</h3>
+    <p class="muted" style="font-size:.88rem;margin:0 0 var(--space-2);">Pick the vertical above; the four prompt sets below are what each cohort vertical (B2B / Consumer / Deep Tech / Impact) is asked to answer in async deal review. Fill the relevant set; the others stay blank. The export flags any blank lingering questions to chase in follow-up outreach.</p>
+
+    <div class="q-block" data-vert="b2b">
+      <h4>B2B / SaaS</h4>
+      <p class="q-prompt">Who is the buyer, what budget does this come out of, and what is the contractual stickiness?</p>
+      <div class="grid-2">
+        <div class="field"><label>Buyer persona &amp; budget owner</label><textarea data-persist="b2b_buyer" rows="2" placeholder="VP Ops; $200k tooling budget; signs without procurement <$50k"></textarea></div>
+        <div class="field"><label>Sales motion (PLG / inside / enterprise)</label><textarea data-persist="b2b_motion" rows="2" placeholder="Inside-sales-led with PLG self-serve below $10k ACV"></textarea></div>
+        <div class="field"><label>Contract length, NRR mechanism</label><textarea data-persist="b2b_contract" rows="2" placeholder="12-mo MSA; expansion via seat &amp; module pricing"></textarea></div>
+        <div class="field"><label>Why now in this category?</label><textarea data-persist="b2b_whynow" rows="2" placeholder="Cloud cost pressure + regulator deadline Jan 2027"></textarea></div>
+      </div>
+    </div>
+
+    <div class="q-block" data-vert="consumer">
+      <h4>Consumer</h4>
+      <p class="q-prompt">What is the organic pull, the unit economics at scale, and the path off paid acquisition?</p>
+      <div class="grid-2">
+        <div class="field"><label>Organic vs. paid mix &amp; trend</label><textarea data-persist="cons_organic" rows="2" placeholder="62% organic at $1.2M ARR, climbing 4 pts/qtr"></textarea></div>
+        <div class="field"><label>Repeat / retention curve (D30 / D90)</label><textarea data-persist="cons_retention" rows="2" placeholder="D30 41%, D90 28% — flat after week 6"></textarea></div>
+        <div class="field"><label>AOV, frequency, cohort LTV</label><textarea data-persist="cons_unit" rows="2" placeholder="AOV $58; 3.2 orders/yr; 18-mo LTV $310"></textarea></div>
+        <div class="field"><label>Brand thesis &amp; defensibility</label><textarea data-persist="cons_brand" rows="2" placeholder="Community-led; UGC supply; 14% of revenue is referral"></textarea></div>
+      </div>
+    </div>
+
+    <div class="q-block" data-vert="deeptech">
+      <h4>Deep Tech</h4>
+      <p class="q-prompt">What is the technical risk, the IP moat, and the capital required to first revenue?</p>
+      <div class="grid-2">
+        <div class="field"><label>Technical risk &amp; current TRL</label><textarea data-persist="dt_risk" rows="2" placeholder="TRL 5 lab demo; pilot at customer site Q3"></textarea></div>
+        <div class="field"><label>IP &amp; defensibility</label><textarea data-persist="dt_ip" rows="2" placeholder="3 issued patents on the synthesis route; 18-mo lead"></textarea></div>
+        <div class="field"><label>Capital to first $1M revenue</label><textarea data-persist="dt_capital" rows="2" placeholder="$8M — pilot line + 6 FTEs"></textarea></div>
+        <div class="field"><label>Regulatory / dual-use path</label><textarea data-persist="dt_reg" rows="2" placeholder="Non-export-controlled today; ITAR review at $5M GMV"></textarea></div>
+      </div>
+    </div>
+
+    <div class="q-block" data-vert="impact">
+      <h4>Impact</h4>
+      <p class="q-prompt">What is the measurable outcome, who pays for it, and is the impact additional or substitutional?</p>
+      <div class="grid-2">
+        <div class="field"><label>Outcome metric &amp; measurement</label><textarea data-persist="imp_metric" rows="2" placeholder="tCO₂e abated per $ of revenue, audited annually by 3rd party"></textarea></div>
+        <div class="field"><label>Who pays (consumer / corp / gov / blended)?</label><textarea data-persist="imp_payer" rows="2" placeholder="60% corporate offtake; 25% IRA tax credits; 15% retail"></textarea></div>
+        <div class="field"><label>Additionality vs. baseline</label><textarea data-persist="imp_add" rows="2" placeholder="Avoids 2.4t/yr per unit vs. natural-gas baseline"></textarea></div>
+        <div class="field"><label>Impact-vs-return trade-off</label><textarea data-persist="imp_tradeoff" rows="2" placeholder="None at unit level; concession on exit timing (8–10 yr hold)"></textarea></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section__num">Module 6</div>
+    <h3>Risks &amp; lingering questions</h3>
+    <div class="grid-2">
+      <div class="field"><label>Top 3 risks</label><textarea data-persist="risks" rows="3" placeholder="1. Single-customer concentration (38% of ARR)&#10;2. Founder-led sales — no second seller yet&#10;3. Unproven retention beyond 18 months"></textarea></div>
+      <div class="field"><label>Lingering questions for follow-up</label><textarea data-persist="lingering" rows="3" placeholder="Cohort retention by acquisition channel · gross margin by segment · NRR drivers"></textarea></div>
+    </div>
+  </div>
+
+  <div class="section" id="result-section" hidden>
+    <div class="section__num">Result</div>
+    <h3>Stage benchmarks &amp; quick-score</h3>
+    <div class="grid-3">
+      <div>
+        <div class="muted" style="font-size:.78rem;text-transform:uppercase;letter-spacing:.14em;">Quick-score</div>
+        <div id="score-num" class="score-big">—</div>
+        <div id="score-band" class="muted" style="font-size:.85rem;">—</div>
+      </div>
+      <div style="grid-column:span 2;">
+        <div id="benches"></div>
+      </div>
+    </div>
+    <div id="flags" style="margin-top:var(--space-3);"></div>
+
+    <div class="handoff">
+      <a href="ic-memo.html" id="hand-ic">
+        <div class="h-num">Hand off → Tool 08</div>
+        <div class="h-title">IC memo <em>builder</em></div>
+        <p class="h-desc">Auto-fills the seven-block IC memo from this record. Click to open and paste.</p>
+      </a>
+      <a href="deal-scorecard.html" id="hand-score">
+        <div class="h-num">Hand off → Tool 17</div>
+        <div class="h-title">Deal <em>scorecard</em></div>
+        <p class="h-desc">Carries forward the 16-criterion weighted evaluation seeded by these inputs.</p>
+      </a>
+      <a href="valuation-comparator.html" id="hand-val">
+        <div class="h-num">Hand off → Tool 14</div>
+        <div class="h-title">Valuation <em>comparator</em></div>
+        <p class="h-desc">Pre-fills VC method, DCF anchors, and Berkus seeds from the round terms above.</p>
+      </a>
+    </div>
+
+    <h3 style="margin-top:var(--space-4);">Structured record (Markdown)</h3>
+    <pre class="kit" id="record-out">Click "Extract &amp; score" above.</pre>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <span>&copy; 2026 Reports Lab &middot; Report No. 04 &middot; the lab</span>
+  <a href="../index.html">&uarr; back to lab</a>
+</footer>
+
+<script src="../js/site.js"></script>
+<script src="../js/tools.js"></script>
+<script>
+(function(){
+  const SLOT = 'pitch-deck-extractor';
+  const root = document.body;
+  if(window.PEVC && PEVC.bindPersistence) PEVC.bindPersistence(root, SLOT);
+
+  const $ = sel => document.querySelector(sel);
+  const num = v => { const n = parseFloat(v); return isNaN(n) ? 0 : n; };
+  const fmtMoney = v => { if(!v) return '—'; const n = num(v); if(n >= 1e6) return '$' + (n/1e6).toFixed(2) + 'M'; if(n >= 1e3) return '$' + (n/1e3).toFixed(0) + 'k'; return '$' + n.toFixed(0); };
+  const fmtPct = v => v ? num(v).toFixed(1) + '%' : '—';
+
+  // Live runway
+  function liveRunway(){
+    const burn = num(document.querySelector('[data-persist="burn"]').value);
+    const cash = num(document.querySelector('[data-persist="cash"]').value);
+    document.getElementById('runway').value = (burn > 0 && cash > 0) ? (cash / burn).toFixed(1) : '';
+  }
+  document.querySelector('[data-persist="burn"]').addEventListener('input', liveRunway);
+  document.querySelector('[data-persist="cash"]').addEventListener('input', liveRunway);
+  liveRunway();
+
+  // Stage benchmarks (ARR, MoM, GM, NRR, churn, payback, runway)
+  const BENCH = {
+    preseed:  { arr:[0,250e3], mom:[10,null], gm:[50,null], nrr:[null,null], churn:[null,null], payback:[null,null], runway:[12,null], tam:[500,null] },
+    seed:     { arr:[0,1e6],   mom:[15,null], gm:[60,null], nrr:[100,null], churn:[null,15],  payback:[null,24], runway:[12,null], tam:[1000,null] },
+    seriesa:  { arr:[1e6,5e6], mom:[15,null], gm:[65,null], nrr:[110,null], churn:[null,10],  payback:[null,18], runway:[15,null], tam:[1000,null] },
+    seriesb:  { arr:[5e6,15e6],mom:[8,null],  gm:[70,null], nrr:[115,null], churn:[null,8],   payback:[null,15], runway:[18,null], tam:[1000,null] },
+    seriesc:  { arr:[15e6,50e6],mom:[5,null], gm:[70,null], nrr:[115,null], churn:[null,8],   payback:[null,12], runway:[18,null], tam:[1000,null] },
+    growth:   { arr:[20e6,null],mom:[3,null], gm:[70,null], nrr:[110,null], churn:[null,8],   payback:[null,12], runway:[18,null], tam:[1000,null] },
+    pe:       { arr:[10e6,null],mom:[null,null], gm:[null,null], nrr:[null,null], churn:[null,null], payback:[null,null], runway:[null,null], tam:[500,null] }
+  };
+
+  function benchPill(label, value, range, fmt){
+    const [lo, hi] = range;
+    let cls = 'pill', verdict = 'n/a';
+    const v = num(value);
+    if(value === '' || value == null || isNaN(v)){ cls = 'pill warn'; verdict = 'missing'; }
+    else if(lo != null && v < lo){ cls = 'pill fail'; verdict = 'below'; }
+    else if(hi != null && v > hi){ cls = 'pill warn'; verdict = 'above range'; }
+    else { cls = 'pill ok'; verdict = 'in range'; }
+    const rangeStr = (lo != null || hi != null) ? `${lo != null ? fmt(lo) : '—'} … ${hi != null ? fmt(hi) : '—'}` : '—';
+    return `<div class="bench"><span class="${cls}">${verdict}</span><strong>${label}</strong><span class="muted" style="font-size:.82rem;">${value === '' || value == null ? '—' : fmt(v)} <span style="color:var(--color-text-soft)">(target: ${rangeStr})</span></span></div>`;
+  }
+
+  function val(name){ const el = document.querySelector(`[data-persist="${name}"]`); return el ? el.value : ''; }
+
+  function score(){
+    const stage = val('stage');
+    const vertical = val('vertical');
+    const b = BENCH[stage] || BENCH.seed;
+
+    const fmtA = v => fmtMoney(v);
+    const fmtP = v => v.toFixed(0) + '%';
+    const fmtM = v => v.toFixed(0) + ' mo';
+    const fmtT = v => '$' + v + 'M';
+
+    const benchesHtml = [
+      benchPill('ARR / revenue', val('arr'), b.arr, fmtA),
+      benchPill('MoM growth', val('mom'), b.mom, fmtP),
+      benchPill('Gross margin', val('gm'), b.gm, fmtP),
+      benchPill('Net rev retention', val('nrr'), b.nrr, fmtP),
+      benchPill('Logo churn / yr', val('churn'), b.churn, fmtP),
+      benchPill('CAC payback', val('payback'), b.payback, fmtM),
+      benchPill('Runway', document.getElementById('runway').value, b.runway, fmtM),
+      benchPill('TAM ($M)', val('tam'), b.tam, fmtT)
+    ].join('');
+    document.getElementById('benches').innerHTML = benchesHtml;
+
+    // Quick-score: 0-100 based on present + in-range fields, vertical-specific bonus, completeness penalty
+    const checkFields = [
+      ['arr', b.arr], ['mom', b.mom], ['gm', b.gm], ['nrr', b.nrr],
+      ['churn', b.churn], ['payback', b.payback]
+    ];
+    let pts = 0, max = 0;
+    checkFields.forEach(([f, range]) => {
+      const v = num(val(f));
+      const present = val(f) !== '' && !isNaN(v);
+      if(!range || (range[0]==null && range[1]==null)){ return; }
+      max += 10;
+      if(!present){ pts += 0; return; }
+      const [lo, hi] = range;
+      const okLo = lo == null || v >= lo;
+      const okHi = hi == null || v <= hi;
+      if(okLo && okHi) pts += 10;
+      else if(okLo || okHi) pts += 5;
+    });
+    // Round-fit: TAM vs. instrument
+    const tamM = num(val('tam'));
+    if(tamM){
+      max += 10;
+      if(stage === 'pe' && tamM >= 500) pts += 10;
+      else if(['seed','seriesa','seriesb','seriesc','growth'].includes(stage) && tamM >= 1000) pts += 10;
+      else pts += 4;
+    }
+    // Team
+    if(val('team').trim().length > 30){ pts += 8; } max += 8;
+    // Vertical Q&A completeness
+    const vertFields = {
+      b2b: ['b2b_buyer','b2b_motion','b2b_contract','b2b_whynow'],
+      consumer: ['cons_organic','cons_retention','cons_unit','cons_brand'],
+      deeptech: ['dt_risk','dt_ip','dt_capital','dt_reg'],
+      impact: ['imp_metric','imp_payer','imp_add','imp_tradeoff']
+    }[vertical] || [];
+    let vFilled = 0;
+    vertFields.forEach(f => { if(val(f).trim().length > 12) vFilled++; });
+    pts += (vFilled / Math.max(1, vertFields.length)) * 12;
+    max += 12;
+
+    const pct = Math.round((pts / max) * 100);
+    document.getElementById('score-num').textContent = pct + ' / 100';
+    let band = 'Pass — too many gaps';
+    if(pct >= 75) band = 'Strong signal — push to IC';
+    else if(pct >= 60) band = 'Worth a partner meeting';
+    else if(pct >= 45) band = 'Follow-up required before decision';
+    document.getElementById('score-band').textContent = band;
+
+    // Flags
+    const flags = [];
+    const tam = num(val('tam'));
+    if(tam && tam < 1000 && stage !== 'pe') flags.push(['fail', `TAM of $${tam}M is below the $1B floor most VCs use for venture-scale outcomes.`]);
+    if(stage === 'pe' && tam && tam < 500) flags.push(['warn', `TAM of $${tam}M is below the $500M floor most lower-mid PE funds use.`]);
+    if(num(val('gm')) < 50 && val('gm') !== '') flags.push(['warn', `Gross margin under 50% — confirm whether this is a software, service, or hardware mix.`]);
+    if(num(val('churn')) > 15 && val('churn') !== '') flags.push(['fail', `Logo churn above 15%/yr — retention is the deal-killer to chase first.`]);
+    if(num(val('nrr')) > 0 && num(val('nrr')) < 100) flags.push(['warn', `NRR under 100% — net contraction. Material at any growth stage.`]);
+    const runway = parseFloat(document.getElementById('runway').value);
+    if(!isNaN(runway) && runway < 9) flags.push(['fail', `Only ${runway.toFixed(1)} months of runway — this is a forced raise.`]);
+    if(val('lingering').trim().length < 10) flags.push(['warn', `No lingering questions captured — you almost certainly have some. Block 10 minutes to write them down.`]);
+    if(vFilled < 2) flags.push(['warn', `Vertical Q&A is mostly empty for ${vertical.toUpperCase()} — async cohort review will return this for follow-up.`]);
+
+    document.getElementById('flags').innerHTML = flags.length
+      ? flags.map(([k,t]) => `<div class="flag ${k}">${t}</div>`).join('')
+      : '<div class="flag ok">No structural flags raised by the benchmark grid. Move to thesis fit and references.</div>';
+
+    // Markdown record
+    const rec = [];
+    rec.push(`# ${val('company') || '—'} — ${stage.toUpperCase()} · ${vertical.toUpperCase()}`);
+    rec.push('');
+    rec.push(`*Founded ${val('founded') || '—'} · HQ ${val('hq') || '—'} · Lead: ${val('lead') || 'TBD'}*`);
+    rec.push('');
+    rec.push(`**Round:** ${fmtMoney(val('round'))} on ${fmtMoney(val('pre'))} pre / cap (${val('instrument')})`);
+    rec.push('');
+    rec.push(`**Quick-score:** ${pct}/100 — ${band}`);
+    rec.push('');
+    rec.push('## Problem & solution');
+    rec.push(val('problem') || '_—_');
+    rec.push('');
+    rec.push(val('solution') || '_—_');
+    rec.push('');
+    rec.push(`## Market`);
+    rec.push(`- **TAM** ${val('tam') ? '$'+val('tam')+'M' : '—'} · **SAM** ${val('sam') ? '$'+val('sam')+'M' : '—'} · **SOM 5yr** ${val('som') ? '$'+val('som')+'M' : '—'}`);
+    rec.push(`- **TAM method:** ${val('tamMethod') || '—'}`);
+    rec.push('');
+    rec.push('## Traction & unit economics');
+    rec.push(`- ARR ${fmtMoney(val('arr'))} · MoM ${fmtPct(val('mom'))} · GM ${fmtPct(val('gm'))} · NRR ${fmtPct(val('nrr'))} · Churn ${fmtPct(val('churn'))}`);
+    rec.push(`- CAC ${fmtMoney(val('cac'))} · LTV ${fmtMoney(val('ltv'))} · Payback ${val('payback') || '—'} mo`);
+    rec.push(`- Customers: ${val('customers') || '—'}`);
+    rec.push('');
+    rec.push('## Team & financials');
+    rec.push(`- Founders: ${val('team') || '—'}`);
+    rec.push(`- Prior outcomes: ${val('priorOutcomes') || '—'}`);
+    rec.push(`- Burn ${fmtMoney(val('burn'))}/mo · Cash ${fmtMoney(val('cash'))} · Runway ${document.getElementById('runway').value || '—'} mo`);
+    rec.push(`- Use of proceeds: ${val('useOf') || '—'}`);
+    rec.push('');
+    rec.push(`## Vertical Q&A — ${vertical.toUpperCase()}`);
+    const labels = {
+      b2b: { b2b_buyer:'Buyer & budget owner', b2b_motion:'Sales motion', b2b_contract:'Contract & NRR', b2b_whynow:'Why now' },
+      consumer: { cons_organic:'Organic vs paid', cons_retention:'Retention curve', cons_unit:'Unit economics', cons_brand:'Brand thesis' },
+      deeptech: { dt_risk:'Technical risk / TRL', dt_ip:'IP & defensibility', dt_capital:'Capital to first $1M', dt_reg:'Regulatory / dual-use' },
+      impact: { imp_metric:'Outcome metric', imp_payer:'Who pays', imp_add:'Additionality', imp_tradeoff:'Impact-vs-return trade-off' }
+    }[vertical] || {};
+    Object.entries(labels).forEach(([k, lbl]) => {
+      rec.push(`- **${lbl}:** ${val(k) || '_blank — chase in follow-up_'}`);
+    });
+    rec.push('');
+    rec.push('## Risks');
+    rec.push(val('risks') || '_—_');
+    rec.push('');
+    rec.push('## Lingering questions for follow-up outreach');
+    rec.push(val('lingering') || '_—_');
+    rec.push('');
+    rec.push('---');
+    rec.push('_Generated by PE/VC Lab · Tool 22 · Pitch deck data extractor._');
+    document.getElementById('record-out').textContent = rec.join('\n');
+    document.getElementById('result-section').hidden = false;
+  }
+
+  document.getElementById('btn-score').addEventListener('click', score);
+  document.getElementById('btn-clear').addEventListener('click', () => {
+    if(!confirm('Clear all fields?')) return;
+    if(window.PEVC && PEVC.clear) PEVC.clear(SLOT);
+    document.querySelectorAll('[data-persist]').forEach(el => { el.value = el.tagName === 'SELECT' ? el.options[0].value : ''; });
+    document.getElementById('result-section').hidden = true;
+    liveRunway();
+  });
+  document.getElementById('btn-copy').addEventListener('click', () => {
+    const txt = document.getElementById('record-out').textContent;
+    if(window.PEVC && PEVC.copyText) PEVC.copyText(txt);
+    else navigator.clipboard.writeText(txt);
+  });
+  document.getElementById('btn-export').addEventListener('click', () => {
+    const txt = document.getElementById('record-out').textContent;
+    const name = (document.querySelector('[data-persist="company"]').value || 'pitch-deck').replace(/\s+/g,'-').toLowerCase();
+    if(window.PEVC && PEVC.downloadFile) PEVC.downloadFile(`${name}-extract.md`, txt);
+  });
+})();
+</script>
+</body>
+</html>

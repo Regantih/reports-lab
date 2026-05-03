@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tool 20 · PE Deal Evaluation Engine · PE/VC Lab</title>
+<meta name="description" content="A PE-specific evaluation engine: buyout, growth equity, minority, and secondary. PE fit score, value creation plan, exit IRR/MOIC scenarios, and a quality filter that mirrors the 'fewer but better deals' selection bar.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/lab.css">
+<style>
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3)}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-3)}
+@media (max-width:720px){.grid-2,.grid-3{grid-template-columns:1fr}}
+.module{border:1px solid var(--color-border);border-radius:8px;padding:var(--space-4);margin:var(--space-3) 0;background:var(--color-surface)}
+.module h3{margin:0 0 var(--space-2);font-family:var(--font-display);font-weight:500;font-size:1.1rem}
+.module__num{font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--color-accent-copper)}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:var(--space-2);margin-top:var(--space-2)}
+.kpi{padding:.65rem .85rem;border:1px solid var(--color-border);border-radius:6px;background:var(--color-surface-offset)}
+.kpi .k{font-family:var(--font-mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--color-text-soft)}
+.kpi .v{font-family:var(--font-display);font-size:1.35rem;margin-top:.1rem}
+.scen-table{width:100%;border-collapse:collapse;margin-top:.5rem;font-size:.88rem}
+.scen-table th,.scen-table td{padding:.5rem .65rem;border:1px solid var(--color-border);text-align:right}
+.scen-table th:first-child,.scen-table td:first-child{text-align:left;font-family:var(--font-mono);font-size:.78rem;color:var(--color-text-soft)}
+.qual-row{display:flex;gap:.6rem;align-items:center;padding:.4rem 0}
+.qual-row label{flex:1;font-size:.92rem}
+.bar{height:8px;border-radius:4px;background:rgba(0,0,0,.08);overflow:hidden;margin:.4rem 0;}
+.bar > span{display:block;height:100%;background:var(--color-accent-copper)}
+.flag{border-left:3px solid var(--color-accent-copper);padding:.5rem .75rem;margin:.4rem 0;background:var(--color-surface);font-size:.88rem;border-radius:0 4px 4px 0}
+.flag.warn{border-left-color:#b88012}
+.flag.fail{border-left-color:#a02d24}
+.flag.ok{border-left-color:#1a8c4a}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../../index.html"><span class="brand__mark"></span><span>PE/VC<span class="brand__sub"> &middot; the practitioner&apos;s lab</span></span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../../index.html">Report cover</a>
+  <a class="nav-link" href="../../index.html#chapters">Chapters</a>
+  <a class="nav-link nav-link--active" href="../index.html">Lab</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap">
+  <section style="padding: var(--space-10) 0 var(--space-4);">
+    <div class="eyebrow" style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-accent-copper);">Tool 20 &middot; <a href="../index.html" style="font-family:inherit; letter-spacing:inherit; color:inherit;">the lab</a> &middot; <a href="../../chapters/18-valuation-dcf-lbo.html">Read: Ch. 18 — DCF, LBO, and venture methods</a></div>
+    <h1 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-2xl); margin: var(--space-2) 0 var(--space-3);">PE deal evaluation <em>engine</em></h1>
+    <p class="muted" style="max-width: 64ch;">Where the VC scorecard fits a Series A, this fits a buyout. Six modules — company profile, structure, PE fit, value creation, three exit scenarios, and a quality filter. Outputs a fit score, IRR/MOIC matrix, and a verdict band.</p>
+  </section>
+
+  <section class="tool-toolbar">
+    <button class="btn" id="btn-eval" type="button">Evaluate deal</button>
+    <button class="btn btn--ghost" id="btn-clear" type="button">Clear</button>
+    <span class="nav-spacer" style="flex:1;"></span>
+    <button class="btn" id="btn-export" type="button">Export Markdown</button>
+  </section>
+
+  <div class="module">
+    <div class="module__num">1 · Company profile</div>
+    <h3>The numbers as they sit today</h3>
+    <div class="grid-3">
+      <div class="field"><label>Company name</label><input type="text" data-persist="name"></div>
+      <div class="field"><label>Sector</label><input type="text" data-persist="sector"></div>
+      <div class="field"><label>Geography</label><input type="text" data-persist="geo" placeholder="e.g. North America, multi-state"></div>
+      <div class="field"><label>Revenue (LTM, $M)</label><input type="number" min="0" step="0.1" data-persist="revenue" placeholder="120"></div>
+      <div class="field"><label>EBITDA (LTM, $M)</label><input type="number" min="0" step="0.1" data-persist="ebitda" placeholder="22"></div>
+      <div class="field"><label>EBITDA margin (%)</label><input type="number" min="-50" step="0.1" data-persist="margin" placeholder="18"></div>
+      <div class="field"><label>Revenue growth (% / yr)</label><input type="number" min="-50" step="0.1" data-persist="growth" placeholder="9"></div>
+      <div class="field"><label>FCF conversion (% of EBITDA)</label><input type="number" min="0" step="1" data-persist="fcfConv" placeholder="65"></div>
+      <div class="field"><label>Recurring revenue (%)</label><input type="number" min="0" max="100" step="1" data-persist="recurring" placeholder="55"></div>
+    </div>
+  </div>
+
+  <div class="module">
+    <div class="module__num">2 · Entry structure</div>
+    <h3>Type of deal &amp; capital stack</h3>
+    <div class="grid-3">
+      <div class="field"><label>Deal type</label>
+        <select data-persist="dealType">
+          <option>Buyout (LBO)</option>
+          <option>Growth equity</option>
+          <option>Minority recap</option>
+          <option>Secondary purchase</option>
+          <option>Continuation vehicle</option>
+        </select>
+      </div>
+      <div class="field"><label>Entry EV / EBITDA (×)</label><input type="number" min="0" step="0.1" data-persist="entryMult" placeholder="9.5"></div>
+      <div class="field"><label>Hold period (yrs)</label><input type="number" min="1" max="15" step="1" data-persist="hold" placeholder="5"></div>
+      <div class="field"><label>Debt / EBITDA at close (×)</label><input type="number" min="0" step="0.1" data-persist="debtMult" placeholder="5.0"></div>
+      <div class="field"><label>Sponsor equity ($M)</label><input type="number" min="0" step="0.1" data-persist="equityIn"></div>
+      <div class="field"><label>Annual debt paydown (% of FCF)</label><input type="number" min="0" max="100" step="1" data-persist="paydown" placeholder="60"></div>
+    </div>
+  </div>
+
+  <div class="module">
+    <div class="module__num">3 · PE fit score</div>
+    <h3>Quality filter — the "fewer but better" lens</h3>
+    <p class="muted tiny">Five binary checks that great PE deals share. A genuine "yes" on at least four moves the deal into priority diligence.</p>
+    <div id="qual-list">
+      <div class="qual-row"><label>Recurring or contracted revenue ≥ 50% of total</label>
+        <select data-persist="q1"><option value="0">No</option><option value="1">Yes</option></select>
+      </div>
+      <div class="qual-row"><label>Top-3 customer concentration ≤ 30%</label>
+        <select data-persist="q2"><option value="0">No</option><option value="1">Yes</option></select>
+      </div>
+      <div class="qual-row"><label>Demonstrated pricing power (price hikes absorbed)</label>
+        <select data-persist="q3"><option value="0">No</option><option value="1">Yes</option></select>
+      </div>
+      <div class="qual-row"><label>Defensible market position (#1 or #2 in niche)</label>
+        <select data-persist="q4"><option value="0">No</option><option value="1">Yes</option></select>
+      </div>
+      <div class="qual-row"><label>Management willing to roll equity ≥ 25%</label>
+        <select data-persist="q5"><option value="0">No</option><option value="1">Yes</option></select>
+      </div>
+    </div>
+  </div>
+
+  <div class="module">
+    <div class="module__num">4 · Value creation plan</div>
+    <h3>Where the EBITDA dollars come from over the hold</h3>
+    <p class="muted tiny">Total of revenue growth + margin expansion + multiple expansion = your edge. Most plans should sum to ≥30%.</p>
+    <div class="grid-3">
+      <div class="field"><label>Revenue growth Δ over hold (%)</label><input type="number" min="0" step="1" data-persist="vRev" placeholder="40"></div>
+      <div class="field"><label>EBITDA margin Δ (pp)</label><input type="number" min="-20" step="0.5" data-persist="vMargin" placeholder="3"></div>
+      <div class="field"><label>Exit multiple Δ vs entry (×)</label><input type="number" step="0.1" data-persist="vMult" placeholder="0.5"></div>
+    </div>
+    <textarea data-persist="vNotes" rows="3" placeholder="Operating playbook: pricing, GTM, M&A, cost-out — concrete actions per year." style="margin-top:.5rem;"></textarea>
+  </div>
+
+  <div class="module">
+    <div class="module__num">5 · Exit scenarios</div>
+    <h3>Bear / Base / Bull at the end of the hold</h3>
+    <p class="muted tiny">Auto-computed from the value creation plan plus a ±20% sensitivity on revenue growth and ±0.75× multiple range.</p>
+    <div id="scen"></div>
+  </div>
+
+  <div class="module" id="verdict-mod" style="display:none;">
+    <div class="module__num">Verdict</div>
+    <h3 id="v-line">—</h3>
+    <p class="muted" id="v-summary"></p>
+    <div class="kpi-grid" id="kpi"></div>
+    <div id="flags" style="margin-top:var(--space-2);"></div>
+  </div>
+
+  <div style="height: var(--space-16);"></div>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span>&copy; 2026 Reports Lab &middot; Report No. 04 &middot; the lab</span>
+  <span><a href="../index.html">&uarr; lab</a> &middot; <a href="../../index.html">&uarr; report cover</a></span>
+</div></footer>
+
+<script src="../js/site.js"></script>
+<script src="../js/tools.js"></script>
+<script>
+(function(){
+  const SLOT='pe-deal-engine';
+  const root=document.querySelector('main');
+  PEVC.bindPersistence(root, SLOT);
+
+  function d(){ return PEVC.load(SLOT,{})||{}; }
+
+  function compute(){
+    const x=d();
+    const ebitda = +x.ebitda||0;
+    const entryMult = +x.entryMult||0;
+    const hold = Math.max(1, +x.hold||5);
+    const debtMult = +x.debtMult||0;
+    const equityIn = +x.equityIn||(ebitda*entryMult - ebitda*debtMult);
+    const paydownPct = (+x.paydown||0)/100;
+    const fcfConv = (+x.fcfConv||0)/100;
+
+    // EV bridge (entry)
+    const entryEV = ebitda * entryMult;
+    const debtIn = ebitda * debtMult;
+
+    // Build EBITDA at exit using value creation deltas
+    const revGrowthPct = (+x.vRev||0)/100;
+    const marginDelta = (+x.vMargin||0)/100; // percentage points expressed as fraction
+    const mult0 = entryMult;
+    const mult1 = mult0 + (+x.vMult||0);
+
+    const revenue0 = +x.revenue||0;
+    const margin0 = (+x.margin||0)/100;
+    const revenue1 = revenue0 * (1 + revGrowthPct);
+    const margin1 = margin0 + marginDelta;
+    const ebitda1 = revenue1 * margin1;
+
+    // Debt paydown over hold
+    const annualFCF = ebitda * fcfConv;
+    const debtPaid = Math.min(debtIn, annualFCF * paydownPct * hold);
+    const debtOut = Math.max(0, debtIn - debtPaid);
+
+    function scenario(growthAdj, multAdj){
+      const rev = revenue0 * (1 + revGrowthPct + growthAdj);
+      const eb = rev * Math.max(0, margin1);
+      const m = Math.max(0.1, mult1 + multAdj);
+      const exitEV = eb * m;
+      const exitEquity = Math.max(0, exitEV - debtOut);
+      const moic = equityIn > 0 ? exitEquity / equityIn : 0;
+      const irr = moic > 0 ? Math.pow(moic, 1/hold) - 1 : -1;
+      return { rev, eb, m, exitEV, exitEquity, moic, irr };
+    }
+
+    const bear = scenario(-0.20, -0.75);
+    const base = scenario(0, 0);
+    const bull = scenario(+0.20, +0.75);
+
+    // PE fit score
+    const q = [+x.q1,+x.q2,+x.q3,+x.q4,+x.q5].map(v=>v||0);
+    const fitScore = q.reduce((a,b)=>a+b,0);
+
+    return { entryEV, debtIn, equityIn, ebitda, ebitda1, debtOut, bear, base, bull, fitScore, x };
+  }
+
+  function fmtMoney(v){ return PEVC.fmtCurrency(v*1e6); }
+  function fmtX(v){ return PEVC.fmtMult(v); }
+  function fmtP(v){ return PEVC.fmtPct(v); }
+
+  function flagsFor(r){
+    const f=[]; const x=r.x;
+    if(r.fitScore<=2) f.push({c:'fail', m:'PE fit score ≤ 2/5 — this is not a "fewer but better" deal. Pass unless there\'s a specific catalyst.'});
+    if(r.fitScore===5) f.push({c:'ok', m:'PE fit 5/5 — all five quality gates clear. Bring to IC pre-meeting.'});
+    if((+x.debtMult||0) > 6) f.push({c:'warn', m:'Debt > 6× EBITDA — over the conservative LBO range. Lender appetite, covenants, and downside resilience need stress-testing.'});
+    if((+x.recurring||0) < 30 && (x.dealType||'').includes('Buyout')) f.push({c:'warn', m:'Recurring revenue < 30% in a buyout — cyclicality risk; lower advance rate from lenders likely.'});
+    if(r.base.irr < 0.15) f.push({c:'warn', m:'Base case IRR < 15% — below typical LP gross-IRR target of 18–22%. Re-check entry multiple or value creation plan.'});
+    if(r.base.irr >= 0.25) f.push({c:'ok', m:'Base case IRR ≥ 25% — well above the carry threshold; downside should still pencil to ≥ cost of capital.'});
+    if(r.bear.moic < 1) f.push({c:'fail', m:'Bear case MOIC < 1.0× — deal can lose money in a stressed exit. Need a downside-protection mechanism (preferred, structure, board control).'});
+    return f;
+  }
+
+  function render(){
+    const r = compute();
+
+    document.getElementById('verdict-mod').style.display='block';
+
+    // Scenario table
+    const rows = [
+      ['Bear', r.bear], ['Base', r.base], ['Bull', r.bull]
+    ];
+    let html = '<table class="scen-table"><thead><tr><th>Scenario</th><th>Exit revenue</th><th>Exit EBITDA</th><th>Exit ×</th><th>Exit EV</th><th>Equity</th><th>MOIC</th><th>IRR</th></tr></thead><tbody>';
+    rows.forEach(([k,s]) => {
+      html += '<tr><td>'+k+'</td><td>'+fmtMoney(s.rev)+'</td><td>'+fmtMoney(s.eb)+'</td><td>'+fmtX(s.m)+'</td><td>'+fmtMoney(s.exitEV)+'</td><td>'+fmtMoney(s.exitEquity)+'</td><td>'+fmtX(s.moic)+'</td><td>'+fmtP(s.irr)+'</td></tr>';
+    });
+    html += '</tbody></table>';
+    document.getElementById('scen').innerHTML = html;
+
+    // KPIs from base case
+    const kpis = [
+      ['Entry EV', fmtMoney(r.entryEV)],
+      ['Sponsor equity', fmtMoney(r.equityIn)],
+      ['Debt at close', fmtMoney(r.debtIn)],
+      ['Debt at exit', fmtMoney(r.debtOut)],
+      ['Base IRR', fmtP(r.base.irr)],
+      ['Base MOIC', fmtX(r.base.moic)],
+      ['PE fit', r.fitScore + ' / 5'],
+    ];
+    document.getElementById('kpi').innerHTML = kpis.map(([k,v]) => '<div class="kpi"><div class="k">'+k+'</div><div class="v">'+v+'</div></div>').join('');
+
+    const v = document.getElementById('v-line');
+    if(r.base.irr >= 0.20 && r.fitScore >= 4) v.textContent = 'GO · base IRR ' + fmtP(r.base.irr) + ' · PE fit ' + r.fitScore + '/5';
+    else if(r.base.irr >= 0.15 || r.fitScore >= 3) v.textContent = 'WATCH · base IRR ' + fmtP(r.base.irr) + ' · PE fit ' + r.fitScore + '/5';
+    else v.textContent = 'PASS · base IRR ' + fmtP(r.base.irr) + ' · PE fit ' + r.fitScore + '/5';
+    document.getElementById('v-summary').textContent = (r.x.dealType||'Buyout (LBO)') + ' · ' + (r.x.hold||5) + '-yr hold';
+
+    document.getElementById('flags').innerHTML = flagsFor(r).map(f => '<div class="flag '+f.c+'">'+f.m+'</div>').join('');
+  }
+
+  document.getElementById('btn-eval').addEventListener('click', render);
+  document.getElementById('btn-clear').addEventListener('click', () => {
+    if(!confirm('Clear all fields?')) return;
+    PEVC.clear(SLOT);
+    root.querySelectorAll('[data-persist]').forEach(el => { el.value=''; });
+    document.getElementById('verdict-mod').style.display='none';
+    document.getElementById('scen').innerHTML='';
+  });
+  document.getElementById('btn-export').addEventListener('click', () => {
+    const r=compute(); const x=r.x;
+    const lines = [];
+    lines.push('# PE deal evaluation — ' + (x.name || 'Untitled'));
+    lines.push('');
+    lines.push('**Sector:** ' + (x.sector || '—') + ' · **Geography:** ' + (x.geo || '—'));
+    lines.push('**Deal type:** ' + (x.dealType || '—') + ' · **Hold:** ' + (x.hold || '—') + ' yrs');
+    lines.push('**Revenue:** ' + fmtMoney((+x.revenue||0)) + ' · **EBITDA:** ' + fmtMoney((+x.ebitda||0)) + ' · margin ' + (x.margin||'—') + '%');
+    lines.push('');
+    lines.push('## Capital stack');
+    lines.push('- Entry EV: ' + fmtMoney(r.entryEV));
+    lines.push('- Sponsor equity: ' + fmtMoney(r.equityIn));
+    lines.push('- Debt at close: ' + fmtMoney(r.debtIn) + ' (' + (x.debtMult||'—') + '× EBITDA)');
+    lines.push('- Debt at exit: ' + fmtMoney(r.debtOut));
+    lines.push('');
+    lines.push('## PE fit score: ' + r.fitScore + ' / 5');
+    lines.push('');
+    lines.push('## Exit scenarios');
+    lines.push('| Scenario | MOIC | IRR | Exit EV |');
+    lines.push('|---|---|---|---|');
+    [['Bear',r.bear],['Base',r.base],['Bull',r.bull]].forEach(([k,s]) => {
+      lines.push('| '+k+' | '+fmtX(s.moic)+' | '+fmtP(s.irr)+' | '+fmtMoney(s.exitEV)+' |');
+    });
+    lines.push('');
+    lines.push('## Value creation plan');
+    lines.push((x.vNotes||'_to fill_').trim());
+    PEVC.downloadFile('pe-deal-eval.md', lines.join('\n'), 'text/markdown;charset=utf-8');
+  });
+})();
+</script>
+</body></html>

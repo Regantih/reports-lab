@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tool 21 · Job Application Fit Scorer · PE/VC Lab</title>
+<meta name="description" content="Score your fit against any PE/VC job posting on six dimensions, generate gap analysis, role-specific talking points, and a 30-60-90 plan. Designed for the cohort's daily job channel.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/lab.css">
+<style>
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3)}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--space-3)}
+@media (max-width:720px){.grid-2,.grid-3{grid-template-columns:1fr}}
+.section{border:1px solid var(--color-border);border-radius:8px;padding:var(--space-4);margin:var(--space-3) 0;background:var(--color-surface)}
+.section h3{margin:0 0 var(--space-2);font-family:var(--font-display);font-weight:500;font-size:1.1rem}
+.section__num{font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--color-accent-copper)}
+.bar-row{display:flex;align-items:center;gap:.6rem;margin:.35rem 0;font-size:.9rem}
+.bar-row span:first-child{min-width:160px}
+.bar{flex:1;height:8px;background:rgba(0,0,0,.08);border-radius:4px;overflow:hidden}
+.bar > div{height:100%;background:var(--color-accent-copper);transition:width .3s}
+.cat-pct{min-width:3rem;text-align:right;font-family:var(--font-mono);font-size:.85rem;color:var(--color-text-soft)}
+.kit{white-space:pre-wrap;background:var(--color-surface-offset);border:1px solid var(--color-border);border-radius:6px;padding:var(--space-3);font-family:var(--font-mono);font-size:.82rem;line-height:1.55;max-height:560px;overflow:auto}
+.flag{border-left:3px solid var(--color-accent-copper);padding:.5rem .75rem;margin:.4rem 0;background:var(--color-surface);font-size:.88rem;border-radius:0 4px 4px 0}
+.flag.warn{border-left-color:#b88012}
+.flag.fail{border-left-color:#a02d24}
+.flag.ok{border-left-color:#1a8c4a}
+.score-big{font-family:var(--font-display);font-size:2.2rem;margin:.25rem 0}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../../index.html"><span class="brand__mark"></span><span>PE/VC<span class="brand__sub"> &middot; the practitioner&apos;s lab</span></span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../../index.html">Report cover</a>
+  <a class="nav-link" href="../../index.html#chapters">Chapters</a>
+  <a class="nav-link nav-link--active" href="../index.html">Lab</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap">
+  <section style="padding: var(--space-10) 0 var(--space-4);">
+    <div class="eyebrow" style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-accent-copper);">Tool 21 &middot; <a href="../index.html" style="font-family:inherit; letter-spacing:inherit; color:inherit;">the lab</a> &middot; <a href="../../chapters/38-integrated-casework.html">Read: Ch. 38 — Integrated casework &amp; career paths</a></div>
+    <h1 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-2xl); margin: var(--space-2) 0 var(--space-3);">Job application <em>fit scorer</em></h1>
+    <p class="muted" style="max-width: 64ch;">For the daily Sutton Capital jobs channel and any other PE/VC posting. Score your fit on six dimensions, surface the gaps, and produce a tailored application kit you can actually paste into a cover letter.</p>
+  </section>
+
+  <section class="tool-toolbar">
+    <button class="btn" id="btn-score" type="button">Score &amp; build kit</button>
+    <button class="btn btn--ghost" id="btn-clear" type="button">Clear</button>
+    <span class="nav-spacer" style="flex:1;"></span>
+    <button class="btn" id="btn-copy" type="button">Copy kit</button>
+    <button class="btn" id="btn-export" type="button">Export Markdown</button>
+  </section>
+
+  <div class="section">
+    <div class="section__num">Job posting</div>
+    <h3>From the listing</h3>
+    <div class="grid-2">
+      <div class="field"><label>Role title</label><input type="text" data-persist="jobTitle" placeholder="e.g. Senior Associate, Growth Equity"></div>
+      <div class="field"><label>Firm name</label><input type="text" data-persist="firm" placeholder="e.g. TPG Growth"></div>
+      <div class="field"><label>Firm type</label>
+        <select data-persist="firmType">
+          <option>VC</option><option>Growth Equity</option><option>Buyout (PE)</option>
+          <option>CVC</option><option>Family Office</option><option>Impact / Mission-driven</option>
+          <option>Hedge Fund / Cross-over</option><option>Fund of Funds / LP</option>
+        </select>
+      </div>
+      <div class="field"><label>Required years experience</label><input type="number" min="0" max="40" step="1" data-persist="yearsReq" placeholder="3"></div>
+      <div class="field"><label>Credentials required</label>
+        <select data-persist="credReq">
+          <option>None specified</option><option>MBA preferred</option><option>MBA required</option>
+          <option>CFA</option><option>CAIA</option><option>MBA + CFA</option><option>JD/MD</option>
+        </select>
+      </div>
+      <div class="field"><label>Focus area</label>
+        <select data-persist="focus">
+          <option>VC — Seed/Series A</option><option>VC — Growth/Late-stage</option>
+          <option>PE — LBO Buyouts</option><option>PE — Growth Equity</option>
+          <option>Real Assets</option><option>Credit / Direct Lending</option>
+          <option>Secondaries</option><option>Sector-specific</option>
+        </select>
+      </div>
+    </div>
+    <textarea data-persist="jobDesc" rows="3" placeholder="Paste 1–2 sentences from the job description that capture what they actually want." style="margin-top:.5rem;"></textarea>
+  </div>
+
+  <div class="section">
+    <div class="section__num">You</div>
+    <h3>Background &amp; capabilities</h3>
+    <div class="grid-2">
+      <div class="field"><label>Current title</label><input type="text" data-persist="curTitle"></div>
+      <div class="field"><label>Years in finance</label><input type="number" min="0" max="40" step="1" data-persist="yearsHave"></div>
+      <div class="field"><label>Credentials held</label>
+        <select data-persist="credHave">
+          <option>None</option><option>MBA</option><option>CFA Level 1/2</option>
+          <option>CFA Charterholder</option><option>CAIA</option><option>MBA + CFA</option>
+          <option>JD/MD/PhD</option>
+        </select>
+      </div>
+      <div class="field"><label>Deal types completed</label><input type="text" data-persist="deals" placeholder="e.g. 4 LBOs, 2 minority growth, 6 VC checks"></div>
+      <div class="field"><label>Sectors covered</label><input type="text" data-persist="sectors" placeholder="e.g. SaaS, healthcare RCM, defense"></div>
+      <div class="field"><label>Geo coverage</label><input type="text" data-persist="geo" placeholder="e.g. US, EU"></div>
+    </div>
+    <h3 style="margin-top:var(--space-4);">Self-rate (1–5) on the six core PE/VC capabilities</h3>
+    <div class="grid-3">
+      <div class="field"><label>Modeling (LBO / 3-statement)</label>
+        <select data-persist="cap1"><option value="0">— not scored —</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+      </div>
+      <div class="field"><label>Sourcing (proprietary deal flow)</label>
+        <select data-persist="cap2"><option value="0">— not scored —</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+      </div>
+      <div class="field"><label>Diligence &amp; QoE</label>
+        <select data-persist="cap3"><option value="0">— not scored —</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+      </div>
+      <div class="field"><label>Portfolio monitoring &amp; ops</label>
+        <select data-persist="cap4"><option value="0">— not scored —</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+      </div>
+      <div class="field"><label>Sector thesis &amp; market work</label>
+        <select data-persist="cap5"><option value="0">— not scored —</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+      </div>
+      <div class="field"><label>IC memo / written communication</label>
+        <select data-persist="cap6"><option value="0">— not scored —</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+      </div>
+    </div>
+    <textarea data-persist="signature" rows="3" placeholder="Your signature deal — the one you'd lead with in an interview. 3–5 sentences." style="margin-top:.5rem;"></textarea>
+  </div>
+
+  <div class="section" id="result" style="display:none;">
+    <div class="section__num">Fit verdict</div>
+    <h3 id="v-line">—</h3>
+    <div class="score-big" id="score-big">—</div>
+    <p class="muted" id="v-summary"></p>
+    <div id="bars" style="margin-top:var(--space-2);"></div>
+    <div id="flags" style="margin-top:var(--space-3);"></div>
+  </div>
+
+  <h3 style="font-family: var(--font-display); font-weight: 500; margin: var(--space-6) 0 var(--space-2);">Application kit</h3>
+  <p class="muted tiny">Cover-letter talking points, 30-60-90 plan, and tailored interview prep — generated from your inputs.</p>
+  <pre class="kit" id="kit">Press "Score &amp; build kit" to assemble.</pre>
+
+  <div style="height: var(--space-16);"></div>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span>&copy; 2026 Reports Lab &middot; Report No. 04 &middot; the lab</span>
+  <span><a href="../index.html">&uarr; lab</a> &middot; <a href="../../index.html">&uarr; report cover</a></span>
+</div></footer>
+
+<script src="../js/site.js"></script>
+<script src="../js/tools.js"></script>
+<script>
+(function(){
+  const SLOT = 'job-fit';
+  const root = document.querySelector('main');
+  PEVC.bindPersistence(root, SLOT);
+
+  function d(){ return PEVC.load(SLOT,{})||{}; }
+
+  // 6 dimensions: Experience match, Credentials match, Deal-type match, Sector match,
+  // Capability composite, Cultural-fit (firm type alignment).
+  function compute(){
+    const x = d();
+
+    const yearsReq = +x.yearsReq||0, yearsHave = +x.yearsHave||0;
+    let expScore;
+    if(yearsReq === 0) expScore = yearsHave >= 1 ? 100 : 60;
+    else if(yearsHave >= yearsReq) expScore = 100;
+    else expScore = Math.max(0, Math.round((yearsHave / yearsReq) * 100));
+
+    const credReq = (x.credReq||''), credHave = (x.credHave||'');
+    const credRank = ['None','None specified','MBA preferred','CFA Level 1/2','CAIA','CFA Charterholder','MBA','MBA + CFA','MBA required','JD/MD','JD/MD/PhD'];
+    function rk(s){ const i = credRank.indexOf(s); return i<0 ? 0 : i; }
+    let credScore;
+    if(/required/i.test(credReq)){
+      credScore = rk(credHave) >= rk(credReq) ? 100 : 35;
+    } else if(/preferred|CFA|CAIA/i.test(credReq)){
+      credScore = rk(credHave) >= rk(credReq) ? 100 : 70;
+    } else credScore = 90;
+
+    // Deal-type and sector match — heuristic on string overlap with focus
+    const focus = (x.focus||'').toLowerCase();
+    const deals = (x.deals||'').toLowerCase();
+    let dealScore = 60;
+    if(focus.includes('lbo') && deals.match(/lbo|buyout/)) dealScore = 95;
+    else if(focus.includes('growth equity') && deals.match(/growth|minority/)) dealScore = 95;
+    else if(focus.includes('vc') && deals.match(/vc|seed|series/)) dealScore = 95;
+    else if(focus.includes('credit') && deals.match(/credit|direct lend|debt/)) dealScore = 95;
+    else if(deals.length > 0) dealScore = 70;
+
+    const sectorScore = (x.sectors && x.sectors.length > 4) ? 85 : 50;
+
+    // Capability composite — mean of six
+    const caps = [+x.cap1,+x.cap2,+x.cap3,+x.cap4,+x.cap5,+x.cap6].map(v=>v||0);
+    const capMean = caps.reduce((a,b)=>a+b,0) / 6;
+    const capScore = Math.round((capMean / 5) * 100);
+
+    // Cultural fit — firm type vs focus alignment
+    const firmType = (x.firmType||'').toLowerCase();
+    let cultScore = 75;
+    if(firmType.includes('impact') && /impact|mission/.test(deals + sectorScore)) cultScore = 95;
+    if(firmType.includes('cvc') && /strategic|corp/.test(deals)) cultScore = 90;
+
+    const dims = {
+      'Experience': expScore,
+      'Credentials': credScore,
+      'Deal-type fit': dealScore,
+      'Sector fit': sectorScore,
+      'Capabilities': capScore,
+      'Cultural fit': cultScore,
+    };
+    const overall = Math.round(Object.values(dims).reduce((a,b)=>a+b,0) / 6);
+    return { dims, overall, caps, x };
+  }
+
+  function flagsFor(r){
+    const f = [];
+    if(r.dims['Experience'] < 60) f.push({c:'warn', m:'Experience gap — consider whether to apply or to target a senior associate / VP role one level down.'});
+    if(r.dims['Credentials'] < 60) f.push({c:'warn', m:'Credential gap — address explicitly in the cover letter (e.g., "actively pursuing CFA Level 2") and lead with proof of capability.'});
+    const lowCaps = r.caps.map((v,i)=>({i,v})).filter(o=>o.v>0 && o.v<=2);
+    if(lowCaps.length >= 2) f.push({c:'warn', m:'Two or more capabilities below 2/5. Use the 30-60-90 plan in the kit to demonstrate a credible up-skilling path.'});
+    if(r.overall >= 80) f.push({c:'ok', m:'High fit — apply with confidence. Lead the cover letter with your signature deal and the firm\'s thesis.'});
+    if(r.overall < 40) f.push({c:'fail', m:'Low fit — only worth applying if you have a warm intro to the firm or a non-obvious angle.'});
+    return f;
+  }
+
+  function buildKit(r){
+    const x = r.x;
+    const lines = [];
+    lines.push('# Application kit — ' + (x.jobTitle || 'Role') + ' · ' + (x.firm || 'Firm'));
+    lines.push('');
+    lines.push('**Overall fit:** ' + r.overall + '%  ');
+    lines.push('**Firm type:** ' + (x.firmType||'—') + ' · **Focus:** ' + (x.focus||'—'));
+    lines.push('');
+    lines.push('## Cover-letter talking points');
+    lines.push('1. **Why this firm:** [one specific thesis they\'ve published or a recent deal that resonates with your sector view]');
+    lines.push('2. **Signature deal:** ' + ((x.signature||'').trim() || '_replace with your strongest deal in 3–5 sentences_'));
+    lines.push('3. **Capability proof:** lead with your top-rated capability (' +
+      ['Modeling','Sourcing','Diligence','Portfolio ops','Sector thesis','IC memos'][r.caps.indexOf(Math.max(...r.caps))] + ').');
+    lines.push('4. **Sector wedge:** ' + (x.sectors||'_your three best sectors_') + ' map to the firm\'s focus on ' + (x.focus||'_their stated focus_') + '.');
+    lines.push('5. **Edge:** one non-consensus take you bring that an internal hire would not.');
+    lines.push('');
+    lines.push('## Gap addresses (be honest, don\'t hide)');
+    if(r.dims['Experience'] < 80) lines.push('- Experience: ' + (x.yearsHave||0) + ' yrs vs ' + (x.yearsReq||0) + ' yrs requested. Frame: depth of work over years (cite specific transactions).');
+    if(r.dims['Credentials'] < 80) lines.push('- Credential: ' + (x.credHave||'—') + ' vs requested ' + (x.credReq||'—') + '. Address with track record + active study path.');
+    const lowCaps = r.caps.map((v,i)=>({i,v})).filter(o=>o.v>0 && o.v<=2);
+    if(lowCaps.length) lines.push('- Capability gaps: address with concrete sample work (model, memo, thesis) attached to the application.');
+    lines.push('');
+    lines.push('## 30-60-90 day plan');
+    lines.push('**First 30 days** — Read the last 12 months of the firm\'s deals and theses; meet every partner; understand the IC bar; ship one polished diligence note.');
+    lines.push('**60 days** — Source 3 deals on the firm\'s thesis; lead diligence on one live deal; deliver one sector deep-dive at the team meeting.');
+    lines.push('**90 days** — Have one deal in IC; own a sourcing channel end-to-end; publish a sector thesis externally with the firm\'s name on it.');
+    lines.push('');
+    lines.push('## Interview prep — capability drills');
+    lines.push('- 60-second LBO at 9× / 5× debt / 5-yr hold to ~22% IRR — see Tool 01 (LBO).');
+    lines.push('- Cap-table math for a Series B with a 1× non-participating preferred — see Tool 03.');
+    lines.push('- Walk a recent deal end-to-end: sourcing → diligence → memo → IC → outcome.');
+    lines.push('- Sector thesis pitch in 3 minutes — use Tool 19 (Industry Thesis Builder) to draft.');
+    lines.push('');
+    lines.push('## Cover-letter draft (rough)');
+    lines.push('');
+    lines.push('Dear ' + (x.firm ? x.firm + ' team' : 'Hiring team') + ',');
+    lines.push('');
+    lines.push('I\'m applying for the ' + (x.jobTitle || 'role') + ' because [one specific reason tied to their public thesis]. Over the last ' + (x.yearsHave||'few') + ' years as ' + (x.curTitle || 'an investor/operator') + ', I\'ve worked on ' + (x.deals || 'several deals') + ' across ' + (x.sectors || 'multiple sectors') + '.');
+    lines.push('');
+    lines.push('The deal I\'d lead with is: ' + ((x.signature||'').trim() || '[your signature deal in 3–5 sentences]'));
+    lines.push('');
+    lines.push('I\'d welcome a conversation. I\'ve attached a sample IC-style memo and a one-pager on a thesis I think fits your portfolio.');
+    lines.push('');
+    lines.push('Best,');
+    lines.push('[Your name]');
+    return lines.join('\n');
+  }
+
+  function render(){
+    const r = compute();
+    document.getElementById('result').style.display = 'block';
+    document.getElementById('score-big').textContent = r.overall + '%';
+    const v = document.getElementById('v-line');
+    if(r.overall >= 80) v.textContent = 'STRONG fit · apply';
+    else if(r.overall >= 60) v.textContent = 'MODERATE fit · apply with tailoring';
+    else if(r.overall >= 40) v.textContent = 'STRETCH · apply only with edge';
+    else v.textContent = 'LOW fit · skip or pursue with warm intro';
+    document.getElementById('v-summary').textContent = (r.x.jobTitle||'Role') + ' · ' + (r.x.firm||'Firm');
+    document.getElementById('bars').innerHTML = Object.entries(r.dims).map(([k,v]) =>
+      '<div class="bar-row"><span>'+k+'</span><div class="bar"><div style="width:'+v+'%"></div></div><span class="cat-pct">'+v+'%</span></div>'
+    ).join('');
+    document.getElementById('flags').innerHTML = flagsFor(r).map(f => '<div class="flag '+f.c+'">'+f.m+'</div>').join('');
+    document.getElementById('kit').textContent = buildKit(r);
+  }
+
+  document.getElementById('btn-score').addEventListener('click', render);
+  document.getElementById('btn-clear').addEventListener('click', () => {
+    if(!confirm('Clear all fields?')) return;
+    PEVC.clear(SLOT);
+    root.querySelectorAll('[data-persist]').forEach(el => { el.value=''; });
+    document.getElementById('result').style.display='none';
+    document.getElementById('kit').textContent='Press "Score & build kit" to assemble.';
+  });
+  document.getElementById('btn-copy').addEventListener('click', () => PEVC.copyText(buildKit(compute())));
+  document.getElementById('btn-export').addEventListener('click', () => PEVC.downloadFile('application-kit.md', buildKit(compute()), 'text/markdown;charset=utf-8'));
+})();
+</script>
+</body></html>

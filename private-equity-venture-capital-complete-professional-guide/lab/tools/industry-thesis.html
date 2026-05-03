@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tool 19 · Industry Thesis Builder · PE/VC Lab</title>
+<meta name="description" content="A seven-section interactive thesis canvas — macro, market architecture, edge, target archetype, value levers, exit market, disqualifiers — with sector-specific templates for HealthTech, FinTech, Defense, Climate, SaaS, DeepTech/AI, and Consumer.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/lab.css">
+<style>
+.section{border:1px solid var(--color-border);border-radius:8px;padding:var(--space-4);margin:var(--space-3) 0;background:var(--color-surface)}
+.section h3{margin:0 0 var(--space-2);font-family:var(--font-display);font-weight:500;font-size:1.1rem}
+.section__num{font-family:var(--font-mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--color-accent-copper)}
+.tpl-row{display:flex;flex-wrap:wrap;gap:.4rem}
+.preview{white-space:pre-wrap;background:var(--color-surface-offset);border:1px solid var(--color-border);border-radius:6px;padding:var(--space-3);font-family:var(--font-mono);font-size:.82rem;line-height:1.6;max-height:540px;overflow:auto}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../../index.html"><span class="brand__mark"></span><span>PE/VC<span class="brand__sub"> &middot; the practitioner&apos;s lab</span></span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../../index.html">Report cover</a>
+  <a class="nav-link" href="../../index.html#chapters">Chapters</a>
+  <a class="nav-link nav-link--active" href="../index.html">Lab</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap">
+  <section style="padding: var(--space-10) 0 var(--space-4);">
+    <div class="eyebrow" style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-accent-copper);">Tool 19 &middot; <a href="../index.html" style="font-family:inherit; letter-spacing:inherit; color:inherit;">the lab</a> &middot; <a href="../../chapters/34-sector-investing.html">Read: Ch. 34 — Sector investing</a></div>
+    <h1 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-2xl); margin: var(--space-2) 0 var(--space-3);">Industry thesis <em>builder</em></h1>
+    <p class="muted" style="max-width: 64ch;">Where Tool 10 fits one page, this fits one investment committee. Seven sections walk a sector thesis from macro tailwind to falsifiable disqualifiers, with pre-loaded templates that mirror published thesis formats.</p>
+  </section>
+
+  <section class="tool-toolbar">
+    <span class="muted tiny" style="margin-right:.4rem;">Templates:</span>
+    <div class="tpl-row">
+      <button class="btn btn--ghost" data-tpl="healthtech" type="button">HealthTech</button>
+      <button class="btn btn--ghost" data-tpl="fintech" type="button">FinTech</button>
+      <button class="btn btn--ghost" data-tpl="defense" type="button">Defense / GovTech</button>
+      <button class="btn btn--ghost" data-tpl="climate" type="button">Climate / Energy</button>
+      <button class="btn btn--ghost" data-tpl="saas" type="button">B2B SaaS</button>
+      <button class="btn btn--ghost" data-tpl="deeptech" type="button">DeepTech / AI</button>
+      <button class="btn btn--ghost" data-tpl="consumer" type="button">Consumer</button>
+      <button class="btn btn--ghost" data-tpl="blank" type="button">Blank</button>
+    </div>
+    <span class="nav-spacer" style="flex:1;"></span>
+    <button class="btn" id="btn-export" type="button">Export Markdown</button>
+    <button class="btn" id="btn-copy" type="button">Copy 1-pager</button>
+  </section>
+
+  <div class="field"><label>Thesis title</label><input type="text" data-persist="title" placeholder="e.g. Embedded finance for vertical SaaS"></div>
+  <div class="field"><label>Author / fund</label><input type="text" data-persist="author" placeholder="e.g. Sutton Capital — VCLabs cohort"></div>
+
+  <div class="section">
+    <div class="section__num">1 · Macro signal</div>
+    <h3>What changed in the world</h3>
+    <p class="muted tiny">A secular driver — demographic, regulatory, technological, or capital-cost shift. Concrete, recent, and dateable.</p>
+    <textarea data-persist="macro" rows="4"></textarea>
+  </div>
+
+  <div class="section">
+    <div class="section__num">2 · Market architecture</div>
+    <h3>How the dollars actually flow</h3>
+    <p class="muted tiny">TAM breakdown, key incumbents, fragmentation vs consolidation stage, distribution chokepoints.</p>
+    <textarea data-persist="market" rows="4"></textarea>
+  </div>
+
+  <div class="section">
+    <div class="section__num">3 · Investment edge</div>
+    <h3>Why us, why now, what others miss</h3>
+    <p class="muted tiny">The non-consensus claim. If everyone agrees, returns have already been priced in.</p>
+    <textarea data-persist="edge" rows="4"></textarea>
+  </div>
+
+  <div class="section">
+    <div class="section__num">4 · Target company profile</div>
+    <h3>What we will and won't fund</h3>
+    <p class="muted tiny">Revenue range, growth rate, margin profile, ownership structure, geography.</p>
+    <textarea data-persist="target" rows="4"></textarea>
+  </div>
+
+  <div class="section">
+    <div class="section__num">5 · Value creation levers</div>
+    <h3>Operational, financial, strategic</h3>
+    <p class="muted tiny">For PE: pricing, GTM, cost-out, M&amp;A. For VC: hiring, GTM motion, network effects.</p>
+    <textarea data-persist="levers" rows="4"></textarea>
+  </div>
+
+  <div class="section">
+    <div class="section__num">6 · Exit market</div>
+    <h3>Who buys, at what multiple</h3>
+    <p class="muted tiny">Strategic acquirers, financial sponsors, IPO comps. Recent transactions and EV/Revenue ranges.</p>
+    <textarea data-persist="exit" rows="4"></textarea>
+  </div>
+
+  <div class="section">
+    <div class="section__num">7 · Disqualifiers</div>
+    <h3>What proves the thesis wrong</h3>
+    <p class="muted tiny">Falsifiable. Specific. The bar is: if X happens, we close the thesis and stop sourcing here.</p>
+    <textarea data-persist="dq" rows="4"></textarea>
+  </div>
+
+  <h3 style="font-family: var(--font-display); font-weight: 500; margin: var(--space-6) 0 var(--space-2);">One-pager preview</h3>
+  <pre class="preview" id="preview">Press "Copy 1-pager" or "Export Markdown" to assemble.</pre>
+
+  <div style="height: var(--space-16);"></div>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span>&copy; 2026 Reports Lab &middot; Report No. 04 &middot; the lab</span>
+  <span><a href="../index.html">&uarr; lab</a> &middot; <a href="../../index.html">&uarr; report cover</a></span>
+</div></footer>
+
+<script src="../js/site.js"></script>
+<script src="../js/tools.js"></script>
+<script>
+(function(){
+  const SLOT = 'industry-thesis';
+  const root = document.querySelector('main');
+  PEVC.bindPersistence(root, SLOT);
+
+  const TEMPLATES = {
+    healthtech: {
+      title:'AI-augmented revenue cycle in US healthcare',
+      author:'',
+      macro:'Hospital margins compressed to ~1–2% post-COVID; payer denial rates climbed to ~12% of submitted claims. CFOs now actively buy outcome-based AI for billing, prior auth, and denials in a way they would not in 2019.',
+      market:'~$140B US RCM market, fragmented across BPO incumbents (R1, Conifer) and point tools. Distribution chokepoints: EHR integrations (Epic, Cerner) and payer EDI rails. Greenfield niches: specialty physician groups and rural systems underserved by enterprise vendors.',
+      edge:'Most investors lump healthtech AI together. The non-consensus claim is that vertical AI workflow vendors with payer-side data network effects will compound faster than horizontal copilots — and command outcome-based pricing that grows with adoption rather than capping with seats.',
+      target:'$2–10M ARR, >120% NRR, ≥60% gross margins, embedded inside an EHR or clearinghouse, founder with payer-side or RCM operating experience.',
+      levers:'Outcome-pricing roll-out (per recovered $); cross-sell from denials to prior auth to coding; payer integrations as a moat; reference design partner deals with health systems for 3-yr contracts.',
+      exit:'Strategic: Optum, Waystar, R1, Athena. Financial sponsors active in HCIT (TPG, Bain Capital). Comps trade 5–9× revenue; outliers (Waystar IPO, Iodine) reach 12×.',
+      dq:'EHR vendors release a free first-party feature with comparable accuracy; CMS regulates outcome-based AI billing; a flagship customer churns publicly with documented failure.'
+    },
+    fintech: {
+      title:'Embedded finance for vertical SaaS',
+      author:'',
+      macro:'BaaS infrastructure (Unit, Increase, Synctera) matured to where any vertical SaaS can issue cards, take payments, or originate loans inside its own UX. SMB customers prefer it over standalone fintech apps for the same reason they prefer payroll inside their HRIS.',
+      market:'~$7T in SMB payments globally; vertical SaaS already reaches a large share of SMBs in trades, healthcare, food service. ARPU lift from embedded finance: ~3–5× existing SaaS ARPU.',
+      edge:'Most investors fund the BaaS rails. The opportunity is one layer up: vertical SaaS that has earned distribution, where payments, lending, and cards become 50–70% of revenue with much higher margins.',
+      target:'Vertical SaaS with $5M+ ARR in a clear vertical, ≥30% market share within their niche, founders willing to absorb regulated complexity (BSA/AML, fair lending).',
+      levers:'Adding payment processing, working-capital lending, deposit accounts; replacing third-party rails with first-party where economics permit; expanding from one financial product to a stack.',
+      exit:'Strategic: Toast, ServiceTitan, Procore patterns; payment processors (Adyen, Global Payments). IPOs at scale ($300M+ revenue). Multiples track combined SaaS + payment economics.',
+      dq:'A vertical bank charter becomes accessible at SMB scale; Fed regulation removes the BaaS sandwich; a major BaaS partner fails and freezes customer funds.'
+    },
+    defense: {
+      title:'Dual-use software for the new industrial base',
+      author:'',
+      macro:'Sustained defense buildup across US/EU and a generational shift in DoD acquisition: SBIR Phase III, OTA contracts, AFWERX/SOFWERX, and Replicator are pulling commercial software faster than the legacy primes can deliver.',
+      market:'~$850B US DoD budget; the addressable software portion is small but growing. Allied markets (UK, AUS, Five Eyes, EU) add another $400B+. Distribution chokepoints: ATO certification, FedRAMP High, ITAR.',
+      edge:'Most VCs avoid defense for cycle-time reasons. The non-consensus claim is that companies with a credible commercial business + a deliberate dual-use wedge can hit defense scale faster than pure-play primes — without depending on a single program of record.',
+      target:'$5M+ ARR in commercial revenue, ≥1 prime contractor relationship, ≥1 program of record win in the last 18 months, US-only or Five-Eyes-only ownership.',
+      levers:'Move from SBIR to OTA to program of record; expand from one service branch to joint; add allied-nation contracts; convert prime sub-relationships to direct primes.',
+      exit:'Strategic: Anduril, Palantir, L3Harris, Lockheed, Northrop. Recent comps: Anduril\'s acquisitions, Shield AI fundraises, Palantir government revenue. Multiples elevated by sticky long-cycle contracts.',
+      dq:'CR-driven budget freeze cuts the addressable program; prime contractor pulls the partnership; ITAR/CFIUS concern blocks foreign commercial expansion.'
+    },
+    climate: {
+      title:'Industrial decarbonization with hardware moats',
+      author:'',
+      macro:'IRA + EU Green Deal funding; corporate net-zero commitments now backed by board-mandated capex; LCOE for solar/storage continues to fall; carbon pricing live in 25+ jurisdictions.',
+      market:'~$200B/yr global cleantech investment. Industrial heat, cement, steel, and shipping are the highest-emission verticals where software alone cannot solve the problem.',
+      edge:'Software-only climate plays will compress to commodity. The edge is hardware + software bundles — proprietary process, proprietary sensor, or proprietary catalyst — backed by IRA tax credits and offtake contracts.',
+      target:'Has shipped a paid pilot at a Tier-1 industrial; pre-orders or LOIs covering ≥2 years of capacity; hardware IP that survives a 10-year reverse-engineering window.',
+      levers:'Stack tax credits (IRA 45V, 45Q); secure long-term offtakes; vertically integrate (own catalyst → own plant → own offtake); partner with EPCs.',
+      exit:'Strategic acquirers: Schneider, Siemens, Honeywell, the IOCs. Public comps: Bloom Energy, Stem, Plug. Multiples discounted vs SaaS but improving with offtake quality.',
+      dq:'IRA repeal materially impairs unit economics; technology fails first commercial-scale demonstration; offtake counterparty defaults.'
+    },
+    saas: {
+      title:'AI-native B2B SaaS displacing legacy categories',
+      author:'',
+      macro:'Foundation models crossed an accuracy and cost threshold in 2023–24 that flips per-seat productivity tools into per-task automation. Buyers now reallocate from headcount to AI vendor budget, not from one SaaS to another.',
+      market:'~$300B+ enterprise software TAM. Legacy categories (CRM, ITSM, customer support, knowledge management) are exposed where the underlying job is text-heavy and rules-based.',
+      edge:'Most VCs are funding new logos; the asymmetric play is replacements — AI-native vendors that displace incumbents in three categories: customer support, RCM, and security operations.',
+      target:'$1–10M ARR, ≥150% NRR, founder with deep enterprise distribution, replacement deals against named incumbents, gross margin ≥70%.',
+      levers:'Pricing transition from seat to outcome; multi-product expansion within an account; channel partnerships with SIs; international expansion via partner network.',
+      exit:'Strategic: Salesforce, ServiceNow, Microsoft, Atlassian. Public comps: Snowflake, MongoDB, ServiceNow. IPO bar elevated to $200M+ revenue with 30%+ growth.',
+      dq:'Hyperscaler bundles a comparable AI-native feature for free; foundation-model price war collapses gross margins; incumbent acquires a credible AI vendor and forecloses distribution.'
+    },
+    deeptech: {
+      title:'Compute, materials, and energy infrastructure',
+      author:'',
+      macro:'AI inference cost is the new constraint on AI scaling. Power, networking, and custom silicon now bottleneck progress more than algorithms. Capital flowing into compute infra at scale not seen since the cloud build-out.',
+      market:'$300B+ global semiconductor TAM, $50B+ data center construction annually, $1T+ utility transmission capex projected by 2035.',
+      edge:'Most VCs over-index on the application layer; deep-tech infra is contrarian for the right reasons (long cycles, capex) but funding curves and customer urgency have flipped.',
+      target:'PhD-led founding team with patentable IP; first paid pilot with a hyperscaler or government lab; clear roadmap to manufacturable scale; capital plan that includes non-dilutive (DOE, DARPA, IRA).',
+      levers:'Stack non-dilutive capital; secure offtake from one hyperscaler; license IP defensively; vertically integrate where margin justifies.',
+      exit:'Strategic: NVIDIA, Intel, AMD, hyperscalers. Public comps: Cerebras, SambaNova trajectories, ASML, TSMC. IPO viable at $500M+ revenue.',
+      dq:'NVIDIA closes the architectural gap; first manufacturing run misses cost targets by >30%; key technical co-founder departs.'
+    },
+    consumer: {
+      title:'AI-native creator and prosumer tools',
+      author:'',
+      macro:'Generative AI cut the cost of producing professional-grade media by ~100×. Solo creators and small studios now ship work that required teams. Distribution platforms (TikTok, Shorts, IG, X) reward velocity, which AI enables.',
+      market:'~$250B creator economy by 2027; pro-sumer software TAM ~$50B; the gap between Adobe-class tools and free apps is where AI-native players will land.',
+      edge:'Most consumer VCs avoid creator tools (perceived saturation). The asymmetric bet is verticalized creator tools: video for podcasters, music for indie game devs, design for Shopify merchants.',
+      target:'B2C with $1M+ ARR, 30-day retention >40%, organic acquisition >50% of new users, founders with creator-community credibility.',
+      levers:'Convert free → paid; introduce marketplace economics (template store, asset marketplace); expand from solo creator to small team SKU.',
+      exit:'Strategic: Adobe, Canva, Shopify, Roblox. Public comps: Canva\'s eventual IPO, Adobe acquisition track record. Consumer software multiples 4–8× revenue.',
+      dq:'Adobe ships a competing AI feature for free inside Creative Cloud; foundation-model pricing collapses moat; platform algorithm change punishes AI-generated content.'
+    },
+    blank: { title:'', author:'', macro:'', market:'', edge:'', target:'', levers:'', exit:'', dq:'' }
+  };
+
+  document.querySelectorAll('button[data-tpl]').forEach(b => b.addEventListener('click', () => {
+    const t = TEMPLATES[b.dataset.tpl]; if(!t) return;
+    if(!confirm('Replace the canvas with the ' + b.dataset.tpl + ' template? This overwrites your current entries.')) return;
+    PEVC.save(SLOT, t);
+    Object.entries(t).forEach(([k,v]) => { const el = root.querySelector('[data-persist="'+k+'"]'); if(el) el.value = v; });
+    refresh();
+  }));
+
+  function build(){
+    const d = PEVC.load(SLOT, {}) || {};
+    const lines = [];
+    lines.push('# ' + (d.title || 'Industry thesis'));
+    if(d.author) lines.push('_' + d.author + '_');
+    lines.push('');
+    const fields = [
+      ['1. Macro signal', 'macro'],
+      ['2. Market architecture', 'market'],
+      ['3. Investment edge', 'edge'],
+      ['4. Target company profile', 'target'],
+      ['5. Value creation levers', 'levers'],
+      ['6. Exit market', 'exit'],
+      ['7. Disqualifiers', 'dq'],
+    ];
+    fields.forEach(([t,k]) => {
+      lines.push('## ' + t);
+      lines.push((d[k] && d[k].trim()) ? d[k].trim() : '_to fill_');
+      lines.push('');
+    });
+    return lines.join('\n');
+  }
+
+  function refresh(){ document.getElementById('preview').textContent = build(); }
+  root.addEventListener('input', refresh);
+  refresh();
+
+  document.getElementById('btn-export').addEventListener('click', () => PEVC.downloadFile('industry-thesis.md', build(), 'text/markdown;charset=utf-8'));
+  document.getElementById('btn-copy').addEventListener('click', () => PEVC.copyText(build()));
+})();
+</script>
+</body></html>
