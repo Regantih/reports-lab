@@ -1,5 +1,5 @@
 What is a 'token' in the context of a frontier LLM?	A vocabulary unit — a subword piece — produced by a learned tokenizer like tiktoken or SentencePiece. Encoded as an integer in the range 0 to ~vocab_size.
-Roughly how many multiplications per generated token on a frontier model?	~10^15 (one quadrillion).
+Roughly how many multiplications per generated token on a frontier model?	~10^11 — a few hundred billion. A full response of a few thousand tokens climbs into the quadrillions (~10^15).
 Roughly how much wall-clock time per token, on a frontier system?	~50 ms.
 Roughly how much energy per generated token?	~1 joule.
 What is the embedding table's shape?	(vocab_size × hidden_dim), e.g. ~100,000 × ~16,000.
