@@ -1,0 +1,10 @@
+How many compute trays are in an NVL72 rack, and how many GPUs per tray?	18 compute trays, each holding 4 Rubin GPUs and 2 Vera CPUs (typically as two Superchips).
+How many NVLink switch trays does an NVL72 rack contain?	9 NVLink switch trays, whose only job is to switch GPU-to-GPU traffic.
+What is the NVL72 rack’s FP4 inference compute?	Approximately 3.6 exaflops.
+What is the total HBM4 memory in an NVL72 rack?	About 20.7 TB (72 GPUs × 288 GB).
+What is the NVL72’s all-to-all NVLink 6 bandwidth?	260 TB/s.
+What is the NVL72 rack’s power draw range?	Roughly 190–230 kW depending on Max Q (efficiency) vs Max P (peak performance) tuning.
+How does the copper midplane reduce tray assembly time?	From roughly 2 hours per tray with conventional cabling to about 5 minutes.
+Why does NVL72 require liquid cooling rather than air cooling?	~200 kW is too much for air — no fan or heat sink can evacuate that power from a single rack with air alone.
+What is the coolant path in the NVL72 liquid cooling loop?	Coolant enters through manifolds at the top, flows to cold plates bolted to each GPU, picks up heat, and returns to a coolant distribution unit (CDU) at the rack base, which routes hot coolant to the building cooling loop.
+What is the Kyber NVL576, and how does its power figure differ from NVL72?	Kyber NVL576 is the next-generation rack NVIDIA has previewed; it pushes past 600 kW — more than double the NVL72’s 190–230 kW range.

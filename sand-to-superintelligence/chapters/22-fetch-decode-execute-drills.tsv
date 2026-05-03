@@ -1,0 +1,10 @@
+Name the three steps in the fetch-decode-execute loop.	Fetch, Decode, Execute.
+What does the program counter hold?	The memory address of the next instruction to execute.
+What is the program counter called on x86? On ARM?	rip on x86; pc on ARM.
+By how much does the PC normally advance after each instruction?	By 4 bytes (the size of a typical instruction). For branches, it advances to the branch target instead.
+How many bytes is a typical instruction?	4 bytes on ARM and most modern ISAs; 1–15 bytes (variable) on x86.
+How many cycles does it take to fetch an instruction from the L1 instruction cache?	About 4 cycles.
+How many cycles does a DRAM fetch take when the instruction is not in any cache?	Around 300 cycles.
+What are µops (micro-operations)?	Simpler internal operations into which x86 CISC instructions are translated during decode, allowing the pipelined core to handle them uniformly.
+What is the von Neumann architecture’s key insight?	Code and data both live in the same memory as bytes; the CPU reads and acts on bytes without distinguishing their origin.
+How many instructions per second does a single CPU core execute?	About 3 billion per second.

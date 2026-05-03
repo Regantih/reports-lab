@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="07-deposition">
-  
+  <section class="learn predict reveal" data-predict data-slug="07-deposition" data-answer-key="c">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — to what pressure (in torr) does a deposition chamber evacuate before growing a thin film?</h2>
+  <p class="learn__hint">Pick the order of magnitude. The chapter will tell you whether you were close.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-07-deposition" value="a"><span>~10<sup>−2</sup> torr (rough vacuum)</span></label><label class="predict__choice"><input type="radio" name="predict-07-deposition" value="b"><span>~10<sup>−4</sup> torr (medium vacuum)</span></label><label class="predict__choice"><input type="radio" name="predict-07-deposition" value="c"><span>~10<sup>−6</sup> torr (high vacuum)</span></label><label class="predict__choice"><input type="radio" name="predict-07-deposition" value="d"><span>~10<sup>−10</sup> torr (ultra-high vacuum)</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>~10<sup>−6</sup> torr</strong> — about a billionth of atmospheric pressure. At these pressures an atom can travel meters before colliding with anything, which is what allows engineers to control which atom lands where on the wafer surface.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 07 of 42</div>
     <div class="ch-header__num">Chapter 07</div>
     <h1 class="ch-header__title">Painting with Atoms</h1>
     <p class="ch-header__dek">CVD, ALD, PVD and the art of thin films</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">~80</div><div class="stat__label">deposition steps per chip</div></div><div class="stat"><div class="stat__num">0.1 <em>nm</em></div><div class="stat__label">ALD thickness control</div></div><div class="stat"><div class="stat__num"><em>10⁻⁶–⁻⁷</em></div><div class="stat__label">torr — typical fab vacuum</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="07-deposition">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you hit each deposition method, name its defining trait in one word: PVD → directional (line-of-sight), CVD → conformal, ALD → self-limiting.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, explain all three deposition dialects to a peer in 5 minutes. For each, cover: what drives the deposition (physics vs. chemistry), the conformality result, and one real-world application on a GPU. Hit the ALD cycle sequence — A pulse, purge, B pulse, purge — unprompted.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A skeptic argues: 'ALD is too slow to be practical — one hour for a single film?' Respond in 90 seconds. Pass: you note that ALD is reserved for films where atomic precision is non-negotiable (gate dielectrics, barrier layers on nm-scale features); that throughput is managed by parallel processing across many chambers; and that no alternative method can achieve sub-nanometer control inside high-aspect-ratio features at 2 nm scales.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Pick one open challenge in thin-film deposition — precursor chemistry for new high-k materials, ALD throughput at sub-2 nm nodes, or PVD seed-layer uniformity for advanced copper interconnects. State, in three sentences, what is currently unsettled and what your defensible take is.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -170,7 +202,74 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 7.1</span><span class="text">PVD, CVD, ALD: three ways to grow a thin film. PVD is fast and directional; CVD is conformal; ALD is exquisitely precise.</span></figcaption>
     </figure>
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">Three deposition dialects — PVD's line-of-sight brute force, CVD's conformal chemistry, and ALD's self-limiting atomic precision — exist because no single method can coat every geometry a modern chip requires.</p>
+</aside>
       
+      
+      <section class="learn retrieval reveal" data-retrieval data-slug="07-deposition">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What is the self-limiting property of ALD, and what does it make possible?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">In <strong>atomic layer deposition</strong>, each precursor pulse saturates every available surface site exactly once — once the surface is full, no more of that precursor can attach. One pulse of A, purge, one pulse of B, purge: each full cycle deposits exactly <strong>one atomic layer</strong>, regardless of geometry or surface variability. This makes sub-nanometer thickness control possible even inside deep, narrow trenches.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">PVD is fast and widely used, yet it fails on high-aspect-ratio features. Why?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">PVD is <strong>line-of-sight</strong>: atoms are sputtered from a target and travel in straight lines to the wafer. On a flat surface this works well. Inside a deep narrow trench the walls shadow the bottom, and atoms from oblique angles cannot reach it. CVD and ALD avoid this because their deposition is governed by chemistry — gas-phase precursors flow into every recess equally — rather than by the geometry of ballistic atom trajectories.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if a team optimizes deposition purely for throughput, choosing PVD for all layers including gate dielectrics on 2 nm-wide trenches?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">PVD cannot coat the bottoms of high-aspect-ratio trenches because it is line-of-sight: atoms travel ballistically and cannot reach trench bottoms at 10:1 aspect ratios. Gate dielectrics must coat every surface of the channel uniformly — a few atomic-layer variation is unacceptable at 2 nm dimensions. Throughput optimization with PVD would produce gate dielectrics with uncoated or thinly coated regions, causing leakage, threshold-voltage variation, and catastrophic yield loss. Only ALD's self-limiting cycle guarantees uniform, sub-nanometer-precise coverage regardless of geometry.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="07-deposition-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

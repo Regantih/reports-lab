@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="38-browser-worker">
-  
+  <section class="learn predict reveal" data-predict data-slug="38-browser-worker" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — on the WebArena benchmark in late 2025, what fraction of tasks did the best computer-use agents complete successfully?</h2>
+  <p class="learn__hint">Pick the range. The chapter gives you the ceiling.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-38-browser-worker" value="a"><span>Under 25%</span></label><label class="predict__choice"><input type="radio" name="predict-38-browser-worker" value="b"><span>50–70%</span></label><label class="predict__choice"><input type="radio" name="predict-38-browser-worker" value="c"><span>80–90%</span></label><label class="predict__choice"><input type="radio" name="predict-38-browser-worker" value="d"><span>Essentially 100%, matching human speed</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>50–70%</strong> on the WebArena benchmark, late 2025 — and the median time per task was <em>several minutes</em>, not seconds. A human achieves the same tasks faster and with a higher success rate. The economic case for the agent is not speed; it is unit cost and the ability to run a thousand tasks in parallel for less than the cost of a single human doing them in series.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 38 of 42</div>
     <div class="ch-header__num">Chapter 38</div>
     <h1 class="ch-header__title">The Browser Becomes the Worker</h1>
     <p class="ch-header__dek">When the agent operates the same software you do</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">Oct 2024</div><div class="stat__label">Anthropic ships Claude with computer-use; OpenAI Operator follows</div></div><div class="stat"><div class="stat__num">~5-15 <em>s</em></div><div class="stat__label">median latency per browser-action step</div></div><div class="stat"><div class="stat__num">~50-70%</div><div class="stat__label">task completion rate on the WebArena benchmark, late 2025</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="38-browser-worker">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you reach the action-dispatch paragraph, name the three browser-control protocols the agent can use: WebDriver, Chrome DevTools Protocol, and OS-level synthetic input on virtual machines.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, walk a peer through the computer-use loop in 5 minutes: screenshot → model picks action → action dispatched via browser protocol → next screenshot → repeat. Cover the three perception modalities fused by reliable agents and the three named failure modes.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A skeptic argues: 'Computer-use agents are a parlour trick — CAPTCHAs and MFA will always stop them.' Respond in 90 seconds. Pass: you acknowledge these are genuine blockers listed in the chapter, then note that the economic value is in the long tail of workflows that lack those protections — expense reports, government filings, insurance claims — and that the case rests on unit cost and parallelism, not on defeating every anti-bot measure.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Pick one open question in computer-use: the ambient telemetry lost when agents replace human users, or the security risks of agents inheriting user permissions. State, in three sentences, what is unsettled and what your defensible take is.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -182,7 +214,74 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 38.1</span><span class="text">The agent perceives the screen as pixels and a DOM, plans a click or keystroke, dispatches the action through a controlled browser, observes the result, and loops. The interface has not changed; the user has.</span></figcaption>
     </figure>
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">A computer-use agent replaces per-site RPA engineering with a general model that reads any layout, but its 50–70% WebArena completion rate and 5–15 second per-step latency mean the economic case rests entirely on parallelism and unit cost, not on speed or accuracy.</p>
+</aside>
       
+      
+      <section class="learn retrieval reveal" data-retrieval data-slug="38-browser-worker">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What are the three modalities of perception that the most reliable computer-use agents fuse?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The rendered <strong>screenshot</strong> (for spatial understanding), the <strong>DOM tree</strong> (for structural information), and the <strong>accessibility tree</strong> as a backup when the DOM is obfuscated. Pixel-only agents fail more often on complex sites because vision is still imperfect at recognizing low-contrast, oddly-styled, or modal-occluded elements.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does a computer-use agent generalise across different websites and forms without per-site engineering — and how does this differ from traditional robotic-process automation?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Traditional RPA relies on brittle, rule-based bots that break whenever the layout changes; every new site requires explicit engineering. A computer-use agent reads a screenshot and plans the next action using a general-purpose model: the same agent that booked a flight can fill out a tax form the next day because both involve reading a layout and clicking the right element. As the chapter puts it: <em>"The model is the engineering."</em></div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if you optimize computer-use agents for task completion rate alone, without verification and human approval gates on consequential actions?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The chapter names three characteristic failure modes — drift (diverging from the goal), loops (retrying a failing action), and confabulated success (claiming completion without actually submitting) — that a completion-rate metric cannot detect because the agent may report success while none of these failures are visible in its output. A <strong>verifier sub-agent</strong> plus a <strong>human approval gate on consequential actions</strong> addresses all three: a verifier can detect that the agent has wandered (drift), that it is retrying a failing action (loops), or that it claims completion without having clicked the final submit button (confabulated success). Hard step caps are a complementary mitigation for loops. Optimizing for completion rate without these gates produces an agent that scores well on benchmarks and fails silently in production, executing irreversible actions on wrong assumptions.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="38-browser-worker-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

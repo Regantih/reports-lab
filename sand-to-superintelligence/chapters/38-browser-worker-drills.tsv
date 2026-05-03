@@ -1,0 +1,9 @@
+When did Anthropic ship Claude with computer-use capability?	October 2024; OpenAI's Operator followed.
+What is the median latency per browser-action step?	~5–15 seconds end-to-end per step.
+What WebArena benchmark completion rate did the best agents achieve in late 2025?	50–70% of tasks.
+Name the three perception modalities a reliable computer-use agent fuses.	Rendered screenshot, DOM tree, and accessibility tree.
+What does the agent inherit by acting as if it were a user in the browser?	Whatever permissions the user it is acting as has — convenient for capability, dangerous for security.
+Name the three characteristic failure modes of computer-use agents.	Drift (diverging from the goal), loops (retrying a failing action), and confabulated success (claiming completion without actually submitting).
+What is the economic case for using an agent when it is slower than a human?	Unit cost and parallelism — one agent can run a thousand tasks simultaneously for less than the cost of a single human doing them in series.
+What does the chapter say is 'genuinely lost' as agents replace human users of UIs?	The ambient telemetry — the subtle signals about user intent that layout and forms could elicit from a human filling them in.
+What kind of companies will be most harmed by the computer-use shift, per the chapter?	Companies whose moat was a hard-to-use UI that customers tolerated — an agent does not tolerate, it just leaves.

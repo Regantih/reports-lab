@@ -1,0 +1,10 @@
+What machine physically touches the die pads to run wafer-level tests?	A wafer prober, which uses a probe card studded with fine gold-plated tungsten or MEMS needles.
+Roughly how many distinct tests does probe run on a complex chip like Rubin?	Hundreds or thousands of distinct tests.
+What are 'scribe lines' on a wafer?	Channels in the silicon between dies along which the dicing saw or laser cuts to singulate the individual chips.
+What is 'yield' in wafer manufacturing?	The fraction of working dies on a finished wafer.
+What is a typical yield range for leading-edge logic at the start of production?	50–80% is typical; early in production, even 50% would not be surprising for a reticle-limit die like Rubin.
+How much does a 300 mm Rubin wafer cost to produce, approximately?	Perhaps $20,000.
+What is the approximate cost per known-good Rubin die?	Around $10,000.
+What happens to a die that fails one functional block but passes otherwise?	It may be binned and sold as a lower-tier product with that block disabled — a recoverable failure rather than a discard.
+What is a 'performance bin' in wafer test?	A category assigned to a passing die based on its maximum reliable clock speed and functional completeness.
+What comes after dicing for a Rubin GPU die, making it only 'halfway' to finished?	Advanced packaging — integrating the GPU die with stacks of high-bandwidth memory on a silicon interposer.

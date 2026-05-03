@@ -1,0 +1,10 @@
+What is the infant-mortality region of the bathtub curve?	The early high-failure-rate period caused by latent defects — marginal solder joints, microscopic voids, contaminated interfaces — that were not caught by probe test.
+At what temperature does burn-in operate?	Typically 125°C, combined with elevated voltage.
+How long does a typical burn-in recipe run?	48 to 168 hours — two to seven days.
+What happens to chips that fail during burn-in?	They are caught and discarded; surviving chips are past the infant-mortality phase and are the ones that ship.
+What does HTOL stand for and what does it validate?	High Temperature Operating Life — it validates the long-term behavior of the chip <em>design</em> (not individual units) by operating a sample population at elevated stress for 1,000+ hours and extrapolating using the Arrhenius equation.
+What reliability target does the chapter cite for AI cluster chips?	Fewer than 1 failure per billion device-hours — less than 1 FIT.
+What does RAS stand for?	Reliability, Availability, and Serviceability.
+Name four things the RAS engine monitors.	ECC errors in HBM, voltage droop on power rails, junction temperatures across the die, and crossbar errors in NVLink (also: bit-flip patterns from cosmic-ray soft errors).
+What can the RAS engine do with a single bad core?	Mark it as bad and exclude it from scheduling without bringing the rest of the chip down.
+How long is a shipped Rubin GPU expected to run at design limits?	Four to six years, twenty-four hours a day, seven days a week.

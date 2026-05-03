@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="13-vera-rubin-superchip">
-  
+  <section class="learn predict reveal" data-predict data-slug="13-vera-rubin-superchip" data-answer-key="d">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — what is the bidirectional bandwidth of the NVLink-C2C chip-to-chip bus that links GPUs and CPU inside the Vera Rubin Superchip?</h2>
+  <p class="learn__hint">Pick the order of magnitude. The chapter will tell you whether you were close.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-13-vera-rubin-superchip" value="a"><span>~64 GB/s (PCIe Gen4 x16 range)</span></label><label class="predict__choice"><input type="radio" name="predict-13-vera-rubin-superchip" value="b"><span>~256 GB/s (PCIe Gen6 x16)</span></label><label class="predict__choice"><input type="radio" name="predict-13-vera-rubin-superchip" value="c"><span>~900 GB/s (roughly NVLink 4 range)</span></label><label class="predict__choice"><input type="radio" name="predict-13-vera-rubin-superchip" value="d"><span>~1.8 TB/s (NVLink-C2C)</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>1.8 TB/s bidirectional — roughly seven times the bandwidth of PCIe Gen6.</strong> PCIe Gen6 at x16 delivers about 256 GB/s total bidirectional (128 GB/s per direction). NVLink-C2C blows past that, running at 1.8 TB/s and at much lower latency, which is what allows the Vera CPU and Rubin GPUs to share a unified memory space without explicit copies.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 13 of 42</div>
     <div class="ch-header__num">Chapter 13</div>
     <h1 class="ch-header__title">The Vera Rubin Superchip</h1>
     <p class="ch-header__dek">Two GPUs, one CPU, 1.8 TB/s between them</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">100 <em>PFLOPS</em></div><div class="stat__label">FP4 compute per superchip</div></div><div class="stat"><div class="stat__num">576 <em>GB</em></div><div class="stat__label">HBM4 per superchip</div></div><div class="stat"><div class="stat__num">1.8 <em>TB/s</em></div><div class="stat__label">NVLink-C2C bandwidth</div></div><div class="stat"><div class="stat__num">17,000</div><div class="stat__label">components per superchip</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="13-vera-rubin-superchip">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you reach the NVLink-C2C section, note the two things it provides beyond raw bandwidth: coherent memory access and the elimination of explicit PCIe copies.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, explain the Vera Rubin Superchip to a peer in 5 minutes. Cover: two Rubin GPUs + one Vera CPU on one substrate → ~17,000 components → NVLink-C2C at 1.8 TB/s → unified 576 GB coherent address space → ~100 PFLOPS FP4. Quote the transistor count per package.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A skeptic asks: ‘Couldn’t you get the same result by putting two GPUs and a CPU in one server box connected by PCIe?’ Respond in 90 seconds. Pass: you explain that PCIe Gen6 tops at 256 GB/s bidirectional — about 7× less than NVLink-C2C — and lacks the coherency layer that lets GPU and CPU share memory without copies; the per-GPU power budget also requires voltage regulators with nanosecond response times that only make sense at module scale.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Pick one open question in multi-die superchip design: heterogeneous process node integration (CPU on N3P vs GPU on N3P), power delivery at 1.4 kW per GPU die, or the limits of die-to-die coherency at increasing scale. State, in three sentences, what is currently unsettled and what your defensible take is.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -173,7 +205,74 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 13.1</span><span class="text">The Vera Rubin Superchip module: two Rubin GPUs flanking one Vera CPU, with NVLink-C2C interconnects providing 1.8 TB/s of chip-to-chip bandwidth in each direction.</span></figcaption>
     </figure>
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">The Vera Rubin Superchip earns the name by coupling two GPUs and a CPU through NVLink-C2C at 1.8 TB/s with cache coherency — the bandwidth gap over PCIe is real, but the coherency protocol is what makes the unified address space possible.</p>
+</aside>
       
+      
+      <section class="learn retrieval reveal" data-retrieval data-slug="13-vera-rubin-superchip">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">How many components does a complete Vera Rubin Superchip module contain, and how does the chapter put that count in perspective?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Roughly <strong>seventeen thousand individual components</strong> — approximately five times the part count of a smartphone. The chapter compares the finished module to a Boeing 737 cockpit in component count.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">What makes the Vera Rubin module a <em>superchip</em> rather than just a packaged GPU, and why does the CPU’s presence matter?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The CPU and GPU memory are <strong>coherent</strong>: the CPU can address the GPU’s HBM directly without copying data across PCIe, eliminating one of the oldest tax penalties in heterogeneous computing. This unified address space — 576 GB of HBM plus the CPU’s DDR5 — is only possible because NVLink-C2C provides both the bandwidth and the coherency protocol inside the module. A packaged GPU alone cannot offer this.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if you optimize chip-to-chip interconnect purely for raw bandwidth — increasing a hypothetical standard to 800 GB/s — without adding cache coherency?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Bandwidth is only part of the argument. Without coherency, the CPU and GPUs cannot share a single address space — programming across the link requires explicit data staging and copy operations that the 800 GB/s would need to carry. PCIe is already a non-coherent bus in standard deployments; regardless of bandwidth, it forces software-managed data movement. NVLink-C2C’s architectural advantage for unified-memory workloads would remain intact even if its raw bandwidth lead narrowed, because coherency is not a function of link speed.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="13-vera-rubin-superchip-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

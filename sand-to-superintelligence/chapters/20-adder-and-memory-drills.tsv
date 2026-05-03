@@ -1,0 +1,10 @@
+What are the three inputs and two outputs of a full adder?	Inputs: two operand bits and a carry-in. Outputs: sum and carry-out.
+How many NAND gates does a full adder require?	Nine NAND gates.
+What is a ripple-carry adder?	A chain of full adders in which the carry-out of bit <em>i</em> feeds the carry-in of bit <em>i+1</em>; the answer ripples through bit by bit.
+What is the ALU?	Arithmetic Logic Unit — the collection of adders, subtractors, shifters, bitwise logic units, and comparators that does a CPU’s arithmetic in one clock cycle.
+What is an SR latch built from?	Two cross-coupled NAND gates — each gate’s output feeds the other gate’s input.
+How many transistors does an SR latch use in CMOS?	Eight — four transistors per NAND gate, two gates.
+How frequently must DRAM be refreshed, per the JEDEC spec?	Within every 64 milliseconds.
+How many architectural general-purpose registers does x86-64 have?	16 (rax, rbx, rcx, …).
+How many architectural general-purpose registers does ARM64 have?	31 (x0 through x30; x31 is reserved as zero or stack pointer).
+Why are registers the fastest memory in the computing universe?	They live next to the ALU, are built from cross-coupled NANDs, and are accessed in a single clock cycle — a third of a nanosecond at 3 GHz.

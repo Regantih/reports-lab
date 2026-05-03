@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="27-compilers">
-  
+  <section class="learn predict reveal" data-predict data-slug="27-compilers" data-answer-key="c">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — how many distinct translation stages lie between a line of Python source code and the electrons that execute it?</h2>
+  <p class="learn__hint">Pick the order of magnitude. The chapter will tell you whether you were close.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-27-compilers" value="a"><span>2–3</span></label><label class="predict__choice"><input type="radio" name="predict-27-compilers" value="b"><span>4–5</span></label><label class="predict__choice"><input type="radio" name="predict-27-compilers" value="c"><span>6–7</span></label><label class="predict__choice"><input type="radio" name="predict-27-compilers" value="d"><span>10+</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>7 stages</strong> — source code, abstract syntax tree, bytecode/IR, assembly, machine code, micro-ops, and finally electrons. Six of those transformations happen in software before the program ever runs; the seventh — machine code decoded into micro-ops — happens inside the CPU itself at runtime, billions of times a second.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 27 of 42</div>
     <div class="ch-header__num">Chapter 27</div>
     <h1 class="ch-header__title">The Translation Stack</h1>
     <p class="ch-header__dek">Python to bytecode to LLVM to silicon</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">7</div><div class="stat__label">stages of translation between Python and silicon</div></div><div class="stat"><div class="stat__num">LLVM <em>IR</em></div><div class="stat__label">the universal middle language</div></div><div class="stat"><div class="stat__num">~3-5 <em>µops</em></div><div class="stat__label">what one x86 instruction often becomes</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="27-compilers">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you reach the seven-layer list, recite all seven layers in order before continuing.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, walk a peer through the journey of <code>print("hello")</code> in 5 minutes. Hit: source → tokens → AST → bytecode or IR → assembly → machine code → µops. Name LLVM IR and the linker step unprompted.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A skeptic asks: ‘Isn’t Python just interpreted — it doesn’t go through all those stages, right?’ Respond in 90 seconds. Pass: you note that CPython parses source to an AST, compiles the AST to bytecode, and then the virtual machine interprets that bytecode one instruction at a time — Python has the first three stages, just not the compiled-language back-end stages; and tools like Cython or PyPy add more.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Pick one open question in compilation — ML-guided compiler optimization, ahead-of-time vs. JIT tradeoffs for LLM inference kernels, or IR design for heterogeneous targets (CPU + GPU). State, in three sentences, what is currently unsettled and what your defensible take is.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -177,7 +209,80 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 27.1</span><span class="text">The translation stack. A short Python program descends through bytecode, IR, assembly, machine code, and finally micro-ops — each layer narrowing the gap between human intent and electron motion.</span></figcaption>
     </figure>
-      
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">A compiler’s real work happens at the IR stage — machine-independent, shareable across languages — which is why Clang, Rust, and Swift all share one optimizer, and why skipping that stage would force each language to solve the same optimization problems separately.</p>
+</aside>
+      <aside class="learn heuristic reveal" data-heuristic>
+  <div class="heuristic__eyebrow">Rule of thumb</div>
+  <p class="heuristic__body">Shipping a product where binary size and startup time matter (mobile, embedded)? Use -O2 with LTO enabled. Maximum single-thread throughput for a known workload? Use -O3 with PGO — the profile run is worth the build complexity. Debugging or fuzzing? Use -O0 — optimizations obscure the code’s structure and make crashes harder to reproduce.</p>
+</aside>
+      <aside class="learn limits reveal" data-limits>
+  <div class="limits__eyebrow">What this chapter does NOT tell you</div>
+  <ul class="limits__list"><li>Does not tell you how profile-guided optimization (PGO) feeds runtime branch and call frequency data back into the compiler’s cost model, or why the IR-level heuristics are wrong for code the compiler has never seen run.</li><li>Does not explain how link-time optimization (LTO) extends IR-level analysis across translation unit boundaries, or why build systems fight LTO adoption despite its measurable gains.</li><li>Does not address how ML-guided compiler passes (e.g., MLGO for inlining) differ from classical heuristic optimization, or whether learned cost models generalize across microarchitecture generations.</li></ul>
+</aside>
+      <section class="learn retrieval reveal" data-retrieval data-slug="27-compilers">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What is LLVM IR, and which languages use it?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body"><strong>LLVM IR</strong> is a typed, register-based intermediate representation that has become the lingua franca of modern compilers. Clang (C/C++), Rust, Swift, and Kotlin Native all emit LLVM IR. It is where most optimization happens — inlining, dead-code elimination, loop unrolling, vectorization — all before the compiler knows whether it will target x86, ARM, or RISC-V.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why do modern x86 CPUs decode instructions into micro-ops (µops), rather than executing the instruction set directly?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">x86 instructions are variable-length and often complex — a single <code>ADD [memory], reg</code> involves a load, an add, and a store. Decoding each instruction into simpler, fixed-width micro-ops lets the CPU schedule them out-of-order, execute them in parallel on multiple execution ports, and retire results in original program order. This is what allows modern CPUs to claim more than one instruction per cycle; they are actually executing many micro-ops per cycle while presenting the illusion of an in-order machine.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if a language compiler skips the IR stage and compiles directly from AST to assembly — what specific optimizations become much harder or impossible?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">IR-level optimizations are machine-independent: inlining across translation units, eliminating dead code that spans multiple source constructs, hoisting loop-invariant expressions, auto-vectorization, and whole-program alias analysis. Done at the AST level these are harder because the tree structure resists linear analysis; done at the assembly level they are architecture-specific and must be re-implemented per target. The IR is also the stage where multiple front-ends (Clang, Rust, Swift) share a single optimizer — bypassing it would require each language to reimplement that optimization work independently, at the cost of correctness, portability, and the years of engineering already invested in LLVM’s passes.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="27-compilers-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

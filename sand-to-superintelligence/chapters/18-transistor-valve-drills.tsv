@@ -1,0 +1,10 @@
+What does MOSFET stand for?	Metal-oxide-semiconductor field-effect transistor.
+What are the four physical regions of a MOSFET?	Source, channel, drain, and gate.
+What is the doping type of the source and drain vs. the channel in an n-channel MOSFET?	Source and drain are heavily n-doped (full of free electrons); the channel between them is p-doped (full of holes, empty of free electrons).
+What is the approximate threshold voltage of a modern MOSFET?	Around 0.4–0.7 V.
+How thick is the gate oxide in a leading-edge MOSFET?	Roughly 1 nm — about three atoms of silicon dioxide stacked on top of each other.
+How fast does a modern MOSFET switch?	Around 1 picosecond (10⁻¹² seconds).
+How much energy does it take to flip a modern transistor once?	Around 10⁻¹· joules — small enough to flip it a hundred trillion times on the energy of a single calorie.
+How many transistors are in a single Rubin GPU package?	On the order of 336 billion.
+What is the approximate gate length (channel length) in a leading-edge node?	Around 15 nanometers, even though the node is marketed as “3 nm” or “2 nm” — the naming convention is now marketing, not measurement.
+What did the FinFET solve that the planar MOSFET could not below 22 nm?	The gate could no longer control the channel in a planar design; electrons leaked when the transistor was off. FinFET wraps the gate around three sides of a vertical fin for better electrostatic grip.

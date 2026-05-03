@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="15-burn-in">
-  
+  <section class="learn predict reveal" data-predict data-slug="15-burn-in" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — how long does a typical semiconductor burn-in recipe run?</h2>
+  <p class="learn__hint">Pick the order of magnitude. The chapter will tell you whether you were close.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-15-burn-in" value="a"><span>1–4 hours</span></label><label class="predict__choice"><input type="radio" name="predict-15-burn-in" value="b"><span>48–168 hours (two to seven days)</span></label><label class="predict__choice"><input type="radio" name="predict-15-burn-in" value="c"><span>500–1,000 hours (three to six weeks)</span></label><label class="predict__choice"><input type="radio" name="predict-15-burn-in" value="d"><span>Several months of continuous operation</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>48–168 hours</strong> — two to seven days — at elevated temperature (125°C) and elevated voltage. This accelerates failure mechanisms by orders of magnitude, so a defect that would have failed at month three of normal operation now fails on day two of burn-in, where it can be caught and discarded before shipping.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 15 of 42</div>
     <div class="ch-header__num">Chapter 15</div>
     <h1 class="ch-header__title">Burn-In and Reliability</h1>
     <p class="ch-header__dek">Stress-testing chips into honesty</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">125<em>°C</em></div><div class="stat__label">burn-in temperature</div></div><div class="stat"><div class="stat__num">48–168 <em>hrs</em></div><div class="stat__label">burn-in duration</div></div><div class="stat"><div class="stat__num">&lt;1 <em>FIT</em></div><div class="stat__label">target failures per billion device-hours</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="15-burn-in">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you hit the bathtub curve description, name the three regions: infant mortality, useful life, and wear-out — and identify which region burn-in screens out.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, explain burn-in and HTOL to a peer in 5 minutes. Cover: infant mortality → latent defects → 125°C elevated voltage 48–168 hrs → failed devices discarded → survivors ship → HTOL validates design (not individual chips) using Arrhenius extrapolation to <1 FIT target.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A skeptic says: ‘Burn-in is wasteful — you’re stressing good chips unnecessarily.’ Respond in 90 seconds. Pass: you explain that burn-in operates in the infant-mortality acceleration regime, not the wear-out regime; the Arrhenius model shows that the hours consumed correspond to only days of useful-life equivalent at operating temperature. The cost of screening is far lower than the cost of a $50M cluster failure caused by an early-dying chip.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Pick one open question in chip reliability: the applicability of classical Arrhenius models to FinFET and gate-all-around transistors where failure mechanisms differ from planar CMOS, the limits of ECC in HBM at high soft-error rates from cosmic rays in high-altitude data centers, or the predictive accuracy of RAS pre-failure signals. State, in three sentences, what is currently unsettled and what your defensible take is.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -139,7 +171,77 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 15.1</span><span class="text">The reliability bathtub curve. Burn-in screens out the early-failure region on the left, ensuring that the chips that ship are already past infant mortality.</span></figcaption>
     </figure>
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">Burn-in screens infant-mortality failures by stressing chips beyond operating conditions for days — the Arrhenius acceleration means the hours consumed correspond to only days of useful-life equivalent, not years.</p>
+</aside>
+      <aside class="learn heuristic reveal" data-heuristic>
+  <div class="heuristic__eyebrow">Rule of thumb</div>
+  <p class="heuristic__body">AI cluster chip requiring <1 FIT? Run full 48–168 hour burn-in at 125°C with elevated voltage. Consumer GPU with standard reliability spec? Shorter burn-in or statistical HTOL sampling. Chips already beyond infant-mortality phase in field returns? Wear-out analysis, not additional burn-in.</p>
+</aside>
       
+      <section class="learn retrieval reveal" data-retrieval data-slug="15-burn-in">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What temperature are chips exposed to during burn-in, and what reliability target does the chapter state for chips destined for AI clusters?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Burn-in runs at <strong>125°C</strong> (elevated voltage, 48–168 hours). The long-term reliability target is <strong>fewer than 1 failure per billion device-hours</strong> (less than 1 FIT), validated by HTOL testing with the Arrhenius equation for thermal acceleration.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">What is the bathtub curve, and why does burn-in specifically address only the left side of it?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The <strong>bathtub curve</strong> plots failure rate against time in service: high at the start (infant mortality), low and flat through useful life, rising again at the end (wear-out from electromigration, gate-oxide degradation). Burn-in addresses only the infant-mortality region by forcing latent defects — marginal solder joints, microscopic copper voids, contaminated interfaces — to fail quickly under accelerated stress. Surviving chips are statistically past the early-failure phase. The flat useful-life region and the wear-out region are addressed by HTOL qualification and long-term design margins, not by burn-in.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if a fleet operator optimizes GPU reliability management by skipping burn-in — relying on RAS monitoring alone to catch bad units in the field?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Without burn-in, latent-defect chips ship and fail during the infant-mortality window inside the cluster. Each failure causes an unplanned GPU replacement event — costly in cluster downtime and human intervention. RAS can self-heal incrementally — fencing bad cores, migrating workloads before HBM failure — but it cannot prevent the early failure itself, only manage its aftermath. At tens-of-thousands-of-GPU scale, the rate of unplanned early failures without burn-in would exceed the RAS system’s capacity to absorb them gracefully, collapsing availability SLAs that the <1 FIT target was designed to support.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="15-burn-in-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

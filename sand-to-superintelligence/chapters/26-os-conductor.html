@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="26-os-conductor">
-  
+  <section class="learn predict reveal" data-predict data-slug="26-os-conductor" data-answer-key="c">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — roughly how many processes does a modern desktop OS run at idle?</h2>
+  <p class="learn__hint">Pick the order of magnitude. The chapter will tell you whether you were close.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-26-os-conductor" value="a"><span>~10</span></label><label class="predict__choice"><input type="radio" name="predict-26-os-conductor" value="b"><span>~100</span></label><label class="predict__choice"><input type="radio" name="predict-26-os-conductor" value="c"><span>~1,000</span></label><label class="predict__choice"><input type="radio" name="predict-26-os-conductor" value="d"><span>~10,000</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>~1,000+ processes</strong> on a modern desktop at idle. A busy server runs many more. All of them believe — courtesy of the OS — that they each have a CPU to themselves and all of memory, even though the hardware has just a handful of cores and a finite, shared DRAM.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 26 of 42</div>
     <div class="ch-header__num">Chapter 26</div>
     <h1 class="ch-header__title">The OS as Conductor</h1>
     <p class="ch-header__dek">Processes, virtual memory, and the illusion of plenty</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">~1,000+</div><div class="stat__label">processes on a modern desktop at idle</div></div><div class="stat"><div class="stat__num">4 <em>KB</em></div><div class="stat__label">the standard memory page</div></div><div class="stat"><div class="stat__num">~100 <em>ns</em></div><div class="stat__label">cost of a system call on modern Linux</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="26-os-conductor">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you hit the three OS illusions, name all three before moving on.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, explain virtual memory to a peer in 5 minutes. Cover: each process sees its own address space → MMU walks page tables → 4 KB pages → page fault → kernel allocates/swaps. Name the 128 TB user VAS figure unprompted.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A skeptic asks: ‘If a context switch costs only a few microseconds, why do high-performance systems go to such lengths to avoid them?’ Respond in 90 seconds. Pass: you note that even a few microseconds, multiplied by thousands of switches per second per core, adds up; but the deeper cost is TLB and cache pollution — a context switch can evict the hot working set of the previous process, causing cache misses for the incoming one.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Pick one open question in OS design — unikernel tradeoffs, io_uring vs. traditional syscall overhead, or scheduler fairness in heterogeneous CPU topologies. State, in three sentences, what is currently unsettled and what your defensible take is.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -187,7 +219,77 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 26.1</span><span class="text">Virtual memory. Each process sees a clean, contiguous address space. The MMU and page tables translate, on every access, to scattered physical pages — and to the disk if needed.</span></figcaption>
     </figure>
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">The OS conducts a thousand processes at once by giving each three illusions — private CPU, private memory, and safety from its neighbours — all maintained through context switches, page tables, and system call boundaries that are fast enough to be invisible.</p>
+</aside>
       
+      <aside class="learn limits reveal" data-limits>
+  <div class="limits__eyebrow">What this chapter does NOT tell you</div>
+  <ul class="limits__list"><li>Does not tell you how the Linux scheduler handles heterogeneous CPU topologies (P-cores and E-cores on Intel, or NUMA nodes on servers), where the naïve CFS fairness assumption breaks down.</li><li>Does not explain how io_uring’s submission-queue model reduces system-call overhead for high-throughput I/O, or why the ~100 ns system-call cost becomes a bottleneck at millions of calls per second.</li><li>Does not address how containers (cgroups + namespaces) create the appearance of separate OS instances without the overhead of full virtual machines, or where that boundary leaks.</li></ul>
+</aside>
+      <section class="learn retrieval reveal" data-retrieval data-slug="26-os-conductor">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">How large is the virtual address space available to user code on Linux x86-64 with 4-level paging?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body"><strong>128 TB</strong> for user code on Linux x86-64 with 4-level paging. Each process sees its own private, contiguous address space of that size, even though physical RAM is a few dozen gigabytes shared by all processes.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does a system call cost more than an ordinary function call, even though modern hardware makes the trap fast (~100 ns)?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">A system call crosses the user-space/kernel-space boundary via a special CPU instruction (<code>syscall</code> on x86-64, <code>svc</code> on ARM). This flushes the CPU pipeline, switches privilege levels, and changes which page tables are in effect. Even at ~100 ns the overhead is significant because the cross must be made for every interaction with disks, network sockets, new processes, or page-table manipulation — operations that cannot be safely delegated to user code.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if you optimize OS memory management for maximum sharing — mapping all parent and child pages read-write to the same physical memory after fork() — without copy-on-write protection?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">When a process calls fork(), the OS creates a new process with page-table entries pointing to the same physical pages as the parent. Without copy-on-write, a write by either process immediately corrupts the other’s view of that page. Shared mutable state across process boundaries eliminates the OS’s safety illusion — the core guarantee that one process cannot damage another’s address space. The copy-on-write mechanism avoids this: pages are marked read-only and shared until a write actually occurs, at which point the MMU raises a page fault, the kernel allocates a new physical page, copies the original content, and updates the faulting process’s page table. Only pages actually written diverge; everything else stays shared and the safety illusion is preserved.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="26-os-conductor-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

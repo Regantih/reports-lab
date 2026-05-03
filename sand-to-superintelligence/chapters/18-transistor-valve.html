@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="18-transistor-valve">
-  
+  <section class="learn predict reveal" data-predict data-slug="18-transistor-valve" data-answer-key="c">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — roughly how many transistors are packed into a single Rubin GPU package?</h2>
+  <p class="learn__hint">Pick the order of magnitude. The chapter will tell you whether you were close.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-18-transistor-valve" value="a"><span>~10<sup>9</sup> (a billion)</span></label><label class="predict__choice"><input type="radio" name="predict-18-transistor-valve" value="b"><span>~80 billion (~8 × 10<sup>10</sup>)</span></label><label class="predict__choice"><input type="radio" name="predict-18-transistor-valve" value="c"><span>~336 billion (~3.4 × 10<sup>11</sup>)</span></label><label class="predict__choice"><input type="radio" name="predict-18-transistor-valve" value="d"><span>~10<sup>13</sup> (ten trillion)</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>336 billion transistors</strong> in a single Rubin GPU package. That number, cited in the chapter from NVIDIA’s own announcement, is what makes modern AI economically possible: every one of those transistors switches in roughly 1 picosecond, on the energy of about 10<sup>−17</sup> joules — small enough that a transistor can be flipped a hundred trillion times on the energy of a single calorie.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 18 of 42</div>
     <div class="ch-header__num">Chapter 18</div>
     <h1 class="ch-header__title">The Transistor as a Valve</h1>
     <p class="ch-header__dek">How a gate voltage opens a channel</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">~0.7 <em>V</em></div><div class="stat__label">threshold voltage</div></div><div class="stat"><div class="stat__num">~10<sup>-12</sup> <em>s</em></div><div class="stat__label">switching time</div></div><div class="stat"><div class="stat__num">~80 <em>billion</em></div><div class="stat__label">transistors in one Rubin GPU</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="18-transistor-valve">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you reach the MOSFET structure, name the four physical regions: source, channel, drain, and gate. Note that the gate is separated from the silicon by silicon dioxide.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, walk a peer through how a MOSFET turns on in 5 minutes. Cover: p-doped channel (no free electrons), positive gate voltage, field through the oxide, surface inversion to n-type, electron sheet bridging source to drain, current flows. Mention the threshold voltage (~0.4–0.7 V) and what happens when gate returns to zero.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A skeptic says: “If the gate oxide is only one nanometer thick, how does it not just break down immediately?” Respond in 90 seconds. Pass: you explain that modern chips use high-k dielectric materials (hafnium oxide) instead of pure SiO₂, which allows a physically thicker insulating layer while maintaining the same electric-field strength — same field, fewer tunneling electrons.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Pick one open question in transistor scaling — gate-all-around nanosheets, complementary FETs (CFET), or 2D-material channels (MoS₂). State, in three sentences, what is physically unsettled and what your defensible view is on which approach matters most by 2030.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -177,7 +209,74 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 18.1</span><span class="text">Cross-section of an n-channel MOSFET. A positive voltage on the gate inverts the surface of the p-substrate, creating a thin sheet of electrons that bridges source and drain.</span></figcaption>
     </figure>
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">The MOSFET’s gate controls a large current by applying a small voltage across an insulator — that insulted amplification is why 336 billion of them fit in a single package and why the gate oxide thickness, now ~1 nm, is the hardest engineering constraint in the entire stack.</p>
+</aside>
       
+      
+      <section class="learn retrieval reveal" data-retrieval data-slug="18-transistor-valve">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What is the threshold voltage of a modern MOSFET, and what physically happens when the gate voltage crosses it?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Around <strong>0.4–0.7 V</strong> in modern devices. When the gate voltage rises past this value, the surface layer of the p-doped silicon below the gate <em>inverts</em> — it becomes locally n-type. A thin continuous sheet of electrons, only a few nanometers thick, appears and bridges source to drain. The transistor turns on.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why is the gate described as ‘persuading’ rather than passing current? What is gained by that distinction?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The gate is separated from the silicon channel by a layer of silicon dioxide barely thicker than a single layer of atoms — an insulator. No current flows through the gate itself; the electric field alone inverts the channel. Power is gained because the persuasion (a voltage on an insulated gate) controls a vastly larger flow of electrons through the channel. This is the amplification principle: a tiny signal controls a large one without expending energy in the controlling element.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if you optimize gate oxide thinning for electrostatic control of the channel alone, without accounting for quantum tunneling?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">At ~1 nm, the oxide is so thin that electrons quantum-mechanically tunnel through it, leaking current even when the transistor is supposed to be off. Optimizing purely for tighter field control by making the oxide thinner eventually inverts the gain: leakage power rises faster than switching performance improves, and the off-state stops being off. Below 22 nm, the planar MOSFET stopped working adequately for this reason. The industry moved to the <strong>FinFET</strong>, which wraps the gate around three sides of a vertical silicon fin, giving the gate better electrostatic control of the channel without requiring a thinner oxide. At 2 nm, the newer <strong>gate-all-around (GAA)</strong> transistor wraps the gate around all four sides of stacked silicon nanosheets for even tighter control.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="18-transistor-valve-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

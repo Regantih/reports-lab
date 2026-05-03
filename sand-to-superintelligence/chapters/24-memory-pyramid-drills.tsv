@@ -1,0 +1,10 @@
+What is the approximate latency of a register access?	~1 cycle.
+What is the approximate latency of an L1 cache access?	~3–4 cycles.
+What is the approximate latency of an L3 cache access?	~40 cycles.
+What is the approximate latency of a DRAM access?	~300 cycles — the 300× cliff the pyramid exists to hide.
+What size range does L3 cache span, and what qualifies the two ends?	8–64 MB: consumer CPUs at the low end (8–32 MB), server-class parts at the high end.
+What is a cache line, and how big is it on x86?	The unit of data movement between cache levels — 64 bytes on x86 and most ARM; 128 bytes on Apple Silicon.
+What is temporal locality?	The tendency of programs to reuse recently accessed memory locations soon after accessing them.
+What is spatial locality?	The tendency of programs to access memory addresses near recently accessed ones.
+What does the TLB cache, and what is a typical L1 TLB size?	Virtual-to-physical address translations. The L1 TLB often holds around sixty-four entries.
+What is the memory wall?	The growing gap between CPU speed and DRAM speed — documented by Hennessy and Patterson as roughly doubling every few years through the 1990s.

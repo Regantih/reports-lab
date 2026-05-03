@@ -1,0 +1,10 @@
+What is a token, as used by inference providers?	The smallest unit a language model deals with — a subword piece produced by a tokenizer, from a vocabulary of around 100,000 units.
+How many characters is one English token, roughly?	Roughly four characters, or three quarters of a word.
+What is the context window of the long-context Claude Sonnet 4.5 and 4.6 settings?	Up to about one million tokens.
+What context window size do some Gemini variants support?	Two million tokens.
+What is the median price of one million input tokens, as of end of 2025?	~$0.30.
+How many dimensions does an OpenAI text-embedding-3 vector have?	3,072 dimensions (with 768 and 1,536 as common alternatives).
+What geometric operation measures semantic similarity between two embeddings?	Cosine similarity or inner product (dot product) of the two vectors.
+Why are output tokens more expensive to produce than input tokens?	Output requires running the full forward pass token by token; input is processed in a single parallel prefill pass.
+What are the three objects the chapter says travel on the fifth wire?	Tokens, embeddings, and structured calls (function/tool calls conforming to JSON schemas).
+What physical transport layer does the AI API wire run on?	Standard TCP/HTTPS/HTTP2-or-3 and JSON — no new physical layer is required.

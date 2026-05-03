@@ -1,0 +1,9 @@
+By roughly how much did frontier-class inference cost per token fall from 2023 to 2026?	~95% — from ~$30/M tokens to under $2/M tokens.
+How many models does a typical production routing layer choose between?	~12–20 models.
+What share of API traffic at major aggregators went through routers by 2026?	~30% of API traffic at major aggregators.
+Name three commercial routing-layer products mentioned in the chapter.	OpenRouter, major cloud gateway products (Bedrock, Vertex, Azure AI), and specialist routers (cheaper-for-bulk, faster-for-real-time, regulated-for-finance).
+What historical analogy does the chapter draw to explain how the routing layer captures surplus?	Airline GDS systems in the 1980s, payment-card networks, and stock exchanges — intermediaries that aggregated and standardized supply.
+Name three open-weight inference specialists mentioned in the chapter.	Together, Fireworks, Replicate, and Groq (any three of these four).
+What fraction of frontier price does a mid-tier model typically cost, per the chapter's cost-curve description?	~30% of frontier price for ~80–90% of the quality on most tasks.
+How did frontier vendors behave on pricing when a competitor cut rates on a mid-tier model?	They typically responded within weeks — Haiku, smaller GPT-5 variants, and Gemini Flash all leapfrogged each other on price-per-million-tokens through 2024–2025.
+What is the aggregate cost reduction a sophisticated buyer can achieve through multi-model arbitrage?	3–10× cost reduction over naive single-model deployment for the same task quality.

@@ -1,0 +1,10 @@
+What does 'BEOL' stand for?	Back-end-of-line — the wiring layers above the transistors.
+How many metal layers does a Rubin-class GPU's BEOL contain?	Fifteen or more.
+How long would all the copper in a single GPU be if laid end to end?	Tens of kilometers.
+What metal did copper replace for chip wiring, and roughly when?	Aluminum, replaced by IBM's copper interconnect process in the late 1990s.
+Why does copper conduct better than aluminum?	Copper's resistivity is about 40% lower, and it resists electromigration better under high current density.
+Why can't copper be plasma-etched like aluminum?	Copper does not form volatile etch byproducts under standard plasma chemistries — it cannot be cleanly removed that way.
+What barrier metal is deposited before the copper seed layer, and what does it prevent?	Tantalum nitride (TaN) — it prevents copper from diffusing into surrounding silicon or dielectric materials.
+What is CMP, and what role does it play in dual-damascene?	Chemical-mechanical polishing — it removes the excess copper deposited above the trenches, leaving only the inlaid wires.
+What is the wire pitch of the lowest metal layers (M1/M2) at a leading-edge node?	Perhaps ~30 nm.
+What is 'low-k dielectric' and why is it used between metal layers?	A dielectric with relative permittivity below ~2.5 (versus 3.9 for SiO₂), used to reduce capacitive coupling between adjacent wires and speed signal propagation.

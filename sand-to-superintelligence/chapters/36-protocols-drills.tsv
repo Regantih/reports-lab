@@ -1,0 +1,10 @@
+When did Anthropic open-source MCP?	November 2024.
+What does MCP stand for?	Model Context Protocol.
+How many MCP server integrations had the registry grown to by end of 2025?	Thousands in the registry, with community directories listing tens of thousands more.
+What transport does MCP run over?	Standard JSON-RPC; it is transport-agnostic.
+What 1990s standard does the chapter compare MCP to, and why?	ODBC — a standard adapter layer that decouples capability from vendor, with comparable network effects.
+What is Google's A2A protocol, and what is its status at end of 2025?	Agent2Agent, announced April 2025 — a JSON-over-HTTPS standard for agent-to-agent task delegation; production deployments were still scarce.
+Name the four trust failures the chapter says exist in the naive agent-API setup.	Agent hallucination of API responses, tool lying about actions, insufficient or excessive user permissions, and transport tampering.
+Name the four things the chapter says cross-org machine-to-machine trust requires.	Identity, capability description, audit trail, and recourse.
+What does the chapter say about how cross-agent identity is handled today?	Mostly with bearer tokens and API keys, which are leaky; decentralized identifiers are a candidate but nothing is mainstream.
+What historical analogy does the chapter use for the current state of agent protocol competition?	HTTP around 1992 — multiple proposals, real interest, no consensus, most cross-agent traffic through whatever proprietary glue is cheapest.

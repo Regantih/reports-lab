@@ -1,0 +1,10 @@
+What does RAG stand for?	Retrieval-augmented generation.
+What is the vector lookup latency at billion-scale that the chapter cites?	Under 10 ms.
+What is the approximate cost to embed one million tokens with text-embedding-3-small?	~$0.02.
+What does FAISS stand for, and who open-sourced it?	FAISS is from Meta (Facebook AI Research); it open-sourced the foundational ANN algorithms IVF, HNSW, and product quantization.
+What similarity metric does vector retrieval typically use?	Cosine similarity or inner product (dot product).
+How many vectors does a mid-size production index hold, per the chapter?	~10⁹ — about a billion vectors.
+What three things does the chapter say RAG works well for?	Factual question-answering grounded in a corpus, customer support over product documentation, and internal knowledge search (and code search at scale).
+What does the chapter say RAG works poorly for?	Synthesis across many chunks, ambiguous queries where the retriever picks the wrong neighbourhood, and corpora with internal contradictions the retriever surfaces without resolving.
+What is a knowledge graph's primitive data unit?	An explicit (subject, predicate, object) triple organized into a queryable graph.
+What makes the memory commons 'genuinely new', per the chapter?	The same retrieval substrate is queryable in natural language by any model that can speak to its embedding — multiple agents read and write it, making institutional knowledge a structured, per-token-retrievable asset.

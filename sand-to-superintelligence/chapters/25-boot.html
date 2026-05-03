@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="25-boot">
-  
+  <section class="learn predict reveal" data-predict data-slug="25-boot" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — how long does a modern system take to go from power-on to kernel hand-off?</h2>
+  <p class="learn__hint">Pick the order of magnitude. The chapter will tell you whether you were close.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-25-boot" value="a"><span>~30 milliseconds</span></label><label class="predict__choice"><input type="radio" name="predict-25-boot" value="b"><span>~3 seconds</span></label><label class="predict__choice"><input type="radio" name="predict-25-boot" value="c"><span>~30 seconds</span></label><label class="predict__choice"><input type="radio" name="predict-25-boot" value="d"><span>~3 minutes</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>~3 seconds</strong> from power-on to kernel hand-off on a modern UEFI system. Behind that small wait is a five-stage relay race — reset, firmware, bootloader, kernel init, userspace — each stage trusting only what it has just measured and handing a slightly more capable machine to the next.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 25 of 42</div>
     <div class="ch-header__num">Chapter 25</div>
     <h1 class="ch-header__title">Boot</h1>
     <p class="ch-header__dek">The first second of a chip's life</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">0xFFFFFFF0</div><div class="stat__label">the address an x86 CPU jumps to on reset</div></div><div class="stat"><div class="stat__num">~5 <em>stages</em></div><div class="stat__label">from power-on to login prompt</div></div><div class="stat"><div class="stat__num">~3 <em>seconds</em></div><div class="stat__label">modern UEFI boot to kernel hand-off</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="25-boot">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you hit the five-stage boot sequence, name all five stages in order without re-reading the list.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, explain the relay race to a peer in 5 minutes. Cover: reset vector → UEFI flash → bootloader finds kernel → kernel init (page tables, scheduler, PID 1) → systemd to login. Name 0xFFFFFFF0 unprompted.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A skeptic asks: ‘Why not put the whole OS in flash and skip the bootloader entirely?’ Respond in 90 seconds. Pass: you note that flash is small and slow to update, that the kernel is compressed and must be decompressed into DRAM, and that the bootloader must pass machine-specific facts to the kernel via the boot protocol — facts that only become available after UEFI inventories the hardware.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Pick one open question in early-boot security — Secure Boot bypass techniques, firmware supply-chain integrity, or measured boot / TPM attestation. State, in three sentences, what is currently unsettled and what your defensible take is.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -188,7 +220,74 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 25.1</span><span class="text">The boot ladder. Each stage knows just enough to find, load, and verify the next — handing off control like a relay race that ends at your login screen.</span></figcaption>
     </figure>
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">Boot is a relay race of trust: each stage is small enough to be stored and updated independently, knows only what it needs to know to find the next runner, and hands off a more capable machine than it received — the x86 reset vector at 0xFFFFFFF0 is where that race always begins.</p>
+</aside>
       
+      
+      <section class="learn retrieval reveal" data-retrieval data-slug="25-boot">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What address does an x86 CPU jump to on reset, and where does that address point?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The x86 reset vector is <strong>0xFFFFFFF0</strong>. That address points into flash memory — a small chip on the motherboard, separate from DRAM and immune to power loss — where the system firmware (UEFI or BIOS) lives.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does the bootloader need to pass a boot protocol to the kernel, rather than just jumping to the kernel's entry point?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The kernel starts life single-threaded, in physical-memory mode, knowing nothing about the hardware it is running on. It needs a structured bundle of facts — where DRAM lives, which CPUs are present, what the firmware promised — before it can initialize virtual memory, interrupts, and the scheduler. The Linux x86 boot protocol formalizes this handoff in precise detail; without it, the kernel cannot safely proceed.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if the bootloader is given the firmware’s full job instead of just its own — collapsing the two stages into one?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The firmware’s job — detecting DRAM amount, running memory training, enumerating PCIe devices, configuring the interrupt controller and microcode — requires running before the OS or filesystem exists. A combined firmware-bootloader would need to live in flash (space-constrained and update-hostile), trust no storage, and still somehow find and load a compressed kernel blob. Separation keeps each stage small, independently updateable, and scoped only to what it can safely assume. Collapsing the stages removes that trust boundary and makes the entire early-boot chain brittle — a firmware bug and a bootloader bug become one failure mode instead of two separately fixable ones.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="25-boot-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

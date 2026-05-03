@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="01-quartz">
-  
+  <section class="learn predict reveal" data-predict data-slug="01-quartz" data-answer-key="d">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — what purity level does silicon need to reach before it is usable in a chip? Pick the closest value.</h2>
+  <p class="learn__hint">Pick the order of magnitude of purity. The chapter will tell you whether you were close.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-01-quartz" value="a"><span>~99% (two nines)</span></label><label class="predict__choice"><input type="radio" name="predict-01-quartz" value="b"><span>~99.99% (four nines)</span></label><label class="predict__choice"><input type="radio" name="predict-01-quartz" value="c"><span>~99.9999% (six nines)</span></label><label class="predict__choice"><input type="radio" name="predict-01-quartz" value="d"><span>~99.9999999% (nine nines)</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>99.9999999% — nine nines — is the purity required for chips.</strong> The quartzite that comes out of the mine is already an impressive 99.86% SiO₂, but that remaining 0.14% harbors boron, phosphorus, iron, and other atoms that, in concentrations as small as parts per billion, can short-circuit silicon's precisely controllable electrical conductivity. The gap between mine-grade and chip-grade is not incremental — it is roughly six orders of magnitude of additional purification.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 01 of 42</div>
     <div class="ch-header__num">Chapter 01</div>
     <h1 class="ch-header__title">The Mineral</h1>
     <p class="ch-header__dek">Quartz, purity, and why ordinary sand can't think</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">99.9999999<em>%</em></div><div class="stat__label">purity required for chips</div></div><div class="stat"><div class="stat__num">99.86<em>%</em></div><div class="stat__label">purity straight from the mine</div></div><div class="stat"><div class="stat__num">top <em>10</em></div><div class="stat__label">among earth's most-extracted minerals</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="01-quartz">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you hit the purity ladder, name the two percentage figures given — mine-grade quartzite and chip-grade silicon — without looking back.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, explain to a peer in 5 minutes why beach sand cannot be used for chips, what quartzite is and how it forms, and why Spruce Pine matters. Cover: SiO₂ lattice → metamorphic formation → impurity species → crucible role.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A skeptic says: ‘Silicon is the second most abundant element in Earth’s crust — supply can’t possibly be a bottleneck.’ Respond in 90 seconds. Pass: you distinguish abundant silica from <em>semiconductor-grade</em> precursor, note the handful of viable deposits worldwide, and explain that the constraint is purity, not abundance.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Pick one open question in semiconductor-grade silica supply — geographic concentration, synthetic alternatives, or crucible recycling. State, in three sentences, what is currently unsettled and what your defensible take is.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -157,7 +189,74 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 1.1</span><span class="text">The purity ladder, from sand to electronic-grade silicon. Each rung removes 90–99% of remaining contaminants.</span></figcaption>
     </figure>
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">Chip-grade silicon is not a richer version of beach sand — it is six orders of magnitude purer, and the world's crucibles depend on a single town in North Carolina.</p>
+</aside>
       
+      
+      <section class="learn retrieval reveal" data-retrieval data-slug="01-quartz">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What type of rock do chipmakers actually want, and how is it formed?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body"><strong>Quartzite</strong> — a metamorphic rock formed when sandstone is cooked under pressure for hundreds of millions of years until its quartz grains fuse and recrystallize into a near-pure mass of SiO₂. Beach sand is useless; it is a riot of contamination — iron, organic salts, fragments of shell — that makes it a chemical nightmare for chips.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why is a boron impurity in silicon not just a nuisance but a structural problem for transistor design?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Boron is a dopant: in concentrations as small as parts per billion it modifies silicon's electrical conductivity in a controlled way. An <em>unintended</em> boron atom sitting in the wrong place is therefore not a passive contaminant — it is a transistor nobody designed. The chapter puts it directly: “a boron atom in the wrong place is not an impurity — it is a transistor that someone forgot to design.” The entire purification chain exists to prevent accidental transistors.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if you treat silicon supply as a commodity problem and optimize purely on raw silica abundance?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Abundance is irrelevant: the constraint is purity, not volume. Spruce Pine produces the world’s purest natural quartz, used specifically for the <em>crucibles</em> in which polysilicon is melted during Czochralski crystal growth. No ordinary sand source can substitute because beach sand carries iron, organic salts, and shell fragments that would contaminate the crucible and, through it, the melt. A 2024 wildfire and Hurricane Helene briefly threatened Spruce Pine, and the global semiconductor industry was watching local weather as a result — because abundant silica worldwide could not substitute for one geologically rare deposit.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="01-quartz-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

@@ -1,0 +1,9 @@
+What are the four minimum components of an agent, per the chapter?	Model, tools, memory, and goal.
+What does a goal component usually need to be augmented with in serious agent systems?	A verifier — a check that runs after each action to catch divergence early.
+Name the five steps of the agent loop in order.	Perceive, Plan, Act, Observe, Repeat.
+What does the chapter say about how much engineering effort goes into guardrails vs. model integration?	Systems like Claude with computer use, OpenAI Operator, and OpenHands spend more code on guardrails, logging, confirmation prompts, and rollback than on the model integration itself.
+What benchmark does the chapter cite for software-engineering agents, and what solve rate did top agents achieve in late 2025?	SWE-bench Verified; 60–70% of tasks solved.
+What agent completion rate does AgentBench show for best agents?	~30%.
+What four production use-cases does the chapter say agents handle well in 2026?	Coding agents inside established codebases, customer-support triage and resolution, research-and-analysis loops, and routine browser tasks.
+What does the chapter say definitively does NOT yet work for agents?	Long-horizon autonomous projects without supervision, complex strategic decisions, novel situations without training analogues, and tasks where wrong-action cost is very high relative to right-action value.
+How does the chapter define the budget that terminates the agent loop?	Tokens, seconds, or dollars — whichever is exhausted first.

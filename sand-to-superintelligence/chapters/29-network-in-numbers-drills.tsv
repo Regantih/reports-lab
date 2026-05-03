@@ -1,0 +1,10 @@
+How many parameters does a frontier model typically have?	~200 billion (the chapter’s stat; the range is 100B–1T depending on the model).
+How much memory do 200B parameters occupy in BF16?	~400 GB — two bytes per parameter.
+What is the fundamental operation of a transformer linear layer?	y = Wx + b, followed by a nonlinearity (GELU, SiLU, or ReLU).
+What is self-attention, expressed as a formula?	softmax(QKᵀ/√d)V — a matmul of queries and keys, a softmax, then a matmul with values.
+How many transformer blocks does a typical frontier model have?	~80.
+What paper introduced the transformer’s self-attention mechanism?	‘Attention Is All You Need’ by Vaswani et al. (2017).
+What does BF16 sacrifice compared with FP32, and what does it keep?	It keeps FP32’s exponent range; it sacrifices mantissa precision (uses FP16’s narrower mantissa).
+What is FP8 used for, and what did Hopper add to support it?	FP8 is the new precision floor for inference (and increasingly training); Hopper added native FP8 tensor cores.
+What is FlashAttention?	A kernel that rearranges the attention computation to be memory-efficient on real hardware, exploiting cache hierarchy to avoid materializing the full QKᵀ matrix in HBM.
+What is the vocabulary size and embedding dimension of a typical frontier model?	~100,000 tokens in the vocabulary; each mapped to a ~16,000-dimensional embedding vector.

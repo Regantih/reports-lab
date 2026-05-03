@@ -1,0 +1,10 @@
+What does Metcalfe's Law claim about network value, and what is the chapter's caveat?	Value grows as the square of connected nodes; the caveat is that this overstates for mature networks where most node pairs never actually communicate.
+Name the two genuine compounding loops the chapter identifies in the AI stack.	The data flywheel and the agent flywheel.
+What is the data flywheel loop, step by step?	Deploy model → users interact → interactions produce signal → signal fine-tunes the model → next version is better → usage grows → more signal.
+What is the agent flywheel loop, step by step?	Agent accesses a tool → accomplishes task → success is logged → tool interface is refined → next agent does better → new tools are exposed → capability grows.
+Does a strong data flywheel let a weaker model catch a stronger one?	No — the flywheel amplifies an existing lead; it does not invert a quality gap.
+What is 'model collapse' and who named it?	The recursive narrowing of training data on dominant-model biases when models train on other models' outputs; named by Shumailov et al. (2023).
+What is 'tool-bloat collapse' in agent systems?	When the tool ecosystem grows past a certain size, models lose track of which tool to use and performance degrades — several agent frameworks have hit this wall.
+How many years of headstart does the chapter estimate current AI incumbents have if they execute well?	~3–5 years.
+Why does the chapter say AI moats are less durable than pre-AI internet platform moats?	Because AI capability depends partly on model architecture, which improves rapidly across the whole industry through open releases — a late entrant with a better model can catch up faster than in social networks or marketplaces.
+By roughly how much did the deployed agent population grow from 2024 to 2026?	~10× — roughly an order of magnitude.

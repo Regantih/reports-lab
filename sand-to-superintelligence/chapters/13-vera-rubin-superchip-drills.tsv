@@ -1,0 +1,10 @@
+What three silicon tiles make up a Vera Rubin Superchip?	Two Rubin GPUs and one Vera CPU, all packaged together on a single substrate.
+How many transistors does the Rubin GPU package total across both dies?	About 336 billion transistors.
+What process node is the Rubin GPU fabricated on?	TSMC N3P.
+How much HBM4 memory does the full Superchip carry?	576 GB — 288 GB per GPU × two GPUs.
+What is the FP4 compute performance of the full Superchip?	~100 petaflops FP4.
+What is NVLink-C2C’s bidirectional bandwidth?	1.8 TB/s.
+How does NVLink-C2C’s bandwidth compare to PCIe Gen6 x16?	Roughly seven times higher — PCIe Gen6 delivers about 256 GB/s total bidirectional (128 GB/s per direction).
+What CPU architecture does the Vera CPU use?	NVIDIA’s Olympus Arm v9 architecture, with 88 cores.
+How many components does a Vera Rubin Superchip contain?	Roughly seventeen thousand — about five times the part count of a smartphone.
+What is the Vera CPU’s primary job in the Superchip?	Coordination: managing GPU memory, dispatching kernels, handling I/O, running the OS, and communicating with other Superchips through the rack network.

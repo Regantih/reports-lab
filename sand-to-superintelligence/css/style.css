@@ -1807,6 +1807,82 @@ body[data-print-mode="book"] .print-chapter { break-before: page; }
 .drill__front { font-weight: 500; color: var(--color-text); width: 45%; }
 .drill__back { color: var(--color-text-muted); line-height: 1.6; }
 
+/* ----- One-sentence chapter closer (book-1.html pattern) ----- */
+.one-sentence {
+  margin-top: var(--space-7);
+  padding: var(--space-5) var(--space-6);
+  background: var(--color-surface-2);
+  border-left: 3px solid var(--color-accent-copper);
+  border-radius: 0 6px 6px 0;
+}
+.one-sentence__eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent-copper);
+  margin-bottom: var(--space-2);
+}
+.one-sentence__body {
+  font-family: var(--font-display, var(--font-serif, serif));
+  font-size: var(--text-lg);
+  line-height: 1.5;
+  color: var(--color-text);
+  margin: 0;
+  font-style: italic;
+}
+
+/* ----- Limits callout: what this chapter does NOT tell you ----- */
+.limits {
+  margin-top: var(--space-6);
+  padding: var(--space-5) var(--space-6);
+  background: var(--color-surface-offset, var(--color-surface-2));
+  border: 1px dashed var(--color-divider);
+  border-radius: 6px;
+}
+.limits__eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-3);
+}
+.limits__list {
+  margin: 0;
+  padding-left: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  color: var(--color-text);
+  line-height: 1.55;
+}
+.limits__list li::marker { color: var(--color-accent-copper); }
+
+/* ----- Heuristic / rule-of-thumb box ----- */
+.heuristic {
+  margin-top: var(--space-6);
+  padding: var(--space-4) var(--space-5);
+  background: var(--color-accent-copper-soft, var(--color-surface-2));
+  border: 1px solid var(--color-accent-copper);
+  border-radius: 6px;
+}
+.heuristic__eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent-copper);
+  margin-bottom: var(--space-2);
+}
+.heuristic__body {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--color-text);
+  margin: 0;
+}
+
 /* ----- Quiz mode banner inside the existing tutor modal ----- */
 .tutor__quiz-banner {
   display: flex; align-items: center; justify-content: space-between;

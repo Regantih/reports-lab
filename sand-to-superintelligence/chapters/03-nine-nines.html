@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="03-nine-nines">
-  
+  <section class="learn predict reveal" data-predict data-slug="03-nine-nines" data-answer-key="c">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — what is the maximum allowable boron contamination in electronic-grade silicon?</h2>
+  <p class="learn__hint">Pick the concentration. The chapter will tell you whether you were close.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-03-nine-nines" value="a"><span>1 boron atom per thousand silicon atoms (parts per thousand)</span></label><label class="predict__choice"><input type="radio" name="predict-03-nine-nines" value="b"><span>1 boron atom per million silicon atoms (parts per million)</span></label><label class="predict__choice"><input type="radio" name="predict-03-nine-nines" value="c"><span>1 boron atom per billion silicon atoms (parts per billion)</span></label><label class="predict__choice"><input type="radio" name="predict-03-nine-nines" value="d"><span>1 boron atom per trillion silicon atoms (parts per trillion)</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>1 part per billion</strong> — one boron atom per billion silicon atoms — is the stated limit for electronic-grade silicon. The chapter’s stats row puts this as the lead figure. Achieving it requires converting MG-Si into trichlorosilane gas, distilling that gas through fractional columns that remove 90%+ of impurities per pass, then decomposing the purified gas back onto hot silicon seed rods in a Siemens reactor — a process essentially unchanged since the 1950s.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 03 of 42</div>
     <div class="ch-header__num">Chapter 03</div>
     <h1 class="ch-header__title">The Nine-Nines Problem</h1>
     <p class="ch-header__dek">Polysilicon and the Siemens process</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">1 <em>part</em></div><div class="stat__label">boron per billion silicon atoms — the limit</div></div><div class="stat"><div class="stat__num">9N</div><div class="stat__label">purity (99.9999999%) for electronic grade</div></div><div class="stat"><div class="stat__num">~1,100<em>°C</em></div><div class="stat__label">Siemens rod temperature</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="03-nine-nines">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you hit the “counting the nines” section, name without looking: what purity grade is sufficient for solar panels, what is the floor for memory chips, and what does leading-edge logic demand.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, explain the Siemens process to a peer in 5 minutes. Cover: MG-Si → trichlorosilane gas → fractional distillation → deposition onto 1,100°C seed rods → polysilicon rods. Explain why boiling-point differences make the distillation step work.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A skeptic says: ‘The Siemens process is 1950s technology — surely something better has replaced it.’ Respond in 90 seconds. Pass: you explain why the process’s maturity and the industry’s conservatism keep it dominant for electronic grade, acknowledge FBR as a real alternative that has captured solar-grade market share, and note that FBR hasn’t displaced Siemens for the highest-purity applications.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Pick one open question in polysilicon purification — FBR scale-up for electronic grade, reduction of Siemens energy consumption, or alternative chlorosilane chemistries. State, in three sentences, what is currently unsettled and what your defensible take is.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -155,7 +187,77 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 3.1</span><span class="text">Inside a Siemens reactor: trichlorosilane gas decomposes onto incandescent silicon seed rods, depositing layer after layer of ultra-pure polysilicon.</span></figcaption>
     </figure>
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">The Siemens process turns a metal into a gas, distills that gas to near-atomic purity, then bakes it back into a solid — the same sequence since the 1950s, still unmatched for electronic-grade silicon.</p>
+</aside>
       
+      <aside class="learn limits reveal" data-limits>
+  <div class="limits__eyebrow">What this chapter does NOT tell you</div>
+  <ul class="limits__list"><li>Does not tell you what failure modes the Siemens process accumulates at very high nines (10N–11N), where even trace reactor-wall contamination matters.</li><li>Does not explain why the boiling-point separation works for boron but not for all impurities — some co-distill and require additional chemistry.</li><li>Does not address how FBR yield compares to Siemens for mixed purity lots, only for the solar-vs-electronic split.</li></ul>
+</aside>
+      <section class="learn retrieval reveal" data-retrieval data-slug="03-nine-nines">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What is trichlorosilane, how is it made, and why does its boiling point matter?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Trichlorosilane (SiHCl₃) is produced by reacting powdered MG-Si with gaseous hydrogen chloride at around 300°C: Si + 3HCl → SiHCl₃ + H₂. Its boiling point is 31.8°C. This matters because the key impurity compound, boron trichloride (BCl₃), boils at 12.6°C — a different temperature — so the two can be separated by fractional distillation. The difference in boiling points is the chemical handle that makes ultra-purification possible.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does the Siemens process deposit silicon onto <em>hot</em> rods rather than, say, into a cold container?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The trichlorosilane gas only decomposes and releases silicon atoms when it contacts a surface hot enough to crack the molecule. The seed rods are heated to about 1,100°C by passing electric current directly through them. At that temperature, trichlorosilane in the vicinity breaks apart; silicon atoms deposit onto the rod surface and extend the existing crystal structure layer by layer. A cold surface would not crack the gas. The selectivity of the hot rod is what makes deposition onto a growing polysilicon rod possible, while hydrogen and hydrogen chloride drift away as gases.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if you optimize polysilicon production purely for energy efficiency — choosing FBR over Siemens — without accounting for purity requirements?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">FBR wins on energy at roughly one-fifth the cost of Siemens, and it has captured a large fraction of the solar-grade market. The problem is that buyers of electronic-grade silicon are not optimizing primarily for energy cost — they optimize for yield and reliability. The Siemens process has been mastered over decades; its failure modes are understood; its purity output is certified by a long track record. A single misplaced boron atom can ruin a chip worth thousands of dollars, so energy efficiency is a secondary metric at 9N to 11N purity. Optimizing on energy alone would route electronic-grade procurement to a process that cannot yet guarantee those purity levels at scale.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="03-nine-nines-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

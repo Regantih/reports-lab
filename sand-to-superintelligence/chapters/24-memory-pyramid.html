@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="24-memory-pyramid">
-  
+  <section class="learn predict reveal" data-predict data-slug="24-memory-pyramid" data-answer-key="c">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — how long does a DRAM access take, compared with a register access, on a modern CPU?</h2>
+  <p class="learn__hint">Pick the order of magnitude. The chapter will tell you whether you were close.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-24-memory-pyramid" value="a"><span>~3× slower</span></label><label class="predict__choice"><input type="radio" name="predict-24-memory-pyramid" value="b"><span>~30× slower</span></label><label class="predict__choice"><input type="radio" name="predict-24-memory-pyramid" value="c"><span>~300× slower</span></label><label class="predict__choice"><input type="radio" name="predict-24-memory-pyramid" value="d"><span>~3,000× slower</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>~300× slower</strong> — a register answers in roughly one cycle; DRAM takes around three hundred. The chapter renders this gap viscerally: if a register access were one second, a DRAM access would be five minutes. The entire memory pyramid exists to hide this cliff from the CPU.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 24 of 42</div>
     <div class="ch-header__num">Chapter 24</div>
     <h1 class="ch-header__title">Memory's Pyramid</h1>
     <p class="ch-header__dek">Registers, caches, DRAM, and the tyranny of distance</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">~1 <em>cycle</em></div><div class="stat__label">register access</div></div><div class="stat"><div class="stat__num">~300 <em>cycles</em></div><div class="stat__label">DRAM access — a 300× cliff</div></div><div class="stat"><div class="stat__num">64 <em>B</em></div><div class="stat__label">the cache line, the unit of memory motion</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="24-memory-pyramid">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you reach the six-level pyramid list, name each layer and its approximate size and latency without re-reading the list.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, explain the memory wall and the locality trick to a peer in 5 minutes. Cover: register vs. DRAM latency gap → temporal locality → spatial locality → cache lines → TLB. Hit the 300× figure unprompted.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A skeptic asks: ‘If L3 is already shared across all cores, why do we even need DRAM?’ Respond in 90 seconds. Pass: you note that L3 is 8–64 MB while a modern program's working set is tens of gigabytes — model weights alone can be hundreds of GB — and that DRAM is also persistent across context switches in ways L3 is not.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Pick one open question in memory-system design — near-memory computing, persistent memory (PMEM), or HBM replacing DRAM in CPUs. State, in three sentences, what is currently unsettled and what your defensible take is.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -167,7 +199,80 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 24.1</span><span class="text">The memory pyramid. Each step down is roughly an order of magnitude slower and an order of magnitude bigger. The whole edifice exists to hide the gap between a 3 GHz CPU and 100 ns DRAM.</span></figcaption>
     </figure>
-      
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">The memory pyramid is not a hierarchy of speed — it is a hierarchy of locality bets: every level down is a gamble that the data needed next is physically near the data just used, and the 300× cliff between register and DRAM is the tax paid when that bet fails.</p>
+</aside>
+      <aside class="learn heuristic reveal" data-heuristic>
+  <div class="heuristic__eyebrow">Rule of thumb</div>
+  <p class="heuristic__body">Sequential array traversal on large data? Prefetch ahead by one cache line and profile L3 hit rate first. Random-access pattern across gigabytes? The TLB miss rate is likely the bottleneck — use huge pages before tuning anything else. Mixed access on AI weights? Measure HBM bandwidth utilization; if it is below 60%, memory layout, not more bandwidth, is the fix.</p>
+</aside>
+      <aside class="learn limits reveal" data-limits>
+  <div class="limits__eyebrow">What this chapter does NOT tell you</div>
+  <ul class="limits__list"><li>Does not tell you how the cache replacement policy (LRU, PLRU, RRIP) affects miss rate for working sets just larger than cache capacity, or why the cliff is stepped rather than smooth.</li><li>Does not explain how NUMA (non-uniform memory access) topology on multi-socket servers creates a second latency dimension — local vs. remote DRAM — that the single-machine pyramid model does not capture.</li><li>Does not address how HBM stacks (used in GPUs and AI accelerators) alter the latency/bandwidth tradeoff relative to DDR DRAM, or why the 300× figure differs for AI workloads that read weights sequentially rather than randomly.</li></ul>
+</aside>
+      <section class="learn retrieval reveal" data-retrieval data-slug="24-memory-pyramid">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What is the size of a cache line on x86 and most ARM cores, and what is the exception?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">A cache line is <strong>64 bytes</strong> on x86 and most ARM cores. Apple Silicon uses 128-byte cache lines. Caches move data in these fixed-size chunks, not byte by byte — the architectural bet on spatial locality.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does the TLB exist, and what happens if it misses?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Caches are indexed by physical address, but programs use virtual addresses. Translating a virtual address to physical would normally require its own memory lookup — a vicious circle. The TLB (translation look-aside buffer) breaks that circle by caching the hottest translations in a tiny, fast hierarchy: an L1 TLB of around sixty-four entries backed by an L2 TLB of hundreds to thousands. A TLB miss is one of the most expensive routine events in modern computing, requiring a page-table walk that itself touches memory.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if you optimize a memory system for peak bandwidth alone, without considering that real access patterns may be random rather than sequential?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Random access undermines <em>spatial locality</em>. First, the <strong>cache</strong> suffers: each access fetches a 64-byte cache line, but since adjacent bytes are never needed, those sixty-three neighbours are wasted — cache hit rate collapses. Second, the <strong>TLB</strong> suffers: random access spans many pages, exhausting the small set of cached translations and causing frequent, expensive TLB misses. Both effects push the CPU repeatedly to the slow bottom of the pyramid. A memory system optimized purely for peak sequential bandwidth — wide buses, deep prefetchers — delivers almost none of that bandwidth under random access, because bandwidth and latency under randomness are determined by DRAM row activation timing, not bus width.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="24-memory-pyramid-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

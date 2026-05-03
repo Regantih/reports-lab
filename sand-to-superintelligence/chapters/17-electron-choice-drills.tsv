@@ -1,0 +1,10 @@
+What is silicon’s band gap at room temperature?	1.12 electron-volts.
+How many valence electrons does a silicon atom have?	Four — silicon sits in column IV of the periodic table.
+What is the lightest and heaviest doping concentration described in the chapter?	One part in ten billion at the lightest; one part in ten million at the heaviest.
+What element is used to create n-type silicon, and why does it donate an electron?	Phosphorus (column V). It has five valence electrons; four bond with neighbours, leaving the fifth loosely bound and easily kicked into the conduction band.
+What element is used to create p-type silicon, and what does it create?	Boron (column III). It has three valence electrons, leaving a ‘hole’ in the bonding lattice that behaves as a positive charge carrier.
+What is a p-n junction, and what does it form?	A boundary between p-type and n-type silicon. A depletion region forms at the interface, creating a one-way valve for current — a diode.
+Who demonstrated the p-n junction at Bell Labs, and when?	Russell Ohl, in work culminating in February 1940.
+Why does copper conduct while glass insulates?	Copper’s valence and conduction bands overlap (no gap); glass has an ~9 eV gap far too large for room-temperature thermal energy (~0.026 eV) to bridge.
+What three external influences can promote electrons across silicon’s band gap?	Heat, light, and neighbouring dopant atoms.
+What conceptual ancestor does the p-n junction provide for every device in the book?	It is the conceptual ancestor of the transistor — a region whose conductivity depends on a third electrode (the gate) hovering nearby.

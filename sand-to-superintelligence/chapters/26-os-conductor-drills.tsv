@@ -1,0 +1,10 @@
+Name the three OS illusions the chapter identifies.	The illusion of CPU plenty, the illusion of memory plenty, and the illusion of safety.
+What is a process?	A running program with its own address space, file descriptors, and identity.
+What is the difference between a process and a thread?	Threads are independent flows of execution that share the same address space within one process.
+What is a context switch?	The act of saving one process's registers and page-table pointer, loading another's, and resuming — costing a few microseconds on modern hardware.
+What is the MMU?	The memory management unit — hardware on every modern CPU that translates virtual addresses to physical addresses by walking the kernel's page tables.
+What is a page fault?	An MMU exception raised when a virtual address has no valid physical mapping; the kernel handles it by allocating a page, paging in from disk, or killing the process.
+What is the standard page size on modern systems?	4 KB.
+How large is user-code VAS on Linux x86-64 with 4-level paging?	128 TB.
+Roughly how much does a system call cost on modern Linux?	~100 ns.
+What does Linux's Completely Fair Scheduler optimize for?	A virtual notion of ‘runtime owed’ to each task — it always picks the task most owed runtime next.

@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="21-the-clock">
-  
+  <section class="learn predict reveal" data-predict data-slug="21-the-clock" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — roughly what fraction of a chip’s total power does the clock distribution tree consume?</h2>
+  <p class="learn__hint">Pick the share. The chapter will tell you whether you were close.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-21-the-clock" value="a"><span>Less than 1%</span></label><label class="predict__choice"><input type="radio" name="predict-21-the-clock" value="b"><span>~10%</span></label><label class="predict__choice"><input type="radio" name="predict-21-the-clock" value="c"><span>~40%</span></label><label class="predict__choice"><input type="radio" name="predict-21-the-clock" value="d"><span>~70%</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>About 10%</strong> of a chip’s total power is spent just keeping time — distributing the clock signal to every flip-flop on the chip. A modern clock tree is a balanced binary tree of buffers; the wires are deliberately routed to equal lengths so the signal arrives at every flip-flop within a few picoseconds of every other. That skew requirement is exacting enough to make the clock tree a piece of art, and expensive enough to consume a tenth of the chip’s energy budget.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 21 of 42</div>
     <div class="ch-header__num">Chapter 21</div>
     <h1 class="ch-header__title">The Clock</h1>
     <p class="ch-header__dek">Synchrony, pipelining, and the heartbeat that makes a chip go</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">3.5 <em>GHz</em></div><div class="stat__label">typical modern clock</div></div><div class="stat"><div class="stat__num">~290 <em>ps</em></div><div class="stat__label">one cycle's duration</div></div><div class="stat"><div class="stat__num">~10<em>%</em></div><div class="stat__label">of chip power spent on clock distribution</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="21-the-clock">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you reach the pipelining section, name the four classic pipeline stages (fetch, decode, execute, write-back) and confirm that a filled 4-stage pipeline delivers one instruction per cycle.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, explain the clock tree to a peer in 5 minutes. Cover: why a global clock is needed (correctness — signals must settle before sampling), the binary tree of buffers, the equal-wire-length requirement for low skew, the PLL that multiplies a 100 MHz reference up to 3.5 GHz, and the ~10% power cost.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A skeptic asks: “If asynchronous chips don’t need a clock, aren’t they strictly more efficient?” Respond in 90 seconds. Pass: you note that asynchronous designs have been built and do avoid the clock’s ~10% power overhead, but they are extremely difficult to design, debug, and verify — the synchronous, clocked approach won because correctness is easier to guarantee when every gate dances to the same drum. Asynchronous research continues but has not broken into mainstream commercial silicon.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Pick one open question in clocking and timing — near-threshold voltage operation, adaptive clocking, or the limits of PLL-based frequency scaling. State, in three sentences, what is unsettled and your defensible view on which constraint will bind first in the next process generation.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -195,7 +227,74 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 21.1</span><span class="text">Top: the clock waveform — a square wave at gigahertz frequency. Bottom: a 5-stage pipeline; once filled, one new instruction completes every cycle.</span></figcaption>
     </figure>
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">The clock is a synchronization contract: every flip-flop on the chip must see the same edge within a few picoseconds, and the cost of maintaining that contract — ~10% of chip power, a binary tree of buffers, and a PLL that multiplies 100 MHz to 3.5 GHz — is what makes pipeline depth a bounded rather than a free variable.</p>
+</aside>
       
+      
+      <section class="learn retrieval reveal" data-retrieval data-slug="21-the-clock">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What is the Pentium 4 Prescott’s pipeline depth, and how did that compare to the original Pentium 4?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The <strong>Pentium 4 Prescott (2004) ran a 31-stage pipeline</strong>, up from the <strong>original Pentium 4’s 20 stages</strong>. That depth allowed clock speeds above 3 GHz on a process where logic gates were still hundreds of nanometers. Modern CPUs are shallower (10–20 stages) because the marginal benefits ran out.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">What is the ‘critical path’, and why does it set a chip’s maximum clock frequency?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The critical path is the slowest signal path between any two flip-flops on the chip. The clock period must be set conservatively enough that every signal — including those on the slowest path — has time to settle before any flip-flop samples it. If the clock were faster than the critical path, a downstream flip-flop could capture a meaningless intermediate value (a glitch). Speeding up a chip is, almost always, the art of finding and shortening critical paths.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if you optimize pipeline depth alone to push clock frequency, without accounting for branch misprediction cost?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Each additional pipeline stage lets the chip clock faster (shorter critical path per stage), but also increases the cost of a branch misprediction: if the branch predictor guesses wrong, all the instructions partway through the deeper pipeline must be flushed and re-fetched, wasting more cycles. The Pentium 4 Prescott’s 31 stages meant a misprediction cost of up to ~31 wasted cycles. Modern CPUs (10–20 stages) reflect a design point where the frequency gain from deeper pipelines is outweighed by the misprediction penalty and the difficulty of finding and shortening critical paths further. Optimizing pipeline depth alone, without modeling branch behavior on real workloads, produces a chip that runs fast on straight-line code and collapses on branch-heavy programs.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="21-the-clock-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

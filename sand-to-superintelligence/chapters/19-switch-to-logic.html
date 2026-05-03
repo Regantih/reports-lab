@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="19-switch-to-logic">
-  
+  <section class="learn predict reveal" data-predict data-slug="19-switch-to-logic" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — how many transistors does a two-input NAND gate require in CMOS?</h2>
+  <p class="learn__hint">Pick the count. The chapter will confirm it.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-19-switch-to-logic" value="a"><span>2 transistors</span></label><label class="predict__choice"><input type="radio" name="predict-19-switch-to-logic" value="b"><span>4 transistors</span></label><label class="predict__choice"><input type="radio" name="predict-19-switch-to-logic" value="c"><span>6 transistors</span></label><label class="predict__choice"><input type="radio" name="predict-19-switch-to-logic" value="d"><span>8 transistors</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>Four transistors</strong>: two PMOS in parallel (between VDD and the output) and two NMOS in series (between the output and ground). The output is low — false — only when both inputs are high, which is exactly the NAND truth table. NOR also uses four transistors, but with the series and parallel arrangement swapped; NAND wins in practice because NMOS in series is faster than PMOS in series.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 19 of 42</div>
     <div class="ch-header__num">Chapter 19</div>
     <h1 class="ch-header__title">From Switch to Logic</h1>
     <p class="ch-header__dek">NAND, NOR, and the universality theorem</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">4</div><div class="stat__label">transistors per NAND gate</div></div><div class="stat"><div class="stat__num">1</div><div class="stat__label">gate type sufficient to compute anything</div></div><div class="stat"><div class="stat__num">~10<sup>11</sup></div><div class="stat__label">gates in a frontier GPU</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="19-switch-to-logic">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you reach the NAND truth table, trace through all four input combinations (00, 01, 10, 11) and confirm that the output is low only when both inputs are high.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, explain NAND’s universality to a peer in 5 minutes. Cover: NOT from NAND (tie both inputs), AND from NAND+NOT, OR from NAND via De Morgan’s laws, and why this means any truth table is buildable from NAND alone. Give the transistor count: 4 per gate.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A skeptic asks: “If NAND is universal, why don’t chips literally consist of only NAND gates?” Respond in 90 seconds. Pass: you explain that synthesis tools do start from universal primitives but then map to a standard cell library containing dozens of optimised gate types (AND, OR, XOR, flip-flops, multiplexers) that are faster, smaller, or lower-power than equivalent NAND compositions — universality is the theoretical foundation; standard cells are the engineering optimisation on top.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Pick one open question in logic synthesis or standard cell design — e.g. sub-threshold CMOS, reversible computing, or adiabatic logic. State, in three sentences, what is unsettled and what your defensible view is on whether it will matter in mainstream silicon within ten years.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -195,7 +227,77 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 19.1</span><span class="text">A two-input NAND gate built from four transistors: two PMOS in parallel, two NMOS in series. Output is low only when both inputs are high. NOR uses the same four-transistor count but with the series/parallel arrangement swapped.</span></figcaption>
     </figure>
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">CMOS NAND’s four-transistor structure is the atom of all digital logic — any truth table is composable from it, and the P ∝ C·V²·f power law it obeys is why clock frequency, not transistor count, became the limiting design constraint once Dennard scaling ended.</p>
+</aside>
       
+      <aside class="learn limits reveal" data-limits>
+  <div class="limits__eyebrow">What this chapter does NOT tell you</div>
+  <ul class="limits__list"><li>Does not tell you how synthesis tools translate a hardware description language into a standard cell library, or why practical chips use dozens of gate types despite NAND’s theoretical universality.</li><li>Does not explain how static timing analysis identifies the critical path through tens of billions of gates, or why hold violations are as dangerous as setup violations.</li><li>Does not address sub-threshold leakage power, which makes the ‘CMOS is free at idle’ claim break down at advanced nodes where leakage is no longer negligible.</li></ul>
+</aside>
+      <section class="learn retrieval reveal" data-retrieval data-slug="19-switch-to-logic">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">Who established the link between boolean algebra and switching circuits, and when?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body"><strong>Claude Shannon</strong>, in his 1937 master’s thesis, proved that boolean algebra — the algebra of <em>and</em>, <em>or</em>, <em>not</em> — was the natural mathematics for switching circuits. The identification of voltage with logic value (high = 1, low = 0) follows directly from that proof.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why did NAND win over NOR as the standard building block, if NOR is also functionally complete?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">In CMOS, both a two-input NAND and a two-input NOR use <strong>four transistors</strong>, with the same count but swapped series/parallel arrangement. The difference is speed: NAND puts its NMOS transistors in series for the pull-down path, while NOR puts its PMOS transistors in series for the pull-up path. Electrons in NMOS channels are roughly twice as mobile as holes in PMOS channels, so the NAND’s series-NMOS pull-down switches faster. A whole industry’s standard cell libraries grew around that small physical advantage.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if you optimize clock frequency alone in a CMOS design, without accounting for how power scales with switching rate?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Because CMOS power scales with switching frequency (P ∝ C·V²·f), a chip that doubles its clock rate roughly doubles its power — and that power must be extracted as heat from a fixed die area. At the scale of ~10<sup>11</sup> gates in a frontier GPU, only a fraction of gates switch each cycle; power is determined by how many switch per second, not by how many gates exist. Dennard scaling masked this relationship for decades by reducing switching energy per transistor generation. When Dennard scaling stalled, adding clock frequency without reducing V or C produced chips that thermally throttled themselves, which is precisely why the industry pivoted from single-thread frequency scaling to parallelism and heterogeneous design.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="19-switch-to-logic-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

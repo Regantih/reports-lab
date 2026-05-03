@@ -1,0 +1,10 @@
+What does 'thin-film deposition' refer to in chip manufacturing?	The discipline of growing controlled films of material — insulators, metals, semiconductors — onto the wafer surface with precise thickness and composition.
+To what approximate pressure does a deposition chamber evacuate?	~10⁻⁶ torr — about a billionth of atmospheric pressure.
+What does the wafer sit on inside a deposition chamber?	A heated chuck, often called a susceptor.
+In PVD, what mechanism knocks atoms off the target?	Argon ions from a plasma slam into the solid target (the sputtering target), knocking atoms loose.
+Why is PVD called 'line-of-sight' deposition?	Atoms travel in straight lines from target to wafer; they cannot coat the bottoms of high-aspect-ratio trenches.
+What precursor gas does CVD use to deposit silicon?	Silane (SiH₄).
+What makes CVD conformal where PVD is not?	CVD deposition is mediated by gas-phase chemistry, so precursors flow into recesses equally well on horizontal and vertical surfaces.
+Describe the ALD cycle sequence.	Pulse precursor A (surface saturates), purge, pulse precursor B (reacts to form one monolayer), purge — repeat.
+What film is grown by ALD using hafnium and water-vapor precursors?	HfO₂ — hafnium oxide, used as a high-k gate dielectric.
+Why is ALD slow, and roughly how long does a single high-quality ALD film take?	Because it deposits exactly one atomic layer per cycle; a single high-quality film can take an hour.

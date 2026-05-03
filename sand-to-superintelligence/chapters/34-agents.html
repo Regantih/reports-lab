@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="34-agents">
-  
+  <section class="learn predict reveal" data-predict data-slug="34-agents" data-answer-key="c">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — how many components does the chapter say a true agent must have at minimum?</h2>
+  <p class="learn__hint">Pick the exact number named in the chapter.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-34-agents" value="a"><span>2 (model + tools)</span></label><label class="predict__choice"><input type="radio" name="predict-34-agents" value="b"><span>3 (model + tools + memory)</span></label><label class="predict__choice"><input type="radio" name="predict-34-agents" value="c"><span>4 (model + tools + memory + goal)</span></label><label class="predict__choice"><input type="radio" name="predict-34-agents" value="d"><span>5 (model + tools + memory + goal + verifier)</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>4 components</strong> — model, tools, memory, and goal. The chapter is explicit: anything missing one of these is an agent in marketing terms only. A verifier is mentioned as a common augmentation for the goal component, but is not listed as one of the four minimum parts.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 34 of 42</div>
     <div class="ch-header__num">Chapter 34</div>
     <h1 class="ch-header__title">Agents</h1>
     <p class="ch-header__dek">The loop that turns a model into a worker</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">4</div><div class="stat__label">minimum components of an agent: model, tools, memory, goal</div></div><div class="stat"><div class="stat__num">~10-100</div><div class="stat__label">tool calls per task in 2026 production agents</div></div><div class="stat"><div class="stat__num">~20-40%</div><div class="stat__label">task completion rate of best agents on real-world benchmarks</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="34-agents">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you hit the five-step agent loop, name each step in order: Perceive, Plan, Act, Observe, Repeat.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, explain the four minimum agent components to a peer in 5 minutes, and give one concrete failure mode for each: model (reasoning errors), tools (leaky semantics produce invisible bugs), memory (state divergence across runs), goal (premature victory declaration).</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A manager says: 'Our agent hits 70% on the benchmark, so we can deploy it for autonomous customer refunds.' Respond in 90 seconds. Pass: you cite the asymmetry the chapter names — a wrong agent does damage, not just a bad paragraph — and the four conditions the chapter gives for production-ready agents (bounded task, well-specified tools, automated verifier, human in loop on consequential actions).</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">The chapter says the gap between demo-quality and production-quality agents is several engineering quarters of guardrail work, with no shortcut. Pick one specific failure mode the chapter names — drift, stuck retry, premature victory, or tool hallucination. State, in three sentences, what is unsettled about fixing it and what your defensible take is.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -183,7 +215,77 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 34.1</span><span class="text">An agent is a tight loop: perceive (read state), plan (call the model), act (invoke a tool), observe (read the result), repeat. The loop terminates when the agent either declares success, declares failure, or hits a budget cap.</span></figcaption>
     </figure>
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">An agent is defined by the loop, not the model — Perceive, Plan, Act, Observe, Repeat — and the shift from chatbot to agent is a category change because the evaluation criterion moves from ‘is the answer good’ to ‘is the world different’, with wrong agents doing damage rather than just generating bad paragraphs.</p>
+</aside>
       
+      <aside class="learn limits reveal" data-limits>
+  <div class="limits__eyebrow">What this chapter does NOT tell you</div>
+  <ul class="limits__list"><li>Does not tell you how agent memory should be structured — episodic vs. semantic vs. working — or why state divergence across long agent runs is the most common production failure mode.</li><li>Does not explain how the tool-calling interface (function-call schema, MCP server, browser control) affects the agent’s error rate, or why leaky tool semantics produce invisible bugs.</li><li>Does not address how agent evaluation benchmarks (SWE-bench, AgentBench) differ from the production conditions they are meant to predict, or why benchmark scores overstate field reliability.</li></ul>
+</aside>
+      <section class="learn retrieval reveal" data-retrieval data-slug="34-agents">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What task-completion rate did the best published agents achieve on SWE-bench Verified in late 2025, and what were the numbers on harder benchmarks like AgentBench?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">On SWE-bench Verified the best published agents solved 60–70% of tasks. On harder, longer benchmarks like AgentBench the numbers were closer to 30%. Two years prior, the same numbers were near zero.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does the chapter call the shift from chatbot to agent a 'category change' rather than a quantitative improvement?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">A chatbot is judged on whether its answer is good. An agent is judged on whether the world is different — whether the meeting got scheduled, the bug fixed, the customer refunded. The evaluation criterion changes from prose quality to state of the system. The downside mirrors the upside: a wrong agent does damage rather than just generating a bad paragraph.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if you build an agent optimizing for task scope alone — giving it broad access to tools and data — without the memory, verifier, and human-in-the-loop components of the full agent pattern?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The chapter’s working pattern requires: bounded task, well-specified tools, automated verifier, and human in the loop on consequential actions. For a legal review agent: the task is bounded (review this contract against these criteria); tools would be document-reading and a knowledge base of clauses; the verifier is the hardest element — legal review lacks a clear automated check equivalent to a CI suite, so a human reviewer is likely the verifier for now. Optimizing for task scope without the verifier loop means the agent’s errors accumulate silently: wrong actions are not caught early, state diverges from intent, and by the time the failure is visible it has propagated through multiple downstream steps. That gap — no cheap automated ground truth — is what keeps the task partially human-supervised.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="34-agents-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

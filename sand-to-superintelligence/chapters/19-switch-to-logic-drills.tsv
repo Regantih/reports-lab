@@ -1,0 +1,10 @@
+What does NAND stand for?	Not AND.
+How many transistors does a two-input NAND gate use in CMOS?	Four: two PMOS in parallel at the top, two NMOS in series at the bottom.
+How many transistors does a two-input NOR gate use in CMOS?	Four — the same count as NAND, but with series and parallel positions swapped.
+Why does NAND switch faster than NOR?	NAND uses NMOS transistors in series for its pull-down; electrons in NMOS are roughly twice as mobile as holes in PMOS, which NOR uses in series for its pull-up.
+What makes NAND ‘functionally complete’?	Every possible boolean function — any truth table, any number of inputs — can be built from NAND gates alone.
+How do you build a NOT gate from a NAND gate?	Tie both inputs of a two-input NAND together.
+Who proved that boolean algebra is the natural mathematics for switching circuits?	Claude Shannon, in his 1937 master’s thesis.
+When does a CMOS gate consume power?	Only when it switches — when transistor capacitances are charged or discharged. Idle transistors are essentially free.
+How many NAND gates does a full adder require?	Nine NAND gates per full adder.
+Roughly how many gates does a frontier GPU contain?	On the order of 10<sup>11</sup> — about a hundred billion gates.

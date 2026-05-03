@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="29-network-in-numbers">
-  
+  <section class="learn predict reveal" data-predict data-slug="29-network-in-numbers" data-answer-key="c">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — how much memory do the weights of a 200-billion-parameter frontier model occupy in BF16?</h2>
+  <p class="learn__hint">Pick the order of magnitude. The chapter will tell you whether you were close.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-29-network-in-numbers" value="a"><span>~4 GB</span></label><label class="predict__choice"><input type="radio" name="predict-29-network-in-numbers" value="b"><span>~40 GB</span></label><label class="predict__choice"><input type="radio" name="predict-29-network-in-numbers" value="c"><span>~400 GB</span></label><label class="predict__choice"><input type="radio" name="predict-29-network-in-numbers" value="d"><span>~4 TB</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>~400 GB</strong> — 200 billion parameters at 16 bits (2 bytes) each. Frontier inference systems shard those weights across many GPUs because no single device’s HBM can hold them. The chapter’s stat row calls this out alongside the model’s parameter count and the shift to FP8 as the new precision floor.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 29 of 42</div>
     <div class="ch-header__num">Chapter 29</div>
     <h1 class="ch-header__title">A Neural Network Lives in Numbers</h1>
     <p class="ch-header__dek">Weights as DRAM, thought as matrix multiply</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">~200 <em>B</em></div><div class="stat__label">parameters in a frontier model</div></div><div class="stat"><div class="stat__num">~400 <em>GB</em></div><div class="stat__label">weight memory in BF16</div></div><div class="stat"><div class="stat__num">FP8</div><div class="stat__label">the new precision floor for inference</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="29-network-in-numbers">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you reach the ‘shape of a frontier model’ list, recite: vocabulary size, hidden dimension, number of transformer blocks, and total parameter count without re-reading.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, explain what a neural network layer is to a peer in 5 minutes. Cover: y = Wx + b → nonlinearity → attention is also a matmul → 80 blocks stacked → 400 GB of weights in BF16. Name FlashAttention’s purpose unprompted.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A skeptic asks: ‘If a neural network is just matrix multiplication, why can’t a spreadsheet run a frontier model?’ Respond in 90 seconds. Pass: you note that the matmuls are enormous (16,000 × 64,000 per layer, 80 layers, repeated per token), that the weights are 400 GB and must live in HBM, that tensor cores achieve throughput orders of magnitude beyond any CPU SIMD unit, and that memory bandwidth — 22 TB/s on Rubin — is the bottleneck that HBM was designed to remove.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Pick one open question in neural-network numerics or architecture — the limits of FP4/FP6 quantization, the mystery of why scale produces emergent capability, or mixture-of-experts vs. dense scaling laws. State, in three sentences, what is currently unsettled and what your defensible take is.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -175,7 +207,77 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 29.1</span><span class="text">A neural network layer as a matrix multiply: input vector × weight matrix → output vector, then a nonlinearity. Stack a few hundred of these and you have a frontier model.</span></figcaption>
     </figure>
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">A transformer is a stack of ~80 matrix multiplications per token, each reading from 400 GB of weights that must live in HBM — and every optimization from FlashAttention to FP8 quantization is an attempt to close the gap between arithmetic speed and memory bandwidth.</p>
+</aside>
       
+      <aside class="learn limits reveal" data-limits>
+  <div class="limits__eyebrow">What this chapter does NOT tell you</div>
+  <ul class="limits__list"><li>Does not tell you how mixture-of-experts (MoE) architectures change the weight-loading pattern — only a fraction of weights are active per token — or why MoE creates different memory-bandwidth bottlenecks than dense models.</li><li>Does not explain how KV-cache size scales with sequence length and batch size, or why long-context inference has a memory footprint that dwarfs the model weights themselves for large batches.</li><li>Does not address how speculative decoding using a draft model changes the per-token latency profile, or why the acceptance rate of draft tokens is the critical tuning variable.</li></ul>
+</aside>
+      <section class="learn retrieval reveal" data-retrieval data-slug="29-network-in-numbers">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What is BF16, and what trade-off does it make compared with FP32?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body"><strong>BF16</strong> (brain floating point) keeps FP32’s exponent range while using FP16’s mantissa width. It trades a little numerical precision for a lot of dynamic range — which matters in training because gradient magnitudes span many orders of magnitude. NVIDIA’s mixed-precision training work showed 16-bit formats are sufficient for both training and inference if handled carefully.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does a transformer’s self-attention mechanism reduce to matrix multiplication, despite appearing algorithmically complex?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Self-attention computes queries, keys, and values by three linear projections — each a matrix multiply of the input against a learned weight matrix. The attention scores are then <em>softmax(QK<sup>T</sup>/√d)V</em>: a matrix multiply of Q and K-transpose, a softmax, and another matrix multiply with V. Every meaningful operation is either a matmul or an element-wise function. This is why the same tensor cores built for dense linear algebra handle attention with no special casing.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if you optimize inference throughput by halving precision from BF16 to FP8 without carefully managing numerical accuracy?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Halving from 16 bits to 8 bits halves weight memory (400 GB → 200 GB for a 200B-parameter model) and doubles compute throughput because tensor cores can process twice as many values per cycle. The risk is that FP8 has limited mantissa bits, so activations or gradients that span a wide dynamic range may overflow or underflow, degrading output quality. Optimizing purely for throughput by applying FP8 without per-layer calibration, dynamic scaling factors, or outlier suppression produces a model that is fast but wrong — the chapter notes that achieving the throughput gain without losing accuracy is ‘a delicate art’, which is precisely why Hopper added native FP8 tensor cores alongside the tooling to use them safely.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="29-network-in-numbers-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

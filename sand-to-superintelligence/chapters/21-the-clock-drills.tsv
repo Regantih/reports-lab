@@ -1,0 +1,10 @@
+What is the typical clock frequency of a modern CPU?	Around 3.5 GHz.
+How long is one clock cycle at 3.5 GHz?	Roughly 290 picoseconds.
+What percentage of a chip’s power does the clock tree consume?	About 10%.
+What is ‘clock skew’ and why must it be low?	Skew is the difference in clock arrival time across flip-flops. If skew is too large, downstream logic sees inputs from different clock cycles and produces wrong results.
+What is the clock tree?	A balanced binary tree of buffers that distributes the clock signal from a central generator to every flip-flop, with equal-length wires on every branch to minimise skew.
+What is the critical path?	The slowest signal path between any two flip-flops on the chip; it sets the minimum clock period and hence the maximum frequency.
+What is a PLL and what does it do?	A phase-locked loop — a feedback circuit that multiplies a slow, accurate reference (typically 100 MHz from a quartz crystal) up to the chip’s operating frequency.
+How many pipeline stages did the Pentium 4 Prescott (2004) run?	31 stages.
+How many pipeline stages did the original Pentium 4 run?	20 stages.
+What is out-of-order execution?	A technique in which the chip looks ahead at dozens of instructions, executes any whose inputs are ready (in whatever order), and then retires them back into program order so the program’s visible behaviour is preserved.

@@ -1,0 +1,10 @@
+What does ISA stand for, and what is its role?	Instruction Set Architecture. It is the contract specifying exactly which bytes a CPU accepts and what they mean — the seam between hardware and software.
+In what year was x86 first defined, and with which processor?	1978, with the Intel 8086.
+How many instructions are in modern x86-64?	Roughly 1,500.
+How many instructions are in baseline RISC-V?	Roughly 50.
+What does CISC stand for, and what is its main characteristic?	Complex Instruction Set Computer. Rich, expressive, variable-length instructions (1–15 bytes on x86) that pack more semantics into each instruction.
+What does RISC stand for, and what is its main characteristic?	Reduced Instruction Set Computer. Simple, regular, fixed-length instructions (4 bytes) that can be pipelined and clocked faster; the compiler composes complex behaviour from simple parts.
+How does a modern x86 chip reconcile a CISC ISA with RISC execution?	It translates CISC instructions into RISC-like µops during decode, then executes those µops in a deeply pipelined, out-of-order RISC core. The ISA stays CISC; the engine inside is RISC.
+What is PTX, and how does it differ from SASS?	PTX (Parallel Thread Execution) is NVIDIA’s virtual ISA, compiled from CUDA. SASS is the real hardware ISA. PTX is JIT-compiled to SASS at runtime, allowing programs to run on future GPUs without recompilation.
+What is a warp in the GPU ISA context?	A group of 32 threads that execute a single PTX instruction simultaneously, each operating on different data — SIMD-style parallelism.
+What is RISC-V, and why is it significant?	An open-source ISA from UC Berkeley that anyone can implement royalty-free. It is small, modern, and modular; most major hyperscalers and AI startups have RISC-V projects underway, often winning quietly in chip controllers and accelerators.

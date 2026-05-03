@@ -1,0 +1,10 @@
+What was the original etching method used in early IC manufacturing, and what limits it?	Wet chemical etching — it is isotropic (etches in all directions equally), which undercuts fine features and is unusable at modern dimensions.
+What gas chemistry is used in plasma etching for silicon and silicon oxides?	Fluorine compounds (e.g., SF₆, CF₄).
+What gas chemistry is used for plasma etching of metals?	Chlorine compounds.
+What volatile compound does silicon form when plasma-etched with fluorine?	Silicon tetrafluoride (SiF₄), which pumps away as a gas.
+What does 'etch selectivity' mean?	The ratio of etch rate on the target material to the etch rate on the masking material; optimized recipes approach 1,000:1.
+What makes RIE anisotropic?	Positive ions are accelerated downward by an RF bias, striking the surface vertically and driving the etch straight down rather than laterally.
+What do boron dopants contribute electrically to silicon?	Holes — positive charge carriers — making the silicon P-type.
+What do phosphorus or arsenic dopants contribute?	Free electrons, making the silicon N-type.
+What energy range is typical for ion implantation?	Tens of thousands of volts (tens of keV) — around ~50 keV typically.
+To what temperature is the wafer heated during a rapid thermal anneal?	Around 1,000°C, sometimes up to 1,200°C, for seconds at a time.

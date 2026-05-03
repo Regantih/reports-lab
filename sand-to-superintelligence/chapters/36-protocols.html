@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="36-protocols">
-  
+  <section class="learn predict reveal" data-predict data-slug="36-protocols" data-answer-key="a">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — how many widely-deployed protocols for cross-vendor agent identity existed at end of 2025?</h2>
+  <p class="learn__hint">The chapter is blunt.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-36-protocols" value="a"><span>0</span></label><label class="predict__choice"><input type="radio" name="predict-36-protocols" value="b"><span>1 (MCP)</span></label><label class="predict__choice"><input type="radio" name="predict-36-protocols" value="c"><span>3 (MCP, A2A, ACL)</span></label><label class="predict__choice"><input type="radio" name="predict-36-protocols" value="d"><span>dozens</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>Zero</strong> — the chapter explicitly states that there are zero widely-deployed protocols for cross-vendor agent identity at end of 2025. MCP solves the tool-integration problem; A2A and its rivals address agent-to-agent delegation but had scarce production deployments. The field is in the period that HTTP was in around 1992.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 36 of 42</div>
     <div class="ch-header__num">Chapter 36</div>
     <h1 class="ch-header__title">Protocols of Trust</h1>
     <p class="ch-header__dek">MCP, A2A, and the standards quietly being negotiated</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">Nov 2024</div><div class="stat__label">Anthropic open-sources Model Context Protocol</div></div><div class="stat"><div class="stat__num">thousands</div><div class="stat__label">MCP servers published in the registry's first year, with broader ecosystem listings already in the tens of thousands</div></div><div class="stat"><div class="stat__num">0</div><div class="stat__label">widely-deployed protocols for cross-vendor agent identity, end of 2025</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="36-protocols">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you hit the four things trust requires at the protocol layer, name them: identity, capability description, audit trail, and recourse.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, explain to a peer in 5 minutes: what MCP does, what it explicitly does not do, and why the cross-organizational trust problem remains unsolved as of end of 2025.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A vendor pitches you their MCP-compliant tool server as 'fully trusted.' Respond in 90 seconds. Pass: you note that MCP standardizes syntax, not the social contract — it does not solve identity (bearer tokens are leaky), audit trail (logging is absent across organizations), or recourse (no mechanism for cross-org damages) — and that all four trust requirements remain unsolved in any deployed standard.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Pick one of the four trust requirements the chapter names — identity, capability description, audit trail, or recourse. State, in three sentences, what is unsettled about solving it at the protocol layer and what your defensible take is.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -155,7 +187,80 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 36.1</span><span class="text">The trust stack. A model calls a tool through a function-calling spec; the tool runs on a server speaking MCP; the server authenticates back to a service via OAuth or signed tokens. Each layer answers a different question: 'what?', 'where?', 'who?'.</span></figcaption>
     </figure>
-      
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">MCP standardizes the shape of the tool conversation — discovery, invocation, structured response — but the social contract beneath it (identity, audit trail, recourse) remains wholly unsolved, which means a company that MCP-connects to a third-party tool has outsourced its trust problem, not solved it.</p>
+</aside>
+      <aside class="learn heuristic reveal" data-heuristic>
+  <div class="heuristic__eyebrow">Rule of thumb</div>
+  <p class="heuristic__body">Connecting a model to internal tools in a single organization? MCP with a private registry is the right abstraction — standardizes tool discovery without cross-org trust complexity. Connecting to third-party tools across organizations? Add explicit OAuth scopes, signed audit logs, and human approval on consequential actions — MCP handles the syntax but not the trust. Comparing protocols? Prefer whichever has the most community MCP server implementations for your domain; switching costs between syntactically similar protocols are low compared to rebuilding tool integrations.</p>
+</aside>
+      <aside class="learn limits reveal" data-limits>
+  <div class="limits__eyebrow">What this chapter does NOT tell you</div>
+  <ul class="limits__list"><li>Does not tell you how bearer token rotation and revocation work in practice for long-running agent sessions, or why token leakage is harder to contain when the agent’s credential is the user’s credential.</li><li>Does not explain how regulatory frameworks (GDPR, HIPAA, SOC 2) interact with agentic tool calls that span organizational boundaries, or who bears liability when an agent acts outside its stated capability.</li><li>Does not address how the MCP registry’s network-effect dynamics will play out — whether it consolidates to a single standard the way HTTP did or fragments the way instant-messaging protocols did.</li></ul>
+</aside>
+      <section class="learn retrieval reveal" data-retrieval data-slug="36-protocols">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">When did Anthropic open-source MCP, and what problem does it solve?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Anthropic open-sourced the Model Context Protocol in November 2024. MCP separates the model from the tool it is calling, so any MCP-compliant client can talk to any MCP-compliant server. It covers tool discovery, invocation, and structured responses; it is transport-agnostic, runs over standard JSON-RPC, and is genuinely portable across vendors.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">The chapter identifies four trust failures in the naive setup of an agent making API calls. What are they, and why does the chapter say existing internet plumbing was not built to handle them?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The four failures: (1) the agent can hallucinate — invent an API response that did not happen; (2) the tool can lie — return a result that misrepresents its underlying action; (3) the user's permissions can be insufficient or excessive; (4) the transport can be tampered with. Existing solutions — TLS, OAuth, formal specs — were designed for stable, deterministic clients. Agents improvise, and the protocol layer must assume the agent itself is the most likely source of trouble — a category of trust problem the existing plumbing was not built for.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if you optimize for protocol standardization alone — adopting MCP for all tool integrations — without the trust layer beneath it?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">MCP handles discovery, invocation syntax, and structured responses. It does not handle authentication of the caller, signing of responses, logging of actions, or policy compliance. A company using a third-party MCP server still has to separately arrange: how the server authenticates that the caller is authorized, how it proves later what actions it took, and what happens if it acts outside its stated capability. Optimizing purely for protocol standardization produces a system where tools are easy to connect but impossible to audit, where an agent hallucinating a tool response is indistinguishable from a tool lying about its action, and where cross-organizational recourse is undefined. Those gaps — identity, audit trail, and recourse — are the four unsolved trust requirements the chapter names, none of which MCP addresses.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="36-protocols-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

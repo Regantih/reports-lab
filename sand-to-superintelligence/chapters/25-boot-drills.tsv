@@ -1,0 +1,9 @@
+What is the x86 reset vector address?	0xFFFFFFF0.
+Where does the reset vector point?	Into flash memory on the motherboard, where UEFI (or BIOS) firmware lives.
+What is the difference between BIOS and UEFI?	BIOS is the older firmware standard; UEFI (Unified Extensible Firmware Interface) is the modern replacement found on current PCs.
+Name three things UEFI does during hardware initialization.	Detects DRAM and runs memory training, enumerates PCIe devices, sets up the interrupt controller (any three from: microcode config, chipset init, locating bootable storage).
+What is GRUB?	The most common Linux bootloader — its job is to find the kernel on disk, decompress it into RAM, and jump to its entry point.
+What is vmlinuz?	The Linux kernel image on disk — a self-extracting compressed blob the bootloader must decompress into a clean region of RAM.
+What is the first function the Linux kernel calls, and what is PID 1?	start_kernel(); PID 1 is the init process (today usually systemd on Linux), the parent of every other process.
+How long does a modern UEFI boot take, from power-on to kernel hand-off?	~3 seconds.
+How many stages does the chapter identify in the power-on-to-login relay race?	Five: power-on reset, firmware, bootloader, kernel init, userspace.

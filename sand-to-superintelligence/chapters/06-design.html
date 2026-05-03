@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="06-design">
-  
+  <section class="learn predict reveal" data-predict data-slug="06-design" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — roughly how many transistors does NVIDIA pack into a Rubin GPU package?</h2>
+  <p class="learn__hint">Pick the order of magnitude. The chapter will tell you whether you were close.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-06-design" value="a"><span>~10<sup>9</sup> (a few billion)</span></label><label class="predict__choice"><input type="radio" name="predict-06-design" value="b"><span>~10<sup>11</sup> (a few hundred billion)</span></label><label class="predict__choice"><input type="radio" name="predict-06-design" value="c"><span>~10<sup>13</sup> (tens of trillions)</span></label><label class="predict__choice"><input type="radio" name="predict-06-design" value="d"><span>~10<sup>15</sup> (a quadrillion)</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>~336 billion transistors per Rubin package</strong> — two dies on a single substrate, each die close to the reticle limit at roughly 800 square millimeters. Built on TSMC's N3P process, a FinFET node. The verification of this design alone consumed thousands of CPU-years of simulation.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 06 of 42</div>
     <div class="ch-header__num">Chapter 06</div>
     <h1 class="ch-header__title">Designing the Impossible</h1>
     <p class="ch-header__dek">EDA, transistors, and 15,000 engineer-years</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">336 <em>billion</em></div><div class="stat__label">transistors per Rubin GPU die</div></div><div class="stat"><div class="stat__num">thousands</div><div class="stat__label">of engineer-years of design effort</div></div><div class="stat"><div class="stat__num">4–5 <em>years</em></div><div class="stat__label">from architecture to first silicon</div></div><div class="stat"><div class="stat__num">~80</div><div class="stat__label">lithography mask sets per chip</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="06-design">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you reach the design-pyramid list, name all seven layers in order from top to bottom: Architecture → Microarchitecture → RTL → Logic synthesis → Place & route → Physical verification → Mask generation.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, explain the EDA design loop to a peer in 5 minutes. Cover: RTL code → netlist of standard cells → place & route → timing/power/reliability closure → hundreds of iterations → physical verification → mask generation. State what 'timing closure' means.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A skeptic says: 'GAA is just marketing — FinFET still works fine.' Respond in 90 seconds. Pass: you explain that at sub-3 nm, ungated fin bottoms leak enough to matter, that GAA wraps all four sides of each nanosheet to eliminate that path, and that this is precisely why N2 exists and why Rubin on N3P is the last major FinFET generation at the leading edge.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Pick one open question in chip design automation — neural-network-assisted placement, formal verification at billion-transistor scale, or PPA (power-performance-area) co-optimization across the full stack. State, in three sentences, what is currently unsettled and what your defensible take is.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -191,7 +223,77 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 6.1</span><span class="text">Three transistor architectures across two decades. Each generation puts more of the gate around the channel. Rubin still rides FinFETs on TSMC's N3P; the next architecture jumps to nanosheet GAA on N2.</span></figcaption>
     </figure>
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">A Rubin GPU is not designed once — it is the output of hundreds of EDA iterations that jointly close timing, power, and area across 336 billion transistors, and a single missed constraint anywhere restarts the loop.</p>
+</aside>
       
+      <aside class="learn limits reveal" data-limits>
+  <div class="limits__eyebrow">What this chapter does NOT tell you</div>
+  <ul class="limits__list"><li>Does not tell you why timing closure failures cluster at specific physical locations rather than being random across the die.</li><li>Does not explain how EDA tools handle disagreements between the power model and the thermal model when both must close simultaneously.</li><li>Does not address how mask costs and NRE change the economics when die size exceeds the reticle limit and stitching is required.</li></ul>
+</aside>
+      <section class="learn retrieval reveal" data-retrieval data-slug="06-design">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What process node does the Rubin GPU use, and what transistor architecture does it employ?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Rubin is built on <strong>TSMC's N3P process</strong>, the high-performance refinement of N3. It uses <strong>FinFET</strong> transistors — not gate-all-around nanosheets, which are coming on N2, the node expected for NVIDIA's architecture after Rubin.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does a chip design loop run hundreds of iterations rather than converging in a single pass?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Because timing, power, area, and signal integrity are all coupled — optimizing one often degrades another. EDA tools translate RTL into a netlist, then place and route cells, then check timing closure (every signal reaching its destination within one clock period), power closure, and reliability. Each check reveals violations that require changes upstream, restarting the loop. Modern EDA tools use neural networks to suggest placement strategies, but humans still review and re-run.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if a chip team optimizes purely for transistor count — maximizing density without closing on timing and power?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">A chip that does not achieve timing closure ships with race conditions: signals arrive at destinations outside the clock window, producing wrong results. Power closure failures mean the chip exceeds its thermal envelope under real workloads, throttling or permanently damaging itself. Maximizing transistor count without closing on these constraints produces silicon that either fails in the lab or throttles so aggressively in the field that its nominal performance is never reached. The 336 billion transistors in Rubin are only useful because every path through all of them was verified to meet timing and power specifications.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="06-design-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

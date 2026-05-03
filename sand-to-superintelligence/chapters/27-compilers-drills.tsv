@@ -1,0 +1,9 @@
+How many stages of translation exist between Python source and electrons?	Seven.
+What is an abstract syntax tree (AST)?	A tree representation of a program's structure produced by parsing; a function call becomes a node with a callee and argument list.
+What is Python bytecode?	The stack-machine intermediate representation CPython compiles the AST into; the CPython virtual machine executes it one instruction at a time.
+What is LLVM IR?	A typed, register-based intermediate language used by Clang, Rust, Swift, and others as the universal middle layer for optimization and code generation.
+What is an object file?	The output of the assembler: machine-code bytes in a standard format (ELF on Linux, Mach-O on macOS, PE on Windows), with unresolved symbol references.
+What does the linker do?	Stitches object files and libraries together into the final executable, resolving every function and variable reference to a real address.
+What are micro-ops (µops)?	The simpler, internal operations a modern x86 CPU decodes each fetched instruction into before scheduling and executing them out-of-order.
+How many µops might one x86 instruction expand into?	~3–5, depending on the instruction.
+At what stage does most compiler optimization happen?	At the IR stage (e.g., LLVM IR) — before the compiler knows the target architecture.

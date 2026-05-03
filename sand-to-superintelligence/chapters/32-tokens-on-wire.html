@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="32-tokens-on-wire">
-  
+  <section class="learn predict reveal" data-predict data-slug="32-tokens-on-wire" data-answer-key="c">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — roughly how many dimensions does an OpenAI text-embedding-3 vector have?</h2>
+  <p class="learn__hint">Pick the order of magnitude.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-32-tokens-on-wire" value="a"><span>~100</span></label><label class="predict__choice"><input type="radio" name="predict-32-tokens-on-wire" value="b"><span>~1,000</span></label><label class="predict__choice"><input type="radio" name="predict-32-tokens-on-wire" value="c"><span>~3,000</span></label><label class="predict__choice"><input type="radio" name="predict-32-tokens-on-wire" value="d"><span>~30,000</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>3,072 dimensions</strong> for the text-embedding-3 vector, with common alternatives at 768 and 1,536. The chapter notes that the dot product of two such vectors is a usable proxy for semantic similarity, computable in microseconds — which is the primitive that vector databases are built around.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 32 of 42</div>
     <div class="ch-header__num">Chapter 32</div>
     <h1 class="ch-header__title">Tokens on the Wire</h1>
     <p class="ch-header__dek">What flows when intelligence is the payload</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">~4 <em>chars</em></div><div class="stat__label">average bytes per English token</div></div><div class="stat"><div class="stat__num">3,072 <em>dims</em></div><div class="stat__label">size of an OpenAI text-embedding-3 vector</div></div><div class="stat"><div class="stat__num">~$0.30</div><div class="stat__label">median price of one million input tokens, end of 2025</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="32-tokens-on-wire">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you hit the three objects that travel on the fifth wire, name all three: tokens, embeddings, and structured (function) calls.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, walk a peer through the anatomy of a single API call end to end in 5 minutes: JSON request built with messages, tools, model, and sampling params → HTTPS to load balancer → TLS termination, auth, rate limits → GPU queue → KV-cache prefill → streaming token generation at ~50ms/token → billing in tokens not bytes.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A skeptic says: 'Tokens are just bytes with a fancy name — there's nothing economically new.' Respond in 90 seconds. Pass: you explain that the token is a unit of economic accounting that did not exist five years ago, that every meaningful AI workload is now budgeted, billed, rate-limited, and compared in tokens, and that the context window — not bandwidth — is the binding constraint on prompt size.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">The chapter says there is no standard body governing the AI wire's semantic layer — tokens, embeddings, function-call schemas — the way HTTP is governed. State, in three sentences, what the key unsettled question is and what your defensible take on how it resolves is.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -207,7 +239,80 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 32.1</span><span class="text">Three things travel between AI systems. Tokens (raw thought-units), embeddings (meaning as a vector), and function calls (structured intent). The protocols described in later chapters are conventions about how to wrap them.</span></figcaption>
     </figure>
-      
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">Tokens are the billing unit of the fifth wire and the discrete atoms a model can manipulate, but they carry no geometry — embeddings solve that by mapping tokens into a high-dimensional space where direction encodes meaning, and dot product becomes a fast proxy for semantic similarity.</p>
+</aside>
+      <aside class="learn heuristic reveal" data-heuristic>
+  <div class="heuristic__eyebrow">Rule of thumb</div>
+  <p class="heuristic__body">Choosing embedding dimension? 768 for most retrieval tasks — cheap and fast with negligible accuracy loss for standard corpora. 1,536 for multilingual or technical corpora where semantic precision matters. 3,072 only if you are benchmarking or building a retrieval system where sub-1% recall differences are worth the 4× storage and compute cost.</p>
+</aside>
+      <aside class="learn limits reveal" data-limits>
+  <div class="limits__eyebrow">What this chapter does NOT tell you</div>
+  <ul class="limits__list"><li>Does not tell you how context-window size interacts with KV-cache memory at inference time, or why long-context pricing has a different cost structure than per-token pricing for short prompts.</li><li>Does not explain how tokenizer vocabulary choices (byte-pair encoding vs. unigram LM) affect model performance on code, numbers, or non-Latin scripts, or why tokenizer design is still an active research area.</li><li>Does not address how embedding drift — the same text producing different vectors as a model is updated — breaks vector database indexes that were built on a previous model version.</li></ul>
+</aside>
+      <section class="learn retrieval reveal" data-retrieval data-slug="32-tokens-on-wire">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">Approximately how many characters does one English token correspond to, and roughly what fraction of a word does that represent?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">One token is roughly four characters, or three quarters of a word. The tokenizer learns a vocabulary of around 100,000 subword units from a large corpus; common words become single tokens, rare words get broken into pieces.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does the chapter say output tokens are four to five times more expensive than input tokens for inference providers?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Output generation requires running the full forward pass token by token — each new token is produced by a fresh autoregressive forward pass through the model. Input tokens are processed in a single parallel forward pass (prefill). The serial, per-token nature of generation is what drives the price premium.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if you optimize token representation for discrete precision alone — relying only on token IDs without embedding geometry — when you need semantic similarity search?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Tokens are categorical — 'cat' and 'feline' are as far apart as 'cat' and 'spreadsheet'. A representation that is only discrete token IDs has no notion of proximity: you can match exact tokens but not semantically related text. Embeddings solve the semantic-proximity problem: texts with similar meaning produce vectors with similar directions in a high-dimensional space. Because embedding models are trained so that similar texts produce close vectors (via contrastive objectives), cosine similarity and inner product in that space become usable proxies for semantic overlap. Optimizing only for token-level exact matching produces a retrieval system that fails on synonyms, paraphrases, and any query where the user’s words differ from the document’s words.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="32-tokens-on-wire-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="35-swarm">
-  
+  <section class="learn predict reveal" data-predict data-slug="35-swarm" data-answer-key="c">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — a five-agent system has how many pairwise interfaces that can each fail independently?</h2>
+  <p class="learn__hint">Think combinatorially: C(5,2).</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-35-swarm" value="a"><span>5</span></label><label class="predict__choice"><input type="radio" name="predict-35-swarm" value="b"><span>8</span></label><label class="predict__choice"><input type="radio" name="predict-35-swarm" value="c"><span>10</span></label><label class="predict__choice"><input type="radio" name="predict-35-swarm" value="d"><span>20</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>10 pairwise interfaces</strong> — C(5,2) = 10, as the chapter states explicitly. The point is that debugging a five-agent system is harder by an order of magnitude than debugging a single agent, because every one of those ten interfaces can fail, and tracing a failure across them is non-trivial.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 35 of 42</div>
     <div class="ch-header__num">Chapter 35</div>
     <h1 class="ch-header__title">Swarm</h1>
     <p class="ch-header__dek">Many agents, one outcome</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">3-7</div><div class="stat__label">agents in a typical production multi-agent system</div></div><div class="stat"><div class="stat__num">~5×</div><div class="stat__label">token cost of debate vs. single-agent on same task</div></div><div class="stat"><div class="stat__num">~10-25%</div><div class="stat__label">accuracy lift from debate over best single agent on hard tasks</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="35-swarm">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you hit the three multi-agent patterns, name all three: hierarchy, debate, and market.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, explain to a peer in 5 minutes: the three walls that motivate multi-agent systems, what each pattern buys, and what the chapter says multi-agent systems demonstrably do NOT provide.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A colleague proposes using a five-agent debate system for a high-volume content moderation task. Respond in 90 seconds. Pass: you cite the 5× token-cost multiplier, the 10–25% accuracy lift, and the chapter’s explicit conclusion that debate rarely justifies its cost in bulk-throughput settings; and you propose a single well-prompted agent with a cheap verifier as the chapter’s recommended alternative.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">The chapter calls the most overstated claim in the multi-agent literature the idea that swarms produce qualitatively new behaviour. Pick one real emergent-looking multi-agent result in the literature. State, in three sentences, whether you think it is quantitative scaffolding or genuine emergence, and what evidence would settle it.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -185,7 +217,77 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 35.1</span><span class="text">Three coordination patterns. Hierarchy (a planner dispatching workers), debate (peers arguing toward consensus), and market (a router auctioning each subtask to the cheapest qualified bidder). Each trades cost for robustness differently.</span></figcaption>
     </figure>
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">A swarm buys specialization, error correction, and context isolation — three quantitative improvements on reliability — but it cannot exceed the reasoning ceiling of its component models, which means the decision to build multi-agent is a decision about reliability on a known task, not about acquiring qualitatively new capability.</p>
+</aside>
       
+      <aside class="learn limits reveal" data-limits>
+  <div class="limits__eyebrow">What this chapter does NOT tell you</div>
+  <ul class="limits__list"><li>Does not tell you how inter-agent communication latency accumulates in hierarchical swarms with many layers, or where the RTT budget from Chapter 33 becomes the binding constraint on swarm depth.</li><li>Does not explain how to audit a swarm’s decision when the responsible agent is itself running agents, or why attribution of errors across ten pairwise interfaces is a harder forensics problem than single-agent debugging.</li><li>Does not address how swarm architectures interact with context-window pricing — each agent reading a shared transcript pays the full prefill cost — or why shared-transcript designs become economically impractical past three or four agents.</li></ul>
+</aside>
+      <section class="learn retrieval reveal" data-retrieval data-slug="35-swarm">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What is the typical token-cost multiplier for a debate between agents versus having the best single agent answer directly, and what accuracy lift does debate typically produce?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">A debate between three agents on a hard reasoning task can easily cost 5× the tokens of the best single agent. The accuracy lift, on tasks where debate helps, is typically 10–25%. The honest accounting therefore depends heavily on domain — the lift is often worth it in high-stakes settings but rarely justifies the cost in bulk-throughput settings.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">The chapter names three walls that cause single-agent systems to break down. What are they, and which multi-agent pattern does each suggest?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The three walls: (1) <strong>Context length</strong> — even two-million-token windows produce worse reasoning when the full project state is dumped in; this suggests the <em>hierarchy</em> pattern, where each worker reads only a focused subset. (2) <strong>Specialization</strong> — a generalist model underperforms a narrowly-prompted specialist; this also suggests hierarchy with specialist workers. (3) <strong>Error correction</strong> — a model is systematically less critical of its own work than a sibling reviewing from outside; this suggests the <em>debate</em> pattern.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if you optimize a swarm for specialization without acknowledging that it cannot exceed the reasoning ceiling of its component models?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">A swarm of GPT-4-class agents will not collectively do GPT-6 work. What the swarm buys is quantitative reliability — turning a 60% solve rate into 80% — not a qualitatively different kind of reasoning. Optimizing for specialization through swarm architecture while expecting emergent capability beyond the underlying model’s ceiling leads to over-investment in orchestration scaffolding for tasks the model is not capable of solving at any level of specialization. A team should reach for multi-agent when their ceiling is reliability on a known task; if the bottleneck is the underlying model’s reasoning, they are better served upgrading to a stronger model than building multi-agent scaffolding around a weaker one.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="35-swarm-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

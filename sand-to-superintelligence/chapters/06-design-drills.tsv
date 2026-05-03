@@ -1,0 +1,10 @@
+What process node is Rubin built on?	TSMC N3P — the high-performance refinement of N3, a FinFET node.
+How many transistors does the Rubin package contain?	About 336 billion, across two dies on a single substrate.
+What are the three dominant EDA companies?	Synopsys, Cadence, and Siemens EDA.
+What language do engineers write to describe chip behavior at the RTL level?	Hardware description languages like SystemVerilog.
+What does 'timing closure' mean in chip design?	Every signal must reach every destination within a single clock period, with margin for manufacturing variation.
+How many lithography mask layers does a leading-edge chip require?	Perhaps eighty individual mask layers — one per lithography step.
+What does a mask-making vendor pattern masks on?	Chrome on glass plates, using electron-beam lithography.
+What is the key structural difference between a FinFET and a GAA nanosheet transistor?	A FinFET's gate wraps three sides of a vertical fin; a GAA gate wraps all four sides of each horizontal nanosheet.
+Which TSMC node uses GAA nanosheet transistors?	N2 — the successor to N3P, not yet used by Rubin.
+Why is the Rubin GPU die area close to the 'reticle limit'?	The reticle limit is the largest area a single EUV exposure can pattern at once; at roughly 800 mm², Rubin's die pushes that boundary.

@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="37-memory-commons">
-  
+  <section class="learn predict reveal" data-predict data-slug="37-memory-commons" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — approximately how much does it cost to embed one million tokens using text-embedding-3-small?</h2>
+  <p class="learn__hint">Pick the order of magnitude in dollars.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-37-memory-commons" value="a"><span>~$0.002</span></label><label class="predict__choice"><input type="radio" name="predict-37-memory-commons" value="b"><span>~$0.02</span></label><label class="predict__choice"><input type="radio" name="predict-37-memory-commons" value="c"><span>~$0.20</span></label><label class="predict__choice"><input type="radio" name="predict-37-memory-commons" value="d"><span>~$2.00</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>~$0.02 per million tokens</strong> with text-embedding-3-small. This low unit cost is part of what makes retrieval-augmented generation economically viable at scale — the expense of building a corpus index is modest compared with the inference cost of answering questions over it.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 37 of 42</div>
     <div class="ch-header__num">Chapter 37</div>
     <h1 class="ch-header__title">The Memory Commons</h1>
     <p class="ch-header__dek">Vector databases and the shared substrate of recall</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">~10<sup>9</sup></div><div class="stat__label">vectors in a single mid-size production index</div></div><div class="stat"><div class="stat__num"><10 <em>ms</em></div><div class="stat__label">vector lookup latency at billion-scale</div></div><div class="stat"><div class="stat__num">~$0.02/M</div><div class="stat__label">cost of embedding a million tokens with text-embedding-3-small</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="37-memory-commons">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you hit the RAG pipeline description, name all the stages in order: chunk, embed, index, embed query, ANN search, rerank, format into prompt, model answers.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, explain to a peer in 5 minutes what the 'memory commons' is: why a model's frozen weights are insufficient, how RAG fills the gap, what a vector database does (ANN search at billion-scale in under 10ms), and what the commons contributes organizationally beyond any single agent.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A team claims their pure-vector RAG system handles all retrieval needs, including multi-hop relational queries. Respond in 90 seconds. Pass: you explain the structural difference between similarity search and structured JOIN, cite the chapter's example of 'list every Apple acquisition,' and describe why GraphRAG-style hybrid systems outperform vector-only on multi-hop questions.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">The chapter says the memory commons raises questions about ownership, read access, and hygiene that are being worked out in courts and company policies with a lag behind the engineering. Pick one of those three questions. State, in three sentences, what is unsettled and what your defensible take is.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -185,7 +217,77 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 37.1</span><span class="text">A retrieval-augmented system. Documents are chunked, embedded, and stored as vectors. At query time, the question is embedded; nearest-neighbour search returns relevant chunks; the model reads them as context and answers grounded.</span></figcaption>
     </figure>
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">The memory commons is what gives a model current knowledge it was never trained on — RAG grounds answers in retrieved facts, vector search makes that retrieval sub-10ms at billion scale, and the hard architectural limit is that vectors capture similarity but lose structure, which is why multi-hop relational questions require a knowledge graph, not a dot product.</p>
+</aside>
       
+      <aside class="learn limits reveal" data-limits>
+  <div class="limits__eyebrow">What this chapter does NOT tell you</div>
+  <ul class="limits__list"><li>Does not tell you how chunk size and overlap interact with retrieval recall — chunks too small lose context, chunks too large dilute the relevant signal — or why optimal chunking is domain-dependent.</li><li>Does not explain how rerankers improve precision after ANN retrieval, or why a two-stage retrieve-then-rerank pipeline outperforms a single-stage ANN search on most production benchmarks.</li><li>Does not address how the memory commons raises ownership questions — who controls what an agent can read or write into a shared index — or why access control for multi-agent shared memory is an unsolved engineering problem.</li></ul>
+</aside>
+      <section class="learn retrieval reveal" data-retrieval data-slug="37-memory-commons">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What vector lookup latency does the chapter say ANN indexing achieves at billion-scale, and what algorithms does FAISS use to get there?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Sub-10 ms at billion-scale, at modest accuracy loss. FAISS from Meta open-sourced the foundational algorithms: IVF (inverted file index), HNSW (hierarchical navigable small world), and product quantization. These turn a pairwise comparison that would take seconds into a sub-10ms operation.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does the chapter say RAG makes a model accurate where it would otherwise hallucinate, but does not make a model smart?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">RAG gives the model current, grounded facts at inference time by pasting relevant retrieved chunks into the context window. That unblocks the model from producing confidently wrong answers about information it never had. But the model’s reasoning — its ability to synthesize, infer, and judge — is still the binding constraint. If the retrieved chunks are the right ones, the model can answer; if its reasoning is weak, better retrieval does not compensate.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if you optimize retrieval for semantic similarity alone — using pure vector search — without structural knowledge for multi-hop relational queries?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">An embedding of 'Apple acquired Beats' and 'Beats was acquired by Apple' are nearly identical — both sit in the same neighbourhood. But answering 'list every Apple acquisition' requires enumerating all (Apple, acquired, ?) triples — a structured JOIN across entities and relationships, not a similarity search. A vector search would surface documents that mention Apple acquisitions, but the model would need to read and collate each one, introducing synthesis risk on every retrieved chunk. A knowledge graph storing explicit (subject, predicate, object) triples answers the query directly and precisely, without that risk. Optimizing purely for semantic similarity produces a retrieval system that is excellent for ‘find text like this’ and fails for ‘enumerate all instances of this relationship’.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="37-memory-commons-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

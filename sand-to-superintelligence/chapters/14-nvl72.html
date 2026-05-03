@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="14-nvl72">
-  
+  <section class="learn predict reveal" data-predict data-slug="14-nvl72" data-answer-key="c">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — how much all-to-all NVLink 6 bandwidth does a single NVL72 rack carry between its 72 GPUs?</h2>
+  <p class="learn__hint">Pick the order of magnitude. The chapter will tell you whether you were close.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-14-nvl72" value="a"><span>~10 TB/s</span></label><label class="predict__choice"><input type="radio" name="predict-14-nvl72" value="b"><span>~80 TB/s</span></label><label class="predict__choice"><input type="radio" name="predict-14-nvl72" value="c"><span>~260 TB/s</span></label><label class="predict__choice"><input type="radio" name="predict-14-nvl72" value="d"><span>~1 PB/s</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>260 TB/s all-to-all bandwidth</strong> across the 72 GPUs — roughly comparable, by some estimates, to the global internet’s aggregate cross-sectional bandwidth, delivered inside one cabinet. This is what allows the rack to act as a single GPU: activations can be moved between shards quickly enough that they do not dominate the training step.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 14 of 42</div>
     <div class="ch-header__num">Chapter 14</div>
     <h1 class="ch-header__title">The NVL72 Rack</h1>
     <p class="ch-header__dek">72 GPUs that move data faster than the internet</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">72 <em>GPUs</em></div><div class="stat__label">per NVL72 rack</div></div><div class="stat"><div class="stat__num">3.6 <em>EFLOPS</em></div><div class="stat__label">FP4 per rack</div></div><div class="stat"><div class="stat__num">260 <em>TB/s</em></div><div class="stat__label">all-to-all NVLink bandwidth</div></div><div class="stat"><div class="stat__num">~190–230 <em>kW</em></div><div class="stat__label">rack power (Max Q / Max P)</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="14-nvl72">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you reach the midplane section, note the two directions trays plug in: compute trays from one side, NVLink switch trays from the other.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, describe the NVL72 rack’s anatomy to a peer in 5 minutes. Cover: 18 compute trays × 4 GPUs + 2 CPUs → 9 NVLink switch trays → copper midplane spine → 260 TB/s all-to-all → ~190–230 kW power → liquid cooling loop. Quote the aggregate memory and compute figures.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A skeptic says: ‘Why not just use InfiniBand inside the rack too — it’s proven at scale.’ Respond in 90 seconds. Pass: you explain that InfiniBand operates at hundreds of gigabits per port, whereas NVLink 6 delivers the equivalent of 260 TB/s all-to-all at much lower latency and without protocol overhead, because it is a GPU-native coherent fabric; InfiniBand takes over for rack-to-rack traffic, where the distance and protocol layering are unavoidable.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Pick one open question in rack-scale AI compute: the limit of copper midplane trace density at future bandwidths, thermal management above 300 kW per rack, or the architectural shift to optical interconnect inside the rack. State, in three sentences, what is currently unsettled and what your defensible take is.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -150,7 +182,80 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 14.1</span><span class="text">The NVL72 rack: 18 compute trays connected to a copper midplane spine that carries 260 TB/s of all-to-all NVLink 6 bandwidth, drawing roughly 190–230 kW depending on configuration.</span></figcaption>
     </figure>
-      
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">The NVL72 rack works as a single 3.6-exaflop machine because its copper midplane delivers 260 TB/s all-to-all — the moment that bandwidth is cut, the rack stops being one machine and becomes 72 queued ones.</p>
+</aside>
+      <aside class="learn heuristic reveal" data-heuristic>
+  <div class="heuristic__eyebrow">Rule of thumb</div>
+  <p class="heuristic__body">Training a multi-trillion-parameter MoE model that spans all 72 GPUs? Use Max P — peak compute matters more than efficiency. Running sustained inference where tokens-per-watt is the cost driver? Use Max Q. Mixed training and inference on the same rack? Profile at Max Q first; only switch to Max P if compute, not efficiency, is the bottleneck.</p>
+</aside>
+      <aside class="learn limits reveal" data-limits>
+  <div class="limits__eyebrow">What this chapter does NOT tell you</div>
+  <ul class="limits__list"><li>Does not tell you how NVLink 6 latency scales with hop count as the switched fabric grows beyond one rack, where InfiniBand takes over and the latency model changes.</li><li>Does not explain how liquid-cooling flow rate is balanced across 18 compute trays to prevent thermal gradients that could throttle individual GPUs.</li><li>Does not address how the Max Q vs Max P tuning decision interacts with HBM junction temperature limits under sustained inference load.</li></ul>
+</aside>
+      <section class="learn retrieval reveal" data-retrieval data-slug="14-nvl72">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What is the NVL72 rack’s total HBM4 memory and its power draw range?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The rack holds about <strong>20.7 TB of HBM4</strong> in aggregate (72 GPUs × 288 GB). Power draw runs roughly <strong>190–230 kW</strong>, depending on tuning: Max Q optimizes for energy efficiency; Max P runs for peak performance.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why did NVIDIA replace conventional cable harnesses with a copper midplane, and what are the concrete benefits?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Carrying 260 TB/s of bandwidth between trays via cables would be impractical: cables require manual assembly, can be miswired, and add latency and loss. The <strong>copper midplane</strong> — a large PCB running vertically through the rack into which compute and switch trays plug — reduces tray assembly time from ~2 hours to about 5 minutes, eliminates miswiring, improves reliability, cuts cost per tray-link, shrinks the thermal envelope (copper traces dissipate less than active cabling), and makes the rack field-serviceable: a failed tray slides out without disturbing others.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if the NVL72 all-to-all bandwidth is optimized in isolation — maximized without considering the training workloads that must run across it?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">At half the current bandwidth (roughly 130 TB/s), inter-GPU communication time would approximately double for communication-bound operations. For MoE models, which route activations to expert shards on different GPUs at every layer, this makes inter-GPU communication the dominant cost per training step rather than compute — GPU utilization drops and effective throughput falls well below the 3.6 exaflop headline. The rack would stop behaving as a single coherent machine. The 260 TB/s figure is not a target chosen for its own sake; it is the minimum that keeps activation transfer below the compute time for these specific workloads.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="14-nvl72-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

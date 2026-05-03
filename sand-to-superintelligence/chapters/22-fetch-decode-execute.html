@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="22-fetch-decode-execute">
-  
+  <section class="learn predict reveal" data-predict data-slug="22-fetch-decode-execute" data-answer-key="c">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — roughly how many instructions does a single CPU core execute per second?</h2>
+  <p class="learn__hint">Pick the order of magnitude. The chapter will confirm it.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-22-fetch-decode-execute" value="a"><span>~10<sup>6</sup> (a million)</span></label><label class="predict__choice"><input type="radio" name="predict-22-fetch-decode-execute" value="b"><span>~10<sup>8</sup> (a hundred million)</span></label><label class="predict__choice"><input type="radio" name="predict-22-fetch-decode-execute" value="c"><span>~3 × 10<sup>9</sup> (three billion)</span></label><label class="predict__choice"><input type="radio" name="predict-22-fetch-decode-execute" value="d"><span>~10<sup>12</sup> (a trillion)</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>About 3 billion instructions per second per core</strong> — the stat row the chapter anchors the entire fetch-decode-execute loop to. A modern CPU reads an instruction, figures out what it means, does it, and moves on, three billion times a second, until power is removed. That rate is the mechanical heartbeat of every general-purpose computer ever built.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 22 of 42</div>
     <div class="ch-header__num">Chapter 22</div>
     <h1 class="ch-header__title">Fetch, Decode, Execute</h1>
     <p class="ch-header__dek">The instruction cycle and a CPU's to-do list</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">3 <em>billion</em></div><div class="stat__label">instructions per second per core</div></div><div class="stat"><div class="stat__num">4 <em>bytes</em></div><div class="stat__label">size of a typical instruction</div></div><div class="stat"><div class="stat__num">1</div><div class="stat__label">register that holds the world: the program counter</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="22-fetch-decode-execute">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you reach the five-step loop, recite the steps from memory: Fetch → Decode → Execute → Update PC → GOTO 1.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, explain the fetch-decode-execute loop to a peer in 5 minutes. Cover: the program counter as the only required top-level state, what each of the three stages does, how PC normally advances by 4 bytes (and when it doesn’t), the instruction cache and why its miss penalty scales from 4 cycles (L1) to 300 cycles (DRAM), and the von Neumann insight that code and data are the same bytes.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A skeptic says: “If the CPU has no plan and no comprehension, how can it run something as complex as Photoshop?” Respond in 90 seconds. Pass: you explain that ‘Photoshop’ is a particular sequence of bytes laid out in memory such that the side effects of the fetch-decode-execute loop — values written to registers, memory, the screen — accomplish image editing. The CPU is indifferent; the intelligence is entirely in the arrangement of bytes, not in the CPU’s comprehension of them.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Pick one open question that follows from the von Neumann architecture — Spectre/Meltdown-class speculation vulnerabilities, the memory wall, or Harvard vs. modified-Harvard cache hierarchies. State, in three sentences, what is unsettled and your defensible view on which mitigation or alternative is most promising.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -179,7 +211,77 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 22.1</span><span class="text">The fetch-decode-execute cycle. Every CPU, ever built, runs this loop, with minor variations, billions of times per second.</span></figcaption>
     </figure>
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">The fetch-decode-execute loop, repeating three billion times per second, is the CPU’s entire personality — and the von Neumann insight that code and data are the same bytes is what makes every JIT compiler, interpreter, and self-modifying program possible.</p>
+</aside>
       
+      <aside class="learn limits reveal" data-limits>
+  <div class="limits__eyebrow">What this chapter does NOT tell you</div>
+  <ul class="limits__list"><li>Does not tell you how speculative execution — the CPU running instructions before it knows whether branches are taken — creates the Spectre and Meltdown class of timing side-channels.</li><li>Does not explain how out-of-order execution retires instructions while hiding data hazards, or why the reorder buffer size sets a practical limit on instruction-level parallelism.</li><li>Does not address how the instruction cache miss penalty of ~300 cycles for a DRAM fetch interacts with branch prediction accuracy to set the real performance ceiling.</li></ul>
+</aside>
+      <section class="learn retrieval reveal" data-retrieval data-slug="22-fetch-decode-execute">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What is the program counter (PC), what does it hold, and what are its names on x86 vs. ARM?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The <strong>program counter</strong> is a special-purpose register that holds the memory address of the next instruction to run. On x86 it is called <code>rip</code>; on ARM it is called <code>pc</code>. It is, at the highest level, the entire state of what a CPU is doing next — everything else (register values, cache contents, DRAM) is auxiliary.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">What does the decode stage do, and why is it more complicated on x86 than on ARM?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Decoding takes the raw bytes of an instruction and produces, in a single cycle, the control signals the pipeline needs: which registers to read, which ALU operation to perform, which register to write. On ARM (and RISC-V), instructions are a fixed 4 bytes, regular, and easy to decode. On x86, instructions are variable-length (1–15 bytes), multiple can arrive per cycle, and they must be translated into simpler internal micro-operations called <strong>µops</strong> before the pipelined core can handle them. The x86 decode stage is consequently a major engineering challenge — and a significant portion of die area.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if code and data stores are kept strictly separate — a pure Harvard architecture with no path from the data store to the instruction fetch unit?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">A machine with separate code and data memories physically cannot write new instructions to the code store at runtime, which prevents JIT compilation and most forms of metaprogramming. Every JIT compiler, dynamic linker, interpreter, and neural network that generates code depends on the von Neumann indifference: a program can write bytes to memory and then jump to them, executing freshly written instructions. A Harvard architecture closes that path. The cost is not merely a missing optimization — it forecloses entire categories of software: Python’s cpython VM compiles source to bytecode in memory; a JIT like V8 writes native x86 to a data buffer and then executes it. Both are impossible on a strict Harvard machine.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="22-fetch-decode-execute-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

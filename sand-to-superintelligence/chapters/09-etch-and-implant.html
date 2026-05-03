@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="09-etch-and-implant">
-  
+  <section class="learn predict reveal" data-predict data-slug="09-etch-and-implant" data-answer-key="c">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — what is the selectivity ratio that a well-optimized plasma etch recipe can achieve between the target material and the photoresist mask?</h2>
+  <p class="learn__hint">Pick the order of magnitude. The chapter will tell you whether you were close.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-09-etch-and-implant" value="a"><span>~10<sup>1</sup>:1 (ten to one)</span></label><label class="predict__choice"><input type="radio" name="predict-09-etch-and-implant" value="b"><span>~10<sup>2</sup>:1 (hundred to one)</span></label><label class="predict__choice"><input type="radio" name="predict-09-etch-and-implant" value="c"><span>~10<sup>3</sup>:1 (thousand to one)</span></label><label class="predict__choice"><input type="radio" name="predict-09-etch-and-implant" value="d"><span>~10<sup>6</sup>:1 (million to one)</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>~10<sup>3</sup>:1</strong> — carefully optimized plasma etch recipes can approach 1,000 to 1 selectivity, meaning the target material is removed a thousand times faster than the masking photoresist. Routine recipes exceed 100:1. This extreme selectivity is what allows the resist to survive long enough to protect everything it covers.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 09 of 42</div>
     <div class="ch-header__num">Chapter 09</div>
     <h1 class="ch-header__title">Carving and Doping</h1>
     <p class="ch-header__dek">Plasma etch and ion implantation</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">~50 <em>keV</em></div><div class="stat__label">ion implant energy</div></div><div class="stat"><div class="stat__num">~10³<em>:1</em></div><div class="stat__label">etch selectivity ratio</div></div><div class="stat"><div class="stat__num">~1,000<em>°C</em></div><div class="stat__label">anneal temperature</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="09-etch-and-implant">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you reach the implantation section, name the three controlled parameters of the ion beam: dose, energy, and angle.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, explain the full etch-and-implant cycle to a peer in 5 minutes: patterned resist → plasma etch (chemistry + RIE physics) → selectivity → why anisotropy matters → strip resist → ion implant (ionize, accelerate, magnetic filter, scan) → anneal to heal and activate. State what dopants do electrically.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A skeptic asks: 'Why not just dope the silicon chemically during CVD instead of shooting ions at it?' Respond in 90 seconds. Pass: you explain that in-situ CVD doping is used for some layers, but ion implantation allows precise control of dopant depth (energy-controlled), dose, and spatial distribution with a mask that CVD cannot match; and that the magnetic mass filter provides a purity CVD gas flows cannot guarantee.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Pick one open challenge in etch or implant — atomic-layer-precision etch control at sub-2 nm nodes, dopant straggle in ultrathin nanosheet channels, or millisecond laser anneal uniformity. State, in three sentences, what is currently unsettled and what your defensible take is.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -196,7 +228,77 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 9.1</span><span class="text">Plasma etching carves the silicon according to the resist mask. Ion implantation then bombards the exposed regions with dopant ions to define N-type and P-type areas.</span></figcaption>
     </figure>
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">Plasma etching and ion implantation are the two steps where atoms actually move — one removes material with directional violence, the other places dopants with magnetic precision — and neither is reversible once done.</p>
+</aside>
+      <aside class="learn heuristic reveal" data-heuristic>
+  <div class="heuristic__eyebrow">Rule of thumb</div>
+  <p class="heuristic__body">Etching a flat blanket layer? Wet etch is faster and cheaper. Carving vertical sidewalls in a fin or nanosheet? RIE is mandatory. Doping a broad region uniformly? In-situ CVD doping is acceptable. Placing dopants at a specific depth with precise dose? Ion implantation with magnetic mass filtering is the only option.</p>
+</aside>
       
+      <section class="learn retrieval reveal" data-retrieval data-slug="09-etch-and-implant">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What happens to the silicon crystal lattice during ion implantation, and how is the damage repaired?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">An implanted ion arrives with kilo-electronvolts of kinetic energy and knocks surrounding silicon atoms out of their lattice positions, leaving behind an <strong>amorphous damaged region</strong>. The repair is called <strong>annealing</strong>: the wafer is heated rapidly — often with a high-power lamp or laser — to around <strong>1,000°C</strong> (sometimes up to 1,200°C) for seconds at a time. The heat lets silicon atoms return to their lattice sites and activates the implanted dopants electrically. Modern rapid thermal anneal recipes complete this cycle in under a minute.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why is reactive ion etching (RIE) essential for making FinFET fins and GAA nanosheet stacks, where wet chemical etching cannot substitute?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Wet etching is <strong>isotropic</strong> — it removes material equally in all directions, including sideways. At modern feature sizes, this lateral undercutting would destroy the fin before it was fully formed. RIE combines chemical reactivity with physical ion bombardment: positive ions are accelerated <em>straight down</em> onto the wafer, so the etch proceeds vertically with near-vertical sidewalls. This <strong>anisotropy</strong> is what carves a fin or a nanosheet stack without eating the sidewalls. The chapter states directly: without anisotropic etching, modern transistors as we know them simply do not exist.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if ion implantation is performed without the magnetic mass filter — optimizing for beam current rather than species purity?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The magnetic field bends ions by their mass-to-charge ratio; only the target species follows the correct arc to the wafer, while contaminants are deflected off-axis. Without the filter, unwanted atoms — contaminants, molecular fragments, multiply charged species — are implanted alongside the intended dopant. At ppm doping levels, even trace contaminants alter the transistor's electrical behavior, potentially disabling entire chip regions. Optimizing beam current without the filter trades a cleaner, slower beam for a contaminated one that ruins the precision the implantation step exists to achieve.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="09-etch-and-implant-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

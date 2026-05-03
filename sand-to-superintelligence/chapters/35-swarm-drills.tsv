@@ -1,0 +1,10 @@
+How many agents does a typical production multi-agent system contain?	3–7 agents.
+What is the token-cost multiplier of a three-agent debate versus the best single agent on the same task?	~5× more tokens.
+What accuracy lift does debate typically produce on hard tasks?	~10–25% over the best single agent.
+Name the three walls that single-agent systems hit, as listed in the chapter.	Context length, specialization, and error correction.
+What is the 'collusion' failure mode of the debate pattern?	Two instances of the same model will often agree on the same wrong answer, especially when the model is overconfident — they fail to genuinely challenge each other.
+How many pairwise interfaces does a five-agent system have?	Ten — C(5,2) = 10.
+What does the chapter say is the most under-discussed cost of multi-agent systems?	Debugging: tracing a failure across ten pairwise interfaces is harder by an order of magnitude than debugging a single agent.
+What communication pattern does the chapter say rarely survives in production?	Plain text turns in a shared transcript — a research convenience that becomes wasteful and impractical past three or four agents.
+What three things does the chapter say multi-agent systems actually buy you?	Specialization, error correction, and context isolation.
+In what domains does the chapter say the debate pattern's accuracy lift is typically worth the 5× cost?	High-stakes settings: legal review, medical synthesis, financial decision support.

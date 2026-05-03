@@ -34,14 +34,46 @@
   </div>
 </header>
 <main class="page" data-learn-root="33-latency">
-  
+  <section class="learn predict reveal" data-predict data-slug="33-latency" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — approximately what is the minimum transatlantic TCP round-trip time on the public internet, set by the speed of light in fibre?</h2>
+  <p class="learn__hint">Pick the order of magnitude in milliseconds.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-33-latency" value="a"><span>~8 ms</span></label><label class="predict__choice"><input type="radio" name="predict-33-latency" value="b"><span>~80 ms</span></label><label class="predict__choice"><input type="radio" name="predict-33-latency" value="c"><span>~800 ms</span></label><label class="predict__choice"><input type="radio" name="predict-33-latency" value="d"><span>~8,000 ms</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body"><strong>~80 ms</strong> — a hard floor set by the speed of light in fibre (~200,000 km/s). A US-to-Europe round-trip cannot be much under 80 ms regardless of engineering quality. The chapter uses this fact to establish that latency constraints are geometric, not computational, for distributed AI systems.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Within OOM</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off by one</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Chapter 33 of 42</div>
     <div class="ch-header__num">Chapter 33</div>
     <h1 class="ch-header__title">Latency Is Cognition</h1>
     <p class="ch-header__dek">Why milliseconds decide what a model can think about</p>
     <div class="stat-row"><div class="stat"><div class="stat__num">~80 <em>ms</em></div><div class="stat__label">transatlantic TCP round trip on the public internet</div></div><div class="stat"><div class="stat__num">~30-100 <em>ms</em></div><div class="stat__label">first-token latency from a major frontier model</div></div><div class="stat"><div class="stat__num">~50 <em>ms</em></div><div class="stat__label">time per output token at typical batch sizes</div></div></div>
-    
+    <section class="learn ladder reveal" data-ladder data-slug="33-latency">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. When you hit the latency-budget breakdown, name each component: client-to-backend, backend work, backend-to-provider RTT, provider queuing, prompt-processing forward pass, per-token generation.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Without looking, explain to a peer in 5 minutes why the chapter says 'three seconds is often barely enough for a single round-trip, single-tool-call AI response.' Walk through the budget components and show how they sum.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A product manager says: 'We'll just use a faster model to fix our latency problem.' Respond in 90 seconds. Pass: you explain that compute is not the binding constraint — RTT and the number of serial round-trips are — and that the durable answer for chained workflows is co-location, not a faster model.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Pick one latency-mitigation technique the chapter names — speculative decoding, parallel tool calls, or streaming. State, in three sentences, what remains unsettled about its limits and what your defensible take is.</span></label></div>
+  </div>
+</section>
     <div class="toolbar reveal">
       <div class="toolbar__audio" data-audio-wrap>
         <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
@@ -65,7 +97,7 @@
       </div>
       <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
       <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
-      
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
       <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
     </div>
   </header>
@@ -171,7 +203,80 @@
 </svg></div>
       <figcaption class="figure__caption"><span class="label">Figure 33.1</span><span class="text">A three-second response budget, broken into pieces. Network round-trips, queue wait, prompt-processing pass, and per-token generation each take a real share. Add a tool call and the budget collapses.</span></figcaption>
     </figure>
-      
+      <aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">In a chained agentic workflow, latency is not a performance metric — it is a structural constraint set by the speed of light and the number of serial round-trips, and every extra model call multiplies the floor, not the ceiling.</p>
+</aside>
+      <aside class="learn heuristic reveal" data-heuristic>
+  <div class="heuristic__eyebrow">Rule of thumb</div>
+  <p class="heuristic__body">Single model call, low-complexity task? Co-locate client and model in the same region — RTT dominates. Multi-call agent chain? Reduce the number of serial hops before optimizing any individual hop’s latency. Streaming output to a user? Optimize time-to-first-token first, throughput second — perceived latency is governed by when the stream starts, not when it ends.</p>
+</aside>
+      <aside class="learn limits reveal" data-limits>
+  <div class="limits__eyebrow">What this chapter does NOT tell you</div>
+  <ul class="limits__list"><li>Does not tell you how streaming with incremental rendering changes the perceived latency model for users — time-to-first-token and token throughput matter differently depending on the UI.</li><li>Does not explain how co-location decisions interact with data-residency regulations, where the cheapest latency solution (put the model next to the data) may be legally prohibited.</li><li>Does not address how speculative decoding’s acceptance rate depends on the draft model’s quality relative to the target model, or why the latency gain is workload-specific.</li></ul>
+</aside>
+      <section class="learn retrieval reveal" data-retrieval data-slug="33-latency">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What HBM bandwidth does the chapter cite for a Rubin GPU, and what does it imply for per-token latency?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Roughly 22 TB/s of HBM4 bandwidth. Even at that speed, reading hundreds of GB of model weights once per token sets a hard floor under per-token latency. Batching partially mitigates this, but speculative decoding, KV cache reuse, and continuous batching can only squeeze the constants — they cannot break the floor.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">The chapter claims that for distributed AI, compute and bandwidth are not the binding constraint — geometry is. What does it mean for geometry to be the binding constraint?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The binding constraint is how far apart the components are and how many serial round-trips the workflow requires. A team with a worse model co-located with its data will, for many real workloads, beat a team with a better model that must round-trip across continents. FLOPS are routinely available; the speed of light is not negotiable, and every extra hop in a chain adds the full RTT.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">What goes wrong if you optimize model quality alone — using a larger, more capable model — without budgeting for the latency impact in a multi-call agentic chain?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Per the chapter: client-to-backend ~10ms, backend work ~10ms, backend-to-provider ~50–100ms (call it 75ms), provider queuing/pre-processing ~50ms, prompt-processing forward pass ~100–500ms (call it 300ms), plus 30 tokens × 50ms/token = 1,500ms generation. That is roughly 1,945ms per call. For a chain of two calls you double everything except client-side overhead (~10ms), giving approximately 3,880ms — nearly four seconds of pure latency before any application logic. Optimizing model quality without reducing the number of serial hops means the chain grows slower in direct proportion to the number of calls added. The chapter puts the realistic floor for an agent that takes more than a couple of actions at thirty seconds — a wall that a better model cannot move.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="33-latency-drills.html">Drill cards →</a>
+  </div>
+</section>
     </article>
   </div>
 

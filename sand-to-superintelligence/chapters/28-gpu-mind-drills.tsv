@@ -1,0 +1,10 @@
+How many threads are in one GPU warp?	32.
+What does SIMT stand for?	Single instruction, multiple threads — NVIDIA’s execution model where hardware groups threads into warps and issues one instruction to the whole warp.
+What is warp divergence?	When threads in a warp take different branches; the hardware executes both paths serially, masking inactive threads — halving throughput at best.
+What do tensor cores do?	Perform a small matrix multiply-and-accumulate as a single instruction; introduced in Volta (2017) and refined through Hopper and Blackwell.
+What matrix shape does one tensor-core instruction operate on?	16×16×16 (a tile of that shape; the chapter lists it as the stat-row figure).
+What is occupancy?	The ratio of active warps to maximum possible warps on an SM; high occupancy is needed to hide memory latency by keeping the SM saturated.
+What is memory coalescing?	Adjacent threads in a warp reading adjacent words, so the hardware can fold many reads into a single memory transaction and fully use available bandwidth.
+How much HBM bandwidth does a Rubin GPU have?	~22 TB/s from its HBM4 stacks.
+What is the maximum number of resident threads on a Hopper-class SM?	~2,048.
+What frameworks exist specifically to engineer coalesced memory layouts for neural-network kernels?	Triton and FlashAttention (the chapter names both).

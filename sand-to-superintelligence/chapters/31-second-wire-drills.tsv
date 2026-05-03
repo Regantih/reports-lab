@@ -1,0 +1,9 @@
+When did the Baltimore-to-Washington telegraph line open?	May 1844.
+What year does the chapter cite as the first year a majority of API calls came from software, not browsers?	2024.
+What service does the chapter credit with tracking the human-to-software crossing in API traffic?	Cloudflare's Radar.
+Name the five wires in order, each identified by its dominant payload.	Telegraph (prices), Telephone (voice), TCP/IP (files), HTTP/Web (documents/pages), Fifth wire (intelligence — generative inference).
+What does the chapter say is the unit of traffic on the fifth wire?	The token — a small, original act of cognition performed on demand.
+Why can the fifth wire's traffic not be cached the way a CDN caches documents?	The cargo is generative: every call may produce a unique output the model has never produced before.
+What pattern do all five wires share, according to the chapter?	Each wire removed distance as a constraint on an existing activity, and the economy restructured around the new traffic — eliminating friction-based middlemen and creating new wire-operator rents.
+In what year did Tim Berners-Lee propose the World Wide Web at CERN?	1989.
+What does the chapter say about which jobs will get cheaper as the fifth wire matures?	Whatever previously required a human to do something formulaic — read a document, draft a memo, answer a question, schedule a meeting — will get cheaper by an order of magnitude, possibly two.
