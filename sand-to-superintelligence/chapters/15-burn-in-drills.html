@@ -29,11 +29,13 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page">
+  <script id="srs-drills-15-burn-in" type="application/json">[{"q": "What is the infant-mortality region of the bathtub curve?", "a": "The early high-failure-rate period caused by latent defects \u2014 marginal solder joints, microscopic voids, contaminated interfaces \u2014 that were not caught by probe test."}, {"q": "At what temperature does burn-in operate?", "a": "Typically 125\u00b0C, combined with elevated voltage."}, {"q": "How long does a typical burn-in recipe run?", "a": "48 to 168 hours \u2014 two to seven days."}, {"q": "What happens to chips that fail during burn-in?", "a": "They are caught and discarded; surviving chips are past the infant-mortality phase and are the ones that ship."}, {"q": "What does HTOL stand for and what does it validate?", "a": "High Temperature Operating Life \u2014 it validates the long-term behavior of the chip <em>design</em> (not individual units) by operating a sample population at elevated stress for 1,000+ hours and extrapolating using the Arrhenius equation."}, {"q": "What reliability target does the chapter cite for AI cluster chips?", "a": "Fewer than 1 failure per billion device-hours \u2014 less than 1 FIT."}, {"q": "What does RAS stand for?", "a": "Reliability, Availability, and Serviceability."}, {"q": "Name four things the RAS engine monitors.", "a": "ECC errors in HBM, voltage droop on power rails, junction temperatures across the die, and crossbar errors in NVLink (also: bit-flip patterns from cosmic-ray soft errors)."}, {"q": "What can the RAS engine do with a single bad core?", "a": "Mark it as bad and exclude it from scheduling without bringing the rest of the chip down."}, {"q": "How long is a shipped Rubin GPU expected to run at design limits?", "a": "Four to six years, twenty-four hours a day, seven days a week."}]</script>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Drill cards · Chapter 15</div>
     <div class="ch-header__num">Drills</div>
@@ -41,6 +43,10 @@
     <p class="ch-header__dek">10 atomic recall cards. Export to Anki and let spaced repetition do its slow work.</p>
   </header>
   <div class="drills__wrap">
+    <div class="srs-banner" data-srs-banner>
+  <span class="srs-banner__label"><span class="srs-banner__count" data-srs-count>10</span> cards due for review</span>
+  <button type="button" class="srs-banner__btn" data-srs-open="15-burn-in">Review now</button>
+</div>
     <div class="drills__actions">
       <a class="learn__btn learn__btn--primary" href="15-burn-in-drills.tsv" download>Download Anki TSV</a>
       <a class="learn__btn learn__btn--ghost" href="15-burn-in.html">← Back to chapter</a>
@@ -97,4 +103,5 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
 </body></html>

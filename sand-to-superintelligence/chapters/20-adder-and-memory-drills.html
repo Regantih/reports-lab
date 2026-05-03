@@ -29,11 +29,13 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page">
+  <script id="srs-drills-20-adder-and-memory" type="application/json">[{"q": "What are the three inputs and two outputs of a full adder?", "a": "Inputs: two operand bits and a carry-in. Outputs: sum and carry-out."}, {"q": "How many NAND gates does a full adder require?", "a": "Nine NAND gates."}, {"q": "What is a ripple-carry adder?", "a": "A chain of full adders in which the carry-out of bit <em>i</em> feeds the carry-in of bit <em>i+1</em>; the answer ripples through bit by bit."}, {"q": "What is the ALU?", "a": "Arithmetic Logic Unit \u2014 the collection of adders, subtractors, shifters, bitwise logic units, and comparators that does a CPU\u2019s arithmetic in one clock cycle."}, {"q": "What is an SR latch built from?", "a": "Two cross-coupled NAND gates \u2014 each gate\u2019s output feeds the other gate\u2019s input."}, {"q": "How many transistors does an SR latch use in CMOS?", "a": "Eight \u2014 four transistors per NAND gate, two gates."}, {"q": "How frequently must DRAM be refreshed, per the JEDEC spec?", "a": "Within every 64 milliseconds."}, {"q": "How many architectural general-purpose registers does x86-64 have?", "a": "16 (rax, rbx, rcx, \u2026)."}, {"q": "How many architectural general-purpose registers does ARM64 have?", "a": "31 (x0 through x30; x31 is reserved as zero or stack pointer)."}, {"q": "Why are registers the fastest memory in the computing universe?", "a": "They live next to the ALU, are built from cross-coupled NANDs, and are accessed in a single clock cycle \u2014 a third of a nanosecond at 3 GHz."}]</script>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Drill cards · Chapter 20</div>
     <div class="ch-header__num">Drills</div>
@@ -41,6 +43,10 @@
     <p class="ch-header__dek">10 atomic recall cards. Export to Anki and let spaced repetition do its slow work.</p>
   </header>
   <div class="drills__wrap">
+    <div class="srs-banner" data-srs-banner>
+  <span class="srs-banner__label"><span class="srs-banner__count" data-srs-count>10</span> cards due for review</span>
+  <button type="button" class="srs-banner__btn" data-srs-open="20-adder-and-memory">Review now</button>
+</div>
     <div class="drills__actions">
       <a class="learn__btn learn__btn--primary" href="20-adder-and-memory-drills.tsv" download>Download Anki TSV</a>
       <a class="learn__btn learn__btn--ghost" href="20-adder-and-memory.html">← Back to chapter</a>
@@ -97,4 +103,5 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
 </body></html>

@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="20-adder-and-memory">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">XOR + AND gates</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">half adder</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">full adder</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">ripple-carry ALU</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">SR latch</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">two NAND gates</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">one bit stored</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">register file</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="20-adder-and-memory" data-answer-key="b">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — how many NAND gates does a standard full adder require?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 20</div>
     <h1 class="ch-header__title">Adders, Latches, Memory</h1>
     <p class="ch-header__dek">From half-adder to ALU; the bit that remembers</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Trace the gate-level construction of a full adder from XOR, AND, and OR primitives</li><li>Explain why cross-coupling two NAND gates creates a stable bi-stable latch</li><li>State why SRAM holds a bit with negligible standby power while DRAM requires periodic refresh</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">64</div><div class="stat__label">bits in a modern register</div></div><div class="stat"><div class="stat__num">~6</div><div class="stat__label">transistors per SRAM cell</div></div><div class="stat"><div class="stat__num">0</div><div class="stat__label">extra power to remember a bit (statically)</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="20-adder-and-memory">
   <div class="ladder__bar">
@@ -106,46 +115,46 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#adding">Adding, with gates</a></li><li><a href="#the-alu">The ALU — arithmetic at speed</a></li><li><a href="#the-bit-that-stays">The bit that stays</a></li><li><a href="#registers">From latch to register</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">We have logic. We have a way to make any boolean function we wish. The next two miracles are arithmetic and memory: adding, and remembering. Both are built from the same NAND gates we just learned. The fact that they emerge so naturally is part of why digital electronics took over the world so completely.</p>
+<p class="lede" id="p-1ea7857a">We have logic. We have a way to make any boolean function we wish. The next two miracles are arithmetic and memory: adding, and remembering. Both are built from the same NAND gates we just learned. The fact that they emerge so naturally is part of why digital electronics took over the world so completely.</p>
 
 <h2 id="adding">Adding, with gates</h2>
 
-<p>The smallest possible adder is the half-adder we sketched at the end of last chapter: two inputs (each one bit), two outputs (sum and carry). It can add 0+0, 0+1, 1+0, 1+1 — and in the last case it produces sum=0, carry=1, the two-bit answer "10" in binary, which is two in decimal.</p>
+<p id="p-ca3220b8">The smallest possible adder is the half-adder we sketched at the end of last chapter: two inputs (each one bit), two outputs (sum and carry). It can add 0+0, 0+1, 1+0, 1+1 — and in the last case it produces sum=0, carry=1, the two-bit answer "10" in binary, which is two in decimal.</p>
 
-<p>To add real numbers we need a <strong>full adder</strong>: three inputs (two operand bits and a carry-in from the previous bit), two outputs (sum and carry-out). A full adder takes about five gates — two XORs, two ANDs, and an OR. We can build any of these from NANDs; the standard textbook construction works out to nine NAND gates per full adder.</p>
+<p id="p-cde7a3e8">To add real numbers we need a <strong>full adder</strong>: three inputs (two operand bits and a carry-in from the previous bit), two outputs (sum and carry-out). A full adder takes about five gates — two XORs, two ANDs, and an OR. We can build any of these from NANDs; the standard textbook construction works out to nine NAND gates per full adder.</p>
 
-<p>Chain 64 full adders together — the carry-out of bit i feeding the carry-in of bit i+1 — and you have a 64-bit adder. Feed it two 64-bit numbers and the answer ripples through, bit by bit, in a few nanoseconds. This is called a <strong>ripple-carry adder</strong>, and it is the slow-but-honest version. Real CPUs use cleverer designs (<a href="https://en.wikipedia.org/wiki/Carry-lookahead_adder">carry-lookahead</a>, <a href="https://en.wikipedia.org/wiki/Carry-select_adder">carry-select</a>, Kogge-Stone) that compute carries in parallel rather than serially, knocking the latency from O(n) down to O(log n) for an n-bit add.</p>
+<p id="p-d33b3a0e">Chain 64 full adders together — the carry-out of bit i feeding the carry-in of bit i+1 — and you have a 64-bit adder. Feed it two 64-bit numbers and the answer ripples through, bit by bit, in a few nanoseconds. This is called a <strong>ripple-carry adder</strong>, and it is the slow-but-honest version. Real CPUs use cleverer designs (<a href="https://en.wikipedia.org/wiki/Carry-lookahead_adder">carry-lookahead</a>, <a href="https://en.wikipedia.org/wiki/Carry-select_adder">carry-select</a>, Kogge-Stone) that compute carries in parallel rather than serially, knocking the latency from O(n) down to O(log n) for an n-bit add.</p>
 
 <h2 id="the-alu">The ALU — arithmetic at speed</h2>
 
-<p>The adder is not alone. Right next to it on the silicon sit the other arithmetic units: a subtractor (which is, beautifully, just an adder with one input inverted and a carry-in of 1, courtesy of two's-complement arithmetic), a shifter (for multiplying or dividing by powers of two), bitwise logic units (AND, OR, XOR, NOT applied 64 ways in parallel), and comparators. Together they form the <strong>ALU</strong> — Arithmetic Logic Unit — and they are, alongside the register file we'll meet shortly, the heart of any CPU.</p>
+<p id="p-eb05e550">The adder is not alone. Right next to it on the silicon sit the other arithmetic units: a subtractor (which is, beautifully, just an adder with one input inverted and a carry-in of 1, courtesy of two's-complement arithmetic), a shifter (for multiplying or dividing by powers of two), bitwise logic units (AND, OR, XOR, NOT applied 64 ways in parallel), and comparators. Together they form the <strong>ALU</strong> — Arithmetic Logic Unit — and they are, alongside the register file we'll meet shortly, the heart of any CPU.</p>
 
-<p>The ALU is wired so that a small <em>opcode</em> on its control inputs (a few bits) selects which operation it performs this cycle. The operands feed in on two 64-bit buses; the result emerges on a third. The whole assembly is purely combinational: no memory, no clock — just gates, settling into the right answer like a tuning fork stilling itself. The hard part isn't the answer; it's the schedule.</p>
+<p id="p-a10bbffb">The ALU is wired so that a small <em>opcode</em> on its control inputs (a few bits) selects which operation it performs this cycle. The operands feed in on two 64-bit buses; the result emerges on a third. The whole assembly is purely combinational: no memory, no clock — just gates, settling into the right answer like a tuning fork stilling itself. The hard part isn't the answer; it's the schedule.</p>
 
-<p>For multiplication and division, dedicated units called <a href="https://www.cs.cmu.edu/~410/doc/segments/book.pdf">multipliers</a> and dividers do the work. Floating-point arithmetic — the kind used in scientific computing, graphics, and neural networks — is handled by a different set of units called the FPU, the floating-point unit, which is essentially a small constellation of adders, multipliers, and shifters dedicated to manipulating IEEE 754 numbers. In modern AI chips, the FPU has a much larger sibling: the <strong>tensor core</strong>, an entire matrix-multiply engine baked into the silicon. We'll meet it again in Part II's later chapters.</p>
+<p id="p-aaa6fdea">For multiplication and division, dedicated units called <a href="https://www.cs.cmu.edu/~410/doc/segments/book.pdf">multipliers</a> and dividers do the work. Floating-point arithmetic — the kind used in scientific computing, graphics, and neural networks — is handled by a different set of units called the FPU, the floating-point unit, which is essentially a small constellation of adders, multipliers, and shifters dedicated to manipulating IEEE 754 numbers. In modern AI chips, the FPU has a much larger sibling: the <strong>tensor core</strong>, an entire matrix-multiply engine baked into the silicon. We'll meet it again in Part II's later chapters.</p>
 
 <h2 id="the-bit-that-stays">The bit that stays</h2>
 
-<p>Combinational logic — all-NAND, all-gates — can compute, but it cannot remember. The output of an adder depends only on its current inputs; if the inputs change, the output changes. To remember anything we need a circuit that breaks this rule: one whose output depends on its <em>history</em>.</p>
+<p id="p-d3caf525">Combinational logic — all-NAND, all-gates — can compute, but it cannot remember. The output of an adder depends only on its current inputs; if the inputs change, the output changes. To remember anything we need a circuit that breaks this rule: one whose output depends on its <em>history</em>.</p>
 
-<p>The smallest such circuit is the <strong>SR latch</strong>. Take two NAND gates and cross-couple them: each gate's output feeds back into the other gate's input. Now the system has two stable states. If gate A's output is high and gate B's is low, that configuration sustains itself; the same is true for the opposite. Pulse the "set" input low and the latch flips to one state; pulse "reset" low and it flips to the other. Otherwise, the latch holds whichever state it last entered, indefinitely, with no continuing power input.</p>
+<p id="p-59f788fe">The smallest such circuit is the <strong>SR latch</strong>. Take two NAND gates and cross-couple them: each gate's output feeds back into the other gate's input. Now the system has two stable states. If gate A's output is high and gate B's is low, that configuration sustains itself; the same is true for the opposite. Pulse the "set" input low and the latch flips to one state; pulse "reset" low and it flips to the other. Otherwise, the latch holds whichever state it last entered, indefinitely, with no continuing power input.</p>
 
 <blockquote>Two NAND gates — eight transistors in CMOS, four per gate — cross-coupled. That is the world's smallest unit of static memory. Everything you have ever stored on a computer, every photo, every paragraph, every weight in a neural network, is ultimately a bit in some descendant of this circuit.</blockquote>
 
-<p>The "no continuing power input" part is worth pausing on. SRAM (static RAM, used for CPU caches) consumes negligible power once a bit is stored: leakage currents only. DRAM (used for main memory) cheats by storing bits as tiny charges on capacitors, which leak and must be refreshed within every 64 milliseconds — the JEDEC retention spec — a small fee for the much higher density. Different memories make different bargains with physics, but the underlying capacity to <em>remember</em> traces back to that pair of cross-coupled gates.</p>
+<p id="p-51bbb0fb">The "no continuing power input" part is worth pausing on. SRAM (static RAM, used for CPU caches) consumes negligible power once a bit is stored: leakage currents only. DRAM (used for main memory) cheats by storing bits as tiny charges on capacitors, which leak and must be refreshed within every 64 milliseconds — the JEDEC retention spec — a small fee for the much higher density. Different memories make different bargains with physics, but the underlying capacity to <em>remember</em> traces back to that pair of cross-coupled gates.</p>
 
 <h2 id="registers">From latch to register</h2>
 
-<p>A single bit isn't very useful. Group 64 latches together, share a "load" signal between them, and you have a <strong>register</strong>: a 64-bit unit of fast, on-chip storage. A modern CPU exposes 16 architectural general-purpose registers on x86-64 (<code>rax</code>, <code>rbx</code>, <code>rcx</code>…) or 31 on ARM64 (<code>x0</code> through <code>x30</code>, with <code>x31</code> reserved as zero/stack pointer), plus dozens or hundreds more "physical" registers used by the out-of-order engine to keep multiple in-flight instructions from stepping on each other's results.</p>
+<p id="p-66fb65f9">A single bit isn't very useful. Group 64 latches together, share a "load" signal between them, and you have a <strong>register</strong>: a 64-bit unit of fast, on-chip storage. A modern CPU exposes 16 architectural general-purpose registers on x86-64 (<code>rax</code>, <code>rbx</code>, <code>rcx</code>…) or 31 on ARM64 (<code>x0</code> through <code>x30</code>, with <code>x31</code> reserved as zero/stack pointer), plus dozens or hundreds more "physical" registers used by the out-of-order engine to keep multiple in-flight instructions from stepping on each other's results.</p>
 
-<p>Registers are the fastest memory in the universe of computing. They live next to the ALU, accessed in a single clock cycle (a third of a nanosecond at 3 GHz), built directly out of cross-coupled NANDs. They are also the smallest memory: a few kilobytes total, on the entire chip, vs. the <a href="https://www.tomshardware.com/news/intel-core-i9-13900k-review">tens of megabytes of cache</a> and gigabytes of DRAM elsewhere in the system. The pyramid begins at this peak.</p>
+<p id="p-3a144261">Registers are the fastest memory in the universe of computing. They live next to the ALU, accessed in a single clock cycle (a third of a nanosecond at 3 GHz), built directly out of cross-coupled NANDs. They are also the smallest memory: a few kilobytes total, on the entire chip, vs. the <a href="https://www.tomshardware.com/news/intel-core-i9-13900k-review">tens of megabytes of cache</a> and gigabytes of DRAM elsewhere in the system. The pyramid begins at this peak.</p>
 
 <div class="aside" data-tone="copper">
   <span class="aside__label">A genealogical observation</span>
-  <p>An adder is gates wired into arithmetic. A latch is gates wired into memory. The CPU we are about to assemble is gates wired into a creature that does both, alternately, on a clock — and the GPU we'll meet later is gates wired into a creature that does almost only the first, ten thousand times in parallel. The same NAND, in different braids, becomes very different machines.</p>
+  <p id="p-a1d82555">An adder is gates wired into arithmetic. A latch is gates wired into memory. The CPU we are about to assemble is gates wired into a creature that does both, alternately, on a clock — and the GPU we'll meet later is gates wired into a creature that does almost only the first, ten thousand times in parallel. The same NAND, in different braids, becomes very different machines.</p>
 </div>
 
-<p>Now we have the pieces: arithmetic that can compute, registers that can remember. To make them do anything <em>over time</em>, we need a metronome. We need a clock.</p>
+<p id="p-2cc08fa9">Now we have the pieces: arithmetic that can compute, registers that can remember. To make them do anything <em>over time</em>, we need a metronome. We need a clock.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 380" role="img" aria-label="A full adder built from gates, plus an SR latch that remembers one bit">
@@ -361,4 +370,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="26-os-conductor">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">three illusions</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">processes + threads</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">virtual memory</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">MMU page tables</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">system call border</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">CFS scheduler</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="26-os-conductor" data-answer-key="c">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — roughly how many processes does a modern desktop OS run at idle?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 26</div>
     <h1 class="ch-header__title">The OS as Conductor</h1>
     <p class="ch-header__dek">Processes, virtual memory, and the illusion of plenty</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Name the three OS illusions and explain which hardware mechanism enforces each one</li><li>Explain how copy-on-write makes fork() cheap despite appearing to duplicate an entire address space</li><li>State the cost of a system call on modern Linux and name the two privilege transitions it performs</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">~1,000+</div><div class="stat__label">processes on a modern desktop at idle</div></div><div class="stat"><div class="stat__num">4 <em>KB</em></div><div class="stat__label">the standard memory page</div></div><div class="stat"><div class="stat__num">~100 <em>ns</em></div><div class="stat__label">cost of a system call on modern Linux</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="26-os-conductor">
   <div class="ladder__bar">
@@ -106,11 +115,11 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-illusion">Three illusions</a></li><li><a href="#processes">Processes and threads</a></li><li><a href="#virtual-memory">Virtual memory</a></li><li><a href="#system-calls">The system call border</a></li><li><a href="#the-scheduler">The scheduler</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">An operating system is, more than anything, a generator of useful illusions. The CPU has a few cores; the OS makes it look like there are thousands. Memory is finite and shared; the OS makes every program think it owns all of it. Files live on slow storage; the OS makes them feel near. Strip these illusions away and you would not have a usable computer — you would have a million programs fighting over one set of registers.</p>
+<p class="lede" id="p-c27f8530">An operating system is, more than anything, a generator of useful illusions. The CPU has a few cores; the OS makes it look like there are thousands. Memory is finite and shared; the OS makes every program think it owns all of it. Files live on slow storage; the OS makes them feel near. Strip these illusions away and you would not have a usable computer — you would have a million programs fighting over one set of registers.</p>
 
 <h2 id="the-illusion">Three illusions</h2>
 
-<p>Every modern OS — Linux, Windows NT, Darwin, the kernel inside Android, the hypervisor inside a Rubin server — provides three illusions. <a href="https://www.cs.vu.nl/~ast/books/mos3/"><em>Modern Operating Systems</em> by Tanenbaum</a> calls them the foundational abstractions, and the entire OS field is the engineering required to keep them honest:</p>
+<p id="p-25fb16bf">Every modern OS — Linux, Windows NT, Darwin, the kernel inside Android, the hypervisor inside a Rubin server — provides three illusions. <a href="https://www.cs.vu.nl/~ast/books/mos3/"><em>Modern Operating Systems</em> by Tanenbaum</a> calls them the foundational abstractions, and the entire OS field is the engineering required to keep them honest:</p>
 
 <ol>
   <li><strong>The illusion of CPU plenty.</strong> Every process feels like it has a CPU to itself. In reality, a few cores are time-sliced across thousands of processes by the scheduler.</li>
@@ -120,31 +129,31 @@
 
 <h2 id="processes">Processes and threads</h2>
 
-<p>The OS's basic unit of work is the <strong>process</strong>: a running program with its own address space, file descriptors, and identity. A process can have multiple <strong>threads</strong> — independent flows of execution sharing the same memory. A modern desktop has, at idle, around a thousand processes; a busy server many more.</p>
+<p id="p-8b7a529e">The OS's basic unit of work is the <strong>process</strong>: a running program with its own address space, file descriptors, and identity. A process can have multiple <strong>threads</strong> — independent flows of execution sharing the same memory. A modern desktop has, at idle, around a thousand processes; a busy server many more.</p>
 
-<p>Switching between processes — a <strong>context switch</strong> — costs a few microseconds on modern hardware: the kernel saves the registers of the outgoing process, loads those of the incoming one, switches the page-table pointer, and flushes whatever needs flushing. Done a few thousand times per second per core, this is what produces the illusion of simultaneity.</p>
+<p id="p-2c70021d">Switching between processes — a <strong>context switch</strong> — costs a few microseconds on modern hardware: the kernel saves the registers of the outgoing process, loads those of the incoming one, switches the page-table pointer, and flushes whatever needs flushing. Done a few thousand times per second per core, this is what produces the illusion of simultaneity.</p>
 
 <h2 id="virtual-memory">Virtual memory</h2>
 
-<p>The most beautiful trick in the kernel is virtual memory. Each process sees its own private address space. When it accesses address 0x4000_0000, that address is translated, by hardware, into some physical address in DRAM — possibly different in every process, possibly not present at all (the page might be on disk, or might not exist yet).</p>
+<p id="p-8bd3a3ee">The most beautiful trick in the kernel is virtual memory. Each process sees its own private address space. When it accesses address 0x4000_0000, that address is translated, by hardware, into some physical address in DRAM — possibly different in every process, possibly not present at all (the page might be on disk, or might not exist yet).</p>
 
-<p>The translation is done by the <strong>MMU</strong> (memory management unit), a piece of hardware on every modern CPU. It walks a tree of <strong>page tables</strong> set up by the kernel. Each page is typically 4 KB. Each entry in a page table either points to a physical page or says "not present" — in which case the MMU raises a <em>page fault</em>, and the kernel decides what to do (allocate a new page, page in from disk, or kill the offending process).</p>
+<p id="p-8bb0dfa6">The translation is done by the <strong>MMU</strong> (memory management unit), a piece of hardware on every modern CPU. It walks a tree of <strong>page tables</strong> set up by the kernel. Each page is typically 4 KB. Each entry in a page table either points to a physical page or says "not present" — in which case the MMU raises a <em>page fault</em>, and the kernel decides what to do (allocate a new page, page in from disk, or kill the offending process).</p>
 
-<p>Virtual memory enables half the things we take for granted: <em>fork()</em> and copy-on-write, memory-mapped files, shared libraries used by many processes from one set of physical pages, swap, address-space layout randomization, and the safe execution of completely untrusted code in browser sandboxes. <a href="https://man7.org/linux/man-pages/man7/mmap.7.html">The Linux mmap man page</a> is, in a sense, the user-facing documentation of this entire scheme.</p>
+<p id="p-47313d5f">Virtual memory enables half the things we take for granted: <em>fork()</em> and copy-on-write, memory-mapped files, shared libraries used by many processes from one set of physical pages, swap, address-space layout randomization, and the safe execution of completely untrusted code in browser sandboxes. <a href="https://man7.org/linux/man-pages/man7/mmap.7.html">The Linux mmap man page</a> is, in a sense, the user-facing documentation of this entire scheme.</p>
 
 <h2 id="system-calls">The system call border</h2>
 
-<p>User programs cannot directly do dangerous things — they cannot talk to disks, open network sockets, fork new processes, or set up page tables. To do any of these things, a program must <em>cross into the kernel</em> via a <strong>system call</strong>: a special instruction (<code>syscall</code> on x86-64, <code>svc</code> on ARM) that traps into kernel mode, runs a privileged handler, and traps back.</p>
+<p id="p-7c221f2b">User programs cannot directly do dangerous things — they cannot talk to disks, open network sockets, fork new processes, or set up page tables. To do any of these things, a program must <em>cross into the kernel</em> via a <strong>system call</strong>: a special instruction (<code>syscall</code> on x86-64, <code>svc</code> on ARM) that traps into kernel mode, runs a privileged handler, and traps back.</p>
 
-<p>System calls are the gates between user-space and kernel-space, and the contract negotiated at those gates is what an OS <em>is</em>, technically. Linux exposes about <a href="https://man7.org/linux/man-pages/man2/syscalls.2.html">three hundred and fifty system calls</a>; Windows NT a similar number through a different ABI. Modern hardware makes the trap fast — about 100 ns — but each crossing still flushes pipelines, switches privilege levels, and changes which page tables are in effect.</p>
+<p id="p-1149b5ea">System calls are the gates between user-space and kernel-space, and the contract negotiated at those gates is what an OS <em>is</em>, technically. Linux exposes about <a href="https://man7.org/linux/man-pages/man2/syscalls.2.html">three hundred and fifty system calls</a>; Windows NT a similar number through a different ABI. Modern hardware makes the trap fast — about 100 ns — but each crossing still flushes pipelines, switches privilege levels, and changes which page tables are in effect.</p>
 
 <h2 id="the-scheduler">The scheduler</h2>
 
-<p>The scheduler is the OS code that decides, every time a process blocks or its time slice expires, which process should run next. Modern Linux uses the <a href="https://www.kernel.org/doc/html/latest/scheduler/sched-design-CFS.html">Completely Fair Scheduler</a>, which models a virtual notion of "runtime owed" to each task and always picks the task most owed. Real-time kernels use stricter algorithms (rate-monotonic, earliest-deadline-first); macOS and Windows use related, sophisticated schemes.</p>
+<p id="p-8919f2bd">The scheduler is the OS code that decides, every time a process blocks or its time slice expires, which process should run next. Modern Linux uses the <a href="https://www.kernel.org/doc/html/latest/scheduler/sched-design-CFS.html">Completely Fair Scheduler</a>, which models a virtual notion of "runtime owed" to each task and always picks the task most owed. Real-time kernels use stricter algorithms (rate-monotonic, earliest-deadline-first); macOS and Windows use related, sophisticated schemes.</p>
 
-<p>The whole edifice — processes, virtual memory, the system-call border, the scheduler — exists for one reason: to keep many programs from interfering with each other while letting them all believe they are alone. It is the most complex single piece of software on most computers, and the reason your laptop does not crash every time a webpage misbehaves.</p>
+<p id="p-2ab941a9">The whole edifice — processes, virtual memory, the system-call border, the scheduler — exists for one reason: to keep many programs from interfering with each other while letting them all believe they are alone. It is the most complex single piece of software on most computers, and the reason your laptop does not crash every time a webpage misbehaves.</p>
 
-<p>Now that we have a running OS, we can finally ask: how does a line of Python become electrons moving in a transistor?</p>
+<p id="p-30afee35">Now that we have a running OS, we can finally ask: how does a line of Python become electrons moving in a transistor?</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 380" role="img" aria-label="Virtual to physical address translation through page tables">
@@ -340,4 +349,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

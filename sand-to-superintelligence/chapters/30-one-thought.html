@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="30-one-thought">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">tokenize</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">embed</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">80 transformer blocks</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">unembed</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">softmax</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">sample</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">KV cache</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">repeat</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="30-one-thought" data-answer-key="b">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — about how many multiplications happen in the silicon to generate one token from a frontier model?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 30</div>
     <h1 class="ch-header__title">A Thought, Token by Token</h1>
     <p class="ch-header__dek">Tracing one inference through the silicon</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Trace the full inference path from user prompt text to a sampled output token</li><li>Explain how KV caching reduces per-token compute cost after the first token</li><li>State the approximate wall time, energy cost, and multiply count for generating one token on a frontier system</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">~10<sup>11</sup></div><div class="stat__label">multiplications per generated token</div></div><div class="stat"><div class="stat__num">~50 <em>ms</em></div><div class="stat__label">wall time, on a frontier system</div></div><div class="stat"><div class="stat__num">~1 <em>J</em></div><div class="stat__label">energy spent producing one token</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="30-one-thought">
   <div class="ladder__bar">
@@ -106,55 +115,55 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-prompt">The prompt arrives</a></li><li><a href="#tokenize-and-embed">Tokenize and embed</a></li><li><a href="#the-stack">Through eighty blocks</a></li><li><a href="#sampling">Softmax and sampling</a></li><li><a href="#the-loop">The autoregressive loop</a></li><li><a href="#what-just-happened">What just happened</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">We have spent twenty-nine chapters building, atom by atom, a machine capable of having a thought. In this last chapter we follow one. A user types a prompt, presses enter, and a sentence appears. Between those events, a few hundred billion multiplications happen in roughly the time it takes you to blink — once per token, repeated for every token the model emits. We will trace what those multiplications are, in order, on the silicon we have built.</p>
+<p class="lede" id="p-90aab6b9">We have spent twenty-nine chapters building, atom by atom, a machine capable of having a thought. In this last chapter we follow one. A user types a prompt, presses enter, and a sentence appears. Between those events, a few hundred billion multiplications happen in roughly the time it takes you to blink — once per token, repeated for every token the model emits. We will trace what those multiplications are, in order, on the silicon we have built.</p>
 
 <h2 id="the-prompt">The prompt arrives</h2>
 
-<p>"Write a haiku about the moon," the user types. The keystrokes traverse USB, the kernel buffers them, a TLS-wrapped HTTPS request encodes the prompt as JSON, and the request lands on a frontend server in some data center. The server forwards the prompt to an inference cluster — possibly a Rubin NVL72 rack like the one in Chapter 14 — where a free GPU partition is selected to handle the request.</p>
+<p id="p-63207e76">"Write a haiku about the moon," the user types. The keystrokes traverse USB, the kernel buffers them, a TLS-wrapped HTTPS request encodes the prompt as JSON, and the request lands on a frontend server in some data center. The server forwards the prompt to an inference cluster — possibly a Rubin NVL72 rack like the one in Chapter 14 — where a free GPU partition is selected to handle the request.</p>
 
-<p>The prompt, at this moment, is still text. A piece of UTF-8 bytes. Nothing in any GPU understands text.</p>
+<p id="p-c3dfa481">The prompt, at this moment, is still text. A piece of UTF-8 bytes. Nothing in any GPU understands text.</p>
 
 <h2 id="tokenize-and-embed">Tokenize and embed</h2>
 
-<p>The first thing the model does is <strong>tokenize</strong> the prompt — split the text into the model's vocabulary units using a learned subword scheme like <a href="https://github.com/openai/tiktoken">tiktoken</a> or SentencePiece. "Write a haiku about the moon" becomes maybe 8 tokens, each an integer in the range 0-99,999.</p>
+<p id="p-b299c088">The first thing the model does is <strong>tokenize</strong> the prompt — split the text into the model's vocabulary units using a learned subword scheme like <a href="https://github.com/openai/tiktoken">tiktoken</a> or SentencePiece. "Write a haiku about the moon" becomes maybe 8 tokens, each an integer in the range 0-99,999.</p>
 
-<p>Each token integer indexes into the <strong>embedding table</strong>, a giant matrix of shape (vocab_size, hidden_dim) — perhaps 100,000 × 16,000 — sitting in HBM. The lookup produces, for each token, a 16,000-dimensional vector. These vectors are the input to the network. From this point until the very end, the prompt no longer exists as text; it exists as a sequence of vectors.</p>
+<p id="p-2c5abea1">Each token integer indexes into the <strong>embedding table</strong>, a giant matrix of shape (vocab_size, hidden_dim) — perhaps 100,000 × 16,000 — sitting in HBM. The lookup produces, for each token, a 16,000-dimensional vector. These vectors are the input to the network. From this point until the very end, the prompt no longer exists as text; it exists as a sequence of vectors.</p>
 
 <h2 id="the-stack">Through eighty blocks</h2>
 
-<p>The vectors flow into the first transformer block. Inside the block, attention happens: queries, keys, and values are computed by linear projections, the QK<sup>T</sup> matrix is formed and softmax-ed, and the result is multiplied by V. Each token now sees a weighted blend of every other token's content.</p>
+<p id="p-038e7679">The vectors flow into the first transformer block. Inside the block, attention happens: queries, keys, and values are computed by linear projections, the QK<sup>T</sup> matrix is formed and softmax-ed, and the result is multiplied by V. Each token now sees a weighted blend of every other token's content.</p>
 
-<p>Then the MLP: two linear layers with a nonlinearity in between, expanding the vector to 4× its dimension and contracting it back. Each linear layer is a matrix multiply against weights stored in HBM, run on tensor cores.</p>
+<p id="p-b2eac11d">Then the MLP: two linear layers with a nonlinearity in between, expanding the vector to 4× its dimension and contracting it back. Each linear layer is a matrix multiply against weights stored in HBM, run on tensor cores.</p>
 
-<p>The output of block 1 becomes the input of block 2. Block 2 to block 3. And so on, through 80 blocks. Inside each, several matrix multiplies are dispatched as CUDA kernels; each kernel launches thousands of warps; each warp's threads coalesce their reads and saturate the tensor cores. The full sequence of activations may exceed a single GPU's memory, so the model is sharded across many GPUs in a Rubin rack — connected by NVLink-C2C inside a node, by NVLink Switch across the rack, and by InfiniBand between racks.</p>
+<p id="p-b2b33939">The output of block 1 becomes the input of block 2. Block 2 to block 3. And so on, through 80 blocks. Inside each, several matrix multiplies are dispatched as CUDA kernels; each kernel launches thousands of warps; each warp's threads coalesce their reads and saturate the tensor cores. The full sequence of activations may exceed a single GPU's memory, so the model is sharded across many GPUs in a Rubin rack — connected by NVLink-C2C inside a node, by NVLink Switch across the rack, and by InfiniBand between racks.</p>
 
-<p>Through this whole journey, the activations are 16-bit floats; the weights might be 8-bit. The arithmetic is mostly fused-multiply-add. The hardware does not know anything about haiku or moons. It is moving 16,000-dimensional vectors through a fixed sequence of multiplications.</p>
+<p id="p-3aab0666">Through this whole journey, the activations are 16-bit floats; the weights might be 8-bit. The arithmetic is mostly fused-multiply-add. The hardware does not know anything about haiku or moons. It is moving 16,000-dimensional vectors through a fixed sequence of multiplications.</p>
 
 <h2 id="sampling">Softmax and sampling</h2>
 
-<p>After block 80, the last hidden vector is projected back to vocabulary size — another matrix multiply, this one against the (hidden_dim × vocab_size) <em>unembedding</em> matrix. The result is a vector of 100,000 numbers: the <strong>logits</strong>, one per possible next token.</p>
+<p id="p-28047ad9">After block 80, the last hidden vector is projected back to vocabulary size — another matrix multiply, this one against the (hidden_dim × vocab_size) <em>unembedding</em> matrix. The result is a vector of 100,000 numbers: the <strong>logits</strong>, one per possible next token.</p>
 
-<p>A softmax converts these logits into a probability distribution over the vocabulary. Now the model has, for every possible next token, a number saying how likely that token would be. A sampling rule — argmax for greedy, top-p for nucleus, top-k, or temperature-adjusted sampling — picks one. Say it picks the token for "Silver".</p>
+<p id="p-7258d5cf">A softmax converts these logits into a probability distribution over the vocabulary. Now the model has, for every possible next token, a number saying how likely that token would be. A sampling rule — argmax for greedy, top-p for nucleus, top-k, or temperature-adjusted sampling — picks one. Say it picks the token for "Silver".</p>
 
 <h2 id="the-loop">The autoregressive loop</h2>
 
-<p>The model now appends "Silver" to the prompt and runs the whole stack again — except, with key-value caching, it only has to run the new token through the network, reusing the K and V tensors computed earlier. It produces a probability over the next token; samples one; appends; runs again.</p>
+<p id="p-7c9ede77">The model now appends "Silver" to the prompt and runs the whole stack again — except, with key-value caching, it only has to run the new token through the network, reusing the K and V tensors computed earlier. It produces a probability over the next token; samples one; appends; runs again.</p>
 
-<p>This loop continues. "Silver" → "moon" → "above" → "still" → "pond". At every step a few hundred billion multiplications, fifty milliseconds, one joule of electricity. After ten or twenty iterations, the model emits an end-of-sequence token, the loop terminates, and the resulting string is detokenized back into UTF-8. Tally a complete response of a few thousand tokens and the total compute climbs into the quadrillions — ~10<sup>15</sup> multiplications for one paragraph of generated language.</p>
+<p id="p-d92f4d6f">This loop continues. "Silver" → "moon" → "above" → "still" → "pond". At every step a few hundred billion multiplications, fifty milliseconds, one joule of electricity. After ten or twenty iterations, the model emits an end-of-sequence token, the loop terminates, and the resulting string is detokenized back into UTF-8. Tally a complete response of a few thousand tokens and the total compute climbs into the quadrillions — ~10<sup>15</sup> multiplications for one paragraph of generated language.</p>
 
-<p>"Silver moon above / still pond drinks the night sky in / one ripple, one breath."</p>
+<p id="p-0638168c">"Silver moon above / still pond drinks the night sky in / one ripple, one breath."</p>
 
-<p>The text is sent back through the API, through TLS, through TCP/IP, through the kernel, through the browser's rendering pipeline, and finally onto the user's display — a different piece of silicon glowing in a different colour pattern.</p>
+<p id="p-01bf274f">The text is sent back through the API, through TLS, through TCP/IP, through the kernel, through the browser's rendering pipeline, and finally onto the user's display — a different piece of silicon glowing in a different colour pattern.</p>
 
 <h2 id="what-just-happened">What just happened</h2>
 
-<p>What just happened, to be clear about it: a few quintillion electrons in patterned sand were briefly nudged in coordinated patterns by other electrons in patterned sand, and at the end a different patterned sand emitted light in the shape of a haiku.</p>
+<p id="p-4c22e421">What just happened, to be clear about it: a few quintillion electrons in patterned sand were briefly nudged in coordinated patterns by other electrons in patterned sand, and at the end a different patterned sand emitted light in the shape of a haiku.</p>
 
-<p>The full causal chain runs from the quartzite mine in Spruce Pine, through the Siemens reactors of Hemlock and Wacker, through Czochralski pullers and CMP polishers, through the EUV chambers of TSMC Fab 18, through CoWoS interposers and HBM stacks, through NVLink and InfiniBand and a power substation, through the operating system and the compiler stack and the CUDA runtime and the model weights, into a sampled token, and out as a sentence. Every link in that chain was engineered, deliberately, by people who could draw the next link's diagram. None of them were strange enough, individually, to be called magic.</p>
+<p id="p-e7bbbbfd">The full causal chain runs from the quartzite mine in Spruce Pine, through the Siemens reactors of Hemlock and Wacker, through Czochralski pullers and CMP polishers, through the EUV chambers of TSMC Fab 18, through CoWoS interposers and HBM stacks, through NVLink and InfiniBand and a power substation, through the operating system and the compiler stack and the CUDA runtime and the model weights, into a sampled token, and out as a sentence. Every link in that chain was engineered, deliberately, by people who could draw the next link's diagram. None of them were strange enough, individually, to be called magic.</p>
 
-<p>And yet the result is.</p>
+<p id="p-66bd44e4">And yet the result is.</p>
 
-<p>That is what this book has been about. Not the magic — there is no magic — but the long, deliberate, almost unbelievable accumulation of ordinary engineering that, stacked thirty layers deep, allows a rock to think about the moon.</p>
+<p id="p-a3aee022">That is what this book has been about. Not the magic — there is no magic — but the long, deliberate, almost unbelievable accumulation of ordinary engineering that, stacked thirty layers deep, allows a rock to think about the moon.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 400" role="img" aria-label="A single token traveling through a transformer from input embedding through attention and MLP to output logits">
@@ -357,4 +366,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

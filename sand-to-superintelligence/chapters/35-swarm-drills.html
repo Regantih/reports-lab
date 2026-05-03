@@ -29,11 +29,13 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page">
+  <script id="srs-drills-35-swarm" type="application/json">[{"q": "How many agents does a typical production multi-agent system contain?", "a": "3\u20137 agents."}, {"q": "What is the token-cost multiplier of a three-agent debate versus the best single agent on the same task?", "a": "~5\u00d7 more tokens."}, {"q": "What accuracy lift does debate typically produce on hard tasks?", "a": "~10\u201325% over the best single agent."}, {"q": "Name the three walls that single-agent systems hit, as listed in the chapter.", "a": "Context length, specialization, and error correction."}, {"q": "What is the 'collusion' failure mode of the debate pattern?", "a": "Two instances of the same model will often agree on the same wrong answer, especially when the model is overconfident \u2014 they fail to genuinely challenge each other."}, {"q": "How many pairwise interfaces does a five-agent system have?", "a": "Ten \u2014 C(5,2) = 10."}, {"q": "What does the chapter say is the most under-discussed cost of multi-agent systems?", "a": "Debugging: tracing a failure across ten pairwise interfaces is harder by an order of magnitude than debugging a single agent."}, {"q": "What communication pattern does the chapter say rarely survives in production?", "a": "Plain text turns in a shared transcript \u2014 a research convenience that becomes wasteful and impractical past three or four agents."}, {"q": "What three things does the chapter say multi-agent systems actually buy you?", "a": "Specialization, error correction, and context isolation."}, {"q": "In what domains does the chapter say the debate pattern's accuracy lift is typically worth the 5\u00d7 cost?", "a": "High-stakes settings: legal review, medical synthesis, financial decision support."}]</script>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Drill cards · Chapter 35</div>
     <div class="ch-header__num">Drills</div>
@@ -41,6 +43,10 @@
     <p class="ch-header__dek">10 atomic recall cards. Export to Anki and let spaced repetition do its slow work.</p>
   </header>
   <div class="drills__wrap">
+    <div class="srs-banner" data-srs-banner>
+  <span class="srs-banner__label"><span class="srs-banner__count" data-srs-count>10</span> cards due for review</span>
+  <button type="button" class="srs-banner__btn" data-srs-open="35-swarm">Review now</button>
+</div>
     <div class="drills__actions">
       <a class="learn__btn learn__btn--primary" href="35-swarm-drills.tsv" download>Download Anki TSV</a>
       <a class="learn__btn learn__btn--ghost" href="35-swarm.html">← Back to chapter</a>
@@ -97,4 +103,5 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
 </body></html>

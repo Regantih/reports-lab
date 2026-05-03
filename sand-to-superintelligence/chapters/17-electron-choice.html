@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="17-electron-choice">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">conductor vs. insulator</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">band gap</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">silicon 1.12 eV</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">thermal excitation</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">doping masterstroke</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">N-type / P-type</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">switchable rock</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="17-electron-choice" data-answer-key="b">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — what is silicon's band gap at room temperature?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 17</div>
     <h1 class="ch-header__title">The Electron's Choice</h1>
     <p class="ch-header__dek">Band gaps, doping, and what “semiconductor” really means</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain why silicon's 1.12 eV band gap makes it controllably switchable while copper and glass are not</li><li>Name the two dopant types, give one element per type, and state the charge carrier each introduces</li><li>Defend the claim that doping at one-in-ten-billion concentration is sufficient to transform silicon's conductivity</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">1.12 <em>eV</em></div><div class="stat__label">silicon's band gap at room temperature</div></div><div class="stat"><div class="stat__num">1 <em>in 10<sup>10</sup></em></div><div class="stat__label">ratio of dopant to host atoms</div></div><div class="stat"><div class="stat__num">4</div><div class="stat__label">valence electrons in a silicon atom</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="17-electron-choice">
   <div class="ladder__bar">
@@ -106,52 +115,52 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#a-strange-middle">A strange middle ground</a></li><li><a href="#band-gap">The band gap</a></li><li><a href="#doping">Doping — the masterstroke</a></li><li><a href="#rocks-that-switch">Rocks that switch</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">In the last chapter we left silicon mid-transformation: an enormous data-center humming in Virginia, eighteen trays of cooled metal carrying out a kind of work the rest of nature has never managed. To understand <em>how</em> any of that work happens — how a sliver of patterned rock, the moment electricity touches it, becomes arithmetic, then logic, then memory, then a thought — we have to step back into physics. Specifically, into the strange behaviour of an electron inside a crystal.</p>
+<p class="lede" id="p-e44361ec">In the last chapter we left silicon mid-transformation: an enormous data-center humming in Virginia, eighteen trays of cooled metal carrying out a kind of work the rest of nature has never managed. To understand <em>how</em> any of that work happens — how a sliver of patterned rock, the moment electricity touches it, becomes arithmetic, then logic, then memory, then a thought — we have to step back into physics. Specifically, into the strange behaviour of an electron inside a crystal.</p>
 
-<p>This is the chapter where we earn the word <em>semiconductor</em>.</p>
+<p id="p-7765fdda">This is the chapter where we earn the word <em>semiconductor</em>.</p>
 
 <h2 id="a-strange-middle">A strange middle ground</h2>
 
-<p>Almost every material on earth is either a conductor or an insulator. Copper, aluminum, gold — push a voltage on them and electrons flow effortlessly. Glass, rubber, ceramic — push the same voltage and nothing happens, because their electrons are locked into chemical bonds and have no place to go.</p>
+<p id="p-d462ab63">Almost every material on earth is either a conductor or an insulator. Copper, aluminum, gold — push a voltage on them and electrons flow effortlessly. Glass, rubber, ceramic — push the same voltage and nothing happens, because their electrons are locked into chemical bonds and have no place to go.</p>
 
-<p>Silicon is different. Push a small voltage on a piece of pure silicon at room temperature and a trickle of current flows. Heat it up and the trickle grows. Cool it to liquid-nitrogen temperatures and the silicon becomes nearly an insulator. Shine light on it and the current jumps. <a href="https://www.nobelprize.org/prizes/physics/1956/summary/">Pure silicon's behaviour is conditional</a> in a way that copper's is not. It almost seems to <em>decide</em>.</p>
+<p id="p-ac013644">Silicon is different. Push a small voltage on a piece of pure silicon at room temperature and a trickle of current flows. Heat it up and the trickle grows. Cool it to liquid-nitrogen temperatures and the silicon becomes nearly an insulator. Shine light on it and the current jumps. <a href="https://www.nobelprize.org/prizes/physics/1956/summary/">Pure silicon's behaviour is conditional</a> in a way that copper's is not. It almost seems to <em>decide</em>.</p>
 
-<p>That conditional behaviour — the fact that we can ask silicon "are you conducting right now?" and get a different answer depending on what we did to it — is the entire foundation of the digital age.</p>
+<p id="p-4aee8473">That conditional behaviour — the fact that we can ask silicon "are you conducting right now?" and get a different answer depending on what we did to it — is the entire foundation of the digital age.</p>
 
 <h2 id="band-gap">The band gap</h2>
 
-<p>Quantum mechanics gives us the explanation. Inside any solid, electrons cannot have any energy they like. They are restricted to <strong>bands</strong> — broad ranges of allowed energy — separated by <strong>forbidden gaps</strong>. The lower band, called the valence band, holds electrons that are bound to atoms. The upper band, the conduction band, holds electrons that are free to roam.</p>
+<p id="p-9b7b4e33">Quantum mechanics gives us the explanation. Inside any solid, electrons cannot have any energy they like. They are restricted to <strong>bands</strong> — broad ranges of allowed energy — separated by <strong>forbidden gaps</strong>. The lower band, called the valence band, holds electrons that are bound to atoms. The upper band, the conduction band, holds electrons that are free to roam.</p>
 
-<p>In a metal, these two bands overlap. There is no gap, so electrons are always free to move. That is why copper conducts.</p>
+<p id="p-c5360e0f">In a metal, these two bands overlap. There is no gap, so electrons are always free to move. That is why copper conducts.</p>
 
-<p>In an insulator, the gap is enormous — about 9 eV in glass — far larger than the thermal energy available at room temperature (~0.026 eV). No electron can muster the energy to leap across, so none ever joins the conduction band. That is why glass insulates.</p>
+<p id="p-2f93dcdc">In an insulator, the gap is enormous — about 9 eV in glass — far larger than the thermal energy available at room temperature (~0.026 eV). No electron can muster the energy to leap across, so none ever joins the conduction band. That is why glass insulates.</p>
 
-<p>Silicon's gap is <a href="https://www.pveducation.org/pvcdrom/pn-junctions/band-gap"><strong>1.12 electron-volts</strong></a>. Big enough that very few electrons cross it spontaneously at room temperature — pure silicon is a poor conductor — but small enough that with a modest amount of help (heat, light, or a carefully placed neighbour atom), enormous numbers of electrons <em>can</em> be promoted across. <em>This is the band gap of choice</em>: large enough to keep silicon stable, small enough to make it manipulable.</p>
+<p id="p-4d869879">Silicon's gap is <a href="https://www.pveducation.org/pvcdrom/pn-junctions/band-gap"><strong>1.12 electron-volts</strong></a>. Big enough that very few electrons cross it spontaneously at room temperature — pure silicon is a poor conductor — but small enough that with a modest amount of help (heat, light, or a carefully placed neighbour atom), enormous numbers of electrons <em>can</em> be promoted across. <em>This is the band gap of choice</em>: large enough to keep silicon stable, small enough to make it manipulable.</p>
 
 <blockquote>Conductors say yes. Insulators say no. Semiconductors say "depends on what you do." Our entire civilization runs on what they say next.</blockquote>
 
 <h2 id="doping">Doping — the masterstroke</h2>
 
-<p>Pure silicon is a curiosity, not a technology. The masterstroke that turns it into a switch is <strong>doping</strong>: deliberately introducing a few foreign atoms — one part in ten billion at the lightest, one part in ten million at the heaviest — to flood the conduction band with carriers.</p>
+<p id="p-d209455d">Pure silicon is a curiosity, not a technology. The masterstroke that turns it into a switch is <strong>doping</strong>: deliberately introducing a few foreign atoms — one part in ten billion at the lightest, one part in ten million at the heaviest — to flood the conduction band with carriers.</p>
 
-<p>Silicon has four valence electrons; it sits in column IV of the periodic table. Slip in a phosphorus atom (column V, five valence electrons) and four of phosphorus's electrons participate in bonds with neighbouring silicons. The fifth has nowhere to go — it is loosely bound, easily kicked into the conduction band. Add enough phosphorus, and the silicon now has a sea of mobile electrons. We call this <strong>n-type</strong> silicon (n for negative carriers).</p>
+<p id="p-c0849ed0">Silicon has four valence electrons; it sits in column IV of the periodic table. Slip in a phosphorus atom (column V, five valence electrons) and four of phosphorus's electrons participate in bonds with neighbouring silicons. The fifth has nowhere to go — it is loosely bound, easily kicked into the conduction band. Add enough phosphorus, and the silicon now has a sea of mobile electrons. We call this <strong>n-type</strong> silicon (n for negative carriers).</p>
 
-<p>Slip in a boron atom (column III, three valence electrons) and the situation reverses. There is now a missing electron — a "hole" — in the bonding lattice. Holes behave, mathematically, as if they were positive charge carriers, drifting through the crystal as electrons hop into them from neighbour to neighbour. This is <strong>p-type</strong> silicon.</p>
+<p id="p-af41e72c">Slip in a boron atom (column III, three valence electrons) and the situation reverses. There is now a missing electron — a "hole" — in the bonding lattice. Holes behave, mathematically, as if they were positive charge carriers, drifting through the crystal as electrons hop into them from neighbour to neighbour. This is <strong>p-type</strong> silicon.</p>
 
 <div class="aside" data-tone="euv">
   <span class="aside__label">The precision required</span>
-  <p>Modern chips dope silicon at concentrations as <a href="https://en.wikipedia.org/wiki/Doping_(semiconductor)">low as 10<sup>13</sup> dopant atoms per cubic centimeter</a> — about <em>one foreign atom per billion silicon atoms</em>. This is why Chapters 1-3 of this book obsessed about purity. You cannot dope to one-in-a-billion if your starting material already contains one-in-a-million of the wrong thing.</p>
+  <p id="p-96d919f4">Modern chips dope silicon at concentrations as <a href="https://en.wikipedia.org/wiki/Doping_(semiconductor)">low as 10<sup>13</sup> dopant atoms per cubic centimeter</a> — about <em>one foreign atom per billion silicon atoms</em>. This is why Chapters 1-3 of this book obsessed about purity. You cannot dope to one-in-a-billion if your starting material already contains one-in-a-million of the wrong thing.</p>
 </div>
 
 <h2 id="rocks-that-switch">Rocks that switch</h2>
 
-<p>Place a slab of n-type silicon next to a slab of p-type silicon — what physicists call a <strong>p-n junction</strong> — and remarkable things happen. Free electrons from the n-side rush into the p-side to fill holes; holes drift the other way. A region empty of mobile carriers forms at the boundary. An electric field builds up, opposing further migration. Equilibrium settles. You now have a one-way valve for current — a <strong>diode</strong>.</p>
+<p id="p-a9090158">Place a slab of n-type silicon next to a slab of p-type silicon — what physicists call a <strong>p-n junction</strong> — and remarkable things happen. Free electrons from the n-side rush into the p-side to fill holes; holes drift the other way. A region empty of mobile carriers forms at the boundary. An electric field builds up, opposing further migration. Equilibrium settles. You now have a one-way valve for current — a <strong>diode</strong>.</p>
 
-<p>The p-n junction was demonstrated by Russell Ohl at <a href="https://www.computerhistory.org/siliconengine/silicon-pn-junction-is-discovered/">Bell Labs in work culminating in February 1940</a>, and it is the conceptual ancestor of every device in this book. Once you can build a region of crystal whose conductivity depends on which way you push, you can build a region whose conductivity depends on a third electrode hovering nearby. That third electrode gives us the <em>transistor</em> — the gate that decides whether current flows or doesn't.</p>
+<p id="p-c69bcea2">The p-n junction was demonstrated by Russell Ohl at <a href="https://www.computerhistory.org/siliconengine/silicon-pn-junction-is-discovered/">Bell Labs in work culminating in February 1940</a>, and it is the conceptual ancestor of every device in this book. Once you can build a region of crystal whose conductivity depends on which way you push, you can build a region whose conductivity depends on a third electrode hovering nearby. That third electrode gives us the <em>transistor</em> — the gate that decides whether current flows or doesn't.</p>
 
-<p>What we have, when all this comes together, is the trick we have been after the whole time: a rock whose ability to carry electricity is no longer a property of the rock but of <em>what we have done to a particular spot of it.</em> Silicon has stopped being a material and become a stage on which voltages can play.</p>
+<p id="p-f63d9dae">What we have, when all this comes together, is the trick we have been after the whole time: a rock whose ability to carry electricity is no longer a property of the rock but of <em>what we have done to a particular spot of it.</em> Silicon has stopped being a material and become a stage on which voltages can play.</p>
 
-<p>In the next chapter we walk on that stage and watch a single transistor turn on.</p>
+<p id="p-4709babc">In the next chapter we walk on that stage and watch a single transistor turn on.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 380" role="img" aria-label="Energy band diagram showing valence band, conduction band, and the band gap">
@@ -329,4 +338,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

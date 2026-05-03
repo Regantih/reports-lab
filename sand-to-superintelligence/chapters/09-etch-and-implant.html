@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="09-etch-and-implant">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">patterned resist</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">plasma etch</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">RIE anisotropy</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">ion implantation</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">lattice damage</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">rapid thermal anneal</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">active dopants</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="09-etch-and-implant" data-answer-key="c">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — what is the selectivity ratio that a well-optimized plasma etch recipe can achieve between the target material and the photoresist mask?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 09</div>
     <h1 class="ch-header__title">Carving and Doping</h1>
     <p class="ch-header__dek">Plasma etch and ion implantation</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain why reactive ion etching produces vertical sidewalls while wet etching cannot</li><li>Trace how a boron ion moves from plasma source to active substitutional dopant in the silicon lattice</li><li>Name the two mechanisms that combine in RIE to achieve etch selectivity exceeding 1000:1</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">~50 <em>keV</em></div><div class="stat__label">ion implant energy</div></div><div class="stat"><div class="stat__num">~10³<em>:1</em></div><div class="stat__label">etch selectivity ratio</div></div><div class="stat"><div class="stat__num">~1,000<em>°C</em></div><div class="stat__label">anneal temperature</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="09-etch-and-implant">
   <div class="ladder__bar">
@@ -106,39 +115,39 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#etch">Plasma, the universal solvent</a></li><li><a href="#rie">Reactive ion etching</a></li><li><a href="#implant">Ion implantation</a></li><li><a href="#anneal">The healing burn</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">After lithography, the wafer holds an invisible drawing of the chip's next layer in a patterned photoresist. Where the resist is gone, the underlying material is exposed; where the resist remains, the surface is protected. The wafer is now ready for two of the most violent steps in its life: <strong>etching</strong> away exposed material, and <strong>implanting</strong> ions into exposed silicon to give it electrical character.</p>
+<p class="lede" id="p-b67c47dd">After lithography, the wafer holds an invisible drawing of the chip's next layer in a patterned photoresist. Where the resist is gone, the underlying material is exposed; where the resist remains, the surface is protected. The wafer is now ready for two of the most violent steps in its life: <strong>etching</strong> away exposed material, and <strong>implanting</strong> ions into exposed silicon to give it electrical character.</p>
 
-<p>This is where atoms move.</p>
+<p id="p-ba1f5278">This is where atoms move.</p>
 
 <h2 id="etch">Plasma, the universal solvent</h2>
 
-<p>For the earliest decades of integrated circuits, etching was done with liquids — wet chemical baths that dissolved unwanted material and left protected regions intact. Wet etches are still used, but they are isotropic: they eat in all directions equally, which is acceptable when features are large and tolerances are loose. Modern features are neither.</p>
+<p id="p-abaeaef3">For the earliest decades of integrated circuits, etching was done with liquids — wet chemical baths that dissolved unwanted material and left protected regions intact. Wet etches are still used, but they are isotropic: they eat in all directions equally, which is acceptable when features are large and tolerances are loose. Modern features are neither.</p>
 
-<p>The replacement is <strong>plasma etching</strong>. The wafer enters a chamber under low pressure. Reactive gases — fluorine compounds for silicon and silicon oxides, chlorine compounds for metals — are injected. A radio-frequency field is applied. The gas ionizes into a plasma: a soup of free electrons, positive ions, and reactive radicals.</p>
+<p id="p-c80c52e4">The replacement is <strong>plasma etching</strong>. The wafer enters a chamber under low pressure. Reactive gases — fluorine compounds for silicon and silicon oxides, chlorine compounds for metals — are injected. A radio-frequency field is applied. The gas ionizes into a plasma: a soup of free electrons, positive ions, and reactive radicals.</p>
 
-<p>The chemistry of the plasma reacts with the exposed surface, forming volatile compounds (silicon tetrafluoride, for instance) that pump away as gas. The unexposed surface, protected by photoresist, is untouched. With the right plasma chemistry, etch <strong>selectivities</strong> — the ratio of etch rate on the target material to the rate on the masking material — routinely exceed 100 to 1, and in carefully optimized recipes can approach 1,000 to 1.</p>
+<p id="p-a46c96d5">The chemistry of the plasma reacts with the exposed surface, forming volatile compounds (silicon tetrafluoride, for instance) that pump away as gas. The unexposed surface, protected by photoresist, is untouched. With the right plasma chemistry, etch <strong>selectivities</strong> — the ratio of etch rate on the target material to the rate on the masking material — routinely exceed 100 to 1, and in carefully optimized recipes can approach 1,000 to 1.</p>
 
 <h2 id="rie">Reactive ion etching</h2>
 
-<p>The most powerful version is <strong>reactive ion etching</strong> (RIE). In addition to chemical reactivity, the plasma is biased so that positive ions are accelerated downward toward the wafer. They strike the surface essentially vertically, with kinetic energy. The combination of physical bombardment and chemical reactivity allows RIE to etch <em>anisotropically</em>: the etch proceeds straight down, into the wafer, with vertical sidewalls. This is what makes the FinFET fin and the GAA nanosheet stack possible. Without anisotropic etching, modern transistors as we know them simply do not exist.</p>
+<p id="p-b3a23558">The most powerful version is <strong>reactive ion etching</strong> (RIE). In addition to chemical reactivity, the plasma is biased so that positive ions are accelerated downward toward the wafer. They strike the surface essentially vertically, with kinetic energy. The combination of physical bombardment and chemical reactivity allows RIE to etch <em>anisotropically</em>: the etch proceeds straight down, into the wafer, with vertical sidewalls. This is what makes the FinFET fin and the GAA nanosheet stack possible. Without anisotropic etching, modern transistors as we know them simply do not exist.</p>
 
 <h2 id="implant">Ion implantation</h2>
 
-<p>Now the chemistry shifts from removal to addition. Pure crystalline silicon is, electrically, almost useless — its conduction band is empty, and to do anything interesting you have to introduce a small population of charge carriers.</p>
+<p id="p-cc6a62c8">Now the chemistry shifts from removal to addition. Pure crystalline silicon is, electrically, almost useless — its conduction band is empty, and to do anything interesting you have to introduce a small population of charge carriers.</p>
 
-<p>This is what dopants do. Atoms with one fewer valence electron than silicon (like boron) introduce holes — places where an electron <em>could</em> be but isn't, behaving as positive charge carriers. Atoms with one more (like phosphorus or arsenic) donate free electrons. Different regions of a transistor demand different doping types, which is what makes a transistor work at all.</p>
+<p id="p-2f508729">This is what dopants do. Atoms with one fewer valence electron than silicon (like boron) introduce holes — places where an electron <em>could</em> be but isn't, behaving as positive charge carriers. Atoms with one more (like phosphorus or arsenic) donate free electrons. Different regions of a transistor demand different doping types, which is what makes a transistor work at all.</p>
 
-<p>To place dopants with atomic-scale precision, the industry uses <strong>ion implantation</strong>. The chosen element is ionized in a plasma source, accelerated through tens of thousands of volts, and steered through a magnetic field that filters by mass-to-charge ratio (so that contaminating ions are bent off-axis and never reach the wafer). The pure beam is then scanned across the wafer surface like an electron-microscope raster, with the dose, energy, and angle all controlled to within fractions of a percent.</p>
+<p id="p-a34ae22b">To place dopants with atomic-scale precision, the industry uses <strong>ion implantation</strong>. The chosen element is ionized in a plasma source, accelerated through tens of thousands of volts, and steered through a magnetic field that filters by mass-to-charge ratio (so that contaminating ions are bent off-axis and never reach the wafer). The pure beam is then scanned across the wafer surface like an electron-microscope raster, with the dose, energy, and angle all controlled to within fractions of a percent.</p>
 
-<p>Where photoresist or oxide masks the surface, the ions stop in the mask. Where the surface is exposed, the ions punch into the silicon to a depth that depends on their energy — typically a few tens of nanometers, sometimes less. They come to rest as substitutional dopants in the silicon lattice, often after disrupting it severely along the way.</p>
+<p id="p-0ee6887b">Where photoresist or oxide masks the surface, the ions stop in the mask. Where the surface is exposed, the ions punch into the silicon to a depth that depends on their energy — typically a few tens of nanometers, sometimes less. They come to rest as substitutional dopants in the silicon lattice, often after disrupting it severely along the way.</p>
 
 <h2 id="anneal">The healing burn</h2>
 
-<p>That last detail matters. An implanted ion arrives in the lattice with kilo-electronvolts of kinetic energy and behaves rather like an asteroid. By the time it stops, it has knocked the silicon atoms around it out of place, leaving behind a damaged region that is amorphous rather than crystalline.</p>
+<p id="p-758e710b">That last detail matters. An implanted ion arrives in the lattice with kilo-electronvolts of kinetic energy and behaves rather like an asteroid. By the time it stops, it has knocked the silicon atoms around it out of place, leaving behind a damaged region that is amorphous rather than crystalline.</p>
 
-<p>To heal this damage, the wafer is <strong>annealed</strong>: heated rapidly, often with a high-power lamp or laser, to around 1,000°C for seconds at a time. The heat lets the silicon atoms find their lattice sites again. The implanted dopants — now sitting near where they will function — become electrically active. Modern rapid thermal anneal recipes can heat a wafer to 1,200°C and back to room temperature in less than a minute, with sub-degree control.</p>
+<p id="p-b5b2eae7">To heal this damage, the wafer is <strong>annealed</strong>: heated rapidly, often with a high-power lamp or laser, to around 1,000°C for seconds at a time. The heat lets the silicon atoms find their lattice sites again. The implanted dopants — now sitting near where they will function — become electrically active. Modern rapid thermal anneal recipes can heat a wafer to 1,200°C and back to room temperature in less than a minute, with sub-degree control.</p>
 
-<p>After this, the etched and doped layer is finished. The photoresist is stripped, the wafer is cleaned, and the entire process — deposition, lithography, etch, implant, anneal — begins again for the next layer. A modern leading-edge GPU goes through this loop perhaps eighty times. Each loop adds one layer to the growing chip. Each loop must be perfect.</p>
+<p id="p-c2679277">After this, the etched and doped layer is finished. The photoresist is stripped, the wafer is cleaned, and the entire process — deposition, lithography, etch, implant, anneal — begins again for the next layer. A modern leading-edge GPU goes through this loop perhaps eighty times. Each loop adds one layer to the growing chip. Each loop must be perfect.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 380" role="img" aria-label="Plasma etch carving silicon fins, then ion implantation doping the silicon">
@@ -349,4 +358,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

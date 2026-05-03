@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="14-nvl72">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">18 compute trays</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">9 NVLink switch trays</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">copper midplane</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">260 TB/s all-to-all</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">190-230 kW</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">liquid cooling required</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="14-nvl72" data-answer-key="c">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — how much all-to-all NVLink 6 bandwidth does a single NVL72 rack carry between its 72 GPUs?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 14</div>
     <h1 class="ch-header__title">The NVL72 Rack</h1>
     <p class="ch-header__dek">72 GPUs that move data faster than the internet</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain why 260 TB/s all-to-all NVLink bandwidth is the threshold at which 72 GPUs behave as one machine</li><li>Defend the claim that liquid cooling above 200 kW is structural rather than optional</li><li>State the open question about power scaling in next-generation Kyber NVL576 racks</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">72 <em>GPUs</em></div><div class="stat__label">per NVL72 rack</div></div><div class="stat"><div class="stat__num">3.6 <em>EFLOPS</em></div><div class="stat__label">FP4 per rack</div></div><div class="stat"><div class="stat__num">260 <em>TB/s</em></div><div class="stat__label">all-to-all NVLink bandwidth</div></div><div class="stat"><div class="stat__num">~190–230 <em>kW</em></div><div class="stat__label">rack power (Max Q / Max P)</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="14-nvl72">
   <div class="ladder__bar">
@@ -106,41 +115,41 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-rack">The rack as a unit</a></li><li><a href="#nvlink-6">NVLink 6 — every GPU to every other</a></li><li><a href="#the-spine">The midplane spine</a></li><li><a href="#liquid-cooling">Liquid cooling, by necessity</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">The unit of frontier AI is not a chip. It is not a server. It is a <strong>rack</strong>.</p>
+<p class="lede" id="p-a82a90ce">The unit of frontier AI is not a chip. It is not a server. It is a <strong>rack</strong>.</p>
 
-<p>This is a strange thing to say in 2026. For thirty years, the unit of computing was the server: a single machine, perhaps with several CPUs and a handful of GPUs, with its own power supply, fans, network ports, and operating system. Racks were just convenient ways to stack many servers. The compute happened inside the box, and the network glued boxes together.</p>
+<p id="p-3d3f7230">This is a strange thing to say in 2026. For thirty years, the unit of computing was the server: a single machine, perhaps with several CPUs and a handful of GPUs, with its own power supply, fans, network ports, and operating system. Racks were just convenient ways to stack many servers. The compute happened inside the box, and the network glued boxes together.</p>
 
-<p>That model has broken. <a href="https://www.cnbc.com/2026/02/25/first-look-at-nvidias-ai-system-vera-rubin-and-how-it-beats-blackwell.html">In the NVL72 design</a>, the rack itself is the machine. There is no individual server inside it that is meaningful on its own. Every component is part of one cabinet-scale computer.</p>
+<p id="p-c851130a">That model has broken. <a href="https://www.cnbc.com/2026/02/25/first-look-at-nvidias-ai-system-vera-rubin-and-how-it-beats-blackwell.html">In the NVL72 design</a>, the rack itself is the machine. There is no individual server inside it that is meaningful on its own. Every component is part of one cabinet-scale computer.</p>
 
 <h2 id="the-rack">The rack as a unit</h2>
 
-<p>An NVL72 rack contains 18 <strong>compute trays</strong>, each holding 4 Rubin GPUs and 2 Vera CPUs (typically as two Superchips). It also contains 9 <strong>NVLink switch trays</strong> — separate units whose only job is to switch GPU-to-GPU traffic — plus power shelves, networking SuperNICs, and management hardware. Add it up and you get 72 Rubin GPUs and 36 Vera CPUs in a single 19-inch rack.</p>
+<p id="p-ec22a878">An NVL72 rack contains 18 <strong>compute trays</strong>, each holding 4 Rubin GPUs and 2 Vera CPUs (typically as two Superchips). It also contains 9 <strong>NVLink switch trays</strong> — separate units whose only job is to switch GPU-to-GPU traffic — plus power shelves, networking SuperNICs, and management hardware. Add it up and you get 72 Rubin GPUs and 36 Vera CPUs in a single 19-inch rack.</p>
 
-<p>That rack delivers approximately <strong>3.6 exaflops</strong> of FP4 inference compute, with about 20.7 TB of HBM4 memory in aggregate (72 GPUs × 288 GB). It draws roughly 190–230 kilowatts depending on whether the rack is tuned for energy efficiency (Max Q) or peak performance (Max P) — comparable to a few hundred US homes — and dissipates that power as heat that has to leave the cabinet without melting it.</p>
+<p id="p-8f1617b8">That rack delivers approximately <strong>3.6 exaflops</strong> of FP4 inference compute, with about 20.7 TB of HBM4 memory in aggregate (72 GPUs × 288 GB). It draws roughly 190–230 kilowatts depending on whether the rack is tuned for energy efficiency (Max Q) or peak performance (Max P) — comparable to a few hundred US homes — and dissipates that power as heat that has to leave the cabinet without melting it.</p>
 
 <h2 id="nvlink-6">NVLink 6 — every GPU to every other</h2>
 
-<p>The communication fabric inside the rack is <strong>NVLink 6</strong>, the latest generation of NVIDIA's GPU-to-GPU interconnect. Every Rubin GPU has many NVLink lanes; the lanes from all 72 GPUs are routed through the 9 NVLink switch trays, configured so that any GPU can talk to any other GPU at full bandwidth simultaneously.</p>
+<p id="p-63cd2d9d">The communication fabric inside the rack is <strong>NVLink 6</strong>, the latest generation of NVIDIA's GPU-to-GPU interconnect. Every Rubin GPU has many NVLink lanes; the lanes from all 72 GPUs are routed through the 9 NVLink switch trays, configured so that any GPU can talk to any other GPU at full bandwidth simultaneously.</p>
 
-<p>The aggregate is staggering: <a href="https://www.signalintegrityjournal.com/articles/4183-nvidia-kicks-off-the-next-generation-of-ai-with-rubin-six-new-chips-one-incredible-ai-supercomputer">260 terabytes per second</a> of all-to-all bandwidth across the 72 GPUs. To put that in context, the global internet's aggregate cross-sectional bandwidth is, by some estimates, in the same neighborhood. Inside one rack, NVIDIA delivers roughly the bandwidth of the entire commodity internet.</p>
+<p id="p-20879050">The aggregate is staggering: <a href="https://www.signalintegrityjournal.com/articles/4183-nvidia-kicks-off-the-next-generation-of-ai-with-rubin-six-new-chips-one-incredible-ai-supercomputer">260 terabytes per second</a> of all-to-all bandwidth across the 72 GPUs. To put that in context, the global internet's aggregate cross-sectional bandwidth is, by some estimates, in the same neighborhood. Inside one rack, NVIDIA delivers roughly the bandwidth of the entire commodity internet.</p>
 
-<p>This bandwidth is what allows the rack to behave as a single GPU. A model whose parameters do not fit in any single GPU can be sharded across all 72; the latency of moving activations between shards is small enough that it does not dominate the training step. This is what permits trillion-parameter mixture-of-experts models to be trained at all, and to be served at usable throughput.</p>
+<p id="p-9ed409ff">This bandwidth is what allows the rack to behave as a single GPU. A model whose parameters do not fit in any single GPU can be sharded across all 72; the latency of moving activations between shards is small enough that it does not dominate the training step. This is what permits trillion-parameter mixture-of-experts models to be trained at all, and to be served at usable throughput.</p>
 
 <h2 id="the-spine">The midplane spine</h2>
 
-<p>To carry 260 TB/s of bandwidth between trays without melting, NVIDIA replaced the conventional cable harness with a <strong>copper midplane</strong>: a large printed circuit board running vertically through the center of the rack, into which compute trays plug from one side and switch trays plug from the other. Signals flow through the midplane's copper traces, not through cables.</p>
+<p id="p-fa6d3150">To carry 260 TB/s of bandwidth between trays without melting, NVIDIA replaced the conventional cable harness with a <strong>copper midplane</strong>: a large printed circuit board running vertically through the center of the rack, into which compute trays plug from one side and switch trays plug from the other. Signals flow through the midplane's copper traces, not through cables.</p>
 
-<p>The benefits of this are enormous. <a href="https://developer.nvidia.com/blog/nvidia-vera-rubin-pod-seven-chips-five-rack-scale-systems-one-ai-supercomputer/">Assembly time per tray drops from ~2 hours to about 5 minutes.</a> Reliability rises because there are no cables to be miswired or to come loose. Cost per tray-link drops dramatically. The thermal envelope shrinks because copper traces dissipate less than active cabling. And the rack becomes a serviceable unit: a tray that fails can be slid out and replaced, without disturbing anything else.</p>
+<p id="p-ead0bed8">The benefits of this are enormous. <a href="https://developer.nvidia.com/blog/nvidia-vera-rubin-pod-seven-chips-five-rack-scale-systems-one-ai-supercomputer/">Assembly time per tray drops from ~2 hours to about 5 minutes.</a> Reliability rises because there are no cables to be miswired or to come loose. Cost per tray-link drops dramatically. The thermal envelope shrinks because copper traces dissipate less than active cabling. And the rack becomes a serviceable unit: a tray that fails can be slid out and replaced, without disturbing anything else.</p>
 
 <h2 id="liquid-cooling">Liquid cooling, by necessity</h2>
 
-<p>Two hundred kilowatts is too much for air. There is no fan large enough, no airflow loud enough, no heat sink dense enough to evacuate that much power from a single rack with air alone. NVL72 is liquid-cooled from the start — and the next-generation Kyber NVL576 racks NVIDIA has previewed push past 600 kW, where liquid is no longer optional but existential.</p>
+<p id="p-5156558e">Two hundred kilowatts is too much for air. There is no fan large enough, no airflow loud enough, no heat sink dense enough to evacuate that much power from a single rack with air alone. NVL72 is liquid-cooled from the start — and the next-generation Kyber NVL576 racks NVIDIA has previewed push past 600 kW, where liquid is no longer optional but existential.</p>
 
-<p>Coolant — typically a water-glycol mix — enters the rack through manifolds at the top, flows down to cold plates that are bolted directly to each Rubin GPU, picks up heat, and returns to a coolant distribution unit (CDU) at the rack base. From the CDU, hot coolant flows to a building-scale facility cooling loop where the heat is finally rejected — to chillers, to cooling towers, to outside air or, in some new builds, to a dedicated heat-recovery loop that warms nearby buildings.</p>
+<p id="p-8ebe4e5c">Coolant — typically a water-glycol mix — enters the rack through manifolds at the top, flows down to cold plates that are bolted directly to each Rubin GPU, picks up heat, and returns to a coolant distribution unit (CDU) at the rack base. From the CDU, hot coolant flows to a building-scale facility cooling loop where the heat is finally rejected — to chillers, to cooling towers, to outside air or, in some new builds, to a dedicated heat-recovery loop that warms nearby buildings.</p>
 
-<p>The cooling loop is itself an engineering object of its own. Flow rates, temperatures, pressure drops, leak detection, redundancy — every aspect must be managed to ensure that no Rubin ever exceeds its junction temperature and no failure of cooling can take more than a fraction of a rack offline.</p>
+<p id="p-53113273">The cooling loop is itself an engineering object of its own. Flow rates, temperatures, pressure drops, leak detection, redundancy — every aspect must be managed to ensure that no Rubin ever exceeds its junction temperature and no failure of cooling can take more than a fraction of a rack offline.</p>
 
-<p>Eighteen trays. Seventy-two GPUs. Roughly two hundred kilowatts. One copper spine. One liquid loop. The NVL72 rack is, in this sense, the first cabinet-scale supercomputer designed from a clean sheet of paper for AI workloads — and it is the smallest practical unit of the next decade's frontier compute.</p>
+<p id="p-e6151745">Eighteen trays. Seventy-two GPUs. Roughly two hundred kilowatts. One copper spine. One liquid loop. The NVL72 rack is, in this sense, the first cabinet-scale supercomputer designed from a clean sheet of paper for AI workloads — and it is the smallest practical unit of the next decade's frontier compute.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 460" role="img" aria-label="NVL72 rack with 18 compute trays, NVLink switches, and copper midplane">
@@ -306,4 +315,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

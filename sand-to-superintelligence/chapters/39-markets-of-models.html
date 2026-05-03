@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="39-markets-of-models">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">one frontier model 2022</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">commodity tier 2026</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">95% cost drop</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">routing layer</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">price-quality curve</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">model arbitrage</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">3-10× savings</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="39-markets-of-models" data-answer-key="d">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — by roughly how much did the cost-per-million-tokens at frontier quality fall between 2023 and 2026?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 39</div>
     <h1 class="ch-header__title">Markets of Models</h1>
     <p class="ch-header__dek">Routing, price-per-token, and the commoditization layer</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain what structural dynamic causes the routing layer to capture surplus the way airline GDS systems did in the 1980s</li><li>Trace the per-request decision a production routing layer makes for a customer-support ticket versus a bulk classification job</li><li>State the realistic price-quality tiers in 2026 and name two providers at each tier</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">~95%</div><div class="stat__label">drop in inference cost per token, frontier-class quality, 2023-2026</div></div><div class="stat"><div class="stat__num">~12-20</div><div class="stat__label">models a typical production routing layer chooses between</div></div><div class="stat"><div class="stat__num">~30%</div><div class="stat__label">share of API traffic at major aggregators that goes through routers</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="39-markets-of-models">
   <div class="ladder__bar">
@@ -106,37 +115,37 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#intelligence-as-commodity">Intelligence as a commodity</a></li><li><a href="#the-routing-layer">The routing layer</a></li><li><a href="#price-discovery">Price discovery and the cost curve</a></li><li><a href="#model-arbitrage">Model arbitrage in practice</a></li><li><a href="#the-shape-of-the-market">The shape of the market</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">Five years ago there was, effectively, one frontier model you could call, and the conversation about which to use was short. Now there are dozens of plausible options at any given quality tier, prices are visible per-token, latencies are measured, and reasonable buyers route work to whichever model fits a particular task best. Intelligence has acquired the texture of a commodity market, with all the consequences that follow — bid-ask spreads, margin compression, switching frictions, and a routing layer that captures real economic value by sitting between buyer and seller. This chapter is about that market.</p>
+<p class="lede" id="p-5c96b454">Five years ago there was, effectively, one frontier model you could call, and the conversation about which to use was short. Now there are dozens of plausible options at any given quality tier, prices are visible per-token, latencies are measured, and reasonable buyers route work to whichever model fits a particular task best. Intelligence has acquired the texture of a commodity market, with all the consequences that follow — bid-ask spreads, margin compression, switching frictions, and a routing layer that captures real economic value by sitting between buyer and seller. This chapter is about that market.</p>
 
 <h2 id="intelligence-as-commodity">Intelligence as a commodity</h2>
 
-<p>The transition was fast. In 2022 GPT-3.5 stood alone in its quality tier; by 2024 GPT-4, Claude 3.5 Sonnet, Gemini 1.5 Pro, and a handful of open-weight Llama and Mistral models offered different tradeoffs at comparable quality; by 2026 the frontier tier has six to eight credible providers, the mid-tier has dozens, and the cost-per-million-input-tokens at frontier quality has dropped roughly 95% over three years. The same quality of output that cost $30/M tokens in 2023 costs under $2/M tokens in 2026 if you pick the right provider.</p>
+<p id="p-e2da3d5e">The transition was fast. In 2022 GPT-3.5 stood alone in its quality tier; by 2024 GPT-4, Claude 3.5 Sonnet, Gemini 1.5 Pro, and a handful of open-weight Llama and Mistral models offered different tradeoffs at comparable quality; by 2026 the frontier tier has six to eight credible providers, the mid-tier has dozens, and the cost-per-million-input-tokens at frontier quality has dropped roughly 95% over three years. The same quality of output that cost $30/M tokens in 2023 costs under $2/M tokens in 2026 if you pick the right provider.</p>
 
-<p>What this looks like to a buyer is no longer "which model do I integrate" but "which model do I route this specific request to". Different requests have different cost-quality tradeoffs: a customer-support response benefits from quality over cost, a bulk classification job benefits from cost over quality, a real-time autocomplete benefits from latency over either. The routing layer that decides per-request is now a recognized component in serious AI stacks.</p>
+<p id="p-33add0a1">What this looks like to a buyer is no longer "which model do I integrate" but "which model do I route this specific request to". Different requests have different cost-quality tradeoffs: a customer-support response benefits from quality over cost, a bulk classification job benefits from cost over quality, a real-time autocomplete benefits from latency over either. The routing layer that decides per-request is now a recognized component in serious AI stacks.</p>
 
 <h2 id="the-routing-layer">The routing layer</h2>
 
-<p>A routing layer is, mechanically, a thin service that receives an incoming model request, classifies it (by task type, expected complexity, latency budget, regulatory zone, content sensitivity), and forwards it to one of N upstream providers. The routing decision is informed by a published price sheet, observed historical accuracy, observed latency distributions, capacity, and any policy constraints (some workloads must stay in EU regions; some must avoid certain providers; some must run on open-weight models for compliance reasons).</p>
+<p id="p-d19b9016">A routing layer is, mechanically, a thin service that receives an incoming model request, classifies it (by task type, expected complexity, latency budget, regulatory zone, content sensitivity), and forwards it to one of N upstream providers. The routing decision is informed by a published price sheet, observed historical accuracy, observed latency distributions, capacity, and any policy constraints (some workloads must stay in EU regions; some must avoid certain providers; some must run on open-weight models for compliance reasons).</p>
 
-<p>The leading commercial routing layers in 2026 are <a href="https://openrouter.ai/">OpenRouter</a>, gateway products at the major clouds (Bedrock, Vertex, Azure AI), and a growing tier of specialist routers (cheaper-for-bulk, faster-for-real-time, regulated-for-finance). Internally, every large AI-using company runs its own routing layer too, often built on top of a commercial one for the actual model calls. The aggregated traffic going through routers — visible to nobody from the outside but spoken about openly by practitioners — is now meaningful enough that pricing pressure on the underlying model providers comes substantially through the routing layer rather than direct.</p>
+<p id="p-886232c5">The leading commercial routing layers in 2026 are <a href="https://openrouter.ai/">OpenRouter</a>, gateway products at the major clouds (Bedrock, Vertex, Azure AI), and a growing tier of specialist routers (cheaper-for-bulk, faster-for-real-time, regulated-for-finance). Internally, every large AI-using company runs its own routing layer too, often built on top of a commercial one for the actual model calls. The aggregated traffic going through routers — visible to nobody from the outside but spoken about openly by practitioners — is now meaningful enough that pricing pressure on the underlying model providers comes substantially through the routing layer rather than direct.</p>
 
-<p>What the router does, that no individual provider does, is make the prices comparable. Each provider would prefer to lock customers into their proprietary tooling, billing units, and quality-of-service guarantees. The router commoditizes by exposing a standard interface across all of them. This is the same dynamic that played out in airline GDS systems in the 1980s, in payment-card networks, and in stock exchanges — a layer that aggregates and standardizes the supply side captures real surplus.</p>
+<p id="p-75ac3247">What the router does, that no individual provider does, is make the prices comparable. Each provider would prefer to lock customers into their proprietary tooling, billing units, and quality-of-service guarantees. The router commoditizes by exposing a standard interface across all of them. This is the same dynamic that played out in airline GDS systems in the 1980s, in payment-card networks, and in stock exchanges — a layer that aggregates and standardizes the supply side captures real surplus.</p>
 
 <h2 id="price-discovery">Price discovery and the cost curve</h2>
 
-<p>Per-token prices are now public, frequently updated, and converged enough that a clear cost curve exists. Frontier-tier models from Anthropic, OpenAI, and Google sit at the top, charging premiums for verified quality and reliability. Mid-tier models from the same providers and from a half-dozen specialists sit a tier below, at maybe 30% of the price for 80-90% of the quality on most tasks. Open-weight models served by inference specialists (<a href="https://www.together.ai/">Together</a>, <a href="https://fireworks.ai/">Fireworks</a>, <a href="https://www.replicate.com/">Replicate</a>, <a href="https://groq.com/">Groq</a>) sit below that, at maybe 10% of the frontier price for 60-80% of the quality on tasks the open models have been tuned for.</p>
+<p id="p-b29a476f">Per-token prices are now public, frequently updated, and converged enough that a clear cost curve exists. Frontier-tier models from Anthropic, OpenAI, and Google sit at the top, charging premiums for verified quality and reliability. Mid-tier models from the same providers and from a half-dozen specialists sit a tier below, at maybe 30% of the price for 80-90% of the quality on most tasks. Open-weight models served by inference specialists (<a href="https://www.together.ai/">Together</a>, <a href="https://fireworks.ai/">Fireworks</a>, <a href="https://www.replicate.com/">Replicate</a>, <a href="https://groq.com/">Groq</a>) sit below that, at maybe 10% of the frontier price for 60-80% of the quality on tasks the open models have been tuned for.</p>
 
-<p>Prices have moved together. When one frontier vendor cuts the rate on a small or mid-tier model, the others typically respond within weeks; <a href="https://www.anthropic.com/news/claude-haiku-4-5">Anthropic's Haiku 4.5</a>, <a href="https://openai.com/pricing">OpenAI's smaller GPT-5 variants</a>, and Google's Gemini Flash family have all leapfrogged each other on price-per-million-tokens through 2024 and 2025. The competitive intensity is high, the costs are still falling fast, and any integrator that locked in a price last year is paying too much this year. This is normal commodity-market behaviour and the people who claim AI is exempt from market dynamics are not paying attention.</p>
+<p id="p-36cf4280">Prices have moved together. When one frontier vendor cuts the rate on a small or mid-tier model, the others typically respond within weeks; <a href="https://www.anthropic.com/news/claude-haiku-4-5">Anthropic's Haiku 4.5</a>, <a href="https://openai.com/pricing">OpenAI's smaller GPT-5 variants</a>, and Google's Gemini Flash family have all leapfrogged each other on price-per-million-tokens through 2024 and 2025. The competitive intensity is high, the costs are still falling fast, and any integrator that locked in a price last year is paying too much this year. This is normal commodity-market behaviour and the people who claim AI is exempt from market dynamics are not paying attention.</p>
 
 <h2 id="model-arbitrage">Model arbitrage in practice</h2>
 
-<p>For sophisticated buyers — usually internal AI platforms at large companies — the work is not just choosing one model but arbitraging across many. A typical production flow in 2026 might use a small fast model to classify the incoming request, route it to the cheapest model that can handle that class, fall back to a larger model on retry if quality is insufficient, and audit a sample of responses with a separate evaluator model. The aggregate effect is a 3-10× cost reduction over naive single-model deployment for the same task quality.</p>
+<p id="p-aecb4bda">For sophisticated buyers — usually internal AI platforms at large companies — the work is not just choosing one model but arbitraging across many. A typical production flow in 2026 might use a small fast model to classify the incoming request, route it to the cheapest model that can handle that class, fall back to a larger model on retry if quality is insufficient, and audit a sample of responses with a separate evaluator model. The aggregate effect is a 3-10× cost reduction over naive single-model deployment for the same task quality.</p>
 
-<p>The losers in this arbitrage are the providers whose pricing is detectably above their quality contribution. The winners are the providers who consistently deliver more capability per dollar than their nominal tier would suggest. Both Anthropic and the open-weight specialists have benefited from being underpriced relative to their quality at various times in this period; both have raised prices when they could and lowered when they had to. The market discipline is real.</p>
+<p id="p-54896be6">The losers in this arbitrage are the providers whose pricing is detectably above their quality contribution. The winners are the providers who consistently deliver more capability per dollar than their nominal tier would suggest. Both Anthropic and the open-weight specialists have benefited from being underpriced relative to their quality at various times in this period; both have raised prices when they could and lowered when they had to. The market discipline is real.</p>
 
 <h2 id="the-shape-of-the-market">The shape of the market</h2>
 
-<p>What the structure of the model market actually rewards, calling spades spades:</p>
+<p id="p-ca5e886b">What the structure of the model market actually rewards, calling spades spades:</p>
 
 <ul>
   <li><strong>The frontier-model owners.</strong> A small number of companies that can train models nobody else can match. Their margins are squeezed by competition with each other but defended by capability. The list is short and gets shorter as training costs rise: Anthropic, OpenAI, Google DeepMind, perhaps two or three others.</li>
@@ -145,7 +154,7 @@
   <li><strong>The routing and integration layer.</strong> Smaller in absolute size, but capturing a meaningful margin per dollar of model spend by being the layer that makes the underlying market efficient.</li>
 </ul>
 
-<p>The losers are the incumbent buyers of human cognition whose business assumed white-collar wage rates were a stable input. Some industries adjust; some shrink; some are reshaped beyond recognition. The next chapter is about the network effects that determine which is which. The chapter after that is about where the value actually reroutes.</p>
+<p id="p-303ecbbb">The losers are the incumbent buyers of human cognition whose business assumed white-collar wage rates were a stable input. Some industries adjust; some shrink; some are reshaped beyond recognition. The next chapter is about the network effects that determine which is which. The chapter after that is about where the value actually reroutes.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 380" role="img" aria-label="A routing layer auctioning incoming requests across multiple model providers on a price-quality-latency curve">
@@ -367,4 +376,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

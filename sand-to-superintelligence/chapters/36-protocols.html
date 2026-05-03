@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="36-protocols">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">function calling baseline</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">MCP tool schema</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">A2A task delegation</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">trust problem</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">capability negotiation</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">what trust actually requires</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="36-protocols" data-answer-key="a">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — how many widely-deployed protocols for cross-vendor agent identity existed at end of 2025?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 36</div>
     <h1 class="ch-header__title">Protocols of Trust</h1>
     <p class="ch-header__dek">MCP, A2A, and the standards quietly being negotiated</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain why function calling alone is insufficient for cross-organization agent interoperability</li><li>Trace an MCP tool invocation from the agent's request to the server's response</li><li>State the three trust properties that any agent-to-agent protocol must establish and name one current gap</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">Nov 2024</div><div class="stat__label">Anthropic open-sources Model Context Protocol</div></div><div class="stat"><div class="stat__num">thousands</div><div class="stat__label">MCP servers published in the registry's first year, with broader ecosystem listings already in the tens of thousands</div></div><div class="stat"><div class="stat__num">0</div><div class="stat__label">widely-deployed protocols for cross-vendor agent identity, end of 2025</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="36-protocols">
   <div class="ladder__bar">
@@ -106,37 +115,37 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-trust-problem">The trust problem</a></li><li><a href="#function-calling-as-baseline">Function calling as the baseline</a></li><li><a href="#mcp">MCP: a protocol for tools</a></li><li><a href="#a2a-and-its-rivals">A2A and its rivals</a></li><li><a href="#what-trust-actually-requires">What trust actually requires</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">When two machines exchange documents, the question of trust is mostly answered by TLS — the document is from the server it claims to be from, and nobody read it in transit. When two AI systems exchange operations, that level of trust is not enough. The agent on the other end can fabricate, refuse, drift, or actively deceive. The protocols of the next decade are about answering, in the field, the same question that letters of credit answered for medieval trade routes: how do you act on a stranger's word?</p>
+<p class="lede" id="p-f6d90abc">When two machines exchange documents, the question of trust is mostly answered by TLS — the document is from the server it claims to be from, and nobody read it in transit. When two AI systems exchange operations, that level of trust is not enough. The agent on the other end can fabricate, refuse, drift, or actively deceive. The protocols of the next decade are about answering, in the field, the same question that letters of credit answered for medieval trade routes: how do you act on a stranger's word?</p>
 
 <h2 id="the-trust-problem">The trust problem</h2>
 
-<p>The naive setup of an agent making API calls has at least four trust failures waiting to happen. The agent can hallucinate — invent an API response that did not happen. The tool can lie — return a result that misrepresents its underlying action. The user's permissions can be insufficient or excessive — the agent does something the user didn't intend, with credentials the user shouldn't have given. And the underlying transport can be tampered with — somebody intercepts and alters the call.</p>
+<p id="p-66f43771">The naive setup of an agent making API calls has at least four trust failures waiting to happen. The agent can hallucinate — invent an API response that did not happen. The tool can lie — return a result that misrepresents its underlying action. The user's permissions can be insufficient or excessive — the agent does something the user didn't intend, with credentials the user shouldn't have given. And the underlying transport can be tampered with — somebody intercepts and alters the call.</p>
 
-<p>Each failure mode has a partial solution that has been around for decades — TLS for transport, OAuth for permissions, formal specs for behaviour — but they were designed for stable, deterministic clients. Agents are neither; they will improvise, and the protocol layer has to assume the agent itself is the most likely source of trouble. This is a category of trust problem the existing internet plumbing was not built for.</p>
+<p id="p-ab695703">Each failure mode has a partial solution that has been around for decades — TLS for transport, OAuth for permissions, formal specs for behaviour — but they were designed for stable, deterministic clients. Agents are neither; they will improvise, and the protocol layer has to assume the agent itself is the most likely source of trouble. This is a category of trust problem the existing internet plumbing was not built for.</p>
 
 <h2 id="function-calling-as-baseline">Function calling as the baseline</h2>
 
-<p>The first answer is the function-calling APIs introduced by every major model provider in 2023-24. <a href="https://platform.openai.com/docs/guides/function-calling">OpenAI</a>, <a href="https://docs.anthropic.com/en/docs/build-with-claude/tool-use">Anthropic</a>, Google, and the open-weight community converged on roughly the same shape: the developer declares tools as JSON schemas, the model emits structured calls conforming to those schemas, the runtime validates and executes them, and the result is fed back as a typed message.</p>
+<p id="p-73b5bcbe">The first answer is the function-calling APIs introduced by every major model provider in 2023-24. <a href="https://platform.openai.com/docs/guides/function-calling">OpenAI</a>, <a href="https://docs.anthropic.com/en/docs/build-with-claude/tool-use">Anthropic</a>, Google, and the open-weight community converged on roughly the same shape: the developer declares tools as JSON schemas, the model emits structured calls conforming to those schemas, the runtime validates and executes them, and the result is fed back as a typed message.</p>
 
-<p>This is a real protocol, in the sense that it is explicit about syntax and at least lightly explicit about semantics (the schema documents what each parameter means). It is not a real protocol, in the sense that there is no standard registry of tools, no portability between providers (each one's schema dialect differs slightly), and no built-in authentication or permission model. Each developer wires their own tools per provider, often three or four times over.</p>
+<p id="p-8f9ac45a">This is a real protocol, in the sense that it is explicit about syntax and at least lightly explicit about semantics (the schema documents what each parameter means). It is not a real protocol, in the sense that there is no standard registry of tools, no portability between providers (each one's schema dialect differs slightly), and no built-in authentication or permission model. Each developer wires their own tools per provider, often three or four times over.</p>
 
 <h2 id="mcp">MCP: a protocol for tools</h2>
 
-<p>The most consequential agent protocol shipped to date is the <a href="https://modelcontextprotocol.io/">Model Context Protocol</a>, open-sourced by Anthropic in November 2024. MCP separates the model from the tool it is calling, so any MCP-compliant client (Claude Desktop, IDE plugins, custom agents) can talk to any MCP-compliant server (a database connector, a filesystem reader, a Slack integration). The protocol covers tool discovery, invocation, and structured responses; it is transport-agnostic, runs over standard JSON-RPC, and is genuinely portable.</p>
+<p id="p-c11bca6e">The most consequential agent protocol shipped to date is the <a href="https://modelcontextprotocol.io/">Model Context Protocol</a>, open-sourced by Anthropic in November 2024. MCP separates the model from the tool it is calling, so any MCP-compliant client (Claude Desktop, IDE plugins, custom agents) can talk to any MCP-compliant server (a database connector, a filesystem reader, a Slack integration). The protocol covers tool discovery, invocation, and structured responses; it is transport-agnostic, runs over standard JSON-RPC, and is genuinely portable.</p>
 
-<p>By the end of 2025, the MCP server registry had grown into the thousands of published integrations, with community directories listing tens of thousands more across: filesystems, databases, version-control hosts, communication tools, internal corporate APIs, vertical SaaS products. The pattern resembles <a href="https://en.wikipedia.org/wiki/Open_Database_Connectivity">ODBC</a> in the 1990s — a standard adapter layer that decouples capability from vendor — and the network effects look comparable. Every model vendor, including those who would have preferred to keep their tool ecosystem captive, has now shipped MCP support.</p>
+<p id="p-4f3b2f5c">By the end of 2025, the MCP server registry had grown into the thousands of published integrations, with community directories listing tens of thousands more across: filesystems, databases, version-control hosts, communication tools, internal corporate APIs, vertical SaaS products. The pattern resembles <a href="https://en.wikipedia.org/wiki/Open_Database_Connectivity">ODBC</a> in the 1990s — a standard adapter layer that decouples capability from vendor — and the network effects look comparable. Every model vendor, including those who would have preferred to keep their tool ecosystem captive, has now shipped MCP support.</p>
 
-<p>What MCP is not, and does not pretend to be, is a solution to the cross-organizational trust problem. An MCP server still has to authenticate its caller, sign its responses, log its actions, and answer to its operator's policies. MCP standardizes the shape of the conversation; it does not standardize the social contract beneath it.</p>
+<p id="p-03316912">What MCP is not, and does not pretend to be, is a solution to the cross-organizational trust problem. An MCP server still has to authenticate its caller, sign its responses, log its actions, and answer to its operator's policies. MCP standardizes the shape of the conversation; it does not standardize the social contract beneath it.</p>
 
 <h2 id="a2a-and-its-rivals">A2A and its rivals</h2>
 
-<p>The next-layer-up problem — agents from different organizations communicating with each other — is less settled. Google's <a href="https://google.github.io/A2A/">Agent2Agent (A2A) protocol</a>, announced in April 2025, proposes a JSON-over-HTTPS standard for agent-to-agent task delegation, with explicit fields for capabilities, identity, and conversational state. Several large vendors have signaled support; production deployments are still scarce.</p>
+<p id="p-4e06d949">The next-layer-up problem — agents from different organizations communicating with each other — is less settled. Google's <a href="https://google.github.io/A2A/">Agent2Agent (A2A) protocol</a>, announced in April 2025, proposes a JSON-over-HTTPS standard for agent-to-agent task delegation, with explicit fields for capabilities, identity, and conversational state. Several large vendors have signaled support; production deployments are still scarce.</p>
 
-<p>Competing with and supplementing A2A are: bespoke agent-to-agent APIs at the major clouds, ad-hoc patterns in the open-source frameworks, and a handful of research proposals (<a href="https://arxiv.org/abs/2402.08164">Agent Communication Languages</a> reflecting older multi-agent work). The honest state of affairs at end of 2025 is that there is no winner and the field is in the period that HTTP was in around 1992 — multiple proposals, real interest, no consensus, and most actual cross-agent traffic happening through whatever proprietary glue happens to be cheapest to wire up.</p>
+<p id="p-9aa36aba">Competing with and supplementing A2A are: bespoke agent-to-agent APIs at the major clouds, ad-hoc patterns in the open-source frameworks, and a handful of research proposals (<a href="https://arxiv.org/abs/2402.08164">Agent Communication Languages</a> reflecting older multi-agent work). The honest state of affairs at end of 2025 is that there is no winner and the field is in the period that HTTP was in around 1992 — multiple proposals, real interest, no consensus, and most actual cross-agent traffic happening through whatever proprietary glue happens to be cheapest to wire up.</p>
 
 <h2 id="what-trust-actually-requires">What trust actually requires</h2>
 
-<p>For machine-to-machine trust to scale beyond a single organization, four things must be solved at the protocol layer. None are fully solved today.</p>
+<p id="p-10627fa9">For machine-to-machine trust to scale beyond a single organization, four things must be solved at the protocol layer. None are fully solved today.</p>
 
 <ol>
   <li><strong>Identity.</strong> Each agent must have a verifiable, non-spoofable identity its operator can authenticate. Today this is mostly done with bearer tokens and API keys, which are leaky. <a href="https://www.w3.org/TR/did-core/">Decentralized identifiers</a> are a candidate; nothing is mainstream.</li>
@@ -145,9 +154,9 @@
   <li><strong>Recourse.</strong> What happens when an agent damages a counterparty? In human commerce this is courts and reputation. In machine commerce it is, presently, a very long support ticket and possibly a chargeback.</li>
 </ol>
 
-<p>The realistic forecast is that protocols will fill these gaps unevenly over the next three to five years, much as the web's authentication and payment layers grew in around the original HTTP. By the end of that window we will have, in some form, an agent-PKI, a capability registry, standardized audit hooks, and small but real cross-organizational machine-to-machine commerce. We will also have, in 2025-2027, the parallel growth industry of agent-fraud and agent-fraud-prevention, which always tracks the trust layer's gaps.</p>
+<p id="p-ecc66a0c">The realistic forecast is that protocols will fill these gaps unevenly over the next three to five years, much as the web's authentication and payment layers grew in around the original HTTP. By the end of that window we will have, in some form, an agent-PKI, a capability registry, standardized audit hooks, and small but real cross-organizational machine-to-machine commerce. We will also have, in 2025-2027, the parallel growth industry of agent-fraud and agent-fraud-prevention, which always tracks the trust layer's gaps.</p>
 
-<p>Whatever the protocols end up looking like, they will need a substrate to operate on: a place where agents store their shared facts and recover what one of them learned an hour ago. That substrate is the memory commons.</p>
+<p id="p-fe681fd7">Whatever the protocols end up looking like, they will need a substrate to operate on: a place where agents store their shared facts and recover what one of them learned an hour ago. That substrate is the memory commons.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 380" role="img" aria-label="Trust stack: function calling, MCP, A2A — each answering a different question">
@@ -311,4 +320,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

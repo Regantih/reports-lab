@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="08-euv">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">CO₂ laser</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">tin droplet</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">220,000°C plasma</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">13.5 nm light</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">10 mirrors</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">4× demagnification</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">resist pattern</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="08-euv" data-answer-key="c">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — how much does a single EUV lithography scanner cost?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 08</div>
     <h1 class="ch-header__title">Light at 13.5 Nanometers</h1>
     <p class="ch-header__dek">EUV lithography — the most complex machine ever built</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain why EUV requires all-mirror optics with no glass lenses in the optical path</li><li>Trace the EUV light-generation sequence from CO₂ laser pulse to photon reaching the wafer</li><li>State the resolution limit that drove the industry from 193 nm immersion to 13.5 nm EUV</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">13.5 <em>nm</em></div><div class="stat__label">EUV wavelength</div></div><div class="stat"><div class="stat__num">50,000<em>/s</em></div><div class="stat__label">tin droplets vaporized</div></div><div class="stat"><div class="stat__num">~$200<em>M</em></div><div class="stat__label">cost of a single EUV scanner</div></div><div class="stat"><div class="stat__num">~1.2 <em>MW</em></div><div class="stat__label">power per scanner</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="08-euv">
   <div class="ladder__bar">
@@ -106,45 +115,45 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-problem-of-light">The problem of light</a></li><li><a href="#euv-source">Vaporizing tin droplets</a></li><li><a href="#the-mirrors">All mirrors, all the way down</a></li><li><a href="#the-mask">The mask is the negative</a></li><li><a href="#multi-patterning">Multi-patterning, and why N2 doesn't need high-NA</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">The most complex machine human beings have ever built is not a particle accelerator. It is not a fusion reactor. It is not the James Webb Space Telescope. It is, by a wide margin, an <strong>EUV lithography scanner</strong>, and there is exactly one company in the world that builds them: ASML, in the small Dutch town of Veldhoven. The machines weigh on the order of one hundred and fifty metric tons. They cost roughly two hundred million dollars each. There are perhaps two hundred of them in use across the entire planet. Without them, no chip below seven nanometers exists.</p>
+<p class="lede" id="p-deb98624">The most complex machine human beings have ever built is not a particle accelerator. It is not a fusion reactor. It is not the James Webb Space Telescope. It is, by a wide margin, an <strong>EUV lithography scanner</strong>, and there is exactly one company in the world that builds them: ASML, in the small Dutch town of Veldhoven. The machines weigh on the order of one hundred and fifty metric tons. They cost roughly two hundred million dollars each. There are perhaps two hundred of them in use across the entire planet. Without them, no chip below seven nanometers exists.</p>
 
-<p>This chapter explains what they do.</p>
+<p id="p-143c9cf4">This chapter explains what they do.</p>
 
 <h2 id="the-problem-of-light">The problem of light</h2>
 
-<p>All optical lithography is the same idea: you shine light through a stencil onto a light-sensitive coating, and where the light lands, the coating changes. Then you wash off the unchanged parts. The pattern of the stencil becomes the pattern on the wafer.</p>
+<p id="p-4712887b">All optical lithography is the same idea: you shine light through a stencil onto a light-sensitive coating, and where the light lands, the coating changes. Then you wash off the unchanged parts. The pattern of the stencil becomes the pattern on the wafer.</p>
 
-<p>The catch is resolution. The smallest feature you can print is roughly proportional to the wavelength of the light you use. <a href="https://www.uprtek.com/en/blogs/photolithography">Decades of lithography</a> have used progressively shorter wavelengths — visible, then ultraviolet at 365 nm, then deep ultraviolet at 248 nm, then 193 nm — to print progressively smaller features. By 2010, 193 nm light combined with elaborate immersion-fluid tricks and multi-patterning had been pushed to an absurd extreme to print features at 14 nm.</p>
+<p id="p-f15980ad">The catch is resolution. The smallest feature you can print is roughly proportional to the wavelength of the light you use. <a href="https://www.uprtek.com/en/blogs/photolithography">Decades of lithography</a> have used progressively shorter wavelengths — visible, then ultraviolet at 365 nm, then deep ultraviolet at 248 nm, then 193 nm — to print progressively smaller features. By 2010, 193 nm light combined with elaborate immersion-fluid tricks and multi-patterning had been pushed to an absurd extreme to print features at 14 nm.</p>
 
-<p>Going smaller required a wavelength jump that the industry had been dreading for decades: to <strong>13.5 nanometers</strong>, deep into the extreme ultraviolet. The problem with EUV is not subtle. <strong>Everything absorbs it.</strong> Glass absorbs it. Air absorbs it. Photoresist absorbs it. To make a lithography system at 13.5 nm, every traditional optical assumption has to be replaced.</p>
+<p id="p-650a69ba">Going smaller required a wavelength jump that the industry had been dreading for decades: to <strong>13.5 nanometers</strong>, deep into the extreme ultraviolet. The problem with EUV is not subtle. <strong>Everything absorbs it.</strong> Glass absorbs it. Air absorbs it. Photoresist absorbs it. To make a lithography system at 13.5 nm, every traditional optical assumption has to be replaced.</p>
 
 <h2 id="euv-source">Vaporizing tin droplets</h2>
 
-<p>The first hurdle is producing the light. There is no laser at 13.5 nm. There is no light bulb. The only reliable EUV source we know how to build involves the most baroque physics in any factory anywhere.</p>
+<p id="p-4d714498">The first hurdle is producing the light. There is no laser at 13.5 nm. There is no light bulb. The only reliable EUV source we know how to build involves the most baroque physics in any factory anywhere.</p>
 
-<p>Fifty thousand times per second, a tiny droplet of molten tin — perhaps thirty micrometers across — falls through vacuum. Just before each droplet reaches a target point, a <em>pre-pulse</em> from a CO₂ laser flattens it into a small disc. A microsecond later, a <em>main pulse</em> from the same laser, focused into the disc, deposits enough energy to vaporize it instantly into a plasma at <strong>over 200,000°C</strong>. That plasma, briefly, emits exactly the spectrum of light that humanity has spent decades trying to produce: a sharp peak at 13.5 nanometers.</p>
+<p id="p-3a0eb186">Fifty thousand times per second, a tiny droplet of molten tin — perhaps thirty micrometers across — falls through vacuum. Just before each droplet reaches a target point, a <em>pre-pulse</em> from a CO₂ laser flattens it into a small disc. A microsecond later, a <em>main pulse</em> from the same laser, focused into the disc, deposits enough energy to vaporize it instantly into a plasma at <strong>over 200,000°C</strong>. That plasma, briefly, emits exactly the spectrum of light that humanity has spent decades trying to produce: a sharp peak at 13.5 nanometers.</p>
 
-<p>The light is collected by a single curved mirror, focused, and sent into the optics column. <a href="https://eureka.patsnap.com/report-what-challenges-do-euv-lithography-processes-face-today">The whole process is repeated fifty thousand times per second</a>, all day, every day, for years.</p>
+<p id="p-2769c387">The light is collected by a single curved mirror, focused, and sent into the optics column. <a href="https://eureka.patsnap.com/report-what-challenges-do-euv-lithography-processes-face-today">The whole process is repeated fifty thousand times per second</a>, all day, every day, for years.</p>
 
 <h2 id="the-mirrors">All mirrors, all the way down</h2>
 
-<p>From here forward, every optical element is a mirror. There are no lenses. Glass would absorb the light. Even the mirrors are not normal mirrors — they are stacks of about fifty alternating bilayers of molybdenum and silicon, each layer a few nanometers thick (so the full stack is roughly a hundred individual films), designed so that EUV reflects from each interface coherently. The entire stack manages about 70% reflectivity at 13.5 nm. That sounds high. It is in fact appalling.</p>
+<p id="p-2a6414b8">From here forward, every optical element is a mirror. There are no lenses. Glass would absorb the light. Even the mirrors are not normal mirrors — they are stacks of about fifty alternating bilayers of molybdenum and silicon, each layer a few nanometers thick (so the full stack is roughly a hundred individual films), designed so that EUV reflects from each interface coherently. The entire stack manages about 70% reflectivity at 13.5 nm. That sounds high. It is in fact appalling.</p>
 
-<p>By the time the light has bounced off more than ten mirrors on the way from source to wafer — collector optics, illuminator, mask, projection optics — only a small fraction of the original photons make it through. The rest end up as heat, in metal mirror surfaces that must be held flat to fractions of a nanometer despite being slowly cooked by the most energetic photons their owners can produce.</p>
+<p id="p-4fa65bc3">By the time the light has bounced off more than ten mirrors on the way from source to wafer — collector optics, illuminator, mask, projection optics — only a small fraction of the original photons make it through. The rest end up as heat, in metal mirror surfaces that must be held flat to fractions of a nanometer despite being slowly cooked by the most energetic photons their owners can produce.</p>
 
 <h2 id="the-mask">The mask is the negative</h2>
 
-<p>In EUV, even the photomask is a mirror. The pattern is etched into the absorbing top layer of a multilayer reflector. Where the absorber remains, no light bounces. Where it has been removed, the underlying mirror reflects EUV down through the projection optics, where it is shrunk by 4× and projected onto the wafer.</p>
+<p id="p-8d5775e5">In EUV, even the photomask is a mirror. The pattern is etched into the absorbing top layer of a multilayer reflector. Where the absorber remains, no light bounces. Where it has been removed, the underlying mirror reflects EUV down through the projection optics, where it is shrunk by 4× and projected onto the wafer.</p>
 
-<p>The wafer rides on a stage that, while exposing one die, must hold position to within a few atoms. Once that die is done, the stage steps to the next die, and exposes again. <a href="https://www.asml.com/news/stories/2021/semiconductor-manufacturing-process-steps">A modern EUV scanner</a> can step through a 300 mm wafer at perhaps 200 wafers per hour — fast enough to be economically viable, slow enough that fabs run them around the clock.</p>
+<p id="p-2471be0d">The wafer rides on a stage that, while exposing one die, must hold position to within a few atoms. Once that die is done, the stage steps to the next die, and exposes again. <a href="https://www.asml.com/news/stories/2021/semiconductor-manufacturing-process-steps">A modern EUV scanner</a> can step through a 300 mm wafer at perhaps 200 wafers per hour — fast enough to be economically viable, slow enough that fabs run them around the clock.</p>
 
 <h2 id="multi-patterning">Multi-patterning, and why N2 doesn't need high-NA</h2>
 
-<p>Even at 13.5 nm, a single EUV exposure is not always enough to print the smallest features at the highest density. The technique called <strong>multi-patterning</strong> splits a desired layout into two, three, or four masks, exposes each separately, and overlays them with nanometer alignment. It is laborious and expensive, but it is what allows TSMC's <strong>N3P</strong> to print Rubin — and what will let its successor, <strong>N2</strong>, push to 2 nm features without yet adopting <a href="https://www.eenewseurope.com/en/tsmc-shuns-high-na-euv-lithography/">high-numerical-aperture EUV</a>, the next-generation tooling that ASML has only begun shipping.</p>
+<p id="p-2c260945">Even at 13.5 nm, a single EUV exposure is not always enough to print the smallest features at the highest density. The technique called <strong>multi-patterning</strong> splits a desired layout into two, three, or four masks, exposes each separately, and overlays them with nanometer alignment. It is laborious and expensive, but it is what allows TSMC's <strong>N3P</strong> to print Rubin — and what will let its successor, <strong>N2</strong>, push to 2 nm features without yet adopting <a href="https://www.eenewseurope.com/en/tsmc-shuns-high-na-euv-lithography/">high-numerical-aperture EUV</a>, the next-generation tooling that ASML has only begun shipping.</p>
 
-<p>The trade-off is straightforward: more masks means more exposures, more steps, more chances for error. But it also means using machines that already exist and processes that have been characterized to industrial reliability. For the Rubin generation, this is a deliberate choice.</p>
+<p id="p-de207128">The trade-off is straightforward: more masks means more exposures, more steps, more chances for error. But it also means using machines that already exist and processes that have been characterized to industrial reliability. For the Rubin generation, this is a deliberate choice.</p>
 
-<p>By the time the wafer leaves the EUV scanner, the photoresist has been patterned. The image of the chip — at one-quarter the size of the mask, the standard 4× demagnification of EUV projection optics — is sitting on the wafer's surface, invisible to the naked eye. To make it real, we now have to remove material.</p>
+<p id="p-7ca3fef6">By the time the wafer leaves the EUV scanner, the photoresist has been patterned. The image of the chip — at one-quarter the size of the mask, the standard 4× demagnification of EUV projection optics — is sitting on the wafer's surface, invisible to the naked eye. To make it real, we now have to remove material.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 460" role="img" aria-label="EUV lithography light path: laser-pulsed tin droplet, EUV plasma, mirror reflectors, photomask, and wafer">
@@ -359,4 +368,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

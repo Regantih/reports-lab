@@ -29,11 +29,13 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page">
+  <script id="srs-drills-34-agents" type="application/json">[{"q": "What are the four minimum components of an agent, per the chapter?", "a": "Model, tools, memory, and goal."}, {"q": "What does a goal component usually need to be augmented with in serious agent systems?", "a": "A verifier \u2014 a check that runs after each action to catch divergence early."}, {"q": "Name the five steps of the agent loop in order.", "a": "Perceive, Plan, Act, Observe, Repeat."}, {"q": "What does the chapter say about how much engineering effort goes into guardrails vs. model integration?", "a": "Systems like Claude with computer use, OpenAI Operator, and OpenHands spend more code on guardrails, logging, confirmation prompts, and rollback than on the model integration itself."}, {"q": "What benchmark does the chapter cite for software-engineering agents, and what solve rate did top agents achieve in late 2025?", "a": "SWE-bench Verified; 60\u201370% of tasks solved."}, {"q": "What agent completion rate does AgentBench show for best agents?", "a": "~30%."}, {"q": "What four production use-cases does the chapter say agents handle well in 2026?", "a": "Coding agents inside established codebases, customer-support triage and resolution, research-and-analysis loops, and routine browser tasks."}, {"q": "What does the chapter say definitively does NOT yet work for agents?", "a": "Long-horizon autonomous projects without supervision, complex strategic decisions, novel situations without training analogues, and tasks where wrong-action cost is very high relative to right-action value."}, {"q": "How does the chapter define the budget that terminates the agent loop?", "a": "Tokens, seconds, or dollars \u2014 whichever is exhausted first."}]</script>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Drill cards · Chapter 34</div>
     <div class="ch-header__num">Drills</div>
@@ -41,6 +43,10 @@
     <p class="ch-header__dek">9 atomic recall cards. Export to Anki and let spaced repetition do its slow work.</p>
   </header>
   <div class="drills__wrap">
+    <div class="srs-banner" data-srs-banner>
+  <span class="srs-banner__label"><span class="srs-banner__count" data-srs-count>9</span> cards due for review</span>
+  <button type="button" class="srs-banner__btn" data-srs-open="34-agents">Review now</button>
+</div>
     <div class="drills__actions">
       <a class="learn__btn learn__btn--primary" href="34-agents-drills.tsv" download>Download Anki TSV</a>
       <a class="learn__btn learn__btn--ghost" href="34-agents.html">← Back to chapter</a>
@@ -97,4 +103,5 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
 </body></html>

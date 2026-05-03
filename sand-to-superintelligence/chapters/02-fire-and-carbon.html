@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="02-fire-and-carbon">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">quartzite charge</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">arc furnace</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">carbothermic reduction</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">MG-Si 98-99%</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">10,000 ppm limit</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">next stage</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="02-fire-and-carbon" data-answer-key="c">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — how much electricity does it take to smelt one metric ton of metallurgical-grade silicon in an arc furnace?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 02</div>
     <h1 class="ch-header__title">Fire and Carbon</h1>
     <p class="ch-header__dek">Smelting metallurgical-grade silicon at 1,700°C</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain the carbothermic reaction and why it leaves silicon at 98-99% rather than chip-grade purity</li><li>State the energy cost per ton of MG-Si and name the reason silicon smelting clusters near hydroelectric dams</li><li>Defend the claim that MG-Si is a million times too impure for a transistor channel</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">1,700<em>°C</em></div><div class="stat__label">minimum operating temperature</div></div><div class="stat"><div class="stat__num">13–14 <em>MWh</em></div><div class="stat__label">energy per ton of MG-Si</div></div><div class="stat"><div class="stat__num">98–99<em>%</em></div><div class="stat__label">purity after smelting</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="02-fire-and-carbon">
   <div class="ladder__bar">
@@ -106,40 +115,40 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-furnace">Inside the arc furnace</a></li><li><a href="#the-reaction">Carbothermic reduction</a></li><li><a href="#the-tap">The tap and the pour</a></li><li><a href="#not-good-enough">Why this is not good enough</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">If you stand at the edge of an active silicon smelter — and you are unlikely to, because they do not let you — you feel the heat in your sternum before you feel it on your skin. The whole building is a thermal organ. Above your head, three carbon electrodes the size of tree trunks descend into a furnace whose interior is brighter than the surface of the sun.</p>
+<p class="lede" id="p-b1d47b42">If you stand at the edge of an active silicon smelter — and you are unlikely to, because they do not let you — you feel the heat in your sternum before you feel it on your skin. The whole building is a thermal organ. Above your head, three carbon electrodes the size of tree trunks descend into a furnace whose interior is brighter than the surface of the sun.</p>
 
-<p>This is where rock becomes metal. The technology is essentially Edwardian — submerged-arc electric furnaces have been making silicon since the 1900s — but the discipline required to run one is anything but old-fashioned.</p>
+<p id="p-7c51562b">This is where rock becomes metal. The technology is essentially Edwardian — submerged-arc electric furnaces have been making silicon since the 1900s — but the discipline required to run one is anything but old-fashioned.</p>
 
 <h2 id="the-furnace">Inside the arc furnace</h2>
 
-<p>The furnace is a refractory-lined pit, perhaps three meters deep and ten across. Into it goes a dry stoichiometric mix called the "charge": chunks of clean quartzite, metallurgical-grade coke, charcoal, and wood chips. The wood chips are not there for sentiment — they keep the charge porous so reaction gases can escape.</p>
+<p id="p-17854986">The furnace is a refractory-lined pit, perhaps three meters deep and ten across. Into it goes a dry stoichiometric mix called the "charge": chunks of clean quartzite, metallurgical-grade coke, charcoal, and wood chips. The wood chips are not there for sentiment — they keep the charge porous so reaction gases can escape.</p>
 
-<p>From above, three enormous carbon electrodes, each fed continuously downward by hydraulic mechanisms as they consume themselves, strike electric arcs into the charge. The furnace draws tens of megawatts. Plant operators speak of furnaces by their power rating — a "30 MW unit" — the way mariners speak of ships by their tonnage.</p>
+<p id="p-68327bf9">From above, three enormous carbon electrodes, each fed continuously downward by hydraulic mechanisms as they consume themselves, strike electric arcs into the charge. The furnace draws tens of megawatts. Plant operators speak of furnaces by their power rating — a "30 MW unit" — the way mariners speak of ships by their tonnage.</p>
 
 <h2 id="the-reaction">Carbothermic reduction</h2>
 
-<p>The chemistry is brutal in its simplicity. Inside the white-hot pool at the base of the furnace, silicon dioxide and carbon meet and rearrange themselves:</p>
+<p id="p-da06f64a">The chemistry is brutal in its simplicity. Inside the white-hot pool at the base of the furnace, silicon dioxide and carbon meet and rearrange themselves:</p>
 
 <blockquote>SiO₂ + 2C → Si + 2CO</blockquote>
 
-<p>The carbon takes the oxygen. The silicon is left behind, molten and dense, and it pools at the floor of the furnace. Carbon monoxide gas vents up through the charge and burns at the surface — a furnace in normal operation has flames licking out of the top continuously, blue and orange, like a chimney for an invisible engine. <a href="https://www.energycentral.com/energy-biz/post/mining-and-refining-pure-silicon-and-incredible-effort-it-takes-get-there-0-zncwjzLjToZK1Hg">Producing one ton of metallurgical-grade silicon</a> requires roughly 13–14 megawatt-hours of electricity, which is one reason silicon production tends to cluster near hydroelectric dams.</p>
+<p id="p-c9e8f587">The carbon takes the oxygen. The silicon is left behind, molten and dense, and it pools at the floor of the furnace. Carbon monoxide gas vents up through the charge and burns at the surface — a furnace in normal operation has flames licking out of the top continuously, blue and orange, like a chimney for an invisible engine. <a href="https://www.energycentral.com/energy-biz/post/mining-and-refining-pure-silicon-and-incredible-effort-it-takes-get-there-0-zncwjzLjToZK1Hg">Producing one ton of metallurgical-grade silicon</a> requires roughly 13–14 megawatt-hours of electricity, which is one reason silicon production tends to cluster near hydroelectric dams.</p>
 
 <h2 id="the-tap">The tap and the pour</h2>
 
-<p>Periodically, an operator opens a tap hole in the side of the furnace. White-hot molten silicon — actually a luminous gold color, because what we call "white-hot" is mostly emission — pours out into a ladle, then into casting beds where it solidifies into rough plates. Once cooled, the plates are crushed, and the result is shipped as a granular grey-silver material that looks more like pencil lead than computer.</p>
+<p id="p-e5c1a8c9">Periodically, an operator opens a tap hole in the side of the furnace. White-hot molten silicon — actually a luminous gold color, because what we call "white-hot" is mostly emission — pours out into a ladle, then into casting beds where it solidifies into rough plates. Once cooled, the plates are crushed, and the result is shipped as a granular grey-silver material that looks more like pencil lead than computer.</p>
 
-<p>This is <strong>metallurgical-grade silicon</strong> — MG-Si — and it is good enough for most things silicon is asked to do in the world: aluminum alloying, silicone polymers, ferrosilicon for steel-making, and so on. About 80% of all silicon ever produced ends its career here.</p>
+<p id="p-049a7428">This is <strong>metallurgical-grade silicon</strong> — MG-Si — and it is good enough for most things silicon is asked to do in the world: aluminum alloying, silicone polymers, ferrosilicon for steel-making, and so on. About 80% of all silicon ever produced ends its career here.</p>
 
 <div class="aside">
   <span class="aside__label">Where most silicon goes</span>
-  <p>Of the millions of tons of metallurgical silicon produced annually, only a small percentage <strong>ever sees a semiconductor</strong>. The bulk is consumed by aluminum smelting, silicone production, and ferrosilicon for steel. The semiconductor industry, for all its glamour, is a small and unusually demanding customer at the back of the queue.</p>
+  <p id="p-91c3d2aa">Of the millions of tons of metallurgical silicon produced annually, only a small percentage <strong>ever sees a semiconductor</strong>. The bulk is consumed by aluminum smelting, silicone production, and ferrosilicon for steel. The semiconductor industry, for all its glamour, is a small and unusually demanding customer at the back of the queue.</p>
 </div>
 
 <h2 id="not-good-enough">Why this is not good enough</h2>
 
-<p>At 98–99% purity, MG-Si has roughly 10,000 parts per million of impurities. To put that in perspective: a modern chip's transistors are sensitive to dopant atoms at the level of one part per <em>billion</em> or finer. The silicon coming out of the arc furnace is a million times too dirty.</p>
+<p id="p-647c6fc6">At 98–99% purity, MG-Si has roughly 10,000 parts per million of impurities. To put that in perspective: a modern chip's transistors are sensitive to dopant atoms at the level of one part per <em>billion</em> or finer. The silicon coming out of the arc furnace is a million times too dirty.</p>
 
-<p>The next stage, then, is not another step on a manufacturing line. It is essentially a different industry, with different equipment, different chemistry, and different physics. We have to take a metal and turn it back into a gas — and then turn that gas back into a metal, more carefully this time.</p>
+<p id="p-b431a183">The next stage, then, is not another step on a manufacturing line. It is essentially a different industry, with different equipment, different chemistry, and different physics. We have to take a metal and turn it back into a gas — and then turn that gas back into a metal, more carefully this time.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 420" role="img" aria-label="Cross-section of an electric arc furnace converting quartzite and carbon to metallurgical silicon">
@@ -304,4 +313,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

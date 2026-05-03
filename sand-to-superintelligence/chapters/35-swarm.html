@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="35-swarm">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">single agent limit</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">orchestrator + subagents</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">debate pattern</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">market pattern</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">token cost of coordination</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">10-25% accuracy lift</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="35-swarm" data-answer-key="c">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — a five-agent system has how many pairwise interfaces that can each fail independently?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 35</div>
     <h1 class="ch-header__title">Swarm</h1>
     <p class="ch-header__dek">Many agents, one outcome</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Name three multi-agent coordination patterns and state the task type each is best suited to</li><li>Explain why the debate pattern costs roughly 5× tokens versus single-agent and what accuracy gain justifies it</li><li>State the conditions under which adding a second agent hurts rather than helps task performance</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">3-7</div><div class="stat__label">agents in a typical production multi-agent system</div></div><div class="stat"><div class="stat__num">~5×</div><div class="stat__label">token cost of debate vs. single-agent on same task</div></div><div class="stat"><div class="stat__num">~10-25%</div><div class="stat__label">accuracy lift from debate over best single agent on hard tasks</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="35-swarm">
   <div class="ladder__bar">
@@ -106,25 +115,25 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#why-multi-agent">Why one agent is not enough</a></li><li><a href="#patterns">Patterns: hierarchy, debate, market</a></li><li><a href="#communication">How agents communicate</a></li><li><a href="#the-cost-of-coordination">The cost of coordination</a></li><li><a href="#what-it-actually-buys-you">What it actually buys you</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">If one agent is a knowledge worker, a swarm of agents is a small organization. The same logic that pushed companies past the single-craftsman model in the eighteenth century — division of labour, specialization, supervision — is now being re-derived in software. The gains are sometimes real and sometimes imaginary, the costs are always real, and a clear-eyed view requires acknowledging both. This chapter is about multi-agent systems: when they help, how they communicate, and what they cost.</p>
+<p class="lede" id="p-72827f47">If one agent is a knowledge worker, a swarm of agents is a small organization. The same logic that pushed companies past the single-craftsman model in the eighteenth century — division of labour, specialization, supervision — is now being re-derived in software. The gains are sometimes real and sometimes imaginary, the costs are always real, and a clear-eyed view requires acknowledging both. This chapter is about multi-agent systems: when they help, how they communicate, and what they cost.</p>
 
 <h2 id="why-multi-agent">Why one agent is not enough</h2>
 
-<p>Single-agent systems hit three walls in practice. The first is <strong>context length</strong>: even with two-million-token windows, dumping the full state of a complex project into one prompt produces worse reasoning than reading a focused subset would. The second is <strong>specialization</strong>: a single instruction-tuned model is jack-of-all-trades; a research agent prompted differently from a code agent will outperform a generalist on either narrow task. The third is <strong>error correction</strong>: a model evaluating its own work is systematically less critical than a sibling evaluating the same work from outside.</p>
+<p id="p-c9a533c1">Single-agent systems hit three walls in practice. The first is <strong>context length</strong>: even with two-million-token windows, dumping the full state of a complex project into one prompt produces worse reasoning than reading a focused subset would. The second is <strong>specialization</strong>: a single instruction-tuned model is jack-of-all-trades; a research agent prompted differently from a code agent will outperform a generalist on either narrow task. The third is <strong>error correction</strong>: a model evaluating its own work is systematically less critical than a sibling evaluating the same work from outside.</p>
 
-<p>Each wall suggests a different multi-agent pattern. None of these are new ideas — distributed AI was a research field in the 1980s, and <a href="https://en.wikipedia.org/wiki/Multi-agent_system">multi-agent systems</a> have a long literature — but they have become economically meaningful only now, when each "agent" is cheap enough to spawn and capable enough to contribute.</p>
+<p id="p-c3757e87">Each wall suggests a different multi-agent pattern. None of these are new ideas — distributed AI was a research field in the 1980s, and <a href="https://en.wikipedia.org/wiki/Multi-agent_system">multi-agent systems</a> have a long literature — but they have become economically meaningful only now, when each "agent" is cheap enough to spawn and capable enough to contribute.</p>
 
 <h2 id="patterns">Patterns: hierarchy, debate, market</h2>
 
-<p><strong>Hierarchy.</strong> A planner agent breaks a high-level goal into sub-tasks and dispatches each to a worker agent. The pattern fits well when the work decomposes cleanly: research one company, then another, then another, then write the comparative summary. <a href="https://github.com/microsoft/autogen">AutoGen</a> and <a href="https://github.com/langchain-ai/langgraph">LangGraph</a> formalize this pattern; Anthropic's <a href="https://www.anthropic.com/news/research">Multi-Agent Research System</a> describes a deployment of it at scale. The trap is that planners over-decompose: they spawn five workers when one would have been faster and cheaper.</p>
+<p id="p-79093649"><strong>Hierarchy.</strong> A planner agent breaks a high-level goal into sub-tasks and dispatches each to a worker agent. The pattern fits well when the work decomposes cleanly: research one company, then another, then another, then write the comparative summary. <a href="https://github.com/microsoft/autogen">AutoGen</a> and <a href="https://github.com/langchain-ai/langgraph">LangGraph</a> formalize this pattern; Anthropic's <a href="https://www.anthropic.com/news/research">Multi-Agent Research System</a> describes a deployment of it at scale. The trap is that planners over-decompose: they spawn five workers when one would have been faster and cheaper.</p>
 
-<p><strong>Debate.</strong> Two or more agents are given the same problem, produce independent solutions, then are shown each other's reasoning and asked to converge or to defend. <a href="https://arxiv.org/abs/2305.14325">Du et al. (2023)</a> showed measurable accuracy gains from this on math and reasoning benchmarks. The trap is collusion: two instances of the same model will often agree on the same wrong answer, especially when the model is overconfident. Debate works best when the agents are genuinely heterogeneous — different models, different temperatures, different prompts.</p>
+<p id="p-3da831a6"><strong>Debate.</strong> Two or more agents are given the same problem, produce independent solutions, then are shown each other's reasoning and asked to converge or to defend. <a href="https://arxiv.org/abs/2305.14325">Du et al. (2023)</a> showed measurable accuracy gains from this on math and reasoning benchmarks. The trap is collusion: two instances of the same model will often agree on the same wrong answer, especially when the model is overconfident. Debate works best when the agents are genuinely heterogeneous — different models, different temperatures, different prompts.</p>
 
-<p><strong>Market.</strong> A routing agent receives the task and offers it to a pool of specialist agents, choosing based on stated capability, historical accuracy, latency, or price. This is the pattern that <a href="https://openrouter.ai/">OpenRouter</a>, model-gateway products at the major clouds, and emerging routing-as-a-service platforms are pushing toward. It is the most cost-efficient when the workload is high-volume and heterogeneous; it is overkill when there are only a few tasks per day.</p>
+<p id="p-d5b8a3d6"><strong>Market.</strong> A routing agent receives the task and offers it to a pool of specialist agents, choosing based on stated capability, historical accuracy, latency, or price. This is the pattern that <a href="https://openrouter.ai/">OpenRouter</a>, model-gateway products at the major clouds, and emerging routing-as-a-service platforms are pushing toward. It is the most cost-efficient when the workload is high-volume and heterogeneous; it is overkill when there are only a few tasks per day.</p>
 
 <h2 id="communication">How agents communicate</h2>
 
-<p>In 2026 there is no single standard for agent-to-agent communication. The candidates are visible:</p>
+<p id="p-2048c701">In 2026 there is no single standard for agent-to-agent communication. The candidates are visible:</p>
 
 <ul>
   <li><strong>Plain text turns in a shared transcript.</strong> The simplest pattern. Each agent reads the full transcript and emits a turn. Works for small swarms, becomes wasteful past three or four agents.</li>
@@ -133,21 +142,21 @@
   <li><strong>Tool-mediated.</strong> Agents do not address each other at all — they invoke tools (queues, databases, APIs) that other agents observe. This is the pattern that scales operationally because it is just normal distributed-systems design.</li>
 </ul>
 
-<p>The trajectory is clearly toward the structured-message and tool-mediated patterns, with shared scratchpad as a complement for collaborative artifacts. Plain text turns are a research convenience that rarely survives in production.</p>
+<p id="p-d85e5e53">The trajectory is clearly toward the structured-message and tool-mediated patterns, with shared scratchpad as a complement for collaborative artifacts. Plain text turns are a research convenience that rarely survives in production.</p>
 
 <h2 id="the-cost-of-coordination">The cost of coordination</h2>
 
-<p>Multi-agent systems are not free. Every additional agent multiplies the token bill, and the coordination overhead — agents reading each other's output, the planner re-reading the transcript, the verifier checking everything — often dominates the productive work. A debate between three agents on a hard reasoning task can easily cost 5× the tokens of the best single agent answering it directly.</p>
+<p id="p-ba32e871">Multi-agent systems are not free. Every additional agent multiplies the token bill, and the coordination overhead — agents reading each other's output, the planner re-reading the transcript, the verifier checking everything — often dominates the productive work. A debate between three agents on a hard reasoning task can easily cost 5× the tokens of the best single agent answering it directly.</p>
 
-<p>The accuracy lift, on the tasks where debate helps, is typically in the 10-25% range — meaningful, but not always worth 5× the cost. The honest accounting therefore depends on the domain. In high-stakes settings (legal review, medical synthesis, financial decision support) the lift is often worth it. In bulk-throughput settings (customer support, content moderation) the lift rarely justifies the cost, and a single well-prompted agent with a cheap verifier wins.</p>
+<p id="p-3b8fe2ad">The accuracy lift, on the tasks where debate helps, is typically in the 10-25% range — meaningful, but not always worth 5× the cost. The honest accounting therefore depends on the domain. In high-stakes settings (legal review, medical synthesis, financial decision support) the lift is often worth it. In bulk-throughput settings (customer support, content moderation) the lift rarely justifies the cost, and a single well-prompted agent with a cheap verifier wins.</p>
 
 <h2 id="what-it-actually-buys-you">What it actually buys you</h2>
 
-<p>The realistic case for multi-agent systems, stripped of the marketing, is this: they buy you <em>specialization, error correction, and context isolation</em>, at the cost of <em>tokens, latency, and complexity</em>. They do not buy you general intelligence beyond the ceiling of the underlying model — a swarm of GPT-4-class agents will not collectively do GPT-6 work. They do not, in current implementations, develop genuinely emergent capability; what looks like emergence is usually the underlying model's capability finally being elicited by better scaffolding.</p>
+<p id="p-161de843">The realistic case for multi-agent systems, stripped of the marketing, is this: they buy you <em>specialization, error correction, and context isolation</em>, at the cost of <em>tokens, latency, and complexity</em>. They do not buy you general intelligence beyond the ceiling of the underlying model — a swarm of GPT-4-class agents will not collectively do GPT-6 work. They do not, in current implementations, develop genuinely emergent capability; what looks like emergence is usually the underlying model's capability finally being elicited by better scaffolding.</p>
 
-<p>The most overstated claim in the multi-agent literature is that swarms unlock qualitatively new behaviour. They mostly unlock <em>quantitative</em> reliability gains — turning a 60% solve rate into 80%, which is a real and valuable thing to do, but not a different kind of mind. The most under-discussed cost is debugging: a five-agent system has ten pairwise interfaces (C(5,2) = 10), each of which can fail, and tracing a failure across them is harder by an order of magnitude than debugging a single agent.</p>
+<p id="p-c72bc1a6">The most overstated claim in the multi-agent literature is that swarms unlock qualitatively new behaviour. They mostly unlock <em>quantitative</em> reliability gains — turning a 60% solve rate into 80%, which is a real and valuable thing to do, but not a different kind of mind. The most under-discussed cost is debugging: a five-agent system has ten pairwise interfaces (C(5,2) = 10), each of which can fail, and tracing a failure across them is harder by an order of magnitude than debugging a single agent.</p>
 
-<p>Once you have multiple agents talking, the question that immediately follows is: how do they decide whether to believe each other? That is the next chapter — protocols of trust.</p>
+<p id="p-17a1a843">Once you have multiple agents talking, the question that immediately follows is: how do they decide whether to believe each other? That is the next chapter — protocols of trust.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 380" role="img" aria-label="Three multi-agent coordination patterns: hierarchy, debate, market">
@@ -338,4 +347,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

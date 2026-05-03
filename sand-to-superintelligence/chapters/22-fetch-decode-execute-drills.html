@@ -29,11 +29,13 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page">
+  <script id="srs-drills-22-fetch-decode-execute" type="application/json">[{"q": "Name the three steps in the fetch-decode-execute loop.", "a": "Fetch, Decode, Execute."}, {"q": "What does the program counter hold?", "a": "The memory address of the next instruction to execute."}, {"q": "What is the program counter called on x86? On ARM?", "a": "rip on x86; pc on ARM."}, {"q": "By how much does the PC normally advance after each instruction?", "a": "By 4 bytes (the size of a typical instruction). For branches, it advances to the branch target instead."}, {"q": "How many bytes is a typical instruction?", "a": "4 bytes on ARM and most modern ISAs; 1\u201315 bytes (variable) on x86."}, {"q": "How many cycles does it take to fetch an instruction from the L1 instruction cache?", "a": "About 4 cycles."}, {"q": "How many cycles does a DRAM fetch take when the instruction is not in any cache?", "a": "Around 300 cycles."}, {"q": "What are \u00b5ops (micro-operations)?", "a": "Simpler internal operations into which x86 CISC instructions are translated during decode, allowing the pipelined core to handle them uniformly."}, {"q": "What is the von Neumann architecture\u2019s key insight?", "a": "Code and data both live in the same memory as bytes; the CPU reads and acts on bytes without distinguishing their origin."}, {"q": "How many instructions per second does a single CPU core execute?", "a": "About 3 billion per second."}]</script>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Drill cards · Chapter 22</div>
     <div class="ch-header__num">Drills</div>
@@ -41,6 +43,10 @@
     <p class="ch-header__dek">10 atomic recall cards. Export to Anki and let spaced repetition do its slow work.</p>
   </header>
   <div class="drills__wrap">
+    <div class="srs-banner" data-srs-banner>
+  <span class="srs-banner__label"><span class="srs-banner__count" data-srs-count>10</span> cards due for review</span>
+  <button type="button" class="srs-banner__btn" data-srs-open="22-fetch-decode-execute">Review now</button>
+</div>
     <div class="drills__actions">
       <a class="learn__btn learn__btn--primary" href="22-fetch-decode-execute-drills.tsv" download>Download Anki TSV</a>
       <a class="learn__btn learn__btn--ghost" href="22-fetch-decode-execute.html">← Back to chapter</a>
@@ -97,4 +103,5 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
 </body></html>

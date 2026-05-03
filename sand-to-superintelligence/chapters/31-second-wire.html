@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="31-second-wire">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">telegraph 1844</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">telephone</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">TCP/IP</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">HTTP</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">fifth wire (intelligence)</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">2024 API calls majority software-to-software</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="31-second-wire" data-answer-key="d">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — in what year did a majority of API calls at major cloud providers first originate from software rather than human-operated browsers?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 31</div>
     <h1 class="ch-header__title">The Second Wire</h1>
     <p class="ch-header__dek">When models start talking to each other</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Trace the five-wire progression and name the cargo each wire standardized</li><li>Explain what makes the fifth wire structurally different from the prior four</li><li>State what the 2024 API traffic shift reveals about who or what is now the primary consumer of networked intelligence</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">1844</div><div class="stat__label">the first commercial telegraph line, Baltimore to Washington</div></div><div class="stat"><div class="stat__num">1989</div><div class="stat__label">Tim Berners-Lee proposes the World Wide Web at CERN</div></div><div class="stat"><div class="stat__num">2024</div><div class="stat__label">first year a majority of API calls were made by software, not browsers</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="31-second-wire">
   <div class="ladder__bar">
@@ -106,17 +115,17 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#first-wire">The first wire was a stock ticker</a></li><li><a href="#the-pattern">A pattern that keeps repeating</a></li><li><a href="#intelligence-on-the-wire">Intelligence on a wire</a></li><li><a href="#what-is-different">What is genuinely new</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">For most of the last two centuries, the most valuable invention in any decade was usually a wire. Not the wire itself — copper is cheap, and there has been plenty — but the agreement about what would travel on it, and how. Each generation laid a new wire on top of the old one, carrying a more abstract cargo, and each generation watched the economy reorganize around the new traffic. Part III of this book is about the wire being laid right now: the one carrying intelligence between machines.</p>
+<p class="lede" id="p-9e9004eb">For most of the last two centuries, the most valuable invention in any decade was usually a wire. Not the wire itself — copper is cheap, and there has been plenty — but the agreement about what would travel on it, and how. Each generation laid a new wire on top of the old one, carrying a more abstract cargo, and each generation watched the economy reorganize around the new traffic. Part III of this book is about the wire being laid right now: the one carrying intelligence between machines.</p>
 
 <h2 id="first-wire">The first wire was a stock ticker</h2>
 
-<p>The Baltimore-to-Washington telegraph line opened in May 1844 with the famous message <em>"What hath God wrought."</em> Within five years it carried something more consequential: stock prices. By 1867, the <a href="https://www.britannica.com/technology/stock-ticker">stock ticker</a> was decoupling the price of a share from the physical floor of the exchange. A merchant in Cincinnati could now, for the first time, transact at New York prices in close to real time. Capital began to flow across distances that had previously protected local markets.</p>
+<p id="p-5695ed66">The Baltimore-to-Washington telegraph line opened in May 1844 with the famous message <em>"What hath God wrought."</em> Within five years it carried something more consequential: stock prices. By 1867, the <a href="https://www.britannica.com/technology/stock-ticker">stock ticker</a> was decoupling the price of a share from the physical floor of the exchange. A merchant in Cincinnati could now, for the first time, transact at New York prices in close to real time. Capital began to flow across distances that had previously protected local markets.</p>
 
-<p>The pattern that would repeat itself for the next 180 years was already visible: the wire did not create the underlying activity (prices, conversation, computation), but it removed distance as a constraint, and the activity restructured itself accordingly. Cities specialized. Middlemen who had survived on geographic friction were eliminated. New middlemen — the wire operators themselves — captured a portion of the surplus.</p>
+<p id="p-87be04bd">The pattern that would repeat itself for the next 180 years was already visible: the wire did not create the underlying activity (prices, conversation, computation), but it removed distance as a constraint, and the activity restructured itself accordingly. Cities specialized. Middlemen who had survived on geographic friction were eliminated. New middlemen — the wire operators themselves — captured a portion of the surplus.</p>
 
 <h2 id="the-pattern">A pattern that keeps repeating</h2>
 
-<p>Each subsequent wire told a version of the same story, with a more abstract payload.</p>
+<p id="p-6f5aca84">Each subsequent wire told a version of the same story, with a more abstract payload.</p>
 
 <ul>
   <li><strong>Telephone (1876).</strong> Alexander Graham Bell's <a href="https://www.loc.gov/collections/alexander-graham-bell-papers/articles-and-essays/the-bell-telephone-patent/">patent</a> moved the unit of value from the price quotation to the conversation. AT&T's monopoly, born of network effects in interconnection, became one of the most durable rents in industrial history.</li>
@@ -125,31 +134,31 @@
   <li><strong>Mobile data and the API (2007 onwards).</strong> The iPhone shipped with a cellular data radio and an embedded web browser, and within five years the dominant traffic on the internet was no longer documents requested by humans. It was structured data exchanged between programs through <a href="https://en.wikipedia.org/wiki/REST">REST APIs</a>. The unit of value rose again — from the page to the function call.</li>
 </ul>
 
-<p>By 2024, more than half of all calls hitting public APIs at major cloud providers were originated by software, not by a browser with a person at the other end. Cloudflare's <a href="https://radar.cloudflare.com/">Radar</a> tracked this crossing as a routine fact of internet weather, not a revolution. The web had quietly stopped being primarily a network for humans some time before anybody announced it.</p>
+<p id="p-aba8a933">By 2024, more than half of all calls hitting public APIs at major cloud providers were originated by software, not by a browser with a person at the other end. Cloudflare's <a href="https://radar.cloudflare.com/">Radar</a> tracked this crossing as a routine fact of internet weather, not a revolution. The web had quietly stopped being primarily a network for humans some time before anybody announced it.</p>
 
 <h2 id="intelligence-on-the-wire">Intelligence on a wire</h2>
 
-<p>The fifth wire — the one being laid right now, on top of HTTP and TLS and JSON, requiring no new physical layer — carries something different. The previous payloads were inert. A telegraph line did not interpret the price; a phone line did not understand the voice; a TCP packet did not summarize the file. Each wire moved a thing without changing it.</p>
+<p id="p-14a376dc">The fifth wire — the one being laid right now, on top of HTTP and TLS and JSON, requiring no new physical layer — carries something different. The previous payloads were inert. A telegraph line did not interpret the price; a phone line did not understand the voice; a TCP packet did not summarize the file. Each wire moved a thing without changing it.</p>
 
-<p>The fifth wire carries thought. Not a recording of thought, like a voice on a phone line, but the live act of thinking. One side of the connection sends a question; the other side, in milliseconds, runs the trillion-multiplication ritual described in Chapter 30 and sends back an answer that did not previously exist anywhere. The unit of traffic is a token, and the token is an inference — a small, original act of cognition performed on demand.</p>
+<p id="p-c38f4d45">The fifth wire carries thought. Not a recording of thought, like a voice on a phone line, but the live act of thinking. One side of the connection sends a question; the other side, in milliseconds, runs the trillion-multiplication ritual described in Chapter 30 and sends back an answer that did not previously exist anywhere. The unit of traffic is a token, and the token is an inference — a small, original act of cognition performed on demand.</p>
 
 <blockquote>The other wires moved <em>information</em>. This wire moves <em>operations on information</em>, performed at the wire's far end, by something that resembles a mind enough that the distinction matters.</blockquote>
 
 <h2 id="what-is-different">What is genuinely new</h2>
 
-<p>Three things make this wire structurally different from the four that came before.</p>
+<p id="p-f22059db">Three things make this wire structurally different from the four that came before.</p>
 
-<p><strong>The endpoint is not addressed; it is solicited.</strong> When you call an HTTP API, you address a specific server with a specific function. When you call a model, you describe what you want and the network finds a model that can do it. <a href="https://openrouter.ai/">Routing layers like OpenRouter</a>, model gateways at the major clouds, and the emerging spot markets for inference all work by treating the model as fungible substrate. Anthropic's Claude and OpenAI's GPT-5 are no longer destinations; they are providers competing on a price-and-latency curve.</p>
+<p id="p-fea18a8c"><strong>The endpoint is not addressed; it is solicited.</strong> When you call an HTTP API, you address a specific server with a specific function. When you call a model, you describe what you want and the network finds a model that can do it. <a href="https://openrouter.ai/">Routing layers like OpenRouter</a>, model gateways at the major clouds, and the emerging spot markets for inference all work by treating the model as fungible substrate. Anthropic's Claude and OpenAI's GPT-5 are no longer destinations; they are providers competing on a price-and-latency curve.</p>
 
-<p><strong>The cargo is generative, not retrievable.</strong> A request for the population of France can be cached. A request to summarize a 200-page document the model has never seen cannot. Every call may produce a unique output, which means the wire has no equivalent of a content-delivery network; the only optimization is to bring the model and the data closer in space, or to make the model smaller, or to make the inference cheaper. The economic geography that emerges is therefore different.</p>
+<p id="p-a5aa3463"><strong>The cargo is generative, not retrievable.</strong> A request for the population of France can be cached. A request to summarize a 200-page document the model has never seen cannot. Every call may produce a unique output, which means the wire has no equivalent of a content-delivery network; the only optimization is to bring the model and the data closer in space, or to make the model smaller, or to make the inference cheaper. The economic geography that emerges is therefore different.</p>
 
-<p><strong>The endpoints are themselves software, increasingly capable of orchestrating other endpoints.</strong> A telephone call is between two humans, or one human and one answering machine. A REST call is between two programs, but each program is rigid — it executes a fixed transaction and returns. A model call is between two programs, where one of them can decide, in light of the answer, to call ten more endpoints, in a sequence of its own devising. Chapters 34 and 35 will get to what this implies; for now it is enough to say that the wire's two ends are no longer symmetric in the way previous wires' ends were.</p>
+<p id="p-af6a471a"><strong>The endpoints are themselves software, increasingly capable of orchestrating other endpoints.</strong> A telephone call is between two humans, or one human and one answering machine. A REST call is between two programs, but each program is rigid — it executes a fixed transaction and returns. A model call is between two programs, where one of them can decide, in light of the answer, to call ten more endpoints, in a sequence of its own devising. Chapters 34 and 35 will get to what this implies; for now it is enough to say that the wire's two ends are no longer symmetric in the way previous wires' ends were.</p>
 
-<p>The economic consequences will be enormous, distributed unevenly, and partially predictable. A reasonable first approximation: whatever was previously expensive because it required a human to do something formulaic — read a document, draft a memo, answer a question, schedule a meeting — will get cheaper by an order of magnitude, possibly two. Whatever requires the kind of judgment that current models cannot fake will, for a time, get more valuable. Where the line falls is moving.</p>
+<p id="p-f0451087">The economic consequences will be enormous, distributed unevenly, and partially predictable. A reasonable first approximation: whatever was previously expensive because it required a human to do something formulaic — read a document, draft a memo, answer a question, schedule a meeting — will get cheaper by an order of magnitude, possibly two. Whatever requires the kind of judgment that current models cannot fake will, for a time, get more valuable. Where the line falls is moving.</p>
 
-<p>Part III of this book is the attempt to describe, layer by layer, what is being built on top of this fifth wire — the protocols, the agents, the markets, the new institutions of value. As before, none of the parts are individually strange. Their accumulation is.</p>
+<p id="p-c2fa1bf3">Part III of this book is the attempt to describe, layer by layer, what is being built on top of this fifth wire — the protocols, the agents, the markets, the new institutions of value. As before, none of the parts are individually strange. Their accumulation is.</p>
 
-<p>We start with what travels on the wire: not bytes, exactly, but a stranger object — the token.</p>
+<p id="p-944f4c78">We start with what travels on the wire: not bytes, exactly, but a stranger object — the token.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 380" role="img" aria-label="Five wires of history, from telegraph to AI inference, each carrying a more abstract payload">
@@ -326,4 +335,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

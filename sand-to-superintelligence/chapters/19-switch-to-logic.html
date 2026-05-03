@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="19-switch-to-logic">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">transistor on/off</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">CMOS pair</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">NAND gate</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">functional completeness</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">Boolean algebra</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">any logic from one gate type</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="19-switch-to-logic" data-answer-key="b">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — how many transistors does a two-input NAND gate require in CMOS?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 19</div>
     <h1 class="ch-header__title">From Switch to Logic</h1>
     <p class="ch-header__dek">NAND, NOR, and the universality theorem</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain why a CMOS NAND gate consumes power only during switching, not in steady state</li><li>Derive a NOR gate from NAND gates to demonstrate functional completeness</li><li>State why NAND universality means any digital function can be built from one transistor pair design</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">4</div><div class="stat__label">transistors per NAND gate</div></div><div class="stat"><div class="stat__num">1</div><div class="stat__label">gate type sufficient to compute anything</div></div><div class="stat"><div class="stat__num">~10<sup>11</sup></div><div class="stat__label">gates in a frontier GPU</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="19-switch-to-logic">
   <div class="ladder__bar">
@@ -106,42 +115,42 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#from-on-off-to-truth">From on/off to truth</a></li><li><a href="#the-nand-gate">The NAND gate</a></li><li><a href="#universality">Universality</a></li><li><a href="#a-pocket-calculator">A calculator in your pocket</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">A single transistor is a hand on a faucet. To compute anything we need to ask: how do you build a thought out of faucets? The answer is one of the prettiest results in twentieth-century science, and it is the moment chemistry hands the keys to mathematics.</p>
+<p class="lede" id="p-0759b1bf">A single transistor is a hand on a faucet. To compute anything we need to ask: how do you build a thought out of faucets? The answer is one of the prettiest results in twentieth-century science, and it is the moment chemistry hands the keys to mathematics.</p>
 
 <h2 id="from-on-off-to-truth">From on/off to truth</h2>
 
-<p>The leap is to read a transistor not as physics but as logic. "On" becomes the number 1, "off" becomes the number 0. A pair of voltages — a high one (typically 0.8–1.2 V in modern chips) and a low one (0 V) — represent the binary digits true and false.</p>
+<p id="p-8c8576de">The leap is to read a transistor not as physics but as logic. "On" becomes the number 1, "off" becomes the number 0. A pair of voltages — a high one (typically 0.8–1.2 V in modern chips) and a low one (0 V) — represent the binary digits true and false.</p>
 
-<p>This identification — voltage with logic value — was suggested most famously by <a href="https://en.wikipedia.org/wiki/A_Symbolic_Analysis_of_Relay_and_Switching_Circuits">Claude Shannon's 1937 master's thesis</a>, which proved that boolean algebra (the algebra of <em>and</em>, <em>or</em>, <em>not</em>) was the natural mathematics for switching circuits. Once you have that identification, the question becomes: which arrangements of transistors compute which functions of true and false?</p>
+<p id="p-33650c50">This identification — voltage with logic value — was suggested most famously by <a href="https://en.wikipedia.org/wiki/A_Symbolic_Analysis_of_Relay_and_Switching_Circuits">Claude Shannon's 1937 master's thesis</a>, which proved that boolean algebra (the algebra of <em>and</em>, <em>or</em>, <em>not</em>) was the natural mathematics for switching circuits. Once you have that identification, the question becomes: which arrangements of transistors compute which functions of true and false?</p>
 
 <h2 id="the-nand-gate">The NAND gate</h2>
 
-<p>The most important arrangement is called <strong>NAND</strong> — short for "not and." A NAND of two inputs is true unless both inputs are true. In modern CMOS technology, we build it from four transistors: two PMOS at the top (which conduct when their gate is low) and two NMOS at the bottom (which conduct when their gate is high). The PMOS pair sits in parallel between VDD and the output; the NMOS pair sits in series between the output and ground.</p>
+<p id="p-9e084290">The most important arrangement is called <strong>NAND</strong> — short for "not and." A NAND of two inputs is true unless both inputs are true. In modern CMOS technology, we build it from four transistors: two PMOS at the top (which conduct when their gate is low) and two NMOS at the bottom (which conduct when their gate is high). The PMOS pair sits in parallel between VDD and the output; the NMOS pair sits in series between the output and ground.</p>
 
-<p>Walk through the four cases. If both inputs are <em>low</em>: both PMOS conduct, both NMOS are off, the output is pulled to VDD — output is high (true). If only one input is high: that input's NMOS is on but the other is off, so the series path to ground is broken; meanwhile the PMOS for the low input is on, pulling the output to VDD. Output stays high. Only when <em>both</em> inputs are high do both NMOS conduct, both PMOS turn off, and the output is finally pulled to ground. Output is low (false). That is exactly the truth table of NAND.</p>
+<p id="p-8f749544">Walk through the four cases. If both inputs are <em>low</em>: both PMOS conduct, both NMOS are off, the output is pulled to VDD — output is high (true). If only one input is high: that input's NMOS is on but the other is off, so the series path to ground is broken; meanwhile the PMOS for the low input is on, pulling the output to VDD. Output stays high. Only when <em>both</em> inputs are high do both NMOS conduct, both PMOS turn off, and the output is finally pulled to ground. Output is low (false). That is exactly the truth table of NAND.</p>
 
-<p>A subtlety here is worth noting: in steady state, no current flows through the gate. The PMOS or the NMOS path is always broken. Power is consumed only when the gate <em>switches</em> — when the transistor capacitances are charged or discharged. This is what made <a href="https://www.computerhistory.org/siliconengine/cmos-circuits-eclipse-bipolar-and-nmos-logic/">CMOS logic</a> viable at the scale of billions of gates: a chip's power is determined not by how many gates it contains but by how many gates are switching per second. Idle transistors are essentially free.</p>
+<p id="p-969435c4">A subtlety here is worth noting: in steady state, no current flows through the gate. The PMOS or the NMOS path is always broken. Power is consumed only when the gate <em>switches</em> — when the transistor capacitances are charged or discharged. This is what made <a href="https://www.computerhistory.org/siliconengine/cmos-circuits-eclipse-bipolar-and-nmos-logic/">CMOS logic</a> viable at the scale of billions of gates: a chip's power is determined not by how many gates it contains but by how many gates are switching per second. Idle transistors are essentially free.</p>
 
 <h2 id="universality">Universality</h2>
 
-<p>Now the magic. Once you have NAND, you have everything. <strong>NAND is functionally complete</strong>: every possible boolean function — every truth table you could ever write down, of any number of inputs — can be built out of NAND gates alone. NOT? That's a NAND with both inputs tied together. AND? A NAND followed by a NOT (which is itself a NAND). OR? Use De Morgan's laws: A OR B = NOT (NOT A AND NOT B), and every NOT and every AND is just a NAND. XOR, multiplexer, comparator — all of them, built from NAND.</p>
+<p id="p-fd2afdf7">Now the magic. Once you have NAND, you have everything. <strong>NAND is functionally complete</strong>: every possible boolean function — every truth table you could ever write down, of any number of inputs — can be built out of NAND gates alone. NOT? That's a NAND with both inputs tied together. AND? A NAND followed by a NOT (which is itself a NAND). OR? Use De Morgan's laws: A OR B = NOT (NOT A AND NOT B), and every NOT and every AND is just a NAND. XOR, multiplexer, comparator — all of them, built from NAND.</p>
 
-<p>This is the universality theorem of digital logic. It is the reason a single physical structure — four transistors arranged in a particular pattern — is the lego brick of every computation we have ever performed. Your laptop is, mathematically, an enormous arrangement of NANDs. So is the GPU running a frontier model. So, in principle, would be a brain simulator.</p>
+<p id="p-22b657cf">This is the universality theorem of digital logic. It is the reason a single physical structure — four transistors arranged in a particular pattern — is the lego brick of every computation we have ever performed. Your laptop is, mathematically, an enormous arrangement of NANDs. So is the GPU running a frontier model. So, in principle, would be a brain simulator.</p>
 
 <blockquote>A NAND gate can compute any function of its inputs. Therefore, a great many NAND gates, properly wired, can compute any function — including the function "predict the next word an intelligent being would say." Everything else is implementation.</blockquote>
 
 <h2 id="a-pocket-calculator">A calculator in your pocket</h2>
 
-<p>You can prove this to yourself with a simple case. Consider the half-adder: a circuit that takes two binary digits and produces their sum. The "sum" output is true if exactly one of the inputs is true (this is XOR). The "carry" output is true only if both inputs are true (this is AND). Build XOR from NANDs (it takes four), build AND from NANDs (it takes two), wire them up — and you have an arithmetic unit. Two of them in series (with the carry of the first feeding the carry-in of the second) make a full adder. Sixty-four of those in a chain make a 64-bit adder, which is what your CPU uses to add the integers in <code>x = y + z</code>.</p>
+<p id="p-416e65b8">You can prove this to yourself with a simple case. Consider the half-adder: a circuit that takes two binary digits and produces their sum. The "sum" output is true if exactly one of the inputs is true (this is XOR). The "carry" output is true only if both inputs are true (this is AND). Build XOR from NANDs (it takes four), build AND from NANDs (it takes two), wire them up — and you have an arithmetic unit. Two of them in series (with the carry of the first feeding the carry-in of the second) make a full adder. Sixty-four of those in a chain make a 64-bit adder, which is what your CPU uses to add the integers in <code>x = y + z</code>.</p>
 
-<p>Pause on this for a moment. The integers added in <code>y + z</code> are ultimately voltages in roughly five thousand transistors, arranged into roughly twelve hundred logic gates, switching simultaneously, settling into the right state in a fraction of a nanosecond. That is one addition. A modern CPU does about <a href="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html">ten billion such additions per second per core</a>, and has dozens of cores.</p>
+<p id="p-0743fe57">Pause on this for a moment. The integers added in <code>y + z</code> are ultimately voltages in roughly five thousand transistors, arranged into roughly twelve hundred logic gates, switching simultaneously, settling into the right state in a fraction of a nanosecond. That is one addition. A modern CPU does about <a href="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html">ten billion such additions per second per core</a>, and has dozens of cores.</p>
 
 <div class="aside" data-tone="primary">
   <span class="aside__label">Why NAND, specifically?</span>
-  <p>NOR is also functionally complete. So is the combination AND+NOT, or OR+NOT. In CMOS, both two-input NAND and two-input NOR use the same four transistors — the difference is which devices sit in series. NAND won because <em>NMOS in series is faster than PMOS in series</em>: electrons in NMOS channels are roughly twice as mobile as holes in PMOS channels, so a NAND's series-NMOS pull-down switches faster than a NOR's series-PMOS pull-up. A whole industry's standard cell libraries grew around that small physical advantage.</p>
+  <p id="p-58dc1168">NOR is also functionally complete. So is the combination AND+NOT, or OR+NOT. In CMOS, both two-input NAND and two-input NOR use the same four transistors — the difference is which devices sit in series. NAND won because <em>NMOS in series is faster than PMOS in series</em>: electrons in NMOS channels are roughly twice as mobile as holes in PMOS channels, so a NAND's series-NMOS pull-down switches faster than a NOR's series-PMOS pull-up. A whole industry's standard cell libraries grew around that small physical advantage.</p>
 </div>
 
-<p>One transistor became one bit of decision. A handful of transistors became one logical operation. We are climbing fast. In the next chapter we will use logic to build arithmetic, and arithmetic to build memory, and memory to build the first true unit of computation: the <em>register</em>.</p>
+<p id="p-d70e1c21">One transistor became one bit of decision. A handful of transistors became one logical operation. We are climbing fast. In the next chapter we will use logic to build arithmetic, and arithmetic to build memory, and memory to build the first true unit of computation: the <em>register</em>.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 380" role="img" aria-label="A NAND gate built from four CMOS transistors with truth table">
@@ -348,4 +357,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

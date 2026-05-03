@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="23-isa">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">hardware-software contract</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">ISA definition</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">CISC x86</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">RISC arm</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">microarchitecture independence</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">GPU parallel ISA</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">40 years backward compatibility</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="23-isa" data-answer-key="c">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — how many instructions are in modern x86-64?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 23</div>
     <h1 class="ch-header__title">From Transistors to ISA</h1>
     <p class="ch-header__dek">The contract between hardware and software</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain the distinction between an ISA and a microarchitecture and why the same ISA can have many implementations</li><li>Name the two ISA tribes, give one key design philosophy difference, and state which NVIDIA Vera CPUs use</li><li>Defend the claim that x86 backward compatibility from 1978 is both the industry's greatest asset and its greatest tax</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">1978</div><div class="stat__label">year x86 was first defined</div></div><div class="stat"><div class="stat__num">~1500</div><div class="stat__label">instructions in modern x86-64</div></div><div class="stat"><div class="stat__num">~50</div><div class="stat__label">instructions in baseline RISC-V</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="23-isa">
   <div class="ladder__bar">
@@ -106,11 +115,11 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-contract">The contract</a></li><li><a href="#two-tribes">Two tribes — CISC and RISC</a></li><li><a href="#isa-vs-uarch">ISA vs microarchitecture</a></li><li><a href="#forty-years-of-x86">Forty years of x86</a></li><li><a href="#the-gpu-isa">The GPU's parallel ISA</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">The fetch-decode-execute loop only works if the chip and the program agree on what the bytes mean. That agreement is the <strong>Instruction Set Architecture</strong>, or ISA — the most consequential interface in computing, and the longest-lived. The ISA is why your Linux laptop can run a binary compiled in 1995, why an iPhone game runs on devices built years apart, and why Apple's switch to its own silicon was a multi-year migration of an entire software ecosystem.</p>
+<p class="lede" id="p-26ea4749">The fetch-decode-execute loop only works if the chip and the program agree on what the bytes mean. That agreement is the <strong>Instruction Set Architecture</strong>, or ISA — the most consequential interface in computing, and the longest-lived. The ISA is why your Linux laptop can run a binary compiled in 1995, why an iPhone game runs on devices built years apart, and why Apple's switch to its own silicon was a multi-year migration of an entire software ecosystem.</p>
 
 <h2 id="the-contract">The contract</h2>
 
-<p>An ISA specifies, in unambiguous language, what bytes a CPU will accept and what they mean. It defines:</p>
+<p id="p-76da4873">An ISA specifies, in unambiguous language, what bytes a CPU will accept and what they mean. It defines:</p>
 
 <ul>
   <li>The encoding of instructions — exactly which bits represent ADD, which represent LOAD, which represent BRANCH-IF-EQUAL.</li>
@@ -120,46 +129,46 @@
   <li>System-level state — privileged registers, page-table format, virtual-memory rules, security boundaries.</li>
 </ul>
 
-<p>An ISA is a <em>specification document</em>: hundreds or thousands of pages, written in pedantic English with formal pseudo-code. The <a href="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html">Intel x86-64 manual</a> runs to roughly 5,000 pages. The <a href="https://developer.arm.com/documentation/ddi0487/latest">Arm ARMv9 reference</a> is similar. Every implementation — Intel chips, AMD chips, the dozens of ARM licensees — must obey the manual.</p>
+<p id="p-fa5b6420">An ISA is a <em>specification document</em>: hundreds or thousands of pages, written in pedantic English with formal pseudo-code. The <a href="https://www.intel.com/content/www/us/en/developer/articles/technical/intel-sdm.html">Intel x86-64 manual</a> runs to roughly 5,000 pages. The <a href="https://developer.arm.com/documentation/ddi0487/latest">Arm ARMv9 reference</a> is similar. Every implementation — Intel chips, AMD chips, the dozens of ARM licensees — must obey the manual.</p>
 
 <h2 id="two-tribes">Two tribes — CISC and RISC</h2>
 
-<p>Through the 1980s, two design philosophies emerged.</p>
+<p id="p-fa34fe06">Through the 1980s, two design philosophies emerged.</p>
 
-<p><strong>CISC</strong> (complex instruction set computer): rich, expressive instructions. A single x86 instruction can read two memory locations, multiply their contents, and write the result back to a third. Variable-length encoding (1–15 bytes). Hundreds of instructions, many baroque. The argument: instructions are scarce, memory is precious, packing more semantics into each instruction reduces program size and reduces the number of fetches.</p>
+<p id="p-0573189d"><strong>CISC</strong> (complex instruction set computer): rich, expressive instructions. A single x86 instruction can read two memory locations, multiply their contents, and write the result back to a third. Variable-length encoding (1–15 bytes). Hundreds of instructions, many baroque. The argument: instructions are scarce, memory is precious, packing more semantics into each instruction reduces program size and reduces the number of fetches.</p>
 
-<p><strong>RISC</strong> (reduced instruction set computer): austere, regular instructions. Each instruction does one thing — load, store, register-to-register arithmetic — in a fixed-length encoding (4 bytes), with a small instruction count (~50 in baseline RISC-V). The argument: simple instructions can be pipelined and clocked faster; let the compiler do the work of composing complex behaviour from simple parts.</p>
+<p id="p-92113643"><strong>RISC</strong> (reduced instruction set computer): austere, regular instructions. Each instruction does one thing — load, store, register-to-register arithmetic — in a fixed-length encoding (4 bytes), with a small instruction count (~50 in baseline RISC-V). The argument: simple instructions can be pipelined and clocked faster; let the compiler do the work of composing complex behaviour from simple parts.</p>
 
-<p>RISC won the technical argument decisively in the 1990s. ARM, MIPS, PowerPC, SPARC — all RISC, all faster per gate than the CISC architectures of the same era. <a href="https://www.cs.cmu.edu/~410/doc/hennessy-patterson.pdf">Hennessy and Patterson's Computer Architecture textbook</a> is, structurally, a treatise on the victory of RISC.</p>
+<p id="p-c86cecd3">RISC won the technical argument decisively in the 1990s. ARM, MIPS, PowerPC, SPARC — all RISC, all faster per gate than the CISC architectures of the same era. <a href="https://www.cs.cmu.edu/~410/doc/hennessy-patterson.pdf">Hennessy and Patterson's Computer Architecture textbook</a> is, structurally, a treatise on the victory of RISC.</p>
 
-<p>And yet — Intel x86, the most commercially successful CISC architecture, never died. It survived because of microarchitectural cleverness: modern x86 chips internally <em>translate</em> CISC instructions into a stream of RISC-like µops as part of decoding, then execute those µops in a deeply pipelined, out-of-order RISC core. The ISA stayed CISC; the implementation became RISC. The contract was preserved; the engine underneath was replaced.</p>
+<p id="p-c32ff93b">And yet — Intel x86, the most commercially successful CISC architecture, never died. It survived because of microarchitectural cleverness: modern x86 chips internally <em>translate</em> CISC instructions into a stream of RISC-like µops as part of decoding, then execute those µops in a deeply pipelined, out-of-order RISC core. The ISA stayed CISC; the implementation became RISC. The contract was preserved; the engine underneath was replaced.</p>
 
 <h2 id="isa-vs-uarch">ISA vs microarchitecture</h2>
 
-<p>This brings us to one of the most useful distinctions in computer architecture: ISA versus <strong>microarchitecture</strong>. The ISA is the visible contract — the bytes the CPU will accept and the abstract behaviour it promises. The microarchitecture is the actual circuitry inside the chip — the pipeline depth, the cache sizes, the branch predictor, the number of execution ports, the schedulers, the renamers. Microarchitecture is invisible to programs; it can be redesigned every generation. ISA is visible; it cannot.</p>
+<p id="p-3b2087a0">This brings us to one of the most useful distinctions in computer architecture: ISA versus <strong>microarchitecture</strong>. The ISA is the visible contract — the bytes the CPU will accept and the abstract behaviour it promises. The microarchitecture is the actual circuitry inside the chip — the pipeline depth, the cache sizes, the branch predictor, the number of execution ports, the schedulers, the renamers. Microarchitecture is invisible to programs; it can be redesigned every generation. ISA is visible; it cannot.</p>
 
-<p>An Intel <a href="https://en.wikipedia.org/wiki/Pentium_(original)">Pentium</a> from 1993 and a Core i9 from 2024 implement nearly the same ISA. The Core i9 is roughly 100,000× faster, in some workloads. Almost none of that speedup came from the ISA. It came from microarchitectural inventions — better caches, deeper pipelines, branch prediction, out-of-order execution, simultaneous multithreading, vector units, prefetchers, speculation. The ISA was a stable promise; the chip beneath it was rebuilt every few years.</p>
+<p id="p-9f2b5c8a">An Intel <a href="https://en.wikipedia.org/wiki/Pentium_(original)">Pentium</a> from 1993 and a Core i9 from 2024 implement nearly the same ISA. The Core i9 is roughly 100,000× faster, in some workloads. Almost none of that speedup came from the ISA. It came from microarchitectural inventions — better caches, deeper pipelines, branch prediction, out-of-order execution, simultaneous multithreading, vector units, prefetchers, speculation. The ISA was a stable promise; the chip beneath it was rebuilt every few years.</p>
 
 <blockquote>The ISA is the most stable thing in the computing stack. The transistors below it change every two years. The software above it changes every week. The ISA, once defined, lives for decades.</blockquote>
 
 <h2 id="forty-years-of-x86">Forty years of x86</h2>
 
-<p>Consider x86. Defined in 1978 with the Intel 8086. Extended to 32 bits in 1985 with the 80386. Extended to 64 bits in 2003 with AMD's Opteron. SIMD instructions added through the 1990s and 2000s (MMX, SSE, AVX, AVX-512). Vector and matrix instructions added in the 2020s (AMX). Almost every x86 binary compiled in the last forty years still runs on a modern x86-64 machine. The <em>same bytes</em> still mean the same thing.</p>
+<p id="p-b3e14299">Consider x86. Defined in 1978 with the Intel 8086. Extended to 32 bits in 1985 with the 80386. Extended to 64 bits in 2003 with AMD's Opteron. SIMD instructions added through the 1990s and 2000s (MMX, SSE, AVX, AVX-512). Vector and matrix instructions added in the 2020s (AMX). Almost every x86 binary compiled in the last forty years still runs on a modern x86-64 machine. The <em>same bytes</em> still mean the same thing.</p>
 
-<p>This stability is not aesthetic; it's economic. An ISA migration is a multi-year, multi-billion-dollar undertaking. Apple managed it twice (PowerPC → x86 in 2006, x86 → ARM in 2020), each time only by means of a binary translator (Rosetta) that pretended the old ISA still worked while the ecosystem caught up. ARM is succeeding in displacing x86 in laptops and servers in the 2020s — and even so, the displacement is taking a decade.</p>
+<p id="p-2ad4f3b1">This stability is not aesthetic; it's economic. An ISA migration is a multi-year, multi-billion-dollar undertaking. Apple managed it twice (PowerPC → x86 in 2006, x86 → ARM in 2020), each time only by means of a binary translator (Rosetta) that pretended the old ISA still worked while the ecosystem caught up. ARM is succeeding in displacing x86 in laptops and servers in the 2020s — and even so, the displacement is taking a decade.</p>
 
 <h2 id="the-gpu-isa">The GPU's parallel ISA</h2>
 
-<p>A GPU has an ISA too, though it is shaped very differently. NVIDIA's GPUs implement <a href="https://docs.nvidia.com/cuda/parallel-thread-execution/">PTX (Parallel Thread Execution)</a> as a virtual ISA, which is then JIT-compiled to a hardware-specific real ISA called SASS at run time. PTX has SIMD-style instructions: a single instruction operates on 32 lanes simultaneously (a "warp"), each lane working on different data. There are tensor instructions that do entire 16×16 matrix multiplies in a single op. The contract is fundamentally different from a CPU's, because the workload is fundamentally different — every modern AI workload is, deep down, billions of identical operations on different data.</p>
+<p id="p-12de1be9">A GPU has an ISA too, though it is shaped very differently. NVIDIA's GPUs implement <a href="https://docs.nvidia.com/cuda/parallel-thread-execution/">PTX (Parallel Thread Execution)</a> as a virtual ISA, which is then JIT-compiled to a hardware-specific real ISA called SASS at run time. PTX has SIMD-style instructions: a single instruction operates on 32 lanes simultaneously (a "warp"), each lane working on different data. There are tensor instructions that do entire 16×16 matrix multiplies in a single op. The contract is fundamentally different from a CPU's, because the workload is fundamentally different — every modern AI workload is, deep down, billions of identical operations on different data.</p>
 
-<p>We will spend a whole chapter on what that means architecturally — Chapter 28, "The GPU's Different Mind." For now, the lesson is just that the ISA, whatever shape it takes, is the place where the software stops talking about transistors and the hardware stops talking about programs. Above the ISA: <em>code</em>. Below it: <em>circuits</em>. The interface is the most carefully engineered seam in the digital world.</p>
+<p id="p-a73ad57a">We will spend a whole chapter on what that means architecturally — Chapter 28, "The GPU's Different Mind." For now, the lesson is just that the ISA, whatever shape it takes, is the place where the software stops talking about transistors and the hardware stops talking about programs. Above the ISA: <em>code</em>. Below it: <em>circuits</em>. The interface is the most carefully engineered seam in the digital world.</p>
 
 <div class="aside" data-tone="copper">
   <span class="aside__label">RISC-V — the open ISA</span>
-  <p>Through the 2010s, an open-source ISA called <strong>RISC-V</strong> emerged from UC Berkeley. Anyone can implement it without paying licensing fees. It is small, modern, modular. Most major hyperscalers and AI startups have RISC-V projects underway, sometimes for the main CPU, often for in-chip controllers and accelerators. Whether RISC-V displaces ARM in mass-market silicon is one of the open questions of the next decade. As of 2026, it is winning quietly, in a thousand corners of every chip.</p>
+  <p id="p-5d6d4180">Through the 2010s, an open-source ISA called <strong>RISC-V</strong> emerged from UC Berkeley. Anyone can implement it without paying licensing fees. It is small, modern, modular. Most major hyperscalers and AI startups have RISC-V projects underway, sometimes for the main CPU, often for in-chip controllers and accelerators. Whether RISC-V displaces ARM in mass-market silicon is one of the open questions of the next decade. As of 2026, it is winning quietly, in a thousand corners of every chip.</p>
 </div>
 
-<p>We have, by now, climbed from electrons to instructions. We have a chip that runs programs. The remaining mystery is where the program lives, how it gets to the chip, and how the chip survives the fact that the memory it reads from is, in the most literal sense, much, much slower than itself.</p>
+<p id="p-09443dc8">We have, by now, climbed from electrons to instructions. We have a chip that runs programs. The remaining mystery is where the program lives, how it gets to the chip, and how the chip survives the fact that the memory it reads from is, in the most literal sense, much, much slower than itself.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 380" role="img" aria-label="Stack of abstractions from physics to high-level language with ISA in the middle">
@@ -332,4 +341,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

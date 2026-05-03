@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="06-design">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">architecture intent</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">RTL</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">EDA synthesis</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">netlist</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">place and route</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">physical verification</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">80 mask layers</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="06-design" data-answer-key="b">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — roughly how many transistors does NVIDIA pack into a Rubin GPU package?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 06</div>
     <h1 class="ch-header__title">Designing the Impossible</h1>
     <p class="ch-header__dek">EDA, transistors, and 15,000 engineer-years</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Trace the seven-level design pyramid from architecture to mask generation</li><li>Explain why timing closure requires iterating the EDA loop hundreds of times</li><li>State why a single defect on one photomask can ruin every wafer it exposes</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">336 <em>billion</em></div><div class="stat__label">transistors per Rubin GPU die</div></div><div class="stat"><div class="stat__num">thousands</div><div class="stat__label">of engineer-years of design effort</div></div><div class="stat"><div class="stat__num">4–5 <em>years</em></div><div class="stat__label">from architecture to first silicon</div></div><div class="stat"><div class="stat__num">~80</div><div class="stat__label">lithography mask sets per chip</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="06-design">
   <div class="ladder__bar">
@@ -106,27 +115,27 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-blank-canvas">The blank canvas</a></li><li><a href="#eda">EDA — software that designs silicon</a></li><li><a href="#the-design-pyramid">The design pyramid</a></li><li><a href="#the-rubin-architecture">Designing Rubin</a></li><li><a href="#photomasks">From design to photomask</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">It is tempting to begin a chip's story with the wafer, the way we have. But the wafer is the easy part. By the time anyone reaches for a piece of silicon, the design they are about to print on it has already absorbed thousands of person-years of attention. <strong>The Vera Rubin platform alone took thousands of engineer-years</strong> to bring from architecture to manufacturable form.</p>
+<p class="lede" id="p-e11fed00">It is tempting to begin a chip's story with the wafer, the way we have. But the wafer is the easy part. By the time anyone reaches for a piece of silicon, the design they are about to print on it has already absorbed thousands of person-years of attention. <strong>The Vera Rubin platform alone took thousands of engineer-years</strong> to bring from architecture to manufacturable form.</p>
 
-<p>You cannot photograph this work. It happens almost entirely in the abstract, inside servers, in cool rooms in Santa Clara and Hyderabad and Hsinchu. But it is the part of the silicon supply chain where the most human creativity lives.</p>
+<p id="p-088f39c2">You cannot photograph this work. It happens almost entirely in the abstract, inside servers, in cool rooms in Santa Clara and Hyderabad and Hsinchu. But it is the part of the silicon supply chain where the most human creativity lives.</p>
 
 <h2 id="the-blank-canvas">The blank canvas</h2>
 
-<p>A modern GPU starts as a set of intentions. The architects ask: what do we want this chip to do? For Rubin, the answer is to train and infer the next generation of large language models — to multiply matrices billions of times per second on tensors of low-precision numbers, to move that data in and out of memory faster than any system before, and to coordinate dozens or hundreds of these chips into a single thinking machine.</p>
+<p id="p-97d3b6fa">A modern GPU starts as a set of intentions. The architects ask: what do we want this chip to do? For Rubin, the answer is to train and infer the next generation of large language models — to multiply matrices billions of times per second on tensors of low-precision numbers, to move that data in and out of memory faster than any system before, and to coordinate dozens or hundreds of these chips into a single thinking machine.</p>
 
-<p>This top-level intention cascades downward. Compute units. Memory hierarchy. Interconnect topology. Power delivery. Clock distribution. Each of these is itself a design problem with its own trade-offs, and each generates further sub-problems. The full design hierarchy of a Rubin-class GPU has perhaps a dozen levels and tens of thousands of sub-blocks.</p>
+<p id="p-3899c172">This top-level intention cascades downward. Compute units. Memory hierarchy. Interconnect topology. Power delivery. Clock distribution. Each of these is itself a design problem with its own trade-offs, and each generates further sub-problems. The full design hierarchy of a Rubin-class GPU has perhaps a dozen levels and tens of thousands of sub-blocks.</p>
 
 <h2 id="eda">EDA — software that designs silicon</h2>
 
-<p>None of this could be done by hand anymore. The tools that turn intentions into masks are called <strong>Electronic Design Automation</strong> — EDA — and they are themselves a roughly fifteen-billion-dollar industry, dominated globally by three companies: Synopsys, Cadence, and Siemens EDA.</p>
+<p id="p-6f373ba1">None of this could be done by hand anymore. The tools that turn intentions into masks are called <strong>Electronic Design Automation</strong> — EDA — and they are themselves a roughly fifteen-billion-dollar industry, dominated globally by three companies: Synopsys, Cadence, and Siemens EDA.</p>
 
-<p>An engineer writes <strong>RTL</strong> (register-transfer level) code in a language like SystemVerilog: not a description of the chip's atoms, but a description of what it should compute. EDA tools translate this RTL into a netlist of standard cells — pre-designed building blocks of, say, four-to-eight transistors that perform basic logic operations. These cells are then placed and routed onto a virtual chip floor: where each cell sits, how the wires between them run, what they do to power and clock distribution. Timing must close: every signal must reach every destination within a single clock period, with margin for manufacturing variation. Power must close: the chip must not exceed its thermal envelope. Reliability must close: the chip must not degrade unacceptably over its expected lifetime.</p>
+<p id="p-bd7dd23a">An engineer writes <strong>RTL</strong> (register-transfer level) code in a language like SystemVerilog: not a description of the chip's atoms, but a description of what it should compute. EDA tools translate this RTL into a netlist of standard cells — pre-designed building blocks of, say, four-to-eight transistors that perform basic logic operations. These cells are then placed and routed onto a virtual chip floor: where each cell sits, how the wires between them run, what they do to power and clock distribution. Timing must close: every signal must reach every destination within a single clock period, with margin for manufacturing variation. Power must close: the chip must not exceed its thermal envelope. Reliability must close: the chip must not degrade unacceptably over its expected lifetime.</p>
 
-<p>None of this is a single pass. The design loop runs hundreds of times, with each iteration improving timing, power, area, and signal integrity. Modern EDA tools use neural networks to suggest placement strategies; humans review, refine, and re-run.</p>
+<p id="p-7fa427e4">None of this is a single pass. The design loop runs hundreds of times, with each iteration improving timing, power, area, and signal integrity. Modern EDA tools use neural networks to suggest placement strategies; humans review, refine, and re-run.</p>
 
 <h2 id="the-design-pyramid">The design pyramid</h2>
 
-<p>It is useful to picture the design as a stack:</p>
+<p id="p-bde3e5cc">It is useful to picture the design as a stack:</p>
 
 <ul>
   <li><strong>Architecture</strong> — what does the chip do, and how does it organize compute?</li>
@@ -138,21 +147,21 @@
   <li><strong>Mask generation</strong> — the layout is sliced into the dozens of layers that will be printed</li>
 </ul>
 
-<p>Each layer of this stack is a discipline. Each requires specialists. The chips that can train tomorrow's frontier models are designed by teams whose composition would have been unimaginable to chip designers thirty years ago — half of the headcount works in machine learning to optimize the compiler that will eventually run on the silicon they are designing.</p>
+<p id="p-3fb3ed02">Each layer of this stack is a discipline. Each requires specialists. The chips that can train tomorrow's frontier models are designed by teams whose composition would have been unimaginable to chip designers thirty years ago — half of the headcount works in machine learning to optimize the compiler that will eventually run on the silicon they are designing.</p>
 
 <h2 id="the-rubin-architecture">Designing Rubin</h2>
 
-<p>The Rubin GPU is built on TSMC's <strong>N3P process</strong>, the high-performance refinement of N3 — still a FinFET node, but the most mature leading-edge process available when Rubin entered production. (TSMC's gate-all-around <strong>N2</strong> node, which uses <a href="https://www.tomshardware.com/tech-industry/semiconductors/tsmc-begins-quietly-volume-production-of-2nm-class-chips-first-gaa-transistor-for-tsmc-claims-up-to-15-percent-improvement-at-iso-power">nanosheet transistors</a>, was just ramping in parallel; NVIDIA's next architecture after Rubin is the one expected to ride it.) Nanosheet GAA is a structural break from the FinFETs that have dominated the last decade.</p>
+<p id="p-e276dddd">The Rubin GPU is built on TSMC's <strong>N3P process</strong>, the high-performance refinement of N3 — still a FinFET node, but the most mature leading-edge process available when Rubin entered production. (TSMC's gate-all-around <strong>N2</strong> node, which uses <a href="https://www.tomshardware.com/tech-industry/semiconductors/tsmc-begins-quietly-volume-production-of-2nm-class-chips-first-gaa-transistor-for-tsmc-claims-up-to-15-percent-improvement-at-iso-power">nanosheet transistors</a>, was just ramping in parallel; NVIDIA's next architecture after Rubin is the one expected to ride it.) Nanosheet GAA is a structural break from the FinFETs that have dominated the last decade.</p>
 
-<p>In a FinFET, the transistor's "fin" — a thin vertical wall of silicon — acts as the channel for current. The gate wraps the fin on three sides, giving good electrostatic control but leaving the bottom of the fin to leak. In a gate-all-around (GAA) nanosheet device, the channel is broken into a stack of horizontal silicon sheets, each suspended in midair, with the gate wrapping each sheet on <em>all four</em> sides. The result: less leakage, lower threshold voltage, and the ability to keep shrinking when FinFETs cannot.</p>
+<p id="p-07fc6b21">In a FinFET, the transistor's "fin" — a thin vertical wall of silicon — acts as the channel for current. The gate wraps the fin on three sides, giving good electrostatic control but leaving the bottom of the fin to leak. In a gate-all-around (GAA) nanosheet device, the channel is broken into a stack of horizontal silicon sheets, each suspended in midair, with the gate wrapping each sheet on <em>all four</em> sides. The result: less leakage, lower threshold voltage, and the ability to keep shrinking when FinFETs cannot.</p>
 
-<p>FinFET N3P is the substrate Rubin is designed for. Each GPU die is roughly 800 square millimeters — close to the reticle limit, the largest area a single EUV exposure can pattern at once. Within that area, NVIDIA places <strong>about 336 billion transistors</strong> per Rubin package (two dies on a single substrate), wired, and verified. The verification alone consumes thousands of CPU-years. Software simulates the entire chip down to the transistor level, running representative workloads, finding bugs that — if missed — would not surface until silicon, which costs tens of millions of dollars per spin.</p>
+<p id="p-bcff17b5">FinFET N3P is the substrate Rubin is designed for. Each GPU die is roughly 800 square millimeters — close to the reticle limit, the largest area a single EUV exposure can pattern at once. Within that area, NVIDIA places <strong>about 336 billion transistors</strong> per Rubin package (two dies on a single substrate), wired, and verified. The verification alone consumes thousands of CPU-years. Software simulates the entire chip down to the transistor level, running representative workloads, finding bugs that — if missed — would not surface until silicon, which costs tens of millions of dollars per spin.</p>
 
 <h2 id="photomasks">From design to photomask</h2>
 
-<p>When the design is finally signed off, the layout is sliced into perhaps eighty individual mask layers — one for each lithography step the wafer will undergo in the fab. These layouts are sent to a mask-making vendor, who patterns them in chrome on glass plates using electron-beam lithography. A modern mask set for a leading-edge chip costs <strong>hundreds of millions of dollars</strong>, and a single defect on a single mask can ruin every wafer it touches.</p>
+<p id="p-434c7f30">When the design is finally signed off, the layout is sliced into perhaps eighty individual mask layers — one for each lithography step the wafer will undergo in the fab. These layouts are sent to a mask-making vendor, who patterns them in chrome on glass plates using electron-beam lithography. A modern mask set for a leading-edge chip costs <strong>hundreds of millions of dollars</strong>, and a single defect on a single mask can ruin every wafer it touches.</p>
 
-<p>The masks ship, in armored cases, to the fab. The wafer is waiting. Now silicon and design — having been engineered separately for years — are about to meet for the first time.</p>
+<p id="p-7575a270">The masks ship, in armored cases, to the fab. The wafer is waiting. Now silicon and design — having been engineered separately for years — are about to meet for the first time.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="Transistor evolution from planar to FinFET to gate-all-around nanosheet">
@@ -344,4 +353,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

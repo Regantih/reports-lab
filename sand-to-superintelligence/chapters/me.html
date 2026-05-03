@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your study map · From Sand to Superintelligence</title>
+<meta name="description" content="A one-glance map of your progress across all 42 chapters of From Sand to Superintelligence.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/dashboard.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-page="me">
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+        <circle cx="12" cy="12" r="9" />
+        <circle cx="12" cy="12" r="3" fill="currentColor" />
+        <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+      </svg>
+      <span>From Sand to Superintelligence<span class="brand__sub"> — a visual journey</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../index.html">Cover</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link nav-link--active" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+
+<main class="dash">
+  <div class="dash__eyebrow">Your study map</div>
+  <h1 class="dash__title">Where you are in the book</h1>
+  <p class="dash__dek">A one-glance map of all 42 chapters — colored by how deep you've gone, surfaced with what's due, what's stuck, and where to go next.</p>
+
+  <section class="dash-nudge" data-dash-nudge aria-live="polite">
+    <div class="dash-nudge__label">Next step</div>
+    <div class="dash-nudge__body">Loading…</div>
+  </section>
+
+  <section class="dash-kpis" data-dash-kpis aria-label="Study statistics"></section>
+
+  <section class="dash-section" aria-labelledby="dash-heat-title">
+    <div class="dash-section__head">
+      <h2 class="dash-section__title" id="dash-heat-title">Chapter heatmap</h2>
+      <span class="dash-section__hint">Color = ladder level · Click a cell to open</span>
+    </div>
+    <div class="dash-heatmap" data-dash-heatmap role="list"></div>
+    <div class="dash-legend" aria-hidden="true">
+      <span class="dash-legend__swatch"><span class="dash-legend__chip" style="background:var(--color-surface)"></span> L0 · not started</span>
+      <span class="dash-legend__swatch"><span class="dash-legend__chip" style="background:color-mix(in oklab, var(--color-accent-copper) 12%, var(--color-surface))"></span> L1 · curious</span>
+      <span class="dash-legend__swatch"><span class="dash-legend__chip" style="background:color-mix(in oklab, var(--color-accent-copper) 28%, var(--color-surface))"></span> L2 · practitioner</span>
+      <span class="dash-legend__swatch"><span class="dash-legend__chip" style="background:color-mix(in oklab, var(--color-accent-copper) 55%, var(--color-surface))"></span> L3 · expert</span>
+      <span class="dash-legend__swatch"><span class="dash-legend__chip" style="background:var(--color-accent-copper)"></span> L4 · research-grade</span>
+    </div>
+  </section>
+
+  <section class="dash-section" aria-labelledby="dash-drills-title">
+    <div class="dash-section__head">
+      <h2 class="dash-section__title" id="dash-drills-title">Drills due today</h2>
+      <span class="dash-section__hint">Spaced-repetition cards ready for review</span>
+    </div>
+    <div data-dash-drills></div>
+  </section>
+
+  <section class="dash-section" aria-labelledby="dash-stuck-title">
+    <div class="dash-section__head">
+      <h2 class="dash-section__title" id="dash-stuck-title">Stuck on</h2>
+      <span class="dash-section__hint">Margin notes you flagged as unresolved</span>
+    </div>
+    <div data-dash-stuck></div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Sand to Superintelligence</strong><br>
+      A long-form visual journey through the silicon supply chain.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+
+<script src="../js/app.js" defer></script>
+<script src="../js/dashboard.js" defer></script>
+</body>
+</html>

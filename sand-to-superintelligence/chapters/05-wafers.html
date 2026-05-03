@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="05-wafers">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">ingot</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">wire saw</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">lapping</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">chemical etch</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">CMP</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">sub-nm flatness</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">optical inspection</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">cassette</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="05-wafers" data-answer-key="d">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — how flat is a 300 mm silicon wafer’s surface after its final polishing step?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 05</div>
     <h1 class="ch-header__title">From Log to Mirror</h1>
     <p class="ch-header__dek">Slicing, lapping, and chemical-mechanical polish</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Name the five post-slicing steps that transform a sawn wafer into a polished substrate</li><li>Explain why subsurface saw damage must be removed before any transistor is built</li><li>State the flatness specification after CMP and express it as an analogy to a scaled football field</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">300 <em>mm</em></div><div class="stat__label">wafer diameter (12 inches)</div></div><div class="stat"><div class="stat__num">775 <em>µm</em></div><div class="stat__label">finished wafer thickness</div></div><div class="stat"><div class="stat__num"><em><</em>1 <em>nm</em></div><div class="stat__label">surface flatness after CMP</div></div><div class="stat"><div class="stat__num">~3,000</div><div class="stat__label">wafers from one ingot</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="05-wafers">
   <div class="ladder__bar">
@@ -106,40 +115,40 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-saw">Slicing the log</a></li><li><a href="#lapping-and-etching">Lapping and etching</a></li><li><a href="#cmp">The mirror finish</a></li><li><a href="#inspection">What inspectors look for</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">If you have ever watched a deli slicer carve a salami into translucent rounds, you have already pictured the next step. The Cz ingot — recently still molten, currently a heavy and very expensive dark grey log — is loaded onto a wire saw, and a diamond-impregnated steel filament is dragged through it again and again until the entire ingot is in slices.</p>
+<p class="lede" id="p-de3cac74">If you have ever watched a deli slicer carve a salami into translucent rounds, you have already pictured the next step. The Cz ingot — recently still molten, currently a heavy and very expensive dark grey log — is loaded onto a wire saw, and a diamond-impregnated steel filament is dragged through it again and again until the entire ingot is in slices.</p>
 
-<p>Every chip you have ever owned was once a single round on this slicer. The economics of the entire industry rests on how many of those rounds you can pull out of one ingot, and how flat each one is.</p>
+<p id="p-77825bb5">Every chip you have ever owned was once a single round on this slicer. The economics of the entire industry rests on how many of those rounds you can pull out of one ingot, and how flat each one is.</p>
 
 <h2 id="the-saw">Slicing the log</h2>
 
-<p>The first step before slicing is cosmetic: the ingot is ground to a precise diameter, and a small flat — or in modern wafers, a notch — is ground along its length to mark the crystal's orientation. (Different orientations give different mechanical and electrical properties; logic chips typically want the [100] face up.)</p>
+<p id="p-d34ef04a">The first step before slicing is cosmetic: the ingot is ground to a precise diameter, and a small flat — or in modern wafers, a notch — is ground along its length to mark the crystal's orientation. (Different orientations give different mechanical and electrical properties; logic chips typically want the [100] face up.)</p>
 
-<p>The slicing happens on a multi-wire saw. A single steel wire, perhaps 100 micrometers thick and impregnated with diamond particles, is drawn between hundreds of tiny pulleys to form a parallel array. The ingot is pushed slowly into this array. The wires cut. After perhaps eight hours of patient sawing, the entire ingot has been transformed into roughly three thousand thin, perfectly parallel discs, each about 800 to 850 micrometers thick. <a href="https://www.sumcosi.com/english/products/process/step_02.html">Wafer slicing is a high-volume art</a> — the wire path is computer-controlled to within microns, and the kerf loss (silicon turned to dust by the saw) is one of the fab industry's persistent annoyances.</p>
+<p id="p-56da3be9">The slicing happens on a multi-wire saw. A single steel wire, perhaps 100 micrometers thick and impregnated with diamond particles, is drawn between hundreds of tiny pulleys to form a parallel array. The ingot is pushed slowly into this array. The wires cut. After perhaps eight hours of patient sawing, the entire ingot has been transformed into roughly three thousand thin, perfectly parallel discs, each about 800 to 850 micrometers thick. <a href="https://www.sumcosi.com/english/products/process/step_02.html">Wafer slicing is a high-volume art</a> — the wire path is computer-controlled to within microns, and the kerf loss (silicon turned to dust by the saw) is one of the fab industry's persistent annoyances.</p>
 
 <h2 id="lapping-and-etching">Lapping and etching</h2>
 
-<p>A wafer fresh off the saw is unusable. Its surface is rough on the scale of the wire's grit. Worse, the act of cutting introduces <strong>subsurface damage</strong> — microscopic cracks that penetrate tens of microns into the wafer. Any transistor built atop subsurface damage will fail.</p>
+<p id="p-c1b46279">A wafer fresh off the saw is unusable. Its surface is rough on the scale of the wire's grit. Worse, the act of cutting introduces <strong>subsurface damage</strong> — microscopic cracks that penetrate tens of microns into the wafer. Any transistor built atop subsurface damage will fail.</p>
 
-<p>So the wafers go to <strong>lapping</strong>: a mechanical pressing between two large rotating plates with abrasive slurry between them, which removes a few microns of material and brings both faces parallel. Then to <strong>etching</strong>: a chemical bath, typically a mixture of hydrofluoric, nitric, and acetic acids, which dissolves another few microns and chemically removes the damaged surface layer. By this point the wafer is around 800 µm thick, smooth, and clean — but not yet flat enough.</p>
+<p id="p-ed3e43c6">So the wafers go to <strong>lapping</strong>: a mechanical pressing between two large rotating plates with abrasive slurry between them, which removes a few microns of material and brings both faces parallel. Then to <strong>etching</strong>: a chemical bath, typically a mixture of hydrofluoric, nitric, and acetic acids, which dissolves another few microns and chemically removes the damaged surface layer. By this point the wafer is around 800 µm thick, smooth, and clean — but not yet flat enough.</p>
 
 <h2 id="cmp">The mirror finish</h2>
 
-<p>The last step is <strong>chemical-mechanical polishing</strong>, or CMP, and it is one of the great unsung technologies of the modern world.</p>
+<p id="p-d20c0db6">The last step is <strong>chemical-mechanical polishing</strong>, or CMP, and it is one of the great unsung technologies of the modern world.</p>
 
-<p>The wafer rides face-down on a rotating platen covered with a soft polyurethane pad. Between the wafer and the pad, a continuous stream of slurry — colloidal silica suspended in alkaline solution — flows. The pad's gentle pressure and the slurry's mild chemical attack act in concert: high spots get worn down faster than low spots, because they take more pressure. Over many minutes, the wafer's surface becomes flat to within a single nanometer across its entire 300 mm face. Stand at one edge and look across, and you are looking across a mirror so perfect that the eye cannot find a flaw.</p>
+<p id="p-683fa605">The wafer rides face-down on a rotating platen covered with a soft polyurethane pad. Between the wafer and the pad, a continuous stream of slurry — colloidal silica suspended in alkaline solution — flows. The pad's gentle pressure and the slurry's mild chemical attack act in concert: high spots get worn down faster than low spots, because they take more pressure. Over many minutes, the wafer's surface becomes flat to within a single nanometer across its entire 300 mm face. Stand at one edge and look across, and you are looking across a mirror so perfect that the eye cannot find a flaw.</p>
 
 <div class="aside" data-tone="copper">
   <span class="aside__label">A scale aside</span>
-  <p>A flatness of less than one nanometer across 300 millimeters is roughly equivalent to <strong>polishing a football field flat to within the diameter of a single hydrogen atom</strong>. CMP achieves this routinely, on hundreds of millions of wafers per year, in foundries you have never heard of, in cities you couldn't find on a map.</p>
+  <p id="p-980195de">A flatness of less than one nanometer across 300 millimeters is roughly equivalent to <strong>polishing a football field flat to within the diameter of a single hydrogen atom</strong>. CMP achieves this routinely, on hundreds of millions of wafers per year, in foundries you have never heard of, in cities you couldn't find on a map.</p>
 </div>
 
 <h2 id="inspection">What inspectors look for</h2>
 
-<p>Before the wafer leaves the wafer-supplier and enters the foundry, it is inspected. Optical scanners scan the surface for particles down to perhaps 30 nm. Stress-induced defects are checked with X-ray topography. Thickness, flatness, and edge profile are measured at hundreds of points. Bow and warp — the macroscopic curvature — must be tens of microns or less.</p>
+<p id="p-dc8cf53f">Before the wafer leaves the wafer-supplier and enters the foundry, it is inspected. Optical scanners scan the surface for particles down to perhaps 30 nm. Stress-induced defects are checked with X-ray topography. Thickness, flatness, and edge profile are measured at hundreds of points. Bow and warp — the macroscopic curvature — must be tens of microns or less.</p>
 
-<p>The wafer that passes is now ready for the next leg of its journey: not as raw material anymore, but as the substrate on which billions of features will be patterned. It will leave the wafer fab clean, dry, untouched by human hands, in a sealed cassette, and travel — usually to Taiwan — where it will be attacked by light, by gas, and by ions, and eventually emerge as something altogether stranger.</p>
+<p id="p-ff08b0ad">The wafer that passes is now ready for the next leg of its journey: not as raw material anymore, but as the substrate on which billions of features will be patterned. It will leave the wafer fab clean, dry, untouched by human hands, in a sealed cassette, and travel — usually to Taiwan — where it will be attacked by light, by gas, and by ions, and eventually emerge as something altogether stranger.</p>
 
-<p>But before any of that can happen, somebody has to design what goes on it.</p>
+<p id="p-e496e781">But before any of that can happen, somebody has to design what goes on it.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 320" role="img" aria-label="Stages of wafer finishing: ingot, slice, lap, etch, polish">
@@ -323,4 +332,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

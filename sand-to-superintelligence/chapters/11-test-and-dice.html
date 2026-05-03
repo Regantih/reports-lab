@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="11-test-and-dice">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">wafer prober</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">probe card</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">600 tests per die</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">yield map</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">scribe lines</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">dicing</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">known-good dies</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="11-test-and-dice" data-answer-key="c">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — what is the approximate cost of a single known-good Rubin GPU die after wafer test?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 11</div>
     <h1 class="ch-header__title">Test and Dice</h1>
     <p class="ch-header__dek">Yield, the industry's most guarded secret</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain how wafer probe maps yield without destroying the wafer</li><li>State the typical early yield range for a leading-edge reticle-limit chip and derive cost-per-die from it</li><li>Name the three binning outcomes after probe and explain why a partial-pass die can still ship</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">~600</div><div class="stat__label">tests per die at probe</div></div><div class="stat"><div class="stat__num">60–80<em>%</em></div><div class="stat__label">typical yield, leading-edge</div></div><div class="stat"><div class="stat__num">~$10,000</div><div class="stat__label">cost per known-good Rubin die</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="11-test-and-dice">
   <div class="ladder__bar">
@@ -106,35 +115,35 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-question">The question every wafer asks</a></li><li><a href="#probe">Wafer probe</a></li><li><a href="#yield">What yield really means</a></li><li><a href="#dice">The dice</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">A wafer that has just emerged from the BEOL is — in principle — finished silicon. In practice, no one yet knows whether any of its hundreds of dies actually work. Every wafer carries some number of fatal defects: a particle that fell on a critical layer at the wrong moment, a misalignment between two masks, a contamination from a chemical bath. The defects are random in time and place; the chips on the wafer are correlated only by their unfortunate proximity to whichever defect found them.</p>
+<p class="lede" id="p-46306308">A wafer that has just emerged from the BEOL is — in principle — finished silicon. In practice, no one yet knows whether any of its hundreds of dies actually work. Every wafer carries some number of fatal defects: a particle that fell on a critical layer at the wrong moment, a misalignment between two masks, a contamination from a chemical bath. The defects are random in time and place; the chips on the wafer are correlated only by their unfortunate proximity to whichever defect found them.</p>
 
-<p>The job of <strong>wafer test</strong> is to find out, die by die, which ones work.</p>
+<p id="p-70eb1252">The job of <strong>wafer test</strong> is to find out, die by die, which ones work.</p>
 
 <h2 id="the-question">The question every wafer asks</h2>
 
-<p>Probe test happens on a machine called a <strong>wafer prober</strong>. The wafer is held flat on a vacuum chuck. A probe card — a fixture studded with hundreds of fine, gold-plated tungsten or MEMS needles — descends until each needle touches one of the bond pads on a die. Currents and voltages flow. Test patterns run.</p>
+<p id="p-699eebbe">Probe test happens on a machine called a <strong>wafer prober</strong>. The wafer is held flat on a vacuum chuck. A probe card — a fixture studded with hundreds of fine, gold-plated tungsten or MEMS needles — descends until each needle touches one of the bond pads on a die. Currents and voltages flow. Test patterns run.</p>
 
-<p>For a complex chip like Rubin, the probe sequence runs hundreds or thousands of distinct tests. DC tests measure leakage currents and power-supply impedance. Functional tests stream patterns through the chip's pipelines and check the outputs. Critical paths are clocked at multiple frequencies to find the fastest the die can reliably run. Memory tests scrub the on-die SRAM. Embedded test infrastructure — circuits added by the designers specifically for testing — exercises the chip's internals.</p>
+<p id="p-9ea1ef32">For a complex chip like Rubin, the probe sequence runs hundreds or thousands of distinct tests. DC tests measure leakage currents and power-supply impedance. Functional tests stream patterns through the chip's pipelines and check the outputs. Critical paths are clocked at multiple frequencies to find the fastest the die can reliably run. Memory tests scrub the on-die SRAM. Embedded test infrastructure — circuits added by the designers specifically for testing — exercises the chip's internals.</p>
 
-<p>If everything passes, the die is binned and noted as good. If any test fails, the die is marked as defective. Some failures are recoverable — a die may pass at a slower clock or with one core disabled, and can be sold as a lower-tier product. Others are fatal.</p>
+<p id="p-e6427f37">If everything passes, the die is binned and noted as good. If any test fails, the die is marked as defective. Some failures are recoverable — a die may pass at a slower clock or with one core disabled, and can be sold as a lower-tier product. Others are fatal.</p>
 
 <h2 id="probe">Wafer probe</h2>
 
-<p>The whole process, for a 300 mm wafer of large dies like Rubin, takes hours. The prober steps from die to die, probe card lifting and lowering hundreds of times. The result is a <strong>wafer map</strong>: a record of every die's location, every test result, and (for survivors) which performance bin they fell into. The map travels with the wafer to the next stage.</p>
+<p id="p-deebf0a0">The whole process, for a 300 mm wafer of large dies like Rubin, takes hours. The prober steps from die to die, probe card lifting and lowering hundreds of times. The result is a <strong>wafer map</strong>: a record of every die's location, every test result, and (for survivors) which performance bin they fell into. The map travels with the wafer to the next stage.</p>
 
 <h2 id="yield">What yield really means</h2>
 
-<p>The fraction of working dies — <strong>yield</strong> — is the most jealously guarded number in semiconductors. Foundries publish yield in the loosest possible terms; designers and customers learn it through hard contractual negotiation; analysts estimate it through indirect signals like reticle costs and product pricing.</p>
+<p id="p-0090068c">The fraction of working dies — <strong>yield</strong> — is the most jealously guarded number in semiconductors. Foundries publish yield in the loosest possible terms; designers and customers learn it through hard contractual negotiation; analysts estimate it through indirect signals like reticle costs and product pricing.</p>
 
-<p>For mature, high-volume products, yields can exceed 90%. For leading-edge logic at the bleeding edge — and Rubin, on TSMC's N3P process at the reticle limit, is decisively at the bleeding edge — early yields are far lower. A yield of 50% on Rubin would not be surprising for the first months of production. Every wafer that costs perhaps $20,000 to produce yields perhaps thirty saleable chips. The cost-per-die is the inverse of yield, and it dominates the chip's economics.</p>
+<p id="p-dee62867">For mature, high-volume products, yields can exceed 90%. For leading-edge logic at the bleeding edge — and Rubin, on TSMC's N3P process at the reticle limit, is decisively at the bleeding edge — early yields are far lower. A yield of 50% on Rubin would not be surprising for the first months of production. Every wafer that costs perhaps $20,000 to produce yields perhaps thirty saleable chips. The cost-per-die is the inverse of yield, and it dominates the chip's economics.</p>
 
 <blockquote>The yield curve is the silicon industry's central drama. Every node begins with low yields and unhappy customers; over months and years of process improvement, yield climbs, costs fall, and the chip becomes profitable. By the time it does, the next node is already starting the same struggle.</blockquote>
 
 <h2 id="dice">The dice</h2>
 
-<p>Once the map is recorded, the wafer is sent to a dicing saw or laser. Channels in the silicon between dies — called <strong>scribe lines</strong> — are sliced through, and the wafer falls apart into hundreds of individual dies. Bad dies are discarded. Good dies are loaded into trays.</p>
+<p id="p-1af533f2">Once the map is recorded, the wafer is sent to a dicing saw or laser. Channels in the silicon between dies — called <strong>scribe lines</strong> — are sliced through, and the wafer falls apart into hundreds of individual dies. Bad dies are discarded. Good dies are loaded into trays.</p>
 
-<p>For most chips in the world, this is the moment of maturity. The dies are packaged, sold, and shipped. For the dies destined to become Rubin GPUs, however, this is barely the halfway mark. The most complex packaging the industry has ever attempted — the integration of a GPU die with stacks of high-bandwidth memory on a silicon interposer — is what comes next.</p>
+<p id="p-593fd03e">For most chips in the world, this is the moment of maturity. The dies are packaged, sold, and shipped. For the dies destined to become Rubin GPUs, however, this is barely the halfway mark. The most complex packaging the industry has ever attempted — the integration of a GPU die with stacks of high-bandwidth memory on a silicon interposer — is what comes next.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 280" role="img" aria-label="Wafer yield map: most dies functional, some marked as failures">
@@ -284,4 +293,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

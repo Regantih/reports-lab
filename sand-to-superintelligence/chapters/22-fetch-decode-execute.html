@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="22-fetch-decode-execute">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">program counter</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">fetch instruction</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">decode opcode</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">execute</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">write back</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">increment PC</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">repeat at 3 GHz</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="22-fetch-decode-execute" data-answer-key="c">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — roughly how many instructions does a single CPU core execute per second?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 22</div>
     <h1 class="ch-header__title">Fetch, Decode, Execute</h1>
     <p class="ch-header__dek">The instruction cycle and a CPU's to-do list</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Trace all five stages of the fetch-decode-execute loop for a single ADD instruction</li><li>Explain what the program counter holds and why its integrity is necessary for sequential program correctness</li><li>State what changes in the loop when a branch instruction is fetched and taken</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">3 <em>billion</em></div><div class="stat__label">instructions per second per core</div></div><div class="stat"><div class="stat__num">4 <em>bytes</em></div><div class="stat__label">size of a typical instruction</div></div><div class="stat"><div class="stat__num">1</div><div class="stat__label">register that holds the world: the program counter</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="22-fetch-decode-execute">
   <div class="ladder__bar">
@@ -106,15 +115,15 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-loop">The loop at the bottom</a></li><li><a href="#fetch">Fetch — read the next instruction</a></li><li><a href="#decode-execute">Decode and execute</a></li><li><a href="#everything-is-this">Everything is this</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">If you opened up a CPU and asked it what it does, the answer would fit on a postcard. Read an instruction. Figure out what it means. Do it. Move on. Repeat, three billion times a second, until power is removed.</p>
+<p class="lede" id="p-43a1815a">If you opened up a CPU and asked it what it does, the answer would fit on a postcard. Read an instruction. Figure out what it means. Do it. Move on. Repeat, three billion times a second, until power is removed.</p>
 
-<p>This loop — <strong>fetch, decode, execute</strong> — is the entire mechanical heart of every general-purpose computer ever built. Babbage's Analytical Engine had it, on paper. The ENIAC had it. The 8088 in the original IBM PC had it. The <a href="https://www.amd.com/en/products/cpu/amd-ryzen-9-7950x">AMD Zen 5</a> in your gaming desktop has it. So does the <a href="https://www.apple.com/newsroom/2024/10/new-macbook-pro-features-m4-family-of-chips-and-apple-intelligence/">M4 in a new MacBook</a>, and the Vera CPU in a Rubin superchip. The loop is older than electronics. It will outlive most things.</p>
+<p id="p-3e87e7a6">This loop — <strong>fetch, decode, execute</strong> — is the entire mechanical heart of every general-purpose computer ever built. Babbage's Analytical Engine had it, on paper. The ENIAC had it. The 8088 in the original IBM PC had it. The <a href="https://www.amd.com/en/products/cpu/amd-ryzen-9-7950x">AMD Zen 5</a> in your gaming desktop has it. So does the <a href="https://www.apple.com/newsroom/2024/10/new-macbook-pro-features-m4-family-of-chips-and-apple-intelligence/">M4 in a new MacBook</a>, and the Vera CPU in a Rubin superchip. The loop is older than electronics. It will outlive most things.</p>
 
 <h2 id="the-loop">The loop at the bottom</h2>
 
-<p>Inside a CPU sits a special-purpose register called the <strong>program counter</strong>, or PC. (On x86 it's called <code>rip</code>; on ARM, <code>pc</code>; the idea is the same.) It holds a single 64-bit number: the memory address of the next instruction to run.</p>
+<p id="p-9f2ec9e2">Inside a CPU sits a special-purpose register called the <strong>program counter</strong>, or PC. (On x86 it's called <code>rip</code>; on ARM, <code>pc</code>; the idea is the same.) It holds a single 64-bit number: the memory address of the next instruction to run.</p>
 
-<p>That is the entire state, at the highest level, of what a CPU is doing. Everything else — the contents of registers, the values in cache, the bits sitting in DRAM — is auxiliary. The PC says where the next instruction lives, and the loop is:</p>
+<p id="p-2b91cb8c">That is the entire state, at the highest level, of what a CPU is doing. Everything else — the contents of registers, the values in cache, the bits sitting in DRAM — is auxiliary. The PC says where the next instruction lives, and the loop is:</p>
 
 <ol>
   <li><strong>Fetch</strong> the instruction at the address held in PC.</li>
@@ -124,38 +133,38 @@
   <li>GOTO 1.</li>
 </ol>
 
-<p>That's it. There is no plan, no consciousness, no lookahead at the top level — just an obedient creature that does what the bytes at PC tell it to, then asks for the next bytes.</p>
+<p id="p-06325286">That's it. There is no plan, no consciousness, no lookahead at the top level — just an obedient creature that does what the bytes at PC tell it to, then asks for the next bytes.</p>
 
 <h2 id="fetch">Fetch — read the next instruction</h2>
 
-<p>The fetch stage sends the value of PC to the memory subsystem and gets back, ideally within a cycle or two, the bytes of the next instruction. On x86 this is a variable-length affair (an x86 instruction can be 1 to 15 bytes); on ARM and most other modern ISAs, it's a clean 4 bytes. Fetched instructions land in the <strong>instruction cache</strong>, a small, fast SRAM near the front of the CPU dedicated entirely to instruction bytes.</p>
+<p id="p-7e77d326">The fetch stage sends the value of PC to the memory subsystem and gets back, ideally within a cycle or two, the bytes of the next instruction. On x86 this is a variable-length affair (an x86 instruction can be 1 to 15 bytes); on ARM and most other modern ISAs, it's a clean 4 bytes. Fetched instructions land in the <strong>instruction cache</strong>, a small, fast SRAM near the front of the CPU dedicated entirely to instruction bytes.</p>
 
-<p>This is the first place memory hierarchy bites you. If the instruction is in the L1 instruction cache, fetch takes 4 cycles. If it has to come from L2, 12 cycles. From L3, 40. From DRAM, 300. From disk, ten million. A CPU spends an enormous amount of its design budget — and most of its die area — on hiding this latency, by speculatively fetching instructions ahead of where the PC currently points and tucking them into cache before the chip realizes it wants them.</p>
+<p id="p-1887eeaa">This is the first place memory hierarchy bites you. If the instruction is in the L1 instruction cache, fetch takes 4 cycles. If it has to come from L2, 12 cycles. From L3, 40. From DRAM, 300. From disk, ten million. A CPU spends an enormous amount of its design budget — and most of its die area — on hiding this latency, by speculatively fetching instructions ahead of where the PC currently points and tucking them into cache before the chip realizes it wants them.</p>
 
 <h2 id="decode-execute">Decode and execute</h2>
 
-<p>Decoding is taking the raw bytes of an instruction and figuring out what it means. The first few bits — the <strong>opcode</strong> — say what operation: ADD, LOAD, BRANCH, MULTIPLY. The remaining bits identify the operands: which registers to read from, which to write to, sometimes a constant value baked into the instruction itself. The decoder is a small piece of combinational logic that takes the instruction word and produces, in a single cycle, the dozens of control signals (<em>"send register x3 to ALU input A"</em>, <em>"select ADD operation"</em>, <em>"write result to register x7"</em>) that the rest of the pipeline needs.</p>
+<p id="p-2908ddea">Decoding is taking the raw bytes of an instruction and figuring out what it means. The first few bits — the <strong>opcode</strong> — say what operation: ADD, LOAD, BRANCH, MULTIPLY. The remaining bits identify the operands: which registers to read from, which to write to, sometimes a constant value baked into the instruction itself. The decoder is a small piece of combinational logic that takes the instruction word and produces, in a single cycle, the dozens of control signals (<em>"send register x3 to ALU input A"</em>, <em>"select ADD operation"</em>, <em>"write result to register x7"</em>) that the rest of the pipeline needs.</p>
 
-<p>On a modern x86 chip, decoding is genuinely complicated — variable-length instructions, multiple instructions per cycle, internal translation into simpler micro-operations called <a href="https://en.wikipedia.org/wiki/Micro-operation">µops</a>. On ARM and RISC-V, where instructions are fixed-length and regular, it is simpler. Either way, the output is the same: control signals + register reads, ready for the execution stage.</p>
+<p id="p-a71bceeb">On a modern x86 chip, decoding is genuinely complicated — variable-length instructions, multiple instructions per cycle, internal translation into simpler micro-operations called <a href="https://en.wikipedia.org/wiki/Micro-operation">µops</a>. On ARM and RISC-V, where instructions are fixed-length and regular, it is simpler. Either way, the output is the same: control signals + register reads, ready for the execution stage.</p>
 
-<p>Execution is where the actual work happens. For an arithmetic instruction, the operands flow through the ALU and produce a result. For a load, the address-arithmetic unit computes a memory address and the load/store unit launches a memory read. For a branch, the branch unit decides whether to take the branch and computes the new PC. For a multiply or divide, dedicated units do that. For a vector or matrix instruction, an entire wide datapath is fired up.</p>
+<p id="p-3c7a3a04">Execution is where the actual work happens. For an arithmetic instruction, the operands flow through the ALU and produce a result. For a load, the address-arithmetic unit computes a memory address and the load/store unit launches a memory read. For a branch, the branch unit decides whether to take the branch and computes the new PC. For a multiply or divide, dedicated units do that. For a vector or matrix instruction, an entire wide datapath is fired up.</p>
 
 <h2 id="everything-is-this">Everything is this</h2>
 
-<p>Pause and feel the strangeness of this. There is no "program" inside a CPU in any meaningful sense. There is no plan, no agenda, no comprehension of what it is doing. There is one register holding an address, and a loop that fetches, decodes, and executes whatever happens to be at that address, then moves on.</p>
+<p id="p-ce0cebb4">Pause and feel the strangeness of this. There is no "program" inside a CPU in any meaningful sense. There is no plan, no agenda, no comprehension of what it is doing. There is one register holding an address, and a loop that fetches, decodes, and executes whatever happens to be at that address, then moves on.</p>
 
-<p>What we call a "program" is just <em>a particular sequence of bytes laid out in memory</em>, such that when the CPU follows the loop, the side effects — values written to registers, to memory, to the screen — accomplish something useful. A web browser is a sequence of bytes. A game is a sequence of bytes. A neural network's forward pass, ultimately, is a sequence of bytes. The CPU is profoundly, beautifully indifferent to which.</p>
+<p id="p-9b3b6504">What we call a "program" is just <em>a particular sequence of bytes laid out in memory</em>, such that when the CPU follows the loop, the side effects — values written to registers, to memory, to the screen — accomplish something useful. A web browser is a sequence of bytes. A game is a sequence of bytes. A neural network's forward pass, ultimately, is a sequence of bytes. The CPU is profoundly, beautifully indifferent to which.</p>
 
 <blockquote>The CPU does not know it is running Photoshop. It is reading instructions at PC, doing them, advancing PC. Photoshop is what happens when those instructions are arranged just so.</blockquote>
 
-<p>This is the genius of the <a href="https://en.wikipedia.org/wiki/Von_Neumann_architecture">von Neumann architecture</a>, named for the 1945 paper that codified it: code and data live in the same memory, both are bytes, and the CPU's job is to read and act on bytes. It is a simple architecture. Sixty years of optimization later, it is also the only one that has ever mattered at scale.</p>
+<p id="p-64f422a3">This is the genius of the <a href="https://en.wikipedia.org/wiki/Von_Neumann_architecture">von Neumann architecture</a>, named for the 1945 paper that codified it: code and data live in the same memory, both are bytes, and the CPU's job is to read and act on bytes. It is a simple architecture. Sixty years of optimization later, it is also the only one that has ever mattered at scale.</p>
 
 <div class="aside" data-tone="primary">
   <span class="aside__label">A subtle inversion</span>
-  <p>One of the deepest ideas in computing follows from this: <em>code is data</em>. A compiler is a program whose input is bytes (source code) and whose output is bytes (machine code). A program can write another program; a program can write itself. Every JIT compiler, every dynamic linker, every interpreter, every neural network that generates code — all of these depend on the indifference of the CPU to whether the bytes at PC came from disk or from a million NAND gates flipping last microsecond.</p>
+  <p id="p-20fe8e9f">One of the deepest ideas in computing follows from this: <em>code is data</em>. A compiler is a program whose input is bytes (source code) and whose output is bytes (machine code). A program can write another program; a program can write itself. Every JIT compiler, every dynamic linker, every interpreter, every neural network that generates code — all of these depend on the indifference of the CPU to whether the bytes at PC came from disk or from a million NAND gates flipping last microsecond.</p>
 </div>
 
-<p>The CPU is, then, a very simple animal. The interesting part is the contract that tells it which bytes mean what. That contract is called the <em>instruction set architecture</em> — the ISA — and it is the seam between hardware and software, the place where physics ends and meaning begins.</p>
+<p id="p-4ffc4fa2">The CPU is, then, a very simple animal. The interesting part is the contract that tells it which bytes mean what. That contract is called the <em>instruction set architecture</em> — the ISA — and it is the seam between hardware and software, the place where physics ends and meaning begins.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="The fetch decode execute cycle inside a CPU">
@@ -332,4 +341,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

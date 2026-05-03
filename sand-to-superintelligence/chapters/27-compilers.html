@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="27-compilers">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">source code</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">AST</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">LLVM IR</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">optimization passes</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">assembly</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">machine code</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">µops</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">electrons</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="27-compilers" data-answer-key="c">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — how many distinct translation stages lie between a line of Python source code and the electrons that execute it?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 27</div>
     <h1 class="ch-header__title">The Translation Stack</h1>
     <p class="ch-header__dek">Python to bytecode to LLVM to silicon</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Trace the seven translation stages from Python source to electron motion in the CPU</li><li>Explain why LLVM IR is the universal middle language and name three language front-ends that emit it</li><li>State what µops are and explain why a single x86 ADD instruction can decompose into three of them</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">7</div><div class="stat__label">stages of translation between Python and silicon</div></div><div class="stat"><div class="stat__num">LLVM <em>IR</em></div><div class="stat__label">the universal middle language</div></div><div class="stat"><div class="stat__num">~3-5 <em>µops</em></div><div class="stat__label">what one x86 instruction often becomes</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="27-compilers">
   <div class="ladder__bar">
@@ -106,11 +115,11 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#seven-layers">Seven layers of meaning</a></li><li><a href="#source-to-ast">Source to syntax tree</a></li><li><a href="#ir-and-llvm">Intermediate representation</a></li><li><a href="#assembly-to-machine">Assembly to machine code</a></li><li><a href="#uops">Down to micro-ops</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">When you type <code>print("hello")</code> and hit enter, you are issuing an instruction in a language nothing in the silicon understands. The transistors do not know about strings, or about printing, or about Python. Between your sentence and the electrons that respond to it, there are seven distinct languages and seven translations. This chapter walks down them.</p>
+<p class="lede" id="p-a267bf7a">When you type <code>print("hello")</code> and hit enter, you are issuing an instruction in a language nothing in the silicon understands. The transistors do not know about strings, or about printing, or about Python. Between your sentence and the electrons that respond to it, there are seven distinct languages and seven translations. This chapter walks down them.</p>
 
 <h2 id="seven-layers">Seven layers of meaning</h2>
 
-<p>Each layer of the translation stack is a more constrained, more concrete version of the one above. Each is the input to the next:</p>
+<p id="p-444afd05">Each layer of the translation stack is a more constrained, more concrete version of the one above. Each is the input to the next:</p>
 
 <ol>
   <li><strong>Source code.</strong> What you wrote — Python, C++, Rust, Swift.</li>
@@ -124,31 +133,31 @@
 
 <h2 id="source-to-ast">Source to syntax tree</h2>
 
-<p>The first stage is parsing. The compiler — or interpreter — reads your source as a stream of characters and groups them into <strong>tokens</strong> (keywords, identifiers, literals, punctuation), then assembles those tokens into a tree that captures the program's structure. The Python interpreter does this in <a href="https://docs.python.org/3/library/ast.html">CPython's <code>ast</code> module</a>; clang does it in <a href="https://clang.llvm.org/docs/IntroductionToTheClangAST.html">its own AST</a>. A function call becomes a node with a callee and a list of arguments. A loop becomes a node with a condition and a body.</p>
+<p id="p-20713571">The first stage is parsing. The compiler — or interpreter — reads your source as a stream of characters and groups them into <strong>tokens</strong> (keywords, identifiers, literals, punctuation), then assembles those tokens into a tree that captures the program's structure. The Python interpreter does this in <a href="https://docs.python.org/3/library/ast.html">CPython's <code>ast</code> module</a>; clang does it in <a href="https://clang.llvm.org/docs/IntroductionToTheClangAST.html">its own AST</a>. A function call becomes a node with a callee and a list of arguments. A loop becomes a node with a condition and a body.</p>
 
-<p>The AST is where most type-checking, scoping, and semantic analysis happens. It is the last layer that still resembles what the programmer wrote.</p>
+<p id="p-2539e8a2">The AST is where most type-checking, scoping, and semantic analysis happens. It is the last layer that still resembles what the programmer wrote.</p>
 
 <h2 id="ir-and-llvm">Intermediate representation</h2>
 
-<p>From the AST, the compiler emits an <strong>intermediate representation</strong> (IR). For Python, this is bytecode — small, stack-machine instructions that the CPython virtual machine executes one by one. For compiled languages, it is something more powerful: <a href="https://llvm.org/docs/LangRef.html">LLVM IR</a>, a typed, register-based language that has become the lingua franca of modern compilers. Clang, Rust, Swift, Kotlin Native, and many others all emit LLVM IR.</p>
+<p id="p-489fee8c">From the AST, the compiler emits an <strong>intermediate representation</strong> (IR). For Python, this is bytecode — small, stack-machine instructions that the CPython virtual machine executes one by one. For compiled languages, it is something more powerful: <a href="https://llvm.org/docs/LangRef.html">LLVM IR</a>, a typed, register-based language that has become the lingua franca of modern compilers. Clang, Rust, Swift, Kotlin Native, and many others all emit LLVM IR.</p>
 
-<p>LLVM IR is where most optimization happens. The compiler can inline functions, eliminate dead code, hoist invariant expressions out of loops, vectorize, unroll, and rearrange — all without yet knowing whether it will run on x86, ARM, or RISC-V. <a href="https://llvm.org/devmtg/">LLVM's developer meetings</a> are where the modern art of optimization is most visibly practiced.</p>
+<p id="p-3030922d">LLVM IR is where most optimization happens. The compiler can inline functions, eliminate dead code, hoist invariant expressions out of loops, vectorize, unroll, and rearrange — all without yet knowing whether it will run on x86, ARM, or RISC-V. <a href="https://llvm.org/devmtg/">LLVM's developer meetings</a> are where the modern art of optimization is most visibly practiced.</p>
 
 <h2 id="assembly-to-machine">Assembly to machine code</h2>
 
-<p>Once optimization is done, the back-end emits <strong>assembly</strong> — instructions in the target ISA, with named registers and labels. This is the human-readable form. It is then trivially translated into <strong>machine code</strong>: the actual bytes the CPU will fetch.</p>
+<p id="p-dba6651b">Once optimization is done, the back-end emits <strong>assembly</strong> — instructions in the target ISA, with named registers and labels. This is the human-readable form. It is then trivially translated into <strong>machine code</strong>: the actual bytes the CPU will fetch.</p>
 
-<p>The output is an <strong>object file</strong> in a standard format — <a href="https://refspecs.linuxbase.org/elf/elf.pdf">ELF</a> on Linux, Mach-O on macOS, PE on Windows. The linker then stitches your object file together with libraries (libc, libm, libstdc++) into the final executable, resolving every reference to a function or variable into a real address.</p>
+<p id="p-4e06a26b">The output is an <strong>object file</strong> in a standard format — <a href="https://refspecs.linuxbase.org/elf/elf.pdf">ELF</a> on Linux, Mach-O on macOS, PE on Windows. The linker then stitches your object file together with libraries (libc, libm, libstdc++) into the final executable, resolving every reference to a function or variable into a real address.</p>
 
 <h2 id="uops">Down to micro-ops</h2>
 
-<p>You might think the story ends with machine code. It does not. Inside a modern x86 CPU, each fetched instruction is decoded into one or more <strong>micro-operations</strong> (µops). A single <code>ADD [memory], reg</code> instruction might become three µops: a load, an add, and a store. The CPU then schedules these µops out-of-order, executes them in parallel on multiple ports, and retires their results in the original program order.</p>
+<p id="p-c57af693">You might think the story ends with machine code. It does not. Inside a modern x86 CPU, each fetched instruction is decoded into one or more <strong>micro-operations</strong> (µops). A single <code>ADD [memory], reg</code> instruction might become three µops: a load, an add, and a store. The CPU then schedules these µops out-of-order, executes them in parallel on multiple ports, and retires their results in the original program order.</p>
 
-<p>This is why modern CPUs can claim to execute <em>more than one instruction per cycle</em>. They do not, exactly. They execute many micro-ops per cycle, and present the illusion of an in-order machine to the programmer. <a href="https://www.intel.com/content/www/us/en/develop/documentation/cpp-compiler-developer-guide-and-reference/top.html">Intel's optimization guide</a> documents the µop breakdown of every instruction. ARM and Apple Silicon CPUs use similar internal pipelines.</p>
+<p id="p-fafd090e">This is why modern CPUs can claim to execute <em>more than one instruction per cycle</em>. They do not, exactly. They execute many micro-ops per cycle, and present the illusion of an in-order machine to the programmer. <a href="https://www.intel.com/content/www/us/en/develop/documentation/cpp-compiler-developer-guide-and-reference/top.html">Intel's optimization guide</a> documents the µop breakdown of every instruction. ARM and Apple Silicon CPUs use similar internal pipelines.</p>
 
-<p>So when you type <code>print("hello")</code>, your text is transformed seven times before it becomes electron motion. Six of those transformations happen in software, before the program ever runs. The seventh — machine code into µops — happens inside the CPU itself, every cycle, at runtime, billions of times a second.</p>
+<p id="p-5ee63c6b">So when you type <code>print("hello")</code>, your text is transformed seven times before it becomes electron motion. Six of those transformations happen in software, before the program ever runs. The seventh — machine code into µops — happens inside the CPU itself, every cycle, at runtime, billions of times a second.</p>
 
-<p>This stack is what makes general-purpose CPUs possible. But it is also the stack that AI workloads outgrew. The next chapter is about a different kind of mind, optimized for a different shape of problem.</p>
+<p id="p-08965439">This stack is what makes general-purpose CPUs possible. But it is also the stack that AI workloads outgrew. The next chapter is about a different kind of mind, optimized for a different shape of problem.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 400" role="img" aria-label="Compilation stack from Python source to micro-ops">
@@ -333,4 +342,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

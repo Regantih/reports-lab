@@ -29,11 +29,13 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page">
+  <script id="srs-drills-40-compounding" type="application/json">[{"q": "What does Metcalfe's Law claim about network value, and what is the chapter's caveat?", "a": "Value grows as the square of connected nodes; the caveat is that this overstates for mature networks where most node pairs never actually communicate."}, {"q": "Name the two genuine compounding loops the chapter identifies in the AI stack.", "a": "The data flywheel and the agent flywheel."}, {"q": "What is the data flywheel loop, step by step?", "a": "Deploy model \u2192 users interact \u2192 interactions produce signal \u2192 signal fine-tunes the model \u2192 next version is better \u2192 usage grows \u2192 more signal."}, {"q": "What is the agent flywheel loop, step by step?", "a": "Agent accesses a tool \u2192 accomplishes task \u2192 success is logged \u2192 tool interface is refined \u2192 next agent does better \u2192 new tools are exposed \u2192 capability grows."}, {"q": "Does a strong data flywheel let a weaker model catch a stronger one?", "a": "No \u2014 the flywheel amplifies an existing lead; it does not invert a quality gap."}, {"q": "What is 'model collapse' and who named it?", "a": "The recursive narrowing of training data on dominant-model biases when models train on other models' outputs; named by Shumailov et al. (2023)."}, {"q": "What is 'tool-bloat collapse' in agent systems?", "a": "When the tool ecosystem grows past a certain size, models lose track of which tool to use and performance degrades \u2014 several agent frameworks have hit this wall."}, {"q": "How many years of headstart does the chapter estimate current AI incumbents have if they execute well?", "a": "~3\u20135 years."}, {"q": "Why does the chapter say AI moats are less durable than pre-AI internet platform moats?", "a": "Because AI capability depends partly on model architecture, which improves rapidly across the whole industry through open releases \u2014 a late entrant with a better model can catch up faster than in social networks or marketplaces."}, {"q": "By roughly how much did the deployed agent population grow from 2024 to 2026?", "a": "~10\u00d7 \u2014 roughly an order of magnitude."}]</script>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Drill cards · Chapter 40</div>
     <div class="ch-header__num">Drills</div>
@@ -41,6 +43,10 @@
     <p class="ch-header__dek">10 atomic recall cards. Export to Anki and let spaced repetition do its slow work.</p>
   </header>
   <div class="drills__wrap">
+    <div class="srs-banner" data-srs-banner>
+  <span class="srs-banner__label"><span class="srs-banner__count" data-srs-count>10</span> cards due for review</span>
+  <button type="button" class="srs-banner__btn" data-srs-open="40-compounding">Review now</button>
+</div>
     <div class="drills__actions">
       <a class="learn__btn learn__btn--primary" href="40-compounding-drills.tsv" download>Download Anki TSV</a>
       <a class="learn__btn learn__btn--ghost" href="40-compounding.html">← Back to chapter</a>
@@ -97,4 +103,5 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
 </body></html>

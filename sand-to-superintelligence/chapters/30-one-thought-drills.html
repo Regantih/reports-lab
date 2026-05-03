@@ -29,11 +29,13 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page">
+  <script id="srs-drills-30-one-thought" type="application/json">[{"q": "What is a 'token' in the context of a frontier LLM?", "a": "A vocabulary unit \u2014 a subword piece \u2014 produced by a learned tokenizer like tiktoken or SentencePiece. Encoded as an integer in the range 0 to ~vocab_size."}, {"q": "Roughly how many multiplications per generated token on a frontier model?", "a": "~10^11 \u2014 a few hundred billion. A full response of a few thousand tokens climbs into the quadrillions (~10^15)."}, {"q": "Roughly how much wall-clock time per token, on a frontier system?", "a": "~50 ms."}, {"q": "Roughly how much energy per generated token?", "a": "~1 joule."}, {"q": "What is the embedding table's shape?", "a": "(vocab_size \u00d7 hidden_dim), e.g. ~100,000 \u00d7 ~16,000."}, {"q": "What three tensors does attention compute from the input?", "a": "Queries (Q), keys (K), and values (V), each via a linear projection of the input."}, {"q": "What does the QK^T matrix represent, post-softmax?", "a": "A weighted attention pattern: how much each token should attend to every other token."}, {"q": "What does the unembedding step produce?", "a": "Logits \u2014 one real number per vocabulary entry \u2014 which softmax converts into a probability distribution."}, {"q": "Why does KV caching speed up the autoregressive loop?", "a": "Previous tokens' K and V tensors are cached, so only the new token requires a fresh forward pass instead of recomputing the entire prefix."}, {"q": "Name 4 sampling rules used at the softmax-to-token step.", "a": "Argmax (greedy), top-k, top-p (nucleus), temperature-scaled sampling."}]</script>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Drill cards · Chapter 30</div>
     <div class="ch-header__num">Drills</div>
@@ -41,6 +43,10 @@
     <p class="ch-header__dek">10 atomic recall cards. Export to Anki and let spaced repetition do its slow work.</p>
   </header>
   <div class="drills__wrap">
+    <div class="srs-banner" data-srs-banner>
+  <span class="srs-banner__label"><span class="srs-banner__count" data-srs-count>10</span> cards due for review</span>
+  <button type="button" class="srs-banner__btn" data-srs-open="30-one-thought">Review now</button>
+</div>
     <div class="drills__actions">
       <a class="learn__btn learn__btn--primary" href="30-one-thought-drills.tsv" download>Download Anki TSV</a>
       <a class="learn__btn learn__btn--ghost" href="30-one-thought.html">← Back to chapter</a>
@@ -97,4 +103,5 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
 </body></html>

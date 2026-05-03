@@ -29,11 +29,13 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page">
+  <script id="srs-drills-19-switch-to-logic" type="application/json">[{"q": "What does NAND stand for?", "a": "Not AND."}, {"q": "How many transistors does a two-input NAND gate use in CMOS?", "a": "Four: two PMOS in parallel at the top, two NMOS in series at the bottom."}, {"q": "How many transistors does a two-input NOR gate use in CMOS?", "a": "Four \u2014 the same count as NAND, but with series and parallel positions swapped."}, {"q": "Why does NAND switch faster than NOR?", "a": "NAND uses NMOS transistors in series for its pull-down; electrons in NMOS are roughly twice as mobile as holes in PMOS, which NOR uses in series for its pull-up."}, {"q": "What makes NAND \u2018functionally complete\u2019?", "a": "Every possible boolean function \u2014 any truth table, any number of inputs \u2014 can be built from NAND gates alone."}, {"q": "How do you build a NOT gate from a NAND gate?", "a": "Tie both inputs of a two-input NAND together."}, {"q": "Who proved that boolean algebra is the natural mathematics for switching circuits?", "a": "Claude Shannon, in his 1937 master\u2019s thesis."}, {"q": "When does a CMOS gate consume power?", "a": "Only when it switches \u2014 when transistor capacitances are charged or discharged. Idle transistors are essentially free."}, {"q": "How many NAND gates does a full adder require?", "a": "Nine NAND gates per full adder."}, {"q": "Roughly how many gates does a frontier GPU contain?", "a": "On the order of 10<sup>11</sup> \u2014 about a hundred billion gates."}]</script>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Drill cards · Chapter 19</div>
     <div class="ch-header__num">Drills</div>
@@ -41,6 +43,10 @@
     <p class="ch-header__dek">10 atomic recall cards. Export to Anki and let spaced repetition do its slow work.</p>
   </header>
   <div class="drills__wrap">
+    <div class="srs-banner" data-srs-banner>
+  <span class="srs-banner__label"><span class="srs-banner__count" data-srs-count>10</span> cards due for review</span>
+  <button type="button" class="srs-banner__btn" data-srs-open="19-switch-to-logic">Review now</button>
+</div>
     <div class="drills__actions">
       <a class="learn__btn learn__btn--primary" href="19-switch-to-logic-drills.tsv" download>Download Anki TSV</a>
       <a class="learn__btn learn__btn--ghost" href="19-switch-to-logic.html">← Back to chapter</a>
@@ -97,4 +103,5 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
 </body></html>

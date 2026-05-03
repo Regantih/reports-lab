@@ -29,11 +29,13 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page">
+  <script id="srs-drills-23-isa" type="application/json">[{"q": "What does ISA stand for, and what is its role?", "a": "Instruction Set Architecture. It is the contract specifying exactly which bytes a CPU accepts and what they mean \u2014 the seam between hardware and software."}, {"q": "In what year was x86 first defined, and with which processor?", "a": "1978, with the Intel 8086."}, {"q": "How many instructions are in modern x86-64?", "a": "Roughly 1,500."}, {"q": "How many instructions are in baseline RISC-V?", "a": "Roughly 50."}, {"q": "What does CISC stand for, and what is its main characteristic?", "a": "Complex Instruction Set Computer. Rich, expressive, variable-length instructions (1\u201315 bytes on x86) that pack more semantics into each instruction."}, {"q": "What does RISC stand for, and what is its main characteristic?", "a": "Reduced Instruction Set Computer. Simple, regular, fixed-length instructions (4 bytes) that can be pipelined and clocked faster; the compiler composes complex behaviour from simple parts."}, {"q": "How does a modern x86 chip reconcile a CISC ISA with RISC execution?", "a": "It translates CISC instructions into RISC-like \u00b5ops during decode, then executes those \u00b5ops in a deeply pipelined, out-of-order RISC core. The ISA stays CISC; the engine inside is RISC."}, {"q": "What is PTX, and how does it differ from SASS?", "a": "PTX (Parallel Thread Execution) is NVIDIA\u2019s virtual ISA, compiled from CUDA. SASS is the real hardware ISA. PTX is JIT-compiled to SASS at runtime, allowing programs to run on future GPUs without recompilation."}, {"q": "What is a warp in the GPU ISA context?", "a": "A group of 32 threads that execute a single PTX instruction simultaneously, each operating on different data \u2014 SIMD-style parallelism."}, {"q": "What is RISC-V, and why is it significant?", "a": "An open-source ISA from UC Berkeley that anyone can implement royalty-free. It is small, modern, and modular; most major hyperscalers and AI startups have RISC-V projects underway, often winning quietly in chip controllers and accelerators."}]</script>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Drill cards · Chapter 23</div>
     <div class="ch-header__num">Drills</div>
@@ -41,6 +43,10 @@
     <p class="ch-header__dek">10 atomic recall cards. Export to Anki and let spaced repetition do its slow work.</p>
   </header>
   <div class="drills__wrap">
+    <div class="srs-banner" data-srs-banner>
+  <span class="srs-banner__label"><span class="srs-banner__count" data-srs-count>10</span> cards due for review</span>
+  <button type="button" class="srs-banner__btn" data-srs-open="23-isa">Review now</button>
+</div>
     <div class="drills__actions">
       <a class="learn__btn learn__btn--primary" href="23-isa-drills.tsv" download>Download Anki TSV</a>
       <a class="learn__btn learn__btn--ghost" href="23-isa.html">← Back to chapter</a>
@@ -97,4 +103,5 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
 </body></html>

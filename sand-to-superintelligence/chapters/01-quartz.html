@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="01-quartz">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">quartzite mine</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">SiO₂ lattice</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">impurity species</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">semiconductor grade</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">Spruce Pine</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">supply chain</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="01-quartz" data-answer-key="d">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — what purity level does silicon need to reach before it is usable in a chip? Pick the closest value.</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 01</div>
     <h1 class="ch-header__title">The Mineral</h1>
     <p class="ch-header__dek">Quartz, purity, and why ordinary sand can't think</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain why beach sand cannot substitute for quartzite in semiconductor manufacturing</li><li>Name the six impurity species that make 0.14% contamination structurally disqualifying for transistors</li><li>State why Spruce Pine's geography constitutes a single-point risk for the global chip industry</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">99.9999999<em>%</em></div><div class="stat__label">purity required for chips</div></div><div class="stat"><div class="stat__num">99.86<em>%</em></div><div class="stat__label">purity straight from the mine</div></div><div class="stat"><div class="stat__num">top <em>10</em></div><div class="stat__label">among earth's most-extracted minerals</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="01-quartz">
   <div class="ladder__bar">
@@ -106,42 +115,42 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#not-all-sand">Not all sand thinks</a></li><li><a href="#the-mineral">Quartzite, the mother stone</a></li><li><a href="#global-supply">Where the world keeps its silicon</a></li><li><a href="#the-first-cut">The first cut</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">There is a particular kind of rock, white as bone and harder than steel, sitting in the cool dark of mountains in Spruce Pine, North Carolina, and a handful of other places on earth. If you had picked it up a thousand years ago, you would have noticed nothing remarkable. You would have called it pretty. Today, almost every modern thought your civilization has — every bank transaction, every photograph, every neural network weight — has passed through it.</p>
+<p class="lede" id="p-3de34f6d">There is a particular kind of rock, white as bone and harder than steel, sitting in the cool dark of mountains in Spruce Pine, North Carolina, and a handful of other places on earth. If you had picked it up a thousand years ago, you would have noticed nothing remarkable. You would have called it pretty. Today, almost every modern thought your civilization has — every bank transaction, every photograph, every neural network weight — has passed through it.</p>
 
-<p>The story of the NVIDIA Vera Rubin AI supercomputer does not begin with engineers, or fabrication plants, or even with silicon. It begins underground.</p>
+<p id="p-d1269f13">The story of the NVIDIA Vera Rubin AI supercomputer does not begin with engineers, or fabrication plants, or even with silicon. It begins underground.</p>
 
 <h2 id="not-all-sand">Not all sand thinks</h2>
 
-<p>The first myth to dispatch is the most charming one: that semiconductors are made from beach sand. They are not. Beach sand is a riot of contamination — iron, organic salts, fragments of shell, traces of every river that ever drained into that coast. To a chip, beach sand is a chemical nightmare.</p>
+<p id="p-bc5e8371">The first myth to dispatch is the most charming one: that semiconductors are made from beach sand. They are not. Beach sand is a riot of contamination — iron, organic salts, fragments of shell, traces of every river that ever drained into that coast. To a chip, beach sand is a chemical nightmare.</p>
 
-<p>What chipmakers want is <strong>quartzite</strong>: a metamorphic rock formed when sandstone is cooked under pressure for hundreds of millions of years until its quartz grains fuse and recrystallize into a near-pure mass of <code>SiO₂</code>. The world produces and consumes <a href="https://investornews.com/critical-minerals-rare-earths/cmi-masterclass-the-real-story-behind-the-critical-mineral-silica/">vast quantities of silica</a> — it is among the most-extracted commodities on earth — but only a tiny fraction is clean enough to consider for semiconductors, and a vanishingly small fraction within that is clean enough to actually use.</p>
+<p id="p-169b89de">What chipmakers want is <strong>quartzite</strong>: a metamorphic rock formed when sandstone is cooked under pressure for hundreds of millions of years until its quartz grains fuse and recrystallize into a near-pure mass of <code>SiO₂</code>. The world produces and consumes <a href="https://investornews.com/critical-minerals-rare-earths/cmi-masterclass-the-real-story-behind-the-critical-mineral-silica/">vast quantities of silica</a> — it is among the most-extracted commodities on earth — but only a tiny fraction is clean enough to consider for semiconductors, and a vanishingly small fraction within that is clean enough to actually use.</p>
 
 <blockquote>The chip in your pocket began as a rock so unusually pure that geologists in three centuries of looking have only catalogued a handful of deposits worth mining for it.</blockquote>
 
 <h2 id="the-mineral">Quartzite, the mother stone</h2>
 
-<p>Quartz is silicon dioxide. Two oxygens, one silicon, locked in a tetrahedral lattice that has bedeviled metallurgists since antiquity. It is hard (Mohs 7), chemically inert at room temperature, and stubborn — which is exactly why it has survived eons in the earth's crust without breaking down. The same stubbornness is why getting silicon <em>out</em> of it is so difficult.</p>
+<p id="p-2a45c953">Quartz is silicon dioxide. Two oxygens, one silicon, locked in a tetrahedral lattice that has bedeviled metallurgists since antiquity. It is hard (Mohs 7), chemically inert at room temperature, and stubborn — which is exactly why it has survived eons in the earth's crust without breaking down. The same stubbornness is why getting silicon <em>out</em> of it is so difficult.</p>
 
-<p>Inside a high-grade quartzite deposit, the rock can reach <strong>99.86%</strong> SiO₂ before any human touches it. The remaining 0.14% sounds trivial. It is not. Within that fraction live boron, phosphorus, aluminum, iron, calcium, and other atoms that, in concentrations as small as parts per billion, can short-circuit the very property that makes silicon useful: its precisely controllable electrical conductivity. A boron atom in the wrong place is not an impurity — it is a transistor that someone forgot to design.</p>
+<p id="p-992ef9b4">Inside a high-grade quartzite deposit, the rock can reach <strong>99.86%</strong> SiO₂ before any human touches it. The remaining 0.14% sounds trivial. It is not. Within that fraction live boron, phosphorus, aluminum, iron, calcium, and other atoms that, in concentrations as small as parts per billion, can short-circuit the very property that makes silicon useful: its precisely controllable electrical conductivity. A boron atom in the wrong place is not an impurity — it is a transistor that someone forgot to design.</p>
 
-<p>So we begin from the cleanest rock available, and we begin <em>removing</em>.</p>
+<p id="p-06a76717">So we begin from the cleanest rock available, and we begin <em>removing</em>.</p>
 
 <h2 id="global-supply">Where the world keeps its silicon</h2>
 
-<p>The geography is concentrated and quietly geopolitical. China is the largest producer of raw silica, but the small handful of mines that supply <em>semiconductor-grade</em> precursor material is much narrower. Brazil, Norway, the United States — particularly the Spruce Pine region — and a few sites in Russia and Mauritania account for most of it.</p>
+<p id="p-ea787a14">The geography is concentrated and quietly geopolitical. China is the largest producer of raw silica, but the small handful of mines that supply <em>semiconductor-grade</em> precursor material is much narrower. Brazil, Norway, the United States — particularly the Spruce Pine region — and a few sites in Russia and Mauritania account for most of it.</p>
 
-<p>An open pit at one of these sites looks like every other open pit: terraced cliffs, haul trucks the size of houses, dust on the wind. What separates them is what comes out. Excavators bite into the quartzite, ore is blasted free, and the rock is hauled to a primary processing facility where it is washed, screened, and reduced to a coarse powder. From here, only the cleanest fraction continues onward.</p>
+<p id="p-3001aa67">An open pit at one of these sites looks like every other open pit: terraced cliffs, haul trucks the size of houses, dust on the wind. What separates them is what comes out. Excavators bite into the quartzite, ore is blasted free, and the rock is hauled to a primary processing facility where it is washed, screened, and reduced to a coarse powder. From here, only the cleanest fraction continues onward.</p>
 
 <div class="aside" data-tone="copper">
   <span class="aside__label">A note on Spruce Pine</span>
-  <p>The world's most important semiconductor mine is not in Taiwan. It is in <strong>Spruce Pine, North Carolina</strong>, where two mines produce the world's purest natural quartz — used for the crucibles in which polysilicon is later melted. A 2024 wildfire and Hurricane Helene briefly threatened the town. For a moment, much of the global semiconductor industry was watching the local weather.</p>
+  <p id="p-2e5a28c6">The world's most important semiconductor mine is not in Taiwan. It is in <strong>Spruce Pine, North Carolina</strong>, where two mines produce the world's purest natural quartz — used for the crucibles in which polysilicon is later melted. A 2024 wildfire and Hurricane Helene briefly threatened the town. For a moment, much of the global semiconductor industry was watching the local weather.</p>
 </div>
 
 <h2 id="the-first-cut">The first cut</h2>
 
-<p>What leaves the quartzite mine is not yet a chip. It is not even silicon, in the sense an engineer means the word. It is a clean white rock that, with sufficient violence, can be persuaded to give up its silicon — provided you bring enough heat, the right reducing agent, and a furnace built like a foundry from the gates of hell.</p>
+<p id="p-ac720188">What leaves the quartzite mine is not yet a chip. It is not even silicon, in the sense an engineer means the word. It is a clean white rock that, with sufficient violence, can be persuaded to give up its silicon — provided you bring enough heat, the right reducing agent, and a furnace built like a foundry from the gates of hell.</p>
 
-<p>That furnace is where we go next.</p>
+<p id="p-d62c8a4d">That furnace is where we go next.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="Silicon purity ladder from beach sand to electronic-grade polysilicon">
@@ -307,4 +316,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

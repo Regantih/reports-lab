@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="32-tokens-on-wire">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">token as packet</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">embedding vector</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">function call schema</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">API call anatomy</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">latency budget</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">semantic payload</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="32-tokens-on-wire" data-answer-key="c">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — roughly how many dimensions does an OpenAI text-embedding-3 vector have?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 32</div>
     <h1 class="ch-header__title">Tokens on the Wire</h1>
     <p class="ch-header__dek">What flows when intelligence is the payload</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain why a token is not a packet in the TCP sense and what additional semantic weight it carries</li><li>Trace the anatomy of a single API call from prompt encoding to response decoding</li><li>Name three types of structured output a model can return beyond raw text and state when each is used</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">~4 <em>chars</em></div><div class="stat__label">average bytes per English token</div></div><div class="stat"><div class="stat__num">3,072 <em>dims</em></div><div class="stat__label">size of an OpenAI text-embedding-3 vector</div></div><div class="stat"><div class="stat__num">~$0.30</div><div class="stat__label">median price of one million input tokens, end of 2025</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="32-tokens-on-wire">
   <div class="ladder__bar">
@@ -106,47 +115,47 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-token-as-unit">The token as the new packet</a></li><li><a href="#embeddings">Embeddings: meaning as geometry</a></li><li><a href="#function-calls">Function calls and structured output</a></li><li><a href="#the-anatomy">The anatomy of a single API call</a></li><li><a href="#what-this-changes">What this changes about networking</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">If the fifth wire is real, what does its packet look like? When one model talks to another, or to a tool, or to a database, what is the literal payload? It is not bytes the way HTTP packets are bytes, and it is not records the way SQL rows are records. It is three closely related objects: tokens, embeddings, and structured calls. This chapter describes each of them, and then walks through the anatomy of a single inference request as it crosses the wire.</p>
+<p class="lede" id="p-e66d3b85">If the fifth wire is real, what does its packet look like? When one model talks to another, or to a tool, or to a database, what is the literal payload? It is not bytes the way HTTP packets are bytes, and it is not records the way SQL rows are records. It is three closely related objects: tokens, embeddings, and structured calls. This chapter describes each of them, and then walks through the anatomy of a single inference request as it crosses the wire.</p>
 
 <h2 id="the-token-as-unit">The token as the new packet</h2>
 
-<p>A <strong>token</strong> is the smallest unit a language model deals with. Tokens are produced by a tokenizer such as <a href="https://github.com/openai/tiktoken">tiktoken</a> (used by OpenAI) or <a href="https://github.com/google/sentencepiece">SentencePiece</a> (used widely elsewhere). The tokenizer learns, from a large corpus, a vocabulary of around 100,000 subword units — common words like "the" or "model" become single tokens, while rare words or names get broken into pieces. On English text, one token is roughly four characters, or three quarters of a word.</p>
+<p id="p-01eac2fe">A <strong>token</strong> is the smallest unit a language model deals with. Tokens are produced by a tokenizer such as <a href="https://github.com/openai/tiktoken">tiktoken</a> (used by OpenAI) or <a href="https://github.com/google/sentencepiece">SentencePiece</a> (used widely elsewhere). The tokenizer learns, from a large corpus, a vocabulary of around 100,000 subword units — common words like "the" or "model" become single tokens, while rare words or names get broken into pieces. On English text, one token is roughly four characters, or three quarters of a word.</p>
 
-<p>Once you have tokenized a prompt, the wire-level cost of an AI request is no longer measured in bytes. It is measured in tokens. Inference providers price tokens directly: <a href="https://www.anthropic.com/pricing">Anthropic</a>, <a href="https://openai.com/pricing">OpenAI</a>, Google, and the others all publish per-million-token rates for input and output, with output typically four to five times more expensive than input because output requires running the full forward pass token by token.</p>
+<p id="p-f5ee7e4d">Once you have tokenized a prompt, the wire-level cost of an AI request is no longer measured in bytes. It is measured in tokens. Inference providers price tokens directly: <a href="https://www.anthropic.com/pricing">Anthropic</a>, <a href="https://openai.com/pricing">OpenAI</a>, Google, and the others all publish per-million-token rates for input and output, with output typically four to five times more expensive than input because output requires running the full forward pass token by token.</p>
 
-<p>The token has become, quietly, a unit of economic accounting that did not exist five years ago. Every meaningful AI workload is now budgeted, billed, rate-limited, and compared in tokens. A long-running agent's invoice is a token bill. A model's "context window" — up to about a million tokens for the long-context Claude Sonnet 4.5 and 4.6 settings, two million for some Gemini variants — is the maximum prompt the wire can carry in a single request.</p>
+<p id="p-11a72dbe">The token has become, quietly, a unit of economic accounting that did not exist five years ago. Every meaningful AI workload is now budgeted, billed, rate-limited, and compared in tokens. A long-running agent's invoice is a token bill. A model's "context window" — up to about a million tokens for the long-context Claude Sonnet 4.5 and 4.6 settings, two million for some Gemini variants — is the maximum prompt the wire can carry in a single request.</p>
 
 <h2 id="embeddings">Embeddings: meaning as geometry</h2>
 
-<p>Tokens are categorical. Two tokens are either the same or they are not; "cat" and "feline" are as far apart as "cat" and "spreadsheet". To build search and retrieval systems on top of language, the field needed a representation in which similar meanings sat close together in some space. That representation is the <strong>embedding</strong>.</p>
+<p id="p-bb377537">Tokens are categorical. Two tokens are either the same or they are not; "cat" and "feline" are as far apart as "cat" and "spreadsheet". To build search and retrieval systems on top of language, the field needed a representation in which similar meanings sat close together in some space. That representation is the <strong>embedding</strong>.</p>
 
-<p>An embedding model takes a piece of text — a sentence, a paragraph, a whole document — and emits a fixed-length vector of floating-point numbers, typically 768, 1,536, or 3,072 dimensions. Texts with similar meaning produce vectors with similar directions. <a href="https://platform.openai.com/docs/guides/embeddings">OpenAI's embeddings guide</a> describes the standard recipe; <a href="https://www.sbert.net/">Sentence-Transformers</a> and Cohere's offerings are the open and competing flavours.</p>
+<p id="p-09c1e90f">An embedding model takes a piece of text — a sentence, a paragraph, a whole document — and emits a fixed-length vector of floating-point numbers, typically 768, 1,536, or 3,072 dimensions. Texts with similar meaning produce vectors with similar directions. <a href="https://platform.openai.com/docs/guides/embeddings">OpenAI's embeddings guide</a> describes the standard recipe; <a href="https://www.sbert.net/">Sentence-Transformers</a> and Cohere's offerings are the open and competing flavours.</p>
 
-<p>Geometrically, embeddings turn the question "is this document relevant to that query?" into "is this vector close to that vector?" — and closeness in a 1,536-dimensional space turns out to capture a remarkable amount of semantic similarity, despite the simplicity of the operation. The dot product of two embeddings is a usable proxy for "do these two pieces of text mean the same thing?", and it can be computed in microseconds. Vector databases (Chapter 37) are built around this primitive.</p>
+<p id="p-4e966448">Geometrically, embeddings turn the question "is this document relevant to that query?" into "is this vector close to that vector?" — and closeness in a 1,536-dimensional space turns out to capture a remarkable amount of semantic similarity, despite the simplicity of the operation. The dot product of two embeddings is a usable proxy for "do these two pieces of text mean the same thing?", and it can be computed in microseconds. Vector databases (Chapter 37) are built around this primitive.</p>
 
 <h2 id="function-calls">Function calls and structured output</h2>
 
-<p>The third object travelling on the wire is the <strong>structured output</strong>: a model emitting not free text but a JSON document conforming to a schema you specified in the prompt. <a href="https://platform.openai.com/docs/guides/function-calling">OpenAI's function-calling API</a>, <a href="https://docs.anthropic.com/en/docs/build-with-claude/tool-use">Anthropic's tool-use</a>, and Google's equivalent all formalize the same pattern: you describe a set of tools as JSON schemas, the model decides which tool to call and with what arguments, and the runtime executes the call and feeds the result back as another message in the conversation.</p>
+<p id="p-e9095285">The third object travelling on the wire is the <strong>structured output</strong>: a model emitting not free text but a JSON document conforming to a schema you specified in the prompt. <a href="https://platform.openai.com/docs/guides/function-calling">OpenAI's function-calling API</a>, <a href="https://docs.anthropic.com/en/docs/build-with-claude/tool-use">Anthropic's tool-use</a>, and Google's equivalent all formalize the same pattern: you describe a set of tools as JSON schemas, the model decides which tool to call and with what arguments, and the runtime executes the call and feeds the result back as another message in the conversation.</p>
 
-<p>This is what changes a chat box into something that can act. A pure chat model has no buttons; a function-calling model has every button you give it a schema for. In production systems, the same model that was answering questions a year ago is now reading documents from S3, posting messages to Slack, opening pull requests, scheduling meetings, and querying SQL warehouses, because somebody wrote a JSON schema for each of those actions and exposed it.</p>
+<p id="p-9714c9c9">This is what changes a chat box into something that can act. A pure chat model has no buttons; a function-calling model has every button you give it a schema for. In production systems, the same model that was answering questions a year ago is now reading documents from S3, posting messages to Slack, opening pull requests, scheduling meetings, and querying SQL warehouses, because somebody wrote a JSON schema for each of those actions and exposed it.</p>
 
 <h2 id="the-anatomy">The anatomy of a single API call</h2>
 
-<p>It is worth tracing one full call, end to end, to ground the abstractions.</p>
+<p id="p-14bc308b">It is worth tracing one full call, end to end, to ground the abstractions.</p>
 
-<p>A backend server somewhere builds a JSON object: a <code>messages</code> array containing the system prompt and conversation history, a <code>tools</code> array of available functions with their JSON schemas, a <code>model</code> name, and various sampling parameters. The whole thing is perhaps 8 KB on the wire. It is sent over HTTPS to <code>api.anthropic.com</code> or <code>api.openai.com</code>, which terminates TLS at a load balancer, authenticates the API key, applies rate limits, and forwards the request to a regional inference cluster.</p>
+<p id="p-e19b0c04">A backend server somewhere builds a JSON object: a <code>messages</code> array containing the system prompt and conversation history, a <code>tools</code> array of available functions with their JSON schemas, a <code>model</code> name, and various sampling parameters. The whole thing is perhaps 8 KB on the wire. It is sent over HTTPS to <code>api.anthropic.com</code> or <code>api.openai.com</code>, which terminates TLS at a load balancer, authenticates the API key, applies rate limits, and forwards the request to a regional inference cluster.</p>
 
-<p>Inside the cluster, the request joins a queue. A scheduler picks a free GPU partition, copies the prompt into HBM, and begins generation. With key-value caching (Chapter 30) only the new tokens require a fresh forward pass; previously seen prefixes can be reused across requests in some configurations. As tokens are generated, they are streamed back to the client over a server-sent-events connection, four to thirty bytes at a time, with maybe 50ms of latency per token. The client may or may not display the stream; some agentic systems wait for the whole response before parsing the JSON.</p>
+<p id="p-69144de9">Inside the cluster, the request joins a queue. A scheduler picks a free GPU partition, copies the prompt into HBM, and begins generation. With key-value caching (Chapter 30) only the new tokens require a fresh forward pass; previously seen prefixes can be reused across requests in some configurations. As tokens are generated, they are streamed back to the client over a server-sent-events connection, four to thirty bytes at a time, with maybe 50ms of latency per token. The client may or may not display the stream; some agentic systems wait for the whole response before parsing the JSON.</p>
 
-<p>Once generation completes — either because the model hit a stop sequence, exhausted the output budget, or chose to call a tool — the connection closes. The exchange is recorded for billing in tokens, not bytes; the stream is logged for safety review at the provider; and the client now has either text, a JSON object, or a tool-call request to execute.</p>
+<p id="p-da6d8fe6">Once generation completes — either because the model hit a stop sequence, exhausted the output budget, or chose to call a tool — the connection closes. The exchange is recorded for billing in tokens, not bytes; the stream is logged for safety review at the provider; and the client now has either text, a JSON object, or a tool-call request to execute.</p>
 
 <h2 id="what-this-changes">What this changes about networking</h2>
 
-<p>None of this requires a new physical wire. The packets are TCP, the bytes are HTTPS, the frames are HTTP/2 or HTTP/3, the encoding is JSON. What is new is the <em>semantic layer</em> built on top: tokens, embeddings, function calls, schemas, streaming. These are not standardized by any single body the way HTTP is; they are conventions hardened through practice and (slowly) draft specs.</p>
+<p id="p-42739cad">None of this requires a new physical wire. The packets are TCP, the bytes are HTTPS, the frames are HTTP/2 or HTTP/3, the encoding is JSON. What is new is the <em>semantic layer</em> built on top: tokens, embeddings, function calls, schemas, streaming. These are not standardized by any single body the way HTTP is; they are conventions hardened through practice and (slowly) draft specs.</p>
 
-<p>The economic implication is that anybody who can speak this dialect — emit valid prompts, parse streamed completions, dispatch tool calls — gains, essentially overnight, the ability to insert AI capability into any product they own. The cost of a basic capability that would have required a research team in 2018 is now the cost of an HTTP client and a credit card. That is what is actually meant by "AI as a service": not magic, but a new packet the existing internet already knows how to deliver.</p>
+<p id="p-4c772772">The economic implication is that anybody who can speak this dialect — emit valid prompts, parse streamed completions, dispatch tool calls — gains, essentially overnight, the ability to insert AI capability into any product they own. The cost of a basic capability that would have required a research team in 2018 is now the cost of an HTTP client and a credit card. That is what is actually meant by "AI as a service": not magic, but a new packet the existing internet already knows how to deliver.</p>
 
-<p>The next chapter takes one of those packets seriously and asks: how long does the round trip take, and why does the answer matter for what kinds of applications are possible at all?</p>
+<p id="p-f18c8e77">The next chapter takes one of those packets seriously and asks: how long does the round trip take, and why does the answer matter for what kinds of applications are possible at all?</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 380" role="img" aria-label="Three objects travel on the AI wire: tokens, embeddings, and function calls">
@@ -363,4 +372,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

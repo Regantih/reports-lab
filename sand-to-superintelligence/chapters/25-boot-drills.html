@@ -29,11 +29,13 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page">
+  <script id="srs-drills-25-boot" type="application/json">[{"q": "What is the x86 reset vector address?", "a": "0xFFFFFFF0."}, {"q": "Where does the reset vector point?", "a": "Into flash memory on the motherboard, where UEFI (or BIOS) firmware lives."}, {"q": "What is the difference between BIOS and UEFI?", "a": "BIOS is the older firmware standard; UEFI (Unified Extensible Firmware Interface) is the modern replacement found on current PCs."}, {"q": "Name three things UEFI does during hardware initialization.", "a": "Detects DRAM and runs memory training, enumerates PCIe devices, sets up the interrupt controller (any three from: microcode config, chipset init, locating bootable storage)."}, {"q": "What is GRUB?", "a": "The most common Linux bootloader \u2014 its job is to find the kernel on disk, decompress it into RAM, and jump to its entry point."}, {"q": "What is vmlinuz?", "a": "The Linux kernel image on disk \u2014 a self-extracting compressed blob the bootloader must decompress into a clean region of RAM."}, {"q": "What is the first function the Linux kernel calls, and what is PID 1?", "a": "start_kernel(); PID 1 is the init process (today usually systemd on Linux), the parent of every other process."}, {"q": "How long does a modern UEFI boot take, from power-on to kernel hand-off?", "a": "~3 seconds."}, {"q": "How many stages does the chapter identify in the power-on-to-login relay race?", "a": "Five: power-on reset, firmware, bootloader, kernel init, userspace."}]</script>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Drill cards · Chapter 25</div>
     <div class="ch-header__num">Drills</div>
@@ -41,6 +43,10 @@
     <p class="ch-header__dek">9 atomic recall cards. Export to Anki and let spaced repetition do its slow work.</p>
   </header>
   <div class="drills__wrap">
+    <div class="srs-banner" data-srs-banner>
+  <span class="srs-banner__label"><span class="srs-banner__count" data-srs-count>9</span> cards due for review</span>
+  <button type="button" class="srs-banner__btn" data-srs-open="25-boot">Review now</button>
+</div>
     <div class="drills__actions">
       <a class="learn__btn learn__btn--primary" href="25-boot-drills.tsv" download>Download Anki TSV</a>
       <a class="learn__btn learn__btn--ghost" href="25-boot.html">← Back to chapter</a>
@@ -97,4 +103,5 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
 </body></html>

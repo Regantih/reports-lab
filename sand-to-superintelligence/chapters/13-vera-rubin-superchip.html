@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="13-vera-rubin-superchip">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">2 Rubin GPU dies</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">1 Vera CPU</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">NVLink-C2C 1.8 TB/s</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">unified memory</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">576 GB HBM4</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">100 PFLOPS FP4</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">17,000 parts</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="13-vera-rubin-superchip" data-answer-key="d">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — what is the bidirectional bandwidth of the NVLink-C2C chip-to-chip bus that links GPUs and CPU inside the Vera Rubin Superchip?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 13</div>
     <h1 class="ch-header__title">The Vera Rubin Superchip</h1>
     <p class="ch-header__dek">Two GPUs, one CPU, 1.8 TB/s between them</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain how NVLink-C2C achieves 7× the bandwidth of PCIe Gen6 and why that enables unified memory coherence</li><li>Name the three silicon assemblies in a Vera Rubin Superchip and state each one's primary function</li><li>State the power delivery challenge for a 100-petaflop module operating at sub-millivolt accuracy</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">100 <em>PFLOPS</em></div><div class="stat__label">FP4 compute per superchip</div></div><div class="stat"><div class="stat__num">576 <em>GB</em></div><div class="stat__label">HBM4 per superchip</div></div><div class="stat"><div class="stat__num">1.8 <em>TB/s</em></div><div class="stat__label">NVLink-C2C bandwidth</div></div><div class="stat"><div class="stat__num">17,000</div><div class="stat__label">components per superchip</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="13-vera-rubin-superchip">
   <div class="ladder__bar">
@@ -106,42 +115,42 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-module">The module</a></li><li><a href="#two-gpus-and-a-cpu">Two GPUs and a CPU</a></li><li><a href="#nvlink-c2c">NVLink-C2C, the chip-to-chip bus</a></li><li><a href="#seventeen-thousand">Seventeen thousand parts</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">Up to this point, every chapter has discussed a single chip. From here onward, we discuss <em>systems</em>. The transition is not sentimental: by the time a Rubin GPU is paired with a Vera CPU and packaged together, the unit of design has shifted from the die to the module. The economics shift, the physics shift, the failure modes shift. We are leaving silicon and entering systems integration.</p>
+<p class="lede" id="p-0783c4d4">Up to this point, every chapter has discussed a single chip. From here onward, we discuss <em>systems</em>. The transition is not sentimental: by the time a Rubin GPU is paired with a Vera CPU and packaged together, the unit of design has shifted from the die to the module. The economics shift, the physics shift, the failure modes shift. We are leaving silicon and entering systems integration.</p>
 
-<p>The first artifact of that transition is the <strong>Vera Rubin Superchip</strong>: a single module containing two Rubin GPUs, one Vera CPU, and the high-speed interconnects that bind them.</p>
+<p id="p-e4d2dab9">The first artifact of that transition is the <strong>Vera Rubin Superchip</strong>: a single module containing two Rubin GPUs, one Vera CPU, and the high-speed interconnects that bind them.</p>
 
 <h2 id="the-module">The module</h2>
 
-<p>Physically, a Vera Rubin Superchip is a flat ceramic-and-organic substrate roughly the size of a paperback book. Embedded within it: three CoWoS-packaged silicon assemblies (two GPU + HBM tiles and one CPU tile), high-speed signal traces between them, dozens of voltage regulators, hundreds of decoupling capacitors, and a perimeter of contacts that will eventually mate the module to a system board.</p>
+<p id="p-37df822e">Physically, a Vera Rubin Superchip is a flat ceramic-and-organic substrate roughly the size of a paperback book. Embedded within it: three CoWoS-packaged silicon assemblies (two GPU + HBM tiles and one CPU tile), high-speed signal traces between them, dozens of voltage regulators, hundreds of decoupling capacitors, and a perimeter of contacts that will eventually mate the module to a system board.</p>
 
-<p>The module is built up from individual packaged die assemblies that are themselves the products of the steps in the previous twelve chapters. Each tile arrives with its yield certified, its electrical signature verified, and its identity tracked. Robots lay them into the substrate to within microns of position. <a href="https://nvidianews.nvidia.com/news/rubin-platform-ai-supercomputer">The whole module contains roughly seventeen thousand individual components</a>, perhaps five times the part count of a smartphone.</p>
+<p id="p-9a92d118">The module is built up from individual packaged die assemblies that are themselves the products of the steps in the previous twelve chapters. Each tile arrives with its yield certified, its electrical signature verified, and its identity tracked. Robots lay them into the substrate to within microns of position. <a href="https://nvidianews.nvidia.com/news/rubin-platform-ai-supercomputer">The whole module contains roughly seventeen thousand individual components</a>, perhaps five times the part count of a smartphone.</p>
 
 <h2 id="two-gpus-and-a-cpu">Two GPUs and a CPU</h2>
 
-<p>The two Rubin GPUs are essentially identical, each fabricated on TSMC N3P with the package totaling about 336 billion transistors across both dies and 288 GB of HBM4 attached. Each delivers about 50 petaflops of FP4 inference compute on its own. Together, they double that.</p>
+<p id="p-606f0880">The two Rubin GPUs are essentially identical, each fabricated on TSMC N3P with the package totaling about 336 billion transistors across both dies and 288 GB of HBM4 attached. Each delivers about 50 petaflops of FP4 inference compute on its own. Together, they double that.</p>
 
-<p>The Vera CPU is the system's host. It is a custom NVIDIA design — built around 88 cores of NVIDIA's <a href="https://developer.nvidia.com/blog/inside-the-nvidia-rubin-platform-six-new-chips-one-ai-supercomputer/"><strong>Olympus</strong> Arm v9 architecture</a> — and its job is not raw arithmetic but coordination: managing the GPU's memory, dispatching kernels, handling I/O, running the operating system, talking to other Superchips through the rack's network.</p>
+<p id="p-bc309e08">The Vera CPU is the system's host. It is a custom NVIDIA design — built around 88 cores of NVIDIA's <a href="https://developer.nvidia.com/blog/inside-the-nvidia-rubin-platform-six-new-chips-one-ai-supercomputer/"><strong>Olympus</strong> Arm v9 architecture</a> — and its job is not raw arithmetic but coordination: managing the GPU's memory, dispatching kernels, handling I/O, running the operating system, talking to other Superchips through the rack's network.</p>
 
-<p>The combination of GPU + CPU on a single module is what makes this a <em>superchip</em> rather than just a packaged GPU. The CPU's memory and the GPU's memory are coherent; the CPU can address the GPU's HBM directly without copying data over PCIe. This eliminates one of the oldest tax penalties in heterogeneous computing.</p>
+<p id="p-dbbbadd1">The combination of GPU + CPU on a single module is what makes this a <em>superchip</em> rather than just a packaged GPU. The CPU's memory and the GPU's memory are coherent; the CPU can address the GPU's HBM directly without copying data over PCIe. This eliminates one of the oldest tax penalties in heterogeneous computing.</p>
 
 <h2 id="nvlink-c2c">NVLink-C2C, the chip-to-chip bus</h2>
 
-<p>The connections that hold this together are not PCIe. PCIe Gen6 — the latest fully ratified standard at the time of Rubin's design — offers about 256 GB/s of total bidirectional bandwidth at x16 (128 GB/s in each direction). That is too slow.</p>
+<p id="p-03ad734d">The connections that hold this together are not PCIe. PCIe Gen6 — the latest fully ratified standard at the time of Rubin's design — offers about 256 GB/s of total bidirectional bandwidth at x16 (128 GB/s in each direction). That is too slow.</p>
 
-<p>The bus that links the GPUs and the CPU within a Superchip is called <strong>NVLink-C2C</strong> (Chip-to-Chip), and it runs at <strong>1.8 TB/s bidirectional</strong> — roughly seven times the bandwidth of PCIe Gen6, and at much lower latency. It is implemented as a die-to-die signaling protocol, with serializer/deserializer circuits on both ends, hundreds of differential pairs running at multi-tens of gigabits per second each.</p>
+<p id="p-3eb0bc56">The bus that links the GPUs and the CPU within a Superchip is called <strong>NVLink-C2C</strong> (Chip-to-Chip), and it runs at <strong>1.8 TB/s bidirectional</strong> — roughly seven times the bandwidth of PCIe Gen6, and at much lower latency. It is implemented as a die-to-die signaling protocol, with serializer/deserializer circuits on both ends, hundreds of differential pairs running at multi-tens of gigabits per second each.</p>
 
-<p>NVLink-C2C is also what allows the Vera CPU and the Rubin GPUs to share a unified memory space. Inside the module, the GPUs can pull data from CPU-attached memory as if it were their own, and vice versa, without explicit copies. To a programmer, the entire 576 GB of HBM and the CPU's DDR5 memory appears as a single coherent address space.</p>
+<p id="p-7b2e238c">NVLink-C2C is also what allows the Vera CPU and the Rubin GPUs to share a unified memory space. Inside the module, the GPUs can pull data from CPU-attached memory as if it were their own, and vice versa, without explicit copies. To a programmer, the entire 576 GB of HBM and the CPU's DDR5 memory appears as a single coherent address space.</p>
 
 <h2 id="seventeen-thousand">Seventeen thousand parts</h2>
 
-<p>The superchip's seventeen thousand components are not all silicon. The vast majority are passive: capacitors and resistors and voltage-regulator modules and impedance-matching networks. Power delivery to a 100-petaflop module is itself an engineering problem of extraordinary scope. Each Rubin GPU draws perhaps 1.4 kW under full load. The voltage regulators must deliver this current at sub-millivolt accuracy, with tens of nanoseconds of response time, while the GPU's load swings from idle to full and back many times per second.</p>
+<p id="p-4774b106">The superchip's seventeen thousand components are not all silicon. The vast majority are passive: capacitors and resistors and voltage-regulator modules and impedance-matching networks. Power delivery to a 100-petaflop module is itself an engineering problem of extraordinary scope. Each Rubin GPU draws perhaps 1.4 kW under full load. The voltage regulators must deliver this current at sub-millivolt accuracy, with tens of nanoseconds of response time, while the GPU's load swings from idle to full and back many times per second.</p>
 
 <div class="aside" data-tone="copper">
   <span class="aside__label">A scale comparison</span>
-  <p>A finished Vera Rubin Superchip contains <strong>more components than a Boeing 737 cockpit</strong>. It is assembled by robots in cleanrooms, tested for hours before it leaves the factory floor, and shipped — with its identity tracked individually — to whichever data center has it next.</p>
+  <p id="p-f8486acb">A finished Vera Rubin Superchip contains <strong>more components than a Boeing 737 cockpit</strong>. It is assembled by robots in cleanrooms, tested for hours before it leaves the factory floor, and shipped — with its identity tracked individually — to whichever data center has it next.</p>
 </div>
 
-<p>The superchip is the smallest unit a customer can buy. It is also, by itself, useless. To be turned into an AI factory, it must be combined with seventy-one other GPUs and connected to them in a way the industry has only just learned to do.</p>
+<p id="p-b070fb0a">The superchip is the smallest unit a customer can buy. It is also, by itself, useless. To be turned into an AI factory, it must be combined with seventy-one other GPUs and connected to them in a way the industry has only just learned to do.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 420" role="img" aria-label="Vera Rubin Superchip: 2 Rubin GPUs and 1 Vera CPU connected by NVLink-C2C">
@@ -323,4 +332,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

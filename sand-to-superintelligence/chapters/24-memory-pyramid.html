@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="24-memory-pyramid">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">registers 1 cycle</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">L1 3-4 cycles</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">L2 12 cycles</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">L3 40 cycles</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">DRAM 300 cycles</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">SSD 150,000 cycles</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">locality saves us</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="24-memory-pyramid" data-answer-key="c">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — how long does a DRAM access take, compared with a register access, on a modern CPU?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 24</div>
     <h1 class="ch-header__title">Memory's Pyramid</h1>
     <p class="ch-header__dek">Registers, caches, DRAM, and the tyranny of distance</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>State the access-time ratio between a register and DRAM and express it as an analogy in human-scale time</li><li>Explain why temporal and spatial locality together justify the cache hierarchy</li><li>Name the TLB, state what it caches, and explain the cost of a TLB miss</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">~1 <em>cycle</em></div><div class="stat__label">register access</div></div><div class="stat"><div class="stat__num">~300 <em>cycles</em></div><div class="stat__label">DRAM access — a 300× cliff</div></div><div class="stat"><div class="stat__num">64 <em>B</em></div><div class="stat__label">the cache line, the unit of memory motion</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="24-memory-pyramid">
   <div class="ladder__bar">
@@ -106,27 +115,27 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-disappointment">The disappointment of speed</a></li><li><a href="#locality">Why locality saves us</a></li><li><a href="#the-pyramid">The pyramid, layer by layer</a></li><li><a href="#cache-lines">Cache lines and the TLB</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">A 3 GHz CPU completes an instruction every third of a nanosecond. Main memory takes about a hundred nanoseconds to answer a question. If a CPU had to wait on DRAM for every value it needs, it would spend more than 99% of its life idle. The history of modern computer architecture is, more than anything, the history of <em>hiding that wait</em>.</p>
+<p class="lede" id="p-889ffbee">A 3 GHz CPU completes an instruction every third of a nanosecond. Main memory takes about a hundred nanoseconds to answer a question. If a CPU had to wait on DRAM for every value it needs, it would spend more than 99% of its life idle. The history of modern computer architecture is, more than anything, the history of <em>hiding that wait</em>.</p>
 
 <h2 id="the-disappointment">The disappointment of speed</h2>
 
-<p>For decades, transistor speed grew faster than memory speed. The result is what computer architects call the <strong>memory wall</strong>: a cavernous gap between how fast a CPU could in principle compute and how fast memory could feed it. Hennessy and Patterson, in their canonical textbook <a href="https://www.elsevier.com/books/computer-architecture/hennessy/978-0-12-811905-1"><em>Computer Architecture: A Quantitative Approach</em></a>, document the gap doubling roughly every couple of years through the 1990s.</p>
+<p id="p-793c1f4d">For decades, transistor speed grew faster than memory speed. The result is what computer architects call the <strong>memory wall</strong>: a cavernous gap between how fast a CPU could in principle compute and how fast memory could feed it. Hennessy and Patterson, in their canonical textbook <a href="https://www.elsevier.com/books/computer-architecture/hennessy/978-0-12-811905-1"><em>Computer Architecture: A Quantitative Approach</em></a>, document the gap doubling roughly every couple of years through the 1990s.</p>
 
-<p>The gap is now staggering. A modern x86 register answers in roughly one cycle. L1 cache answers in three to four. L2 in twelve. L3 in forty. Main memory — the gigabytes of DRAM where your operating system, browser tabs, and AI model weights actually live — takes around three hundred. SSD storage takes hundreds of thousands of cycles. A network round-trip takes tens of millions.</p>
+<p id="p-d7d27967">The gap is now staggering. A modern x86 register answers in roughly one cycle. L1 cache answers in three to four. L2 in twelve. L3 in forty. Main memory — the gigabytes of DRAM where your operating system, browser tabs, and AI model weights actually live — takes around three hundred. SSD storage takes hundreds of thousands of cycles. A network round-trip takes tens of millions.</p>
 
-<p>If a register access were one second, a DRAM access would be five minutes, an SSD access would be a day and a half, and a coast-to-coast network round-trip would be more than a year. Computers do not look that slow only because we have spent six decades engineering away the appearance of waiting.</p>
+<p id="p-b04e834d">If a register access were one second, a DRAM access would be five minutes, an SSD access would be a day and a half, and a coast-to-coast network round-trip would be more than a year. Computers do not look that slow only because we have spent six decades engineering away the appearance of waiting.</p>
 
 <h2 id="locality">Why locality saves us</h2>
 
-<p>The trick that saves us is a deep empirical regularity in how programs use memory: <strong>locality of reference</strong>. Programs do not access memory at random. They tend to reuse recently used locations (<em>temporal locality</em>) and to access nearby locations soon after each other (<em>spatial locality</em>). A loop that processes an array touches addresses sequentially. A function that updates a variable will likely update it again on the next iteration.</p>
+<p id="p-76a647b5">The trick that saves us is a deep empirical regularity in how programs use memory: <strong>locality of reference</strong>. Programs do not access memory at random. They tend to reuse recently used locations (<em>temporal locality</em>) and to access nearby locations soon after each other (<em>spatial locality</em>). A loop that processes an array touches addresses sequentially. A function that updates a variable will likely update it again on the next iteration.</p>
 
-<p>If we keep a small fast memory close to the CPU and stuff it with whatever the CPU just used, we will be right far more often than chance. That is the entire idea of a cache.</p>
+<p id="p-f4fe635f">If we keep a small fast memory close to the CPU and stuff it with whatever the CPU just used, we will be right far more often than chance. That is the entire idea of a cache.</p>
 
 <blockquote>A computer is mostly a giant correctness mechanism wrapped around a very fast guess about what you'll need next. The guess is right about 95% of the time, and that is enough.</blockquote>
 
 <h2 id="the-pyramid">The pyramid, layer by layer</h2>
 
-<p>Modern systems stack <em>six</em> levels of storage in a strict pyramid. At the top is the smallest, fastest, most expensive layer. At the bottom is the slowest, biggest, cheapest. The CPU first looks at the top, and only descends if it must.</p>
+<p id="p-929b900a">Modern systems stack <em>six</em> levels of storage in a strict pyramid. At the top is the smallest, fastest, most expensive layer. At the bottom is the slowest, biggest, cheapest. The CPU first looks at the top, and only descends if it must.</p>
 
 <ul>
   <li><strong>Registers (~256 B, 1 cycle).</strong> Sixteen to thirty-two named slots inside the CPU itself, holding the values currently being operated on. They are not addressed; the compiler decides which value lives in which register.</li>
@@ -137,17 +146,17 @@
   <li><strong>SSD/HDD (~1 TB+, ~150,000 cycles).</strong> Files, the OS image, model weights at rest. Persistent — survives a power cycle.</li>
 </ul>
 
-<p>The numbers move around with each generation. The shape of the pyramid does not.</p>
+<p id="p-0a6d4e13">The numbers move around with each generation. The shape of the pyramid does not.</p>
 
 <h2 id="cache-lines">Cache lines and the TLB</h2>
 
-<p>Caches do not move data byte by byte. They move <strong>cache lines</strong> — typically <a href="https://en.wikipedia.org/wiki/CPU_cache#Cache_entries">64 bytes</a> on x86 and most ARM cores (Apple Silicon uses 128). Asking for one byte pulls in its sixty-three neighbours, on the bet that you will want them too. This is the architectural bet on spatial locality.</p>
+<p id="p-837d244e">Caches do not move data byte by byte. They move <strong>cache lines</strong> — typically <a href="https://en.wikipedia.org/wiki/CPU_cache#Cache_entries">64 bytes</a> on x86 and most ARM cores (Apple Silicon uses 128). Asking for one byte pulls in its sixty-three neighbours, on the bet that you will want them too. This is the architectural bet on spatial locality.</p>
 
-<p>Caches are also indexed by physical address, but programs use virtual addresses (we will meet virtual memory in Chapter 26). So every memory access requires translating virtual to physical, which itself would require a memory access — a vicious circle. The way out is the <strong>TLB</strong> (translation look-aside buffer), a hierarchy of tiny caches: an L1 TLB of often just sixty-four entries that holds the very hottest translations, backed by an L2 TLB of hundreds to a few thousand. A TLB miss is one of the most expensive routine events in modern computing; an entire <a href="https://en.wikipedia.org/wiki/Translation_lookaside_buffer">subfield of OS performance work</a> exists to keep the TLB happy.</p>
+<p id="p-5e5948b3">Caches are also indexed by physical address, but programs use virtual addresses (we will meet virtual memory in Chapter 26). So every memory access requires translating virtual to physical, which itself would require a memory access — a vicious circle. The way out is the <strong>TLB</strong> (translation look-aside buffer), a hierarchy of tiny caches: an L1 TLB of often just sixty-four entries that holds the very hottest translations, backed by an L2 TLB of hundreds to a few thousand. A TLB miss is one of the most expensive routine events in modern computing; an entire <a href="https://en.wikipedia.org/wiki/Translation_lookaside_buffer">subfield of OS performance work</a> exists to keep the TLB happy.</p>
 
-<p>Almost everything that distinguishes "fast code" from "slow code" on the same hardware is, in the end, a question of staying high in this pyramid. Profile any serious program and you will find: the inner loop fits in L1, the working set fits in L3, and the rare accesses to DRAM are <em>prefetched</em> long before they are needed. The CPU is a sprinter chained to a tortoise, and modern systems are the elaborate harness that keeps the sprinter from feeling the chain.</p>
+<p id="p-db3e09a7">Almost everything that distinguishes "fast code" from "slow code" on the same hardware is, in the end, a question of staying high in this pyramid. Profile any serious program and you will find: the inner loop fits in L1, the working set fits in L3, and the rare accesses to DRAM are <em>prefetched</em> long before they are needed. The CPU is a sprinter chained to a tortoise, and modern systems are the elaborate harness that keeps the sprinter from feeling the chain.</p>
 
-<p>So far, our chip has logic, arithmetic, memory, and a clock. It is ready to run instructions. But the moment it powers on, the silicon is dark and ignorant — it does not know there is an operating system, a disk, a keyboard, a self. The next chapter is the strange ritual by which it learns.</p>
+<p id="p-1c735882">So far, our chip has logic, arithmetic, memory, and a clock. It is ready to run instructions. But the moment it powers on, the silicon is dark and ignorant — it does not know there is an operating system, a disk, a keyboard, a self. The next chapter is the strange ritual by which it learns.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 400" role="img" aria-label="Memory hierarchy from registers to disk, by latency and capacity">
@@ -323,4 +332,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

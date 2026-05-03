@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="28-gpu-mind">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">CPU latency-optimized</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">GPU throughput-optimized</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">SIMT warps of 32</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">tensor cores</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">memory coalescing</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">occupancy</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">hide latency by oversubscription</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="28-gpu-mind" data-answer-key="b">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — how many threads does a GPU group into its atomic unit of work (a warp)?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 28</div>
     <h1 class="ch-header__title">The GPU's Different Mind</h1>
     <p class="ch-header__dek">SIMT, warps, and tensor cores</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain the structural difference between a CPU core and a GPU streaming multiprocessor</li><li>Trace how warp divergence on a conditional branch forces the hardware to serialize both paths</li><li>Name two consequences of non-coalesced memory access in a GPU and state how FlashAttention addresses one of them</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">32</div><div class="stat__label">threads in a warp — the GPU's atom of work</div></div><div class="stat"><div class="stat__num">16×16×16</div><div class="stat__label">matrix shape one tensor-core instruction multiplies</div></div><div class="stat"><div class="stat__num">~2,048</div><div class="stat__label">max resident threads on a single Hopper-class SM</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="28-gpu-mind">
   <div class="ladder__bar">
@@ -106,39 +115,39 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#two-different-minds">Two different minds</a></li><li><a href="#simt-and-warps">SIMT and warps</a></li><li><a href="#tensor-cores">Tensor cores</a></li><li><a href="#memory-coalescing">Memory coalescing</a></li><li><a href="#occupancy">Occupancy and the art of filling</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">A CPU is a clever generalist. It runs branchy code, it juggles dozens of unrelated tasks, it copes elegantly with surprises. A GPU is a different organism altogether. It cares nothing for cleverness on a single thread — it would rather have ten thousand threads doing the same dumb thing in lockstep. For most of computing's history, this looked like a niche taste. Then deep learning happened, and it turned out the universe of useful problems was actually shaped like a giant matrix multiply. The GPU was waiting for it.</p>
+<p class="lede" id="p-529eaf50">A CPU is a clever generalist. It runs branchy code, it juggles dozens of unrelated tasks, it copes elegantly with surprises. A GPU is a different organism altogether. It cares nothing for cleverness on a single thread — it would rather have ten thousand threads doing the same dumb thing in lockstep. For most of computing's history, this looked like a niche taste. Then deep learning happened, and it turned out the universe of useful problems was actually shaped like a giant matrix multiply. The GPU was waiting for it.</p>
 
 <h2 id="two-different-minds">Two different minds</h2>
 
-<p>A modern CPU core has a few wide pipelines, deep out-of-order execution, big caches, and elaborate branch prediction — all in service of running a single thread as fast as possible. A modern GPU streaming multiprocessor (SM) has many simple ALUs, shallow pipelines, and a thread-scheduler designed to <em>hide latency by oversubscription</em>: when one group of threads stalls, another runs.</p>
+<p id="p-c9af57a9">A modern CPU core has a few wide pipelines, deep out-of-order execution, big caches, and elaborate branch prediction — all in service of running a single thread as fast as possible. A modern GPU streaming multiprocessor (SM) has many simple ALUs, shallow pipelines, and a thread-scheduler designed to <em>hide latency by oversubscription</em>: when one group of threads stalls, another runs.</p>
 
-<p>NVIDIA calls its execution model <strong>SIMT</strong> — <em>single instruction, multiple threads</em>. It is a refinement of the older SIMD idea (single instruction, multiple data). Threads are programmed independently in CUDA; the hardware groups them into <strong>warps</strong> of thirty-two and issues one instruction at a time to the whole warp. <a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html">The CUDA C++ Programming Guide</a> describes this in chapter and verse.</p>
+<p id="p-7b3fd5fb">NVIDIA calls its execution model <strong>SIMT</strong> — <em>single instruction, multiple threads</em>. It is a refinement of the older SIMD idea (single instruction, multiple data). Threads are programmed independently in CUDA; the hardware groups them into <strong>warps</strong> of thirty-two and issues one instruction at a time to the whole warp. <a href="https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html">The CUDA C++ Programming Guide</a> describes this in chapter and verse.</p>
 
 <h2 id="simt-and-warps">SIMT and warps</h2>
 
-<p>A warp is the GPU's atomic unit of work. All thirty-two threads in a warp execute the same instruction in the same cycle, on different data. If one thread takes a different branch, the warp <em>diverges</em>: the hardware executes both paths serially, masking off the threads that should not participate. This is why GPU code prefers data-parallel, branch-free inner loops.</p>
+<p id="p-f6dd3f11">A warp is the GPU's atomic unit of work. All thirty-two threads in a warp execute the same instruction in the same cycle, on different data. If one thread takes a different branch, the warp <em>diverges</em>: the hardware executes both paths serially, masking off the threads that should not participate. This is why GPU code prefers data-parallel, branch-free inner loops.</p>
 
-<p>An SM holds many warps in flight at once — sometimes 64 or more. When one warp stalls on memory, another instantly takes its place. There is no out-of-order execution; latency is hidden by sheer breadth of work.</p>
+<p id="p-6c645a82">An SM holds many warps in flight at once — sometimes 64 or more. When one warp stalls on memory, another instantly takes its place. There is no out-of-order execution; latency is hidden by sheer breadth of work.</p>
 
 <h2 id="tensor-cores">Tensor cores</h2>
 
-<p>Starting with the Volta architecture in 2017, NVIDIA added <strong>tensor cores</strong>: specialized units that perform a small matrix multiply-and-accumulate as a single instruction. A modern Hopper or Blackwell tensor core can multiply two 4×8×16 matrix tiles and accumulate the result in one operation. <a href="https://images.nvidia.com/content/volta-architecture/pdf/volta-architecture-whitepaper.pdf">NVIDIA's Volta whitepaper</a> introduced the design; the <a href="https://resources.nvidia.com/en-us-tensor-core/nvidia-tensor-core-gpu-datasheet">Hopper</a> and Blackwell architectures have refined it through several generations.</p>
+<p id="p-78cf87ad">Starting with the Volta architecture in 2017, NVIDIA added <strong>tensor cores</strong>: specialized units that perform a small matrix multiply-and-accumulate as a single instruction. A modern Hopper or Blackwell tensor core can multiply two 4×8×16 matrix tiles and accumulate the result in one operation. <a href="https://images.nvidia.com/content/volta-architecture/pdf/volta-architecture-whitepaper.pdf">NVIDIA's Volta whitepaper</a> introduced the design; the <a href="https://resources.nvidia.com/en-us-tensor-core/nvidia-tensor-core-gpu-datasheet">Hopper</a> and Blackwell architectures have refined it through several generations.</p>
 
-<p>This matters because everything in a transformer — the matmul in attention, the matmul in the MLP, the projection layers — is exactly this shape of operation. Tensor cores are why modern frontier models train in months instead of years; on raw FP32 ALUs the same training would be a hundred times slower.</p>
+<p id="p-16c89fbc">This matters because everything in a transformer — the matmul in attention, the matmul in the MLP, the projection layers — is exactly this shape of operation. Tensor cores are why modern frontier models train in months instead of years; on raw FP32 ALUs the same training would be a hundred times slower.</p>
 
 <h2 id="memory-coalescing">Memory coalescing</h2>
 
-<p>GPUs are bandwidth machines. A single Rubin GPU pulls roughly 22 TB/s from its HBM4 stacks. To use that bandwidth, the threads in a warp must access memory in a pattern the hardware can fold into a single transaction — adjacent threads reading adjacent words. This is called <strong>coalescing</strong>. Random or strided access patterns waste bandwidth dramatically.</p>
+<p id="p-937a5558">GPUs are bandwidth machines. A single Rubin GPU pulls roughly 22 TB/s from its HBM4 stacks. To use that bandwidth, the threads in a warp must access memory in a pattern the hardware can fold into a single transaction — adjacent threads reading adjacent words. This is called <strong>coalescing</strong>. Random or strided access patterns waste bandwidth dramatically.</p>
 
-<p>The deepest art of GPU programming is laying out data so that the natural access pattern is coalesced. Frameworks like <a href="https://github.com/openai/triton">Triton</a> and the inner kernels of <a href="https://github.com/Dao-AILab/flash-attention">FlashAttention</a> exist largely to engineer this layout for the most common neural-network operations.</p>
+<p id="p-59730790">The deepest art of GPU programming is laying out data so that the natural access pattern is coalesced. Frameworks like <a href="https://github.com/openai/triton">Triton</a> and the inner kernels of <a href="https://github.com/Dao-AILab/flash-attention">FlashAttention</a> exist largely to engineer this layout for the most common neural-network operations.</p>
 
 <h2 id="occupancy">Occupancy and the art of filling</h2>
 
-<p>A GPU performs at peak only when its SMs are saturated — when there are enough warps in flight to hide every latency. <strong>Occupancy</strong> is the ratio of active warps to maximum possible warps on an SM. Hitting high occupancy requires balancing register usage, shared-memory usage, and thread-block size; CUDA exposes <a href="https://developer.nvidia.com/cuda-toolkit">occupancy calculators</a> as a routine optimization tool.</p>
+<p id="p-8c3404c4">A GPU performs at peak only when its SMs are saturated — when there are enough warps in flight to hide every latency. <strong>Occupancy</strong> is the ratio of active warps to maximum possible warps on an SM. Hitting high occupancy requires balancing register usage, shared-memory usage, and thread-block size; CUDA exposes <a href="https://developer.nvidia.com/cuda-toolkit">occupancy calculators</a> as a routine optimization tool.</p>
 
-<p>The experience of writing fast GPU code is unlike writing fast CPU code. On a CPU, you cherish each thread; on a GPU, you spend them like sand. The chip wants ten thousand threads, all doing the same arithmetic, all reading neighbouring bytes, all blocking and unblocking interchangeably. The chip is a swarm.</p>
+<p id="p-bf27ecab">The experience of writing fast GPU code is unlike writing fast CPU code. On a CPU, you cherish each thread; on a GPU, you spend them like sand. The chip wants ten thousand threads, all doing the same arithmetic, all reading neighbouring bytes, all blocking and unblocking interchangeably. The chip is a swarm.</p>
 
-<p>Now we have the right kind of swarm — and the right kind of swarming workload — to ask the question this whole book has been pointing at: what <em>is</em> a neural network, when you finally open the box?</p>
+<p id="p-7df69cee">Now we have the right kind of swarm — and the right kind of swarming workload — to ask the question this whole book has been pointing at: what <em>is</em> a neural network, when you finally open the box?</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 380" role="img" aria-label="GPU SM with warps of threads executing the same instruction in parallel">
@@ -310,4 +319,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

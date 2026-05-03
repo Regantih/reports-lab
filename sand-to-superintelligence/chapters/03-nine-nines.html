@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="03-nine-nines">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">MG-Si</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">HCl reaction</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">trichlorosilane gas</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">fractional distillation</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">Siemens reactor</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">polysilicon rods</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">9N</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="03-nine-nines" data-answer-key="c">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — what is the maximum allowable boron contamination in electronic-grade silicon?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 03</div>
     <h1 class="ch-header__title">The Nine-Nines Problem</h1>
     <p class="ch-header__dek">Polysilicon and the Siemens process</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Trace the full Siemens process from powdered MG-Si to 9N electronic-grade polysilicon</li><li>Explain why trichlorosilane's boiling point difference from BCl₃ makes fractional distillation effective</li><li>State the energy cost range for electronic-grade polysilicon and name the FBR alternative</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">1 <em>part</em></div><div class="stat__label">boron per billion silicon atoms — the limit</div></div><div class="stat"><div class="stat__num">9N</div><div class="stat__label">purity (99.9999999%) for electronic grade</div></div><div class="stat"><div class="stat__num">~1,100<em>°C</em></div><div class="stat__label">Siemens rod temperature</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="03-nine-nines">
   <div class="ladder__bar">
@@ -106,43 +115,43 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-trichlorosilane-trick">The trichlorosilane trick</a></li><li><a href="#distillation">Distillation, atom-style</a></li><li><a href="#the-siemens-reactor">Inside the Siemens reactor</a></li><li><a href="#nines">Counting the nines</a></li><li><a href="#fbr-alternative">An alternative path: FBR</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">The next step is so absurd in conception that, told as a story, it sounds like alchemy. We will take crushed silicon metal, react it with hydrochloric acid to make a gas, distill that gas the way a vodka maker distills vodka, then bake the gas back into a solid by hovering it over hot rods until silicon precipitates onto them like frost. We will do this for a week. At the end, what we have is a crystal so pure that, if you scaled it up to the size of the Pacific Ocean, you could find perhaps <strong>one teaspoon of contamination</strong> in the entire body of water.</p>
+<p class="lede" id="p-0ffc4b11">The next step is so absurd in conception that, told as a story, it sounds like alchemy. We will take crushed silicon metal, react it with hydrochloric acid to make a gas, distill that gas the way a vodka maker distills vodka, then bake the gas back into a solid by hovering it over hot rods until silicon precipitates onto them like frost. We will do this for a week. At the end, what we have is a crystal so pure that, if you scaled it up to the size of the Pacific Ocean, you could find perhaps <strong>one teaspoon of contamination</strong> in the entire body of water.</p>
 
-<p>This is the <strong>Siemens process</strong>. It is the foundation of the entire electronic-grade silicon industry, and it is essentially unchanged since the 1950s.</p>
+<p id="p-5312093e">This is the <strong>Siemens process</strong>. It is the foundation of the entire electronic-grade silicon industry, and it is essentially unchanged since the 1950s.</p>
 
 <h2 id="the-trichlorosilane-trick">The trichlorosilane trick</h2>
 
-<p>The opening move is chemistry. Powdered MG-Si is loaded into a fluidized-bed reactor and exposed to gaseous hydrogen chloride at around 300°C. The silicon and the chlorine flirt with each other and produce a clear, faintly fruity-smelling liquid called <strong>trichlorosilane</strong>:</p>
+<p id="p-ecebe4b6">The opening move is chemistry. Powdered MG-Si is loaded into a fluidized-bed reactor and exposed to gaseous hydrogen chloride at around 300°C. The silicon and the chlorine flirt with each other and produce a clear, faintly fruity-smelling liquid called <strong>trichlorosilane</strong>:</p>
 
 <blockquote>Si + 3 HCl → SiHCl₃ + H₂</blockquote>
 
-<p>Trichlorosilane is the workhorse molecule of the entire industry. It is volatile (boiling point: 31.8°C — about as much as warm bathwater can produce), liquid at room temperature, and — crucially — distinct from the trichloride compounds of other elements you might find in your starting material. Boron, the most feared impurity, forms BCl₃, which boils at 12.6°C. Phosphorus's compound boils elsewhere. Iron's, elsewhere again.</p>
+<p id="p-e931e445">Trichlorosilane is the workhorse molecule of the entire industry. It is volatile (boiling point: 31.8°C — about as much as warm bathwater can produce), liquid at room temperature, and — crucially — distinct from the trichloride compounds of other elements you might find in your starting material. Boron, the most feared impurity, forms BCl₃, which boils at 12.6°C. Phosphorus's compound boils elsewhere. Iron's, elsewhere again.</p>
 
-<p>You see where this is going.</p>
+<p id="p-fb4fa255">You see where this is going.</p>
 
 <h2 id="distillation">Distillation, atom-style</h2>
 
-<p>The crude trichlorosilane is fed into a fractional distillation column, the same broad principle that separates whiskey from mash and gasoline from crude oil. Heated at the bottom, cooled at the top, the column allows different compounds to settle at different heights according to their boiling points. The result is something the chemistry student in you will appreciate: each pass through the column removes 90% or more of remaining boron, phosphorus, and metallic compounds.</p>
+<p id="p-15f82387">The crude trichlorosilane is fed into a fractional distillation column, the same broad principle that separates whiskey from mash and gasoline from crude oil. Heated at the bottom, cooled at the top, the column allows different compounds to settle at different heights according to their boiling points. The result is something the chemistry student in you will appreciate: each pass through the column removes 90% or more of remaining boron, phosphorus, and metallic compounds.</p>
 
-<p>Multiple passes — and several rounds of redistribution and re-distillation — drive impurities into the parts-per-trillion range. The trichlorosilane that emerges at the end of this column is, atom for atom, one of the cleanest substances on earth.</p>
+<p id="p-5eb92d97">Multiple passes — and several rounds of redistribution and re-distillation — drive impurities into the parts-per-trillion range. The trichlorosilane that emerges at the end of this column is, atom for atom, one of the cleanest substances on earth.</p>
 
 <h2 id="the-siemens-reactor">Inside the Siemens reactor</h2>
 
-<p>Now comes the deposition. The clean trichlorosilane is mixed with hydrogen gas and pumped into a tall, bell-shaped quartz reactor — the <strong>Siemens reactor</strong>. Inside, thin silicon "seed rods" are heated to about 1,100°C by passing electric current directly through them. They glow a deep cherry red.</p>
+<p id="p-d3c3f552">Now comes the deposition. The clean trichlorosilane is mixed with hydrogen gas and pumped into a tall, bell-shaped quartz reactor — the <strong>Siemens reactor</strong>. Inside, thin silicon "seed rods" are heated to about 1,100°C by passing electric current directly through them. They glow a deep cherry red.</p>
 
-<p>The hot rods crack the trichlorosilane gas in their vicinity. Silicon atoms, freed by the heat, deposit onto the rods. Hydrogen and hydrogen chloride float away as gases. <a href="https://fpt-semiconductor.com/blogs/a-guidance-to-silicon-wafer-manufacturing-process/">Over the course of several days</a>, the rods grow thicker and thicker, accumulating layer after layer of pure silicon, until what started as pencil-thin filaments are now great <strong>polysilicon rods</strong>, perhaps 150 mm in diameter, two meters tall, gleaming with the texture of a frozen waterfall.</p>
+<p id="p-61eeb2e3">The hot rods crack the trichlorosilane gas in their vicinity. Silicon atoms, freed by the heat, deposit onto the rods. Hydrogen and hydrogen chloride float away as gases. <a href="https://fpt-semiconductor.com/blogs/a-guidance-to-silicon-wafer-manufacturing-process/">Over the course of several days</a>, the rods grow thicker and thicker, accumulating layer after layer of pure silicon, until what started as pencil-thin filaments are now great <strong>polysilicon rods</strong>, perhaps 150 mm in diameter, two meters tall, gleaming with the texture of a frozen waterfall.</p>
 
 <h2 id="nines">Counting the nines</h2>
 
-<p>The industry measures its triumphs in nines. <strong>6N</strong> means 99.9999% — six nines after the decimal — and is sufficient for solar panels. <strong>9N</strong>, sometimes called <em>electronic grade</em>, means 99.9999999% and is the floor for memory chips. Modern leading-edge logic, including the Vera Rubin GPU we are working toward, demands silicon in the <strong>10N to 11N</strong> range.</p>
+<p id="p-e9cd1145">The industry measures its triumphs in nines. <strong>6N</strong> means 99.9999% — six nines after the decimal — and is sufficient for solar panels. <strong>9N</strong>, sometimes called <em>electronic grade</em>, means 99.9999999% and is the floor for memory chips. Modern leading-edge logic, including the Vera Rubin GPU we are working toward, demands silicon in the <strong>10N to 11N</strong> range.</p>
 
-<p>For perspective: 11N silicon contains, at most, one foreign atom per <em>hundred billion</em> silicon atoms. The structures we will eventually pattern onto this material are themselves counted in atoms — a 2 nm fin is perhaps fifteen silicon atoms wide. A single misplaced boron atom in the wrong fin is, statistically, an event that the chip's designers had to plan for.</p>
+<p id="p-54b2194a">For perspective: 11N silicon contains, at most, one foreign atom per <em>hundred billion</em> silicon atoms. The structures we will eventually pattern onto this material are themselves counted in atoms — a 2 nm fin is perhaps fifteen silicon atoms wide. A single misplaced boron atom in the wrong fin is, statistically, an event that the chip's designers had to plan for.</p>
 
 <h2 id="fbr-alternative">An alternative path: FBR</h2>
 
-<p>The Siemens process is energy-hungry. Solar-grade polysilicon takes on the order of 60 kWh of electricity per kilogram; <em>electronic-grade</em> silicon, with its tighter purity targets and slower deposition, runs higher — published estimates put it in the 90–170 kWh/kg range — most of it lost as heat radiated from the incandescent rods. An alternative method, the <strong>fluidized-bed reactor</strong> (FBR), uses silane gas (SiH₄) and produces polysilicon as small beads instead of rods, at roughly one-fifth the energy cost. FBR has captured a substantial fraction of the solar-grade market, but for the highest-purity electronic silicon, the conservatism of the industry — and the maturity of the Siemens process — has kept Siemens dominant.</p>
+<p id="p-381ebd88">The Siemens process is energy-hungry. Solar-grade polysilicon takes on the order of 60 kWh of electricity per kilogram; <em>electronic-grade</em> silicon, with its tighter purity targets and slower deposition, runs higher — published estimates put it in the 90–170 kWh/kg range — most of it lost as heat radiated from the incandescent rods. An alternative method, the <strong>fluidized-bed reactor</strong> (FBR), uses silane gas (SiH₄) and produces polysilicon as small beads instead of rods, at roughly one-fifth the energy cost. FBR has captured a substantial fraction of the solar-grade market, but for the highest-purity electronic silicon, the conservatism of the industry — and the maturity of the Siemens process — has kept Siemens dominant.</p>
 
-<p>Either way, the result is the same kind of object: a chunk of silicon so pure that it is, by any meaningful measure, one substance. Now we have to make it one <em>crystal</em>.</p>
+<p id="p-7b68bbfb">Either way, the result is the same kind of object: a chunk of silicon so pure that it is, by any meaningful measure, one substance. Now we have to make it one <em>crystal</em>.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 380" role="img" aria-label="Siemens reactor depositing polysilicon onto seed rods from trichlorosilane gas">
@@ -308,4 +317,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

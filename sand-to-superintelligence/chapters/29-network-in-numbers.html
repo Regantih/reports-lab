@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="29-network-in-numbers">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">weight tensors</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">linear layer matmul</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">self-attention QKV</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">softmax</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">80 transformer blocks</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">FP8 precision</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">200B parameters</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="29-network-in-numbers" data-answer-key="c">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — how much memory do the weights of a 200-billion-parameter frontier model occupy in BF16?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 29</div>
     <h1 class="ch-header__title">A Neural Network Lives in Numbers</h1>
     <p class="ch-header__dek">Weights as DRAM, thought as matrix multiply</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain why every major operation in a transformer—attention and MLP both—reduces to matrix multiply</li><li>State what BF16 preserves from FP32 and what it sacrifices, and name the accuracy technique that compensates</li><li>Compute the approximate weight-memory footprint of a 200B-parameter model stored in BF16</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">~200 <em>B</em></div><div class="stat__label">parameters in a frontier model</div></div><div class="stat"><div class="stat__num">~400 <em>GB</em></div><div class="stat__label">weight memory in BF16</div></div><div class="stat"><div class="stat__num">FP8</div><div class="stat__label">the new precision floor for inference</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="29-network-in-numbers">
   <div class="ladder__bar">
@@ -106,35 +115,35 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#the-box">Opening the box</a></li><li><a href="#a-layer-is-a-matmul">A layer is a matrix multiply</a></li><li><a href="#attention">Attention is also a matmul</a></li><li><a href="#precision">FP16, BF16, FP8 — the precision frontier</a></li><li><a href="#the-shape-of-a-frontier-model">The shape of a frontier model</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">A frontier AI model is, when you finally pry open the box, a strangely simple thing: a few hundred billion floating-point numbers, organized into stacks of matrices, evaluated by repeated matrix multiplication and a single squashing function. There is no symbol manipulation, no logic engine, no rule database. There is arithmetic, performed at speeds that would have terrified von Neumann.</p>
+<p class="lede" id="p-9ee4e1bf">A frontier AI model is, when you finally pry open the box, a strangely simple thing: a few hundred billion floating-point numbers, organized into stacks of matrices, evaluated by repeated matrix multiplication and a single squashing function. There is no symbol manipulation, no logic engine, no rule database. There is arithmetic, performed at speeds that would have terrified von Neumann.</p>
 
 <h2 id="the-box">Opening the box</h2>
 
-<p>If you download <a href="https://huggingface.co/meta-llama">a Llama model</a> or <a href="https://huggingface.co/mistralai">a Mistral model</a>, what arrives on your disk is a directory of files containing two things: a small JSON config describing the architecture, and many gigabytes of <strong>weight tensors</strong> — multidimensional arrays of numbers. That is the model. The architecture is a rule for how the numbers are arranged and how to use them; the weights are the learned content. Training is the long, expensive act of choosing the weights.</p>
+<p id="p-6efc5aea">If you download <a href="https://huggingface.co/meta-llama">a Llama model</a> or <a href="https://huggingface.co/mistralai">a Mistral model</a>, what arrives on your disk is a directory of files containing two things: a small JSON config describing the architecture, and many gigabytes of <strong>weight tensors</strong> — multidimensional arrays of numbers. That is the model. The architecture is a rule for how the numbers are arranged and how to use them; the weights are the learned content. Training is the long, expensive act of choosing the weights.</p>
 
-<p>For a model with 200 billion parameters in BF16 (16 bits each), the weights occupy 400 GB. Frontier inference systems shard them across many GPUs because they do not fit in any single device's HBM.</p>
+<p id="p-3ed3ab09">For a model with 200 billion parameters in BF16 (16 bits each), the weights occupy 400 GB. Frontier inference systems shard them across many GPUs because they do not fit in any single device's HBM.</p>
 
 <h2 id="a-layer-is-a-matmul">A layer is a matrix multiply</h2>
 
-<p>The fundamental unit of a transformer is a <strong>linear layer</strong>: a matrix multiply <em>y = W x + b</em>, followed by a nonlinearity (typically GELU, SiLU, or ReLU). The input <em>x</em> is a vector of activations from the previous layer, perhaps 16,000 numbers. The weight matrix <em>W</em> is, say, 16,000 × 64,000. The output <em>y</em> is a vector of 64,000 numbers. The nonlinearity is applied element-wise.</p>
+<p id="p-b65babc0">The fundamental unit of a transformer is a <strong>linear layer</strong>: a matrix multiply <em>y = W x + b</em>, followed by a nonlinearity (typically GELU, SiLU, or ReLU). The input <em>x</em> is a vector of activations from the previous layer, perhaps 16,000 numbers. The weight matrix <em>W</em> is, say, 16,000 × 64,000. The output <em>y</em> is a vector of 64,000 numbers. The nonlinearity is applied element-wise.</p>
 
-<p>That is it. That is the operation a neural network performs, repeated thousands of times per token. It maps to tensor cores almost exactly: this is the workload GPUs are built for.</p>
+<p id="p-2acf7d6f">That is it. That is the operation a neural network performs, repeated thousands of times per token. It maps to tensor cores almost exactly: this is the workload GPUs are built for.</p>
 
 <h2 id="attention">Attention is also a matmul</h2>
 
-<p>The transformer's signature trick — <strong>self-attention</strong>, introduced by Vaswani et al. in <a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need</a> (2017) — is, despite its mystique, also a matrix multiply. Three projections of the input (queries Q, keys K, values V) are computed by linear layers. Then attention is computed as <em>softmax(QK<sup>T</sup>/√d)V</em>: a matrix multiply of Q and K-transpose, a softmax over the result, and another matrix multiply with V. <a href="https://github.com/Dao-AILab/flash-attention">FlashAttention</a> rearranges this computation to be memory-efficient on real hardware, but the underlying operation is the same.</p>
+<p id="p-1f0df8ec">The transformer's signature trick — <strong>self-attention</strong>, introduced by Vaswani et al. in <a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need</a> (2017) — is, despite its mystique, also a matrix multiply. Three projections of the input (queries Q, keys K, values V) are computed by linear layers. Then attention is computed as <em>softmax(QK<sup>T</sup>/√d)V</em>: a matrix multiply of Q and K-transpose, a softmax over the result, and another matrix multiply with V. <a href="https://github.com/Dao-AILab/flash-attention">FlashAttention</a> rearranges this computation to be memory-efficient on real hardware, but the underlying operation is the same.</p>
 
-<p>A modern transformer block is <em>attention + an MLP</em>, both of which are linear layers (so, matrix multiplies) wrapped around nonlinearities. The whole network is a stack of these blocks — typically 80 of them in a frontier model — plus an embedding layer at the beginning and a projection to vocabulary at the end.</p>
+<p id="p-e3161969">A modern transformer block is <em>attention + an MLP</em>, both of which are linear layers (so, matrix multiplies) wrapped around nonlinearities. The whole network is a stack of these blocks — typically 80 of them in a frontier model — plus an embedding layer at the beginning and a projection to vocabulary at the end.</p>
 
 <h2 id="precision">FP16, BF16, FP8 — the precision frontier</h2>
 
-<p>Each weight is a floating-point number, but not necessarily a 32-bit one. NVIDIA's <a href="https://docs.nvidia.com/deeplearning/performance/mixed-precision-training/index.html">mixed-precision training paper</a> showed that 16-bit formats are sufficient for both training and inference if you are careful about loss scaling. BF16 (brain floating point) keeps FP32's exponent range with FP16's mantissa, which trades a little precision for a lot of dynamic range.</p>
+<p id="p-b1d03076">Each weight is a floating-point number, but not necessarily a 32-bit one. NVIDIA's <a href="https://docs.nvidia.com/deeplearning/performance/mixed-precision-training/index.html">mixed-precision training paper</a> showed that 16-bit formats are sufficient for both training and inference if you are careful about loss scaling. BF16 (brain floating point) keeps FP32's exponent range with FP16's mantissa, which trades a little precision for a lot of dynamic range.</p>
 
-<p>The frontier has now moved to 8-bit formats — FP8 (E4M3 and E5M2) for both training and inference, sometimes mixed with INT8 quantization. Going from 16 bits to 8 bits halves the memory and doubles the compute throughput; doing it without losing accuracy is a delicate art that has occupied much of the systems-ML community since 2022. Hopper added native FP8 tensor cores; Blackwell adds FP6 and FP4.</p>
+<p id="p-559405fc">The frontier has now moved to 8-bit formats — FP8 (E4M3 and E5M2) for both training and inference, sometimes mixed with INT8 quantization. Going from 16 bits to 8 bits halves the memory and doubles the compute throughput; doing it without losing accuracy is a delicate art that has occupied much of the systems-ML community since 2022. Hopper added native FP8 tensor cores; Blackwell adds FP6 and FP4.</p>
 
 <h2 id="the-shape-of-a-frontier-model">The shape of a frontier model</h2>
 
-<p>A modern frontier model is roughly:</p>
+<p id="p-a4dff246">A modern frontier model is roughly:</p>
 <ul>
   <li>A vocabulary of about 100,000 tokens, each mapped to a 16,000-dimensional embedding vector.</li>
   <li>~80 transformer blocks, each containing self-attention and an MLP, with hidden dimensions of 16,000-25,000.</li>
@@ -143,9 +152,9 @@
   <li>Training cost: 10<sup>25</sup> floating-point operations or more, sustained over months on tens of thousands of GPUs.</li>
 </ul>
 
-<p>What is striking, when you take the box apart, is the absence of mystery in the parts. The mystery — the apparent reasoning, the apparent comprehension, the apparent planning — emerges only when you put 200 billion of those parts together and ask them, in concert, to predict the next token of a sentence. We do not yet understand why such a simple recipe produces such complex behaviour. We only know it does, and that the silicon we built for matrix multiplies turns out to be exactly the silicon needed to make it happen.</p>
+<p id="p-4e889659">What is striking, when you take the box apart, is the absence of mystery in the parts. The mystery — the apparent reasoning, the apparent comprehension, the apparent planning — emerges only when you put 200 billion of those parts together and ask them, in concert, to predict the next token of a sentence. We do not yet understand why such a simple recipe produces such complex behaviour. We only know it does, and that the silicon we built for matrix multiplies turns out to be exactly the silicon needed to make it happen.</p>
 
-<p>The last chapter of this book follows a single thought as it makes its way through that arrangement of numbers, end to end.</p>
+<p id="p-5905973c">The last chapter of this book follows a single thought as it makes its way through that arrangement of numbers, end to end.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 380" role="img" aria-label="A neural network forward pass as a sequence of matrix multiplies">
@@ -328,4 +337,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

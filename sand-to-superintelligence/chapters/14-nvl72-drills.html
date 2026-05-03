@@ -29,11 +29,13 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page">
+  <script id="srs-drills-14-nvl72" type="application/json">[{"q": "How many compute trays are in an NVL72 rack, and how many GPUs per tray?", "a": "18 compute trays, each holding 4 Rubin GPUs and 2 Vera CPUs (typically as two Superchips)."}, {"q": "How many NVLink switch trays does an NVL72 rack contain?", "a": "9 NVLink switch trays, whose only job is to switch GPU-to-GPU traffic."}, {"q": "What is the NVL72 rack\u2019s FP4 inference compute?", "a": "Approximately 3.6 exaflops."}, {"q": "What is the total HBM4 memory in an NVL72 rack?", "a": "About 20.7 TB (72 GPUs \u00d7 288 GB)."}, {"q": "What is the NVL72\u2019s all-to-all NVLink 6 bandwidth?", "a": "260 TB/s."}, {"q": "What is the NVL72 rack\u2019s power draw range?", "a": "Roughly 190\u2013230 kW depending on Max Q (efficiency) vs Max P (peak performance) tuning."}, {"q": "How does the copper midplane reduce tray assembly time?", "a": "From roughly 2 hours per tray with conventional cabling to about 5 minutes."}, {"q": "Why does NVL72 require liquid cooling rather than air cooling?", "a": "~200 kW is too much for air \u2014 no fan or heat sink can evacuate that power from a single rack with air alone."}, {"q": "What is the coolant path in the NVL72 liquid cooling loop?", "a": "Coolant enters through manifolds at the top, flows to cold plates bolted to each GPU, picks up heat, and returns to a coolant distribution unit (CDU) at the rack base, which routes hot coolant to the building cooling loop."}, {"q": "What is the Kyber NVL576, and how does its power figure differ from NVL72?", "a": "Kyber NVL576 is the next-generation rack NVIDIA has previewed; it pushes past 600 kW \u2014 more than double the NVL72\u2019s 190\u2013230 kW range."}]</script>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Drill cards · Chapter 14</div>
     <div class="ch-header__num">Drills</div>
@@ -41,6 +43,10 @@
     <p class="ch-header__dek">10 atomic recall cards. Export to Anki and let spaced repetition do its slow work.</p>
   </header>
   <div class="drills__wrap">
+    <div class="srs-banner" data-srs-banner>
+  <span class="srs-banner__label"><span class="srs-banner__count" data-srs-count>10</span> cards due for review</span>
+  <button type="button" class="srs-banner__btn" data-srs-open="14-nvl72">Review now</button>
+</div>
     <div class="drills__actions">
       <a class="learn__btn learn__btn--primary" href="14-nvl72-drills.tsv" download>Download Anki TSV</a>
       <a class="learn__btn learn__btn--ghost" href="14-nvl72.html">← Back to chapter</a>
@@ -97,4 +103,5 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
 </body></html>

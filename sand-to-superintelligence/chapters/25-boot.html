@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="25-boot">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">reset vector 0xFFFFFFF0</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">UEFI firmware</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">hardware inventory</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">bootloader</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">kernel decompress</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">PID 1</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">login</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="25-boot" data-answer-key="b">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — how long does a modern system take to go from power-on to kernel hand-off?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 25</div>
     <h1 class="ch-header__title">Boot</h1>
     <p class="ch-header__dek">The first second of a chip's life</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Trace the five-stage boot relay from power-on reset to userspace login</li><li>Explain why UEFI lives in flash memory separate from DRAM and what it must accomplish before handing off</li><li>State what the bootloader passes to the kernel via the boot protocol and why this handoff must be exact</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">0xFFFFFFF0</div><div class="stat__label">the address an x86 CPU jumps to on reset</div></div><div class="stat"><div class="stat__num">~5 <em>stages</em></div><div class="stat__label">from power-on to login prompt</div></div><div class="stat"><div class="stat__num">~3 <em>seconds</em></div><div class="stat__label">modern UEFI boot to kernel hand-off</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="25-boot">
   <div class="ladder__bar">
@@ -106,41 +115,41 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#power-on">Power-on reset</a></li><li><a href="#the-firmware">Firmware: BIOS and UEFI</a></li><li><a href="#the-bootloader">The bootloader</a></li><li><a href="#the-kernel">The kernel takes over</a></li><li><a href="#userspace">Into userspace</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">Press the power button. Voltages stabilize, the clock begins ticking, and a cold piece of silicon is suddenly alive — but blank. It has no operating system in memory, no concept of files, no keyboard driver, no display. What happens in the next three seconds is one of the most carefully choreographed sequences in all of engineering: a relay race in which each runner knows just enough to find and pass the baton to the next.</p>
+<p class="lede" id="p-f97c8227">Press the power button. Voltages stabilize, the clock begins ticking, and a cold piece of silicon is suddenly alive — but blank. It has no operating system in memory, no concept of files, no keyboard driver, no display. What happens in the next three seconds is one of the most carefully choreographed sequences in all of engineering: a relay race in which each runner knows just enough to find and pass the baton to the next.</p>
 
 <h2 id="power-on">Power-on reset</h2>
 
-<p>The first thing the chip does is the simplest. A small circuit detects that the supply voltage has crossed a threshold and asserts the <strong>reset</strong> line. Every flip-flop on the die — and there are billions — slams to a known state. The program counter, the special register holding the address of the next instruction, is set to a fixed boot vector. On x86 CPUs that vector is <a href="https://wiki.osdev.org/Real_mode">0xFFFFFFF0</a>. On ARM, it is configurable but typically zero.</p>
+<p id="p-b9a384a6">The first thing the chip does is the simplest. A small circuit detects that the supply voltage has crossed a threshold and asserts the <strong>reset</strong> line. Every flip-flop on the die — and there are billions — slams to a known state. The program counter, the special register holding the address of the next instruction, is set to a fixed boot vector. On x86 CPUs that vector is <a href="https://wiki.osdev.org/Real_mode">0xFFFFFFF0</a>. On ARM, it is configurable but typically zero.</p>
 
-<p>Reset is the only moment in a CPU's life when its starting state is fully predictable. From here on, everything is contingent.</p>
+<p id="p-1df5e992">Reset is the only moment in a CPU's life when its starting state is fully predictable. From here on, everything is contingent.</p>
 
 <h2 id="the-firmware">Firmware: BIOS and UEFI</h2>
 
-<p>The boot vector points into <strong>flash memory</strong> — a small chip on the motherboard, separate from the main DRAM and immune to power loss. There lives the system firmware. On modern PCs this is <a href="https://uefi.org/specifications">UEFI</a> (Unified Extensible Firmware Interface); the older standard was BIOS. On Macs it is similar firmware called iBoot. On a Rubin GPU node, the BMC (baseboard management controller) plays a comparable role.</p>
+<p id="p-393ba4fb">The boot vector points into <strong>flash memory</strong> — a small chip on the motherboard, separate from the main DRAM and immune to power loss. There lives the system firmware. On modern PCs this is <a href="https://uefi.org/specifications">UEFI</a> (Unified Extensible Firmware Interface); the older standard was BIOS. On Macs it is similar firmware called iBoot. On a Rubin GPU node, the BMC (baseboard management controller) plays a comparable role.</p>
 
-<p>The firmware's job is to inventory and initialize the hardware: detect how much DRAM is installed and run memory training to find optimal timings, enumerate PCIe devices, set up the interrupt controller, initialize the chipset, configure the CPU's microcode, and locate bootable storage. It does this with a tiny, statically linked program that lives in flash and never trusts anything beyond what it has just measured.</p>
+<p id="p-823df788">The firmware's job is to inventory and initialize the hardware: detect how much DRAM is installed and run memory training to find optimal timings, enumerate PCIe devices, set up the interrupt controller, initialize the chipset, configure the CPU's microcode, and locate bootable storage. It does this with a tiny, statically linked program that lives in flash and never trusts anything beyond what it has just measured.</p>
 
-<p>Once it has a healthy machine, UEFI's last act is to find a <em>bootloader</em> on disk and jump to it.</p>
+<p id="p-fd2ebd15">Once it has a healthy machine, UEFI's last act is to find a <em>bootloader</em> on disk and jump to it.</p>
 
 <h2 id="the-bootloader">The bootloader</h2>
 
-<p>The bootloader is a small program — <a href="https://www.gnu.org/software/grub/">GRUB</a> on most Linux installs, systemd-boot or rEFInd on others, the Windows Boot Manager on Windows, iBoot Stage 1 on Macs. Its only purpose is to find an operating system kernel on disk, copy it into memory, set up the conditions the kernel expects, and jump to the kernel's entry point.</p>
+<p id="p-0cf5485d">The bootloader is a small program — <a href="https://www.gnu.org/software/grub/">GRUB</a> on most Linux installs, systemd-boot or rEFInd on others, the Windows Boot Manager on Windows, iBoot Stage 1 on Macs. Its only purpose is to find an operating system kernel on disk, copy it into memory, set up the conditions the kernel expects, and jump to the kernel's entry point.</p>
 
-<p>This is more delicate than it sounds. The kernel image on disk is usually compressed (Linux's <code>vmlinuz</code> is a self-extracting blob), so the bootloader must decompress it into a clean region of RAM. It must also pass the kernel a bundle of facts about the machine — where DRAM lives, which CPUs are present, what the firmware promised — via a structured <strong>boot protocol</strong>. <a href="https://www.kernel.org/doc/html/latest/x86/boot.html">The Linux x86 boot protocol</a> documents this handoff in painstaking detail.</p>
+<p id="p-55b15825">This is more delicate than it sounds. The kernel image on disk is usually compressed (Linux's <code>vmlinuz</code> is a self-extracting blob), so the bootloader must decompress it into a clean region of RAM. It must also pass the kernel a bundle of facts about the machine — where DRAM lives, which CPUs are present, what the firmware promised — via a structured <strong>boot protocol</strong>. <a href="https://www.kernel.org/doc/html/latest/x86/boot.html">The Linux x86 boot protocol</a> documents this handoff in painstaking detail.</p>
 
 <h2 id="the-kernel">The kernel takes over</h2>
 
-<p>The kernel begins its life single-threaded, in physical-memory mode, on a single CPU core. Its first acts are to set up its own page tables (so it can use virtual memory — Chapter 26), enable interrupts, initialize the scheduler, mount the root filesystem, and bring the other CPU cores online.</p>
+<p id="p-93d80966">The kernel begins its life single-threaded, in physical-memory mode, on a single CPU core. Its first acts are to set up its own page tables (so it can use virtual memory — Chapter 26), enable interrupts, initialize the scheduler, mount the root filesystem, and bring the other CPU cores online.</p>
 
-<p>The Linux <a href="https://www.kernel.org/doc/html/latest/admin-guide/bootconfig.html">kernel boot</a> is a set of well-named functions: <code>start_kernel()</code> calls <code>setup_arch()</code>, <code>mm_init()</code>, <code>sched_init()</code>, <code>rest_init()</code>. Each one transforms a slightly more limited machine into a slightly less limited one. By the end, the kernel has multitasking, virtual memory, and a primitive process list of exactly one entry: the <strong>init process</strong>, PID 1.</p>
+<p id="p-77c835bc">The Linux <a href="https://www.kernel.org/doc/html/latest/admin-guide/bootconfig.html">kernel boot</a> is a set of well-named functions: <code>start_kernel()</code> calls <code>setup_arch()</code>, <code>mm_init()</code>, <code>sched_init()</code>, <code>rest_init()</code>. Each one transforms a slightly more limited machine into a slightly less limited one. By the end, the kernel has multitasking, virtual memory, and a primitive process list of exactly one entry: the <strong>init process</strong>, PID 1.</p>
 
 <h2 id="userspace">Into userspace</h2>
 
-<p>The kernel launches PID 1 — historically <code>/sbin/init</code>, today usually <a href="https://systemd.io/">systemd</a> on Linux, launchd on macOS, the Service Control Manager on Windows. PID 1 is the parent of every other process. It reads its configuration, mounts remaining filesystems, brings up networking, starts daemons (sshd, the display manager, audio, Bluetooth), and finally launches your login screen.</p>
+<p id="p-a624f9cf">The kernel launches PID 1 — historically <code>/sbin/init</code>, today usually <a href="https://systemd.io/">systemd</a> on Linux, launchd on macOS, the Service Control Manager on Windows. PID 1 is the parent of every other process. It reads its configuration, mounts remaining filesystems, brings up networking, starts daemons (sshd, the display manager, audio, Bluetooth), and finally launches your login screen.</p>
 
-<p>The whole sequence — power-on to login — takes about three seconds on a modern system. Behind that small wait is a five-stage relay race, each stage trusting only what it has measured, each stage handing off a slightly more capable machine to the next. None of the runners know the whole route. Together they get you from a dark chip to a working computer.</p>
+<p id="p-e042dca1">The whole sequence — power-on to login — takes about three seconds on a modern system. Behind that small wait is a five-stage relay race, each stage trusting only what it has measured, each stage handing off a slightly more capable machine to the next. None of the runners know the whole route. Together they get you from a dark chip to a working computer.</p>
 
-<p>What they hand to the user is an illusion: that the machine has always been awake, has infinite memory, runs many programs at once, and is one's own. Producing that illusion is the job of the operating system, which we meet next.</p>
+<p id="p-db9795cf">What they hand to the user is an illusion: that the machine has always been awake, has infinite memory, runs many programs at once, and is one's own. Producing that illusion is the job of the operating system, which we meet next.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="Boot sequence from power-on reset to user shell">
@@ -338,4 +347,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

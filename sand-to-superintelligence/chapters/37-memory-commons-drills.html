@@ -29,11 +29,13 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page">
+  <script id="srs-drills-37-memory-commons" type="application/json">[{"q": "What does RAG stand for?", "a": "Retrieval-augmented generation."}, {"q": "What is the vector lookup latency at billion-scale that the chapter cites?", "a": "Under 10 ms."}, {"q": "What is the approximate cost to embed one million tokens with text-embedding-3-small?", "a": "~$0.02."}, {"q": "What does FAISS stand for, and who open-sourced it?", "a": "FAISS is from Meta (Facebook AI Research); it open-sourced the foundational ANN algorithms IVF, HNSW, and product quantization."}, {"q": "What similarity metric does vector retrieval typically use?", "a": "Cosine similarity or inner product (dot product)."}, {"q": "How many vectors does a mid-size production index hold, per the chapter?", "a": "~10\u2079 \u2014 about a billion vectors."}, {"q": "What three things does the chapter say RAG works well for?", "a": "Factual question-answering grounded in a corpus, customer support over product documentation, and internal knowledge search (and code search at scale)."}, {"q": "What does the chapter say RAG works poorly for?", "a": "Synthesis across many chunks, ambiguous queries where the retriever picks the wrong neighbourhood, and corpora with internal contradictions the retriever surfaces without resolving."}, {"q": "What is a knowledge graph's primitive data unit?", "a": "An explicit (subject, predicate, object) triple organized into a queryable graph."}, {"q": "What makes the memory commons 'genuinely new', per the chapter?", "a": "The same retrieval substrate is queryable in natural language by any model that can speak to its embedding \u2014 multiple agents read and write it, making institutional knowledge a structured, per-token-retrievable asset."}]</script>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Drill cards · Chapter 37</div>
     <div class="ch-header__num">Drills</div>
@@ -41,6 +43,10 @@
     <p class="ch-header__dek">10 atomic recall cards. Export to Anki and let spaced repetition do its slow work.</p>
   </header>
   <div class="drills__wrap">
+    <div class="srs-banner" data-srs-banner>
+  <span class="srs-banner__label"><span class="srs-banner__count" data-srs-count>10</span> cards due for review</span>
+  <button type="button" class="srs-banner__btn" data-srs-open="37-memory-commons">Review now</button>
+</div>
     <div class="drills__actions">
       <a class="learn__btn learn__btn--primary" href="37-memory-commons-drills.tsv" download>Download Anki TSV</a>
       <a class="learn__btn learn__btn--ghost" href="37-memory-commons.html">← Back to chapter</a>
@@ -97,4 +103,5 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
 </body></html>

@@ -29,11 +29,16 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page" data-learn-root="40-compounding">
+  <aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">data flywheel</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">usage signal</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">fine-tuning</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">better model</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">agent flywheel</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">tool substrate</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">synthetic-data risk</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">3-5 year headstart</span></div>
+</aside>
   <section class="learn predict reveal" data-predict data-slug="40-compounding" data-answer-key="c">
   <div class="learn__eyebrow">Predict before you read</div>
   <h2 class="learn__title">Before you read — by roughly how much did the deployed agent population grow between 2024 and 2026?</h2>
@@ -58,6 +63,10 @@
     <div class="ch-header__num">Chapter 40</div>
     <h1 class="ch-header__title">The Compounding</h1>
     <p class="ch-header__dek">Data, evals, and the flywheels that decide who wins</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain the data flywheel and state why it amplifies an existing quality lead rather than inverting a quality gap</li><li>Name the agent flywheel and explain why it benefits tool-substrate owners regardless of which model runs underneath</li><li>State the honest bound on AI network effects in 2026 and the structural reason they are less durable than pre-AI platform moats</li></ul>
+</aside>
     <div class="stat-row"><div class="stat"><div class="stat__num">n²</div><div class="stat__label">the value of a network of n connected nodes, by Metcalfe's claim</div></div><div class="stat"><div class="stat__num">~10×</div><div class="stat__label">growth in deployed agent population, 2024 to 2026</div></div><div class="stat"><div class="stat__num">~3-5</div><div class="stat__label">years of headstart that data flywheels appear to confer in current AI products</div></div></div>
     <section class="learn ladder reveal" data-ladder data-slug="40-compounding">
   <div class="ladder__bar">
@@ -106,45 +115,45 @@
     <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#metcalfe-redux">Metcalfe's Law for cognition</a></li><li><a href="#data-flywheels">Data flywheels</a></li><li><a href="#agent-flywheels">The agent flywheel</a></li><li><a href="#compounding-gone-wrong">Compounding gone wrong</a></li><li><a href="#the-honest-bound">The honest bound on compounding</a></li></ul></aside>
     <article class="prose">
       
-<p class="lede">The economic concept of network effects is so familiar it has become flat. We say "X has network effects" the way we say "X has good product-market fit", as a label that excuses us from inspecting the actual mechanism. This chapter is about specifically how network effects work in the AI stack, where they are real, where they are overstated, and what they imply for which firms and which capabilities compound. The headline: there are at least two genuine compounding loops at work, they are uneven, and they are bounded.</p>
+<p class="lede" id="p-b4a0b9e6">The economic concept of network effects is so familiar it has become flat. We say "X has network effects" the way we say "X has good product-market fit", as a label that excuses us from inspecting the actual mechanism. This chapter is about specifically how network effects work in the AI stack, where they are real, where they are overstated, and what they imply for which firms and which capabilities compound. The headline: there are at least two genuine compounding loops at work, they are uneven, and they are bounded.</p>
 
 <h2 id="metcalfe-redux">Metcalfe's Law for cognition</h2>
 
-<p><a href="https://spectrum.ieee.org/metcalfes-law-is-wrong">Metcalfe's law</a>, in its original form, claims that the value of a communications network grows as the square of the number of connected nodes, because every node can talk to every other. Empirically this is roughly right for early networks and overstates for mature ones (most node pairs never communicate). The intuition still holds: networks have superlinear value when adding a node creates new pairs of useful interactions.</p>
+<p id="p-e26e237e"><a href="https://spectrum.ieee.org/metcalfes-law-is-wrong">Metcalfe's law</a>, in its original form, claims that the value of a communications network grows as the square of the number of connected nodes, because every node can talk to every other. Empirically this is roughly right for early networks and overstates for mature ones (most node pairs never communicate). The intuition still holds: networks have superlinear value when adding a node creates new pairs of useful interactions.</p>
 
-<p>The same intuition extended to AI: as more agents come online, capable of interacting with each other and with shared tools and data, the system's total useful interaction count grows superlinearly. There are real cases where this holds — internal tool ecosystems, MCP server registries, embedding-and-retrieval substrates that benefit from scale. There are also cases where it fails — there is no network effect from the existence of one company's customer-support agent on another company's customer-support agent, except via the common substrate of the model providers.</p>
+<p id="p-12bd7741">The same intuition extended to AI: as more agents come online, capable of interacting with each other and with shared tools and data, the system's total useful interaction count grows superlinearly. There are real cases where this holds — internal tool ecosystems, MCP server registries, embedding-and-retrieval substrates that benefit from scale. There are also cases where it fails — there is no network effect from the existence of one company's customer-support agent on another company's customer-support agent, except via the common substrate of the model providers.</p>
 
 <h2 id="data-flywheels">Data flywheels</h2>
 
-<p>The first and best-understood compounding loop in AI is the <strong>data flywheel</strong>. A model is deployed; users interact with it; their interactions produce signal (explicit feedback, implicit reward signals like which suggestion they accepted, error logs, edge-case reports); the signal is used to fine-tune or evaluate the model; the next version is better; users prefer it; usage grows; signal grows. Operating this loop well is one of the genuine moats in the model business.</p>
+<p id="p-5253763a">The first and best-understood compounding loop in AI is the <strong>data flywheel</strong>. A model is deployed; users interact with it; their interactions produce signal (explicit feedback, implicit reward signals like which suggestion they accepted, error logs, edge-case reports); the signal is used to fine-tune or evaluate the model; the next version is better; users prefer it; usage grows; signal grows. Operating this loop well is one of the genuine moats in the model business.</p>
 
-<p>The realistic state of data flywheels in 2026 is mixed. They produce real, measurable improvements at the margin — particularly on models tuned to specific products like coding assistants or customer-service agents. They do not, on their own, leapfrog quality tiers. A weaker model with a great flywheel does not catch a stronger model with a worse one; a stronger model with a great flywheel pulls steadily ahead. The flywheel amplifies; it does not invert.</p>
+<p id="p-d8e75489">The realistic state of data flywheels in 2026 is mixed. They produce real, measurable improvements at the margin — particularly on models tuned to specific products like coding assistants or customer-service agents. They do not, on their own, leapfrog quality tiers. A weaker model with a great flywheel does not catch a stronger model with a worse one; a stronger model with a great flywheel pulls steadily ahead. The flywheel amplifies; it does not invert.</p>
 
-<p>The asymmetry matters competitively. The frontier-model providers have the largest deployed bases and the strongest flywheels. The open-weight providers do not. This is part of why the open vs. closed gap, while narrower than alarmists claim, has not actually closed at the very top — it persists because closed providers are accumulating reinforcement signal that open providers cannot easily replicate.</p>
+<p id="p-05d47a62">The asymmetry matters competitively. The frontier-model providers have the largest deployed bases and the strongest flywheels. The open-weight providers do not. This is part of why the open vs. closed gap, while narrower than alarmists claim, has not actually closed at the very top — it persists because closed providers are accumulating reinforcement signal that open providers cannot easily replicate.</p>
 
 <h2 id="agent-flywheels">The agent flywheel</h2>
 
-<p>The second loop, and the structurally newer one, is the <strong>agent flywheel</strong>: an agent is given access to a tool; it accomplishes a task; the success is logged; the tool's interface is refined to better match how the agent actually used it; the next agent does better; new tools are exposed; capability grows. This loop runs not at the model level but at the tool-and-integration level, and the locus of compounding shifts accordingly.</p>
+<p id="p-131ace3b">The second loop, and the structurally newer one, is the <strong>agent flywheel</strong>: an agent is given access to a tool; it accomplishes a task; the success is logged; the tool's interface is refined to better match how the agent actually used it; the next agent does better; new tools are exposed; capability grows. This loop runs not at the model level but at the tool-and-integration level, and the locus of compounding shifts accordingly.</p>
 
-<p>The interesting consequence is that whoever owns the substrate of tools — MCP servers, agent frameworks, browser-control APIs, the workflow layer — is in a different network-effect position than the model providers. They benefit from every agent that uses their substrate, regardless of which model is underneath. This is why companies like <a href="https://www.cursor.com/">Cursor</a> and the agent platforms have managed to build defensible positions even though the models they run on are commodities by the chapter you read a moment ago.</p>
+<p id="p-994f2e31">The interesting consequence is that whoever owns the substrate of tools — MCP servers, agent frameworks, browser-control APIs, the workflow layer — is in a different network-effect position than the model providers. They benefit from every agent that uses their substrate, regardless of which model is underneath. This is why companies like <a href="https://www.cursor.com/">Cursor</a> and the agent platforms have managed to build defensible positions even though the models they run on are commodities by the chapter you read a moment ago.</p>
 
 <h2 id="compounding-gone-wrong">Compounding gone wrong</h2>
 
-<p>It would be dishonest not to name the failure modes. Both flywheels have characteristic ways of breaking.</p>
+<p id="p-5af24fe9">It would be dishonest not to name the failure modes. Both flywheels have characteristic ways of breaking.</p>
 
-<p><strong>Synthetic-data poisoning.</strong> When models are increasingly trained on text that other models generated — and this is now most of the freshly produced text on the internet — the data flywheel risks recursively narrowing on the dominant model's biases and errors. <a href="https://arxiv.org/abs/2305.17493">Shumailov et al. (2023)</a> labeled this "model collapse" in extreme cases. The realistic 2026 view is that synthetic data is fine when filtered and curated, dangerous when ingested raw, and that high-quality human-produced data is increasingly priced as a strategic asset.</p>
+<p id="p-c8209b0b"><strong>Synthetic-data poisoning.</strong> When models are increasingly trained on text that other models generated — and this is now most of the freshly produced text on the internet — the data flywheel risks recursively narrowing on the dominant model's biases and errors. <a href="https://arxiv.org/abs/2305.17493">Shumailov et al. (2023)</a> labeled this "model collapse" in extreme cases. The realistic 2026 view is that synthetic data is fine when filtered and curated, dangerous when ingested raw, and that high-quality human-produced data is increasingly priced as a strategic asset.</p>
 
-<p><strong>Tool-bloat collapse.</strong> When the agent-tool ecosystem grows past a certain size, models lose track of which tool to use; the additional tools start hurting performance. Several agent frameworks have hit this wall and walked back to curated, smaller tool sets. The compounding loop is real but not unbounded.</p>
+<p id="p-be475575"><strong>Tool-bloat collapse.</strong> When the agent-tool ecosystem grows past a certain size, models lose track of which tool to use; the additional tools start hurting performance. Several agent frameworks have hit this wall and walked back to curated, smaller tool sets. The compounding loop is real but not unbounded.</p>
 
-<p><strong>Concentration-as-disguise.</strong> Some claims of network effect are really claims of contract lock-in or switching cost — real moats, but not network effects. Distinguishing the two matters because the durability is different. Lock-in erodes when contracts come up for renewal; genuine network effects do not.</p>
+<p id="p-fc6091c8"><strong>Concentration-as-disguise.</strong> Some claims of network effect are really claims of contract lock-in or switching cost — real moats, but not network effects. Distinguishing the two matters because the durability is different. Lock-in erodes when contracts come up for renewal; genuine network effects do not.</p>
 
 <h2 id="the-honest-bound">The honest bound on compounding</h2>
 
-<p>The honest bound on AI network effects in 2026 is this: they are real, they confer multi-year advantages, and they are not as durable as the network effects of pre-AI internet platforms. The reasons are structural. AI capability is partly a function of underlying model architecture, which improves rapidly across the industry, partly through open releases. A late entrant with a better model at the right moment can catch up faster than they could in social networks or marketplaces, because the underlying technology keeps shifting under everyone.</p>
+<p id="p-f4d7f787">The honest bound on AI network effects in 2026 is this: they are real, they confer multi-year advantages, and they are not as durable as the network effects of pre-AI internet platforms. The reasons are structural. AI capability is partly a function of underlying model architecture, which improves rapidly across the industry, partly through open releases. A late entrant with a better model at the right moment can catch up faster than they could in social networks or marketplaces, because the underlying technology keeps shifting under everyone.</p>
 
-<p>The headstart that current incumbents enjoy is on the order of three to five years if they execute well, and considerably less if they do not. Long enough to matter for current investments; short enough that current dominance should not be confused with permanent dominance. Whoever is sitting on a compounding loop today is benefiting; whoever is not should not assume the door is closed.</p>
+<p id="p-eb3ae403">The headstart that current incumbents enjoy is on the order of three to five years if they execute well, and considerably less if they do not. Long enough to matter for current investments; short enough that current dominance should not be confused with permanent dominance. Whoever is sitting on a compounding loop today is benefiting; whoever is not should not assume the door is closed.</p>
 
-<p>What all of this implies for value — for whose work pays, whose disappears, and where the new rents accrue — is the next, and most consequential, chapter.</p>
+<p id="p-a3b9e374">What all of this implies for value — for whose work pays, whose disappears, and where the new rents accrue — is the next, and most consequential, chapter.</p>
 
       <figure class="figure figure--wide reveal" id="figure">
       <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 380" role="img" aria-label="Two compounding loops in AI: data flywheel and agent flywheel">
@@ -345,4 +354,6 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
 </body></html>

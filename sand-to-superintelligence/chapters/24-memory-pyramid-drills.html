@@ -29,11 +29,13 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page">
+  <script id="srs-drills-24-memory-pyramid" type="application/json">[{"q": "What is the approximate latency of a register access?", "a": "~1 cycle."}, {"q": "What is the approximate latency of an L1 cache access?", "a": "~3\u20134 cycles."}, {"q": "What is the approximate latency of an L3 cache access?", "a": "~40 cycles."}, {"q": "What is the approximate latency of a DRAM access?", "a": "~300 cycles \u2014 the 300\u00d7 cliff the pyramid exists to hide."}, {"q": "What size range does L3 cache span, and what qualifies the two ends?", "a": "8\u201364 MB: consumer CPUs at the low end (8\u201332 MB), server-class parts at the high end."}, {"q": "What is a cache line, and how big is it on x86?", "a": "The unit of data movement between cache levels \u2014 64 bytes on x86 and most ARM; 128 bytes on Apple Silicon."}, {"q": "What is temporal locality?", "a": "The tendency of programs to reuse recently accessed memory locations soon after accessing them."}, {"q": "What is spatial locality?", "a": "The tendency of programs to access memory addresses near recently accessed ones."}, {"q": "What does the TLB cache, and what is a typical L1 TLB size?", "a": "Virtual-to-physical address translations. The L1 TLB often holds around sixty-four entries."}, {"q": "What is the memory wall?", "a": "The growing gap between CPU speed and DRAM speed \u2014 documented by Hennessy and Patterson as roughly doubling every few years through the 1990s."}]</script>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Drill cards · Chapter 24</div>
     <div class="ch-header__num">Drills</div>
@@ -41,6 +43,10 @@
     <p class="ch-header__dek">10 atomic recall cards. Export to Anki and let spaced repetition do its slow work.</p>
   </header>
   <div class="drills__wrap">
+    <div class="srs-banner" data-srs-banner>
+  <span class="srs-banner__label"><span class="srs-banner__count" data-srs-count>10</span> cards due for review</span>
+  <button type="button" class="srs-banner__btn" data-srs-open="24-memory-pyramid">Review now</button>
+</div>
     <div class="drills__actions">
       <a class="learn__btn learn__btn--primary" href="24-memory-pyramid-drills.tsv" download>Download Anki TSV</a>
       <a class="learn__btn learn__btn--ghost" href="24-memory-pyramid.html">← Back to chapter</a>
@@ -97,4 +103,5 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
 </body></html>

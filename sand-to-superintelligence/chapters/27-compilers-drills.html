@@ -29,11 +29,13 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
     <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
   </div>
 </header>
 <main class="page">
+  <script id="srs-drills-27-compilers" type="application/json">[{"q": "How many stages of translation exist between Python source and electrons?", "a": "Seven."}, {"q": "What is an abstract syntax tree (AST)?", "a": "A tree representation of a program's structure produced by parsing; a function call becomes a node with a callee and argument list."}, {"q": "What is Python bytecode?", "a": "The stack-machine intermediate representation CPython compiles the AST into; the CPython virtual machine executes it one instruction at a time."}, {"q": "What is LLVM IR?", "a": "A typed, register-based intermediate language used by Clang, Rust, Swift, and others as the universal middle layer for optimization and code generation."}, {"q": "What is an object file?", "a": "The output of the assembler: machine-code bytes in a standard format (ELF on Linux, Mach-O on macOS, PE on Windows), with unresolved symbol references."}, {"q": "What does the linker do?", "a": "Stitches object files and libraries together into the final executable, resolving every function and variable reference to a real address."}, {"q": "What are micro-ops (\u00b5ops)?", "a": "The simpler, internal operations a modern x86 CPU decodes each fetched instruction into before scheduling and executing them out-of-order."}, {"q": "How many \u00b5ops might one x86 instruction expand into?", "a": "~3\u20135, depending on the instruction."}, {"q": "At what stage does most compiler optimization happen?", "a": "At the IR stage (e.g., LLVM IR) \u2014 before the compiler knows the target architecture."}]</script>
   <header class="ch-header reveal">
     <div class="ch-header__crumb"><a href="../index.html">From Sand to Superintelligence</a> &nbsp;·&nbsp; Drill cards · Chapter 27</div>
     <div class="ch-header__num">Drills</div>
@@ -41,6 +43,10 @@
     <p class="ch-header__dek">9 atomic recall cards. Export to Anki and let spaced repetition do its slow work.</p>
   </header>
   <div class="drills__wrap">
+    <div class="srs-banner" data-srs-banner>
+  <span class="srs-banner__label"><span class="srs-banner__count" data-srs-count>9</span> cards due for review</span>
+  <button type="button" class="srs-banner__btn" data-srs-open="27-compilers">Review now</button>
+</div>
     <div class="drills__actions">
       <a class="learn__btn learn__btn--primary" href="27-compilers-drills.tsv" download>Download Anki TSV</a>
       <a class="learn__btn learn__btn--ghost" href="27-compilers.html">← Back to chapter</a>
@@ -97,4 +103,5 @@
   </div>
 </footer>
 <script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
 </body></html>
