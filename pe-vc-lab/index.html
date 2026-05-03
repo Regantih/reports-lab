@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The PE/VC Operator's Lab — Reports Lab №05</title>
+<meta name="description" content="A static, in-browser toolkit for working through PE/VC case studies — case analyzer, LBO/VC model, balance-sheet inconsistency checker, cap table & waterfall, IC memo builder, diligence red flags, sector thesis canvas, and capability drills. Nothing leaves your device.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="css/base.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="brand" href="index.html">
+      <span class="brand__mark" aria-hidden="true"></span>
+      <span>The PE/VC Operator's Lab<span class="brand__sub"> — Reports Lab №05</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link nav-link--active" href="index.html">Cover</a>
+    <a class="nav-link" href="#chapters">Chapters</a>
+    <a class="nav-link" href="tools/">Tools</a>
+    <a class="nav-link" href="../">Reports Lab</a>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero reveal">
+    <div>
+      <div class="hero__eyebrow">A working report · 8 in-browser tools · ~2 hour read</div>
+      <h1 class="hero__title">The PE/VC <em>Operator's</em> Lab</h1>
+      <p class="hero__lede">A short, opinionated report on how a modern private-investment professional reads a deal — paired with eight static, in-browser tools you can run on your own data. Nothing is uploaded; everything stays in your tab.</p>
+      <div class="hero__meta">
+        <span><strong>8</strong> tools</span>
+        <span><strong>6</strong> chapters</span>
+        <span><strong>0</strong> servers</span>
+        <span><strong>0</strong> trackers</span>
+      </div>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="tools/">Open the lab →</a>
+        <a class="btn btn--ghost" href="#chapters">Read the chapters</a>
+      </div>
+    </div>
+    <div aria-hidden="true">
+      <svg viewBox="0 0 400 360" width="100%" style="max-width:420px; display:block; margin:0 auto;">
+        <defs>
+          <linearGradient id="ramp" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0" stop-color="var(--color-primary)" stop-opacity="0.15"/>
+            <stop offset="1" stop-color="var(--color-accent-copper)" stop-opacity="0.55"/>
+          </linearGradient>
+        </defs>
+        <!-- frame -->
+        <rect x="20" y="20" width="360" height="320" fill="none" stroke="var(--color-divider)"/>
+        <!-- ascending value bars -->
+        <g fill="url(#ramp)" stroke="var(--color-primary)" stroke-width="0.8">
+          <rect x="50"  y="240" width="34" height="80"/>
+          <rect x="92"  y="200" width="34" height="120"/>
+          <rect x="134" y="170" width="34" height="150"/>
+          <rect x="176" y="140" width="34" height="180"/>
+          <rect x="218" y="100" width="34" height="220"/>
+          <rect x="260" y="70"  width="34" height="250"/>
+          <rect x="302" y="40"  width="34" height="280"/>
+        </g>
+        <!-- IRR / MOIC labels -->
+        <g font-family="JetBrains Mono, monospace" font-size="9" fill="var(--color-text-muted)" letter-spacing="0.1em">
+          <text x="50" y="335">Y0</text>
+          <text x="92" y="335">Y1</text>
+          <text x="134" y="335">Y2</text>
+          <text x="176" y="335">Y3</text>
+          <text x="218" y="335">Y4</text>
+          <text x="260" y="335">Y5</text>
+          <text x="302" y="335">EXIT</text>
+        </g>
+        <!-- annotation arc -->
+        <path d="M67 240 Q 200 -30 319 40" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.5" stroke-dasharray="3 3"/>
+        <circle cx="319" cy="40" r="4" fill="var(--color-accent-copper)"/>
+        <text x="240" y="52" font-family="Fraunces, serif" font-style="italic" font-size="13" fill="var(--color-text)">3.4× MOIC</text>
+        <text x="240" y="68" font-family="JetBrains Mono, monospace" font-size="10" fill="var(--color-text-muted)" letter-spacing="0.1em">IRR ≈ 28%</text>
+      </svg>
+    </div>
+  </section>
+
+  <section class="section-head reveal" id="chapters">
+    <div class="section-head__eyebrow">§ Chapters</div>
+    <div class="section-head__body">
+      <h2>The shape of a deal</h2>
+      <p>Six short chapters on how a generalist analyst reads a private deal, written so you can finish the report in an evening and pick up the tools the next morning.</p>
+    </div>
+  </section>
+
+  <div class="tile-grid reveal">
+    <a class="tile" href="chapters/01-how-an-analyst-reads-a-deal.html">
+      <div class="tile__num">Ch. 01</div>
+      <div class="tile__title">How an analyst <em>reads</em> a deal</div>
+      <p class="tile__desc">The five questions every IC asks, and the order they're asked in.</p>
+    </a>
+    <a class="tile" href="chapters/02-unit-economics.html">
+      <div class="tile__num">Ch. 02</div>
+      <div class="tile__title">Unit economics, <em>honestly</em></div>
+      <p class="tile__desc">CAC, payback, contribution margin — and the three ways founders dress them up.</p>
+    </a>
+    <a class="tile" href="chapters/03-modeling-an-lbo-and-a-venture-round.html">
+      <div class="tile__num">Ch. 03</div>
+      <div class="tile__title">Modeling an LBO and a <em>venture round</em></div>
+      <p class="tile__desc">The minimal arithmetic of MOIC, IRR, and pre/post-money dilution.</p>
+    </a>
+    <a class="tile" href="chapters/04-balance-sheet-tells.html">
+      <div class="tile__num">Ch. 04</div>
+      <div class="tile__title">Balance-sheet <em>tells</em></div>
+      <p class="tile__desc">Eight inconsistencies that show up before management knows you've found them.</p>
+    </a>
+    <a class="tile" href="chapters/05-the-ic-memo.html">
+      <div class="tile__num">Ch. 05</div>
+      <div class="tile__title">The IC memo, in <em>seven blocks</em></div>
+      <p class="tile__desc">A structure that survives the worst meeting on the calendar.</p>
+    </a>
+    <a class="tile" href="chapters/06-thesis-and-capabilities.html">
+      <div class="tile__num">Ch. 06</div>
+      <div class="tile__title">Thesis &amp; <em>capability drills</em></div>
+      <p class="tile__desc">A canvas for AI/deep-tech/space theses, plus drills graded beginner → expert.</p>
+    </a>
+  </div>
+
+  <section class="section-head reveal" id="tools-preview">
+    <div class="section-head__eyebrow">§ The lab</div>
+    <div class="section-head__body">
+      <h2>Eight tools, all client-side</h2>
+      <p>Every tool runs in your browser. Inputs are kept in <code>localStorage</code> so you can come back to a model. Nothing is sent to any server unless you explicitly use the optional <em>Ask Tutor</em> field, which only forwards the question text.</p>
+    </div>
+  </section>
+
+  <div class="tools-grid reveal">
+    <a class="tile" href="tools/case-analyzer.html"><div class="tile__num">T1</div><div class="tile__title">Case Study <em>Analyzer</em></div><p class="tile__desc">Prompt-driven checklist across company, market, unit economics, risks, thesis.</p></a>
+    <a class="tile" href="tools/lbo-vc-model.html"><div class="tile__num">T2</div><div class="tile__title">LBO / VC <em>Model</em></div><p class="tile__desc">Editable assumptions; computes IRR, MOIC, pre/post-money, dilution.</p></a>
+    <a class="tile" href="tools/balance-sheet-check.html"><div class="tile__num">T3</div><div class="tile__title">Balance-sheet <em>checker</em></div><p class="tile__desc">Enter a few rows; get red-flag heuristics and identity checks.</p></a>
+    <a class="tile" href="tools/cap-table.html"><div class="tile__num">T4</div><div class="tile__title">Cap table &amp; <em>waterfall</em></div><p class="tile__desc">Founders, options, multiple priced rounds, exit waterfall by class.</p></a>
+    <a class="tile" href="tools/ic-memo.html"><div class="tile__num">T5</div><div class="tile__title">IC memo <em>builder</em></div><p class="tile__desc">Structure raw notes into a seven-block memo; export to Markdown.</p></a>
+    <a class="tile" href="tools/diligence-redflags.html"><div class="tile__num">T6</div><div class="tile__title">Diligence <em>red flags</em></div><p class="tile__desc">A scored checklist of patterns that have killed deals at the table.</p></a>
+    <a class="tile" href="tools/sector-canvas.html"><div class="tile__num">T7</div><div class="tile__title">Sector thesis <em>canvas</em></div><p class="tile__desc">Templates for AI / deep-tech / space — fill, save, share.</p></a>
+    <a class="tile" href="tools/capability-drills.html"><div class="tile__num">T8</div><div class="tile__title">Capability <em>drills</em></div><p class="tile__desc">Beginner / intermediate / expert exercises mapped to each tool.</p></a>
+  </div>
+
+  <section class="wrap reveal" style="padding-top: var(--space-12); padding-bottom: var(--space-16);">
+    <h2 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-xl); margin-bottom: var(--space-3);">A note on privacy</h2>
+    <p class="muted" style="max-width: 60ch;">All eight tools are pure HTML/JS that run in this tab. Inputs and outputs are persisted in <code>localStorage</code> on your machine and can be cleared from each tool's toolbar. There is no analytics, no telemetry, and no remote logging. The optional Ask-Tutor field — when present — sends only the literal question you type, never your model inputs.</p>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <span>© 2026 Reports Lab · No. 05</span>
+    <span><a href="../">← back to Reports Lab</a></span>
+  </div>
+</footer>
+
+<script src="js/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T4 — Cap table &amp; waterfall · The PE/VC Operator's Lab</title>
+<meta name="description" content="Founders, options, multiple priced rounds, and a 1× / participating / stacked exit waterfall. All client-side.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../index.html"><span class="brand__mark"></span><span>The PE/VC Operator's Lab</span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../index.html">Cover</a>
+  <a class="nav-link" href="../index.html#chapters">Chapters</a>
+  <a class="nav-link nav-link--active" href="./">Tools</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap wrap--wide">
+  <section style="padding: var(--space-10) 0 var(--space-4);">
+    <div class="eyebrow" style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-accent-copper);">Tool T4 · in-browser only</div>
+    <h1 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-2xl); margin: var(--space-2) 0 var(--space-3);">Cap table &amp; <em>waterfall</em></h1>
+    <p class="muted" style="max-width: 60ch;">Define founders, an option pool, and any number of priced rounds. The waterfall computes payouts under 1× non-participating, 1× participating, and stacked-preferences scenarios at three exit values.</p>
+  </section>
+
+  <section class="tool-toolbar">
+    <button class="btn" id="btn-add-round" type="button">+ add round</button>
+    <button class="btn btn--ghost" id="btn-clear" type="button">Reset</button>
+  </section>
+
+  <div class="row">
+    <div class="card">
+      <h3 style="font-family: var(--font-display); font-weight: 500; margin-bottom: var(--space-3);">Common shareholders</h3>
+      <div id="commons"></div>
+      <button class="btn btn--ghost" id="btn-add-common" type="button" style="margin-top: var(--space-2);">+ add common holder</button>
+      <div class="field" style="margin-top: var(--space-4);"><label>Option pool (% of pre-financing fully-diluted)</label><input type="number" step="0.5" id="optpool" value="10"></div>
+    </div>
+
+    <div class="card">
+      <h3 style="font-family: var(--font-display); font-weight: 500; margin-bottom: var(--space-3);">Exit assumptions</h3>
+      <div class="field--inline">
+        <div class="field"><label>Exit — low ($M)</label><input type="number" step="1" id="exit_low" value="50"></div>
+        <div class="field"><label>Exit — base ($M)</label><input type="number" step="1" id="exit_base" value="200"></div>
+      </div>
+      <div class="field"><label>Exit — high ($M)</label><input type="number" step="1" id="exit_high" value="800"></div>
+      <div class="field"><label>Preference treatment</label>
+        <select id="pref_mode">
+          <option value="1xnp">1× non-participating, single tier</option>
+          <option value="1xp">1× participating, single tier</option>
+          <option value="stacked">Stacked (later rounds first)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <h2 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-xl); margin: var(--space-10) 0 var(--space-3);">Priced rounds</h2>
+  <div id="rounds"></div>
+
+  <h2 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-xl); margin: var(--space-10) 0 var(--space-3);">Cap table (post all rounds)</h2>
+  <div id="cap_out" style="overflow-x:auto;"></div>
+
+  <h2 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-xl); margin: var(--space-10) 0 var(--space-3);">Waterfall</h2>
+  <div id="waterfall" style="overflow-x:auto;"></div>
+
+  <div style="height: var(--space-16);"></div>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span>© 2026 Reports Lab · No. 05 · T4</span>
+  <span><a href="../index.html">↑ cover</a></span>
+</div></footer>
+
+<script src="../js/site.js"></script>
+<script src="../js/tools.js"></script>
+<script>
+(function () {
+  const SLOT = 'cap-table';
+
+  const DEFAULT = {
+    commons: [
+      { name: 'Founder A', pct: 50 },
+      { name: 'Founder B', pct: 40 },
+    ],
+    optpool: 10,
+    rounds: [
+      { name: 'Seed', pre: 8, inv: 2, pref: 1.0 },
+      { name: 'Series A', pre: 30, inv: 10, pref: 1.0 },
+    ],
+    exit_low: 50, exit_base: 200, exit_high: 800,
+    pref_mode: '1xnp'
+  };
+  let state = PEVC.load(SLOT, null);
+  if (!state) { state = JSON.parse(JSON.stringify(DEFAULT)); PEVC.save(SLOT, state); }
+
+  function persist() { PEVC.save(SLOT, state); }
+
+  function renderInputs() {
+    // commons
+    const commonsEl = document.getElementById('commons');
+    commonsEl.innerHTML = '';
+    state.commons.forEach((c, i) => {
+      const row = document.createElement('div');
+      row.style.cssText = 'display:grid; grid-template-columns: 1.5fr 1fr auto; gap: var(--space-2); margin-bottom: var(--space-2);';
+      row.innerHTML = `
+        <input type="text" value="${c.name.replace(/"/g,'&quot;')}" data-idx="${i}" data-key="name" placeholder="name">
+        <input type="number" step="0.5" value="${c.pct}" data-idx="${i}" data-key="pct" placeholder="% pre-financing">
+        <button type="button" class="btn btn--ghost" data-rm="${i}" style="padding:6px 10px;">×</button>`;
+      commonsEl.appendChild(row);
+    });
+    commonsEl.querySelectorAll('input').forEach(el => el.addEventListener('input', () => {
+      const i = +el.dataset.idx, k = el.dataset.key;
+      state.commons[i][k] = (k === 'pct') ? PEVC.num(el.value, 0) : el.value;
+      persist(); renderOutputs();
+    }));
+    commonsEl.querySelectorAll('button[data-rm]').forEach(btn => btn.addEventListener('click', () => {
+      state.commons.splice(+btn.dataset.rm, 1); persist(); renderInputs(); renderOutputs();
+    }));
+
+    document.getElementById('optpool').value = state.optpool;
+    document.getElementById('exit_low').value = state.exit_low;
+    document.getElementById('exit_base').value = state.exit_base;
+    document.getElementById('exit_high').value = state.exit_high;
+    document.getElementById('pref_mode').value = state.pref_mode;
+
+    // rounds
+    const rWrap = document.getElementById('rounds');
+    rWrap.innerHTML = '';
+    state.rounds.forEach((r, i) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.style.cssText = 'margin-bottom: var(--space-3);';
+      card.innerHTML = `
+        <div style="display:grid; grid-template-columns: 1.5fr 1fr 1fr 1fr auto; gap: var(--space-3); align-items: end;">
+          <div class="field" style="margin:0;"><label>Round name</label><input type="text" value="${(r.name||'').replace(/"/g,'&quot;')}" data-idx="${i}" data-key="name"></div>
+          <div class="field" style="margin:0;"><label>Pre-money ($M)</label><input type="number" step="0.5" value="${r.pre}" data-idx="${i}" data-key="pre"></div>
+          <div class="field" style="margin:0;"><label>Investment ($M)</label><input type="number" step="0.5" value="${r.inv}" data-idx="${i}" data-key="inv"></div>
+          <div class="field" style="margin:0;"><label>Pref multiple (×)</label><input type="number" step="0.1" value="${r.pref}" data-idx="${i}" data-key="pref"></div>
+          <button type="button" class="btn btn--ghost" data-rm="${i}" style="padding:8px 10px;">×</button>
+        </div>`;
+      rWrap.appendChild(card);
+    });
+    rWrap.querySelectorAll('input').forEach(el => el.addEventListener('input', () => {
+      const i = +el.dataset.idx, k = el.dataset.key;
+      state.rounds[i][k] = (k === 'name') ? el.value : PEVC.num(el.value, 0);
+      persist(); renderOutputs();
+    }));
+    rWrap.querySelectorAll('button[data-rm]').forEach(btn => btn.addEventListener('click', () => {
+      state.rounds.splice(+btn.dataset.rm, 1); persist(); renderInputs(); renderOutputs();
+    }));
+  }
+
+  function computeCap() {
+    // We track ownership using "share counts" abstracted as %. Common shareholders + option pool start as the pre-financing 100%.
+    // Each priced round dilutes everyone proportionally to (post / (post + new investment)).
+    const stakes = [];
+    state.commons.forEach(c => stakes.push({ name: c.name, kind: 'common', pct: c.pct / 100, invested: 0, pref: 0 }));
+    // any unallocated common → other
+    const allocated = state.commons.reduce((a, c) => a + c.pct, 0);
+    const optPool = state.optpool / 100;
+    const otherCommonShare = Math.max(0, 1 - (allocated/100) - optPool);
+    if (otherCommonShare > 0.0005) stakes.push({ name: 'Other / unallocated common', kind: 'common', pct: otherCommonShare, invested: 0, pref: 0 });
+    if (optPool > 0) stakes.push({ name: 'Option pool', kind: 'pool', pct: optPool, invested: 0, pref: 0 });
+
+    state.rounds.forEach((r, idx) => {
+      const post = r.pre + r.inv;
+      const newStake = post > 0 ? r.inv / post : 0;
+      stakes.forEach(s => s.pct *= (1 - newStake));
+      stakes.push({
+        name: r.name || ('Round ' + (idx+1)),
+        kind: 'preferred',
+        pct: newStake,
+        invested: r.inv,
+        pref: r.pref,
+        roundIdx: idx
+      });
+    });
+    return stakes;
+  }
+
+  function fmt$(x) { return '$' + (x ?? 0).toFixed(2) + 'M'; }
+
+  function renderCapTable(stakes) {
+    let html = '<table class="data"><thead><tr><th>Holder</th><th>Type</th><th class="num">Investment</th><th class="num">Pref</th><th class="num">% post</th></tr></thead><tbody>';
+    stakes.forEach(s => {
+      html += `<tr><td>${s.name}</td><td>${s.kind}</td><td class="num">${s.invested ? fmt$(s.invested) : '—'}</td><td class="num">${s.pref ? s.pref.toFixed(1) + '×' : '—'}</td><td class="num">${(s.pct*100).toFixed(2)}%</td></tr>`;
+    });
+    html += '</tbody></table>';
+    document.getElementById('cap_out').innerHTML = html;
+  }
+
+  // Waterfall: distribute exit equity across stakes given preference treatment.
+  function waterfall(stakes, exit) {
+    const mode = state.pref_mode;
+    const pref = stakes.filter(s => s.kind === 'preferred');
+    const commonAndPool = stakes.filter(s => s.kind !== 'preferred');
+    const out = stakes.map(s => ({ ...s, payout: 0 }));
+    const byName = Object.fromEntries(out.map(s => [s.name, s]));
+    let remaining = exit;
+
+    function asCommon() {
+      // distribute remaining pro-rata across all stakes by their cap-table pct
+      const totalPct = stakes.reduce((a, s) => a + s.pct, 0) || 1;
+      stakes.forEach(s => { byName[s.name].payout += remaining * (s.pct / totalPct); });
+      remaining = 0;
+    }
+
+    if (mode === '1xnp' || mode === '1xp') {
+      // Compute pro-rata share if everyone went common
+      const totalPct = stakes.reduce((a, s) => a + s.pct, 0) || 1;
+      // For each preferred holder, pick the better of: (pref × invested) or pro-rata.
+      // 1× non-participating: pref OR pro-rata, not both.
+      // 1× participating: pref FIRST, then pro-rata of remainder.
+      if (mode === '1xnp') {
+        let convertedToCommon = new Set();
+        // greedy: each preferred takes max(pref, proRataIfRemainderDistributed)
+        // approximate: compute pref total and pro-rata if all converted, then per-investor pick.
+        const prefTotal = pref.reduce((a, s) => a + s.pref * s.invested, 0);
+        // After paying prefs, common+pool+converted-prefs split the rest pro-rata of their pcts.
+        // We simulate: try paying all prefs first; for each, check if their pro-rata payout would exceed pref; if so, convert.
+        // Iterate twice to stabilize.
+        for (let iter = 0; iter < 2; iter++) {
+          const stillPref = pref.filter(s => !convertedToCommon.has(s.name));
+          const prefSum = stillPref.reduce((a, s) => a + s.pref * s.invested, 0);
+          const afterPref = Math.max(0, exit - prefSum);
+          const commonStakeTotal = commonAndPool.reduce((a, s) => a + s.pct, 0)
+            + pref.filter(s => convertedToCommon.has(s.name)).reduce((a, s) => a + s.pct, 0);
+          // For each pref holder, what would they get as common?
+          stillPref.forEach(s => {
+            const asPro = afterPref * (s.pct / Math.max(1e-9, commonStakeTotal + s.pct));
+            if (asPro > s.pref * s.invested) convertedToCommon.add(s.name);
+          });
+        }
+        // Final pass
+        const stillPref = pref.filter(s => !convertedToCommon.has(s.name));
+        const prefSum = stillPref.reduce((a, s) => a + s.pref * s.invested, 0);
+        const cashable = Math.min(exit, prefSum);
+        stillPref.forEach(s => { byName[s.name].payout += s.pref * s.invested * (cashable / Math.max(1e-9, prefSum)); });
+        remaining = exit - cashable;
+        const commonGroup = commonAndPool.concat(pref.filter(s => convertedToCommon.has(s.name)));
+        const tot = commonGroup.reduce((a, s) => a + s.pct, 0) || 1;
+        commonGroup.forEach(s => { byName[s.name].payout += remaining * (s.pct / tot); });
+      } else {
+        // participating: pref first, then full pro-rata on the rest
+        const prefSum = pref.reduce((a, s) => a + s.pref * s.invested, 0);
+        const cashable = Math.min(exit, prefSum);
+        pref.forEach(s => { byName[s.name].payout += s.pref * s.invested * (cashable / Math.max(1e-9, prefSum)); });
+        remaining = exit - cashable;
+        const totalPct = stakes.reduce((a, s) => a + s.pct, 0) || 1;
+        stakes.forEach(s => { byName[s.name].payout += remaining * (s.pct / totalPct); });
+      }
+      return out;
+    }
+
+    // stacked: later rounds paid first, in order; non-participating
+    if (mode === 'stacked') {
+      const sorted = pref.slice().sort((a, b) => (b.roundIdx ?? 0) - (a.roundIdx ?? 0));
+      const converted = new Set();
+      // First pass: tentative conversions if pro-rata would beat pref
+      const wouldConvert = new Set();
+      const totalPct = stakes.reduce((a, s) => a + s.pct, 0) || 1;
+      sorted.forEach(s => {
+        if (exit * (s.pct / totalPct) > s.pref * s.invested) wouldConvert.add(s.name);
+      });
+      // Pay prefs in stack order, skipping those that would convert
+      let r = exit;
+      sorted.forEach(s => {
+        if (wouldConvert.has(s.name)) return;
+        const take = Math.min(r, s.pref * s.invested);
+        byName[s.name].payout += take;
+        r -= take;
+      });
+      const commonGroup = commonAndPool.concat(pref.filter(s => wouldConvert.has(s.name)));
+      const tot = commonGroup.reduce((a, s) => a + s.pct, 0) || 1;
+      commonGroup.forEach(s => { byName[s.name].payout += r * (s.pct / tot); });
+      return out;
+    }
+    asCommon(); return out;
+  }
+
+  function renderWaterfall(stakes) {
+    const exits = [
+      { label: 'Low', val: state.exit_low },
+      { label: 'Base', val: state.exit_base },
+      { label: 'High', val: state.exit_high },
+    ];
+    let html = '<table class="data"><thead><tr><th>Holder</th>';
+    exits.forEach(e => html += `<th class="num">${e.label} · $${e.val}M<br><span class="muted tiny">payout · MOIC</span></th>`);
+    html += '</tr></thead><tbody>';
+    const results = exits.map(e => waterfall(stakes, e.val));
+    stakes.forEach((s, idx) => {
+      html += `<tr><td>${s.name}</td>`;
+      exits.forEach((e, j) => {
+        const r = results[j][idx];
+        const moic = s.invested > 0 ? r.payout / s.invested : null;
+        html += `<td class="num">${fmt$(r.payout)}${moic !== null ? '<br><span class="muted tiny">' + moic.toFixed(2) + '×</span>' : ''}</td>`;
+      });
+      html += '</tr>';
+    });
+    // total row
+    html += '<tr><td><strong>Total</strong></td>';
+    exits.forEach((e, j) => {
+      const tot = results[j].reduce((a, x) => a + x.payout, 0);
+      html += `<td class="num"><strong>${fmt$(tot)}</strong></td>`;
+    });
+    html += '</tr></tbody></table>';
+    html += `<p class="muted tiny" style="margin-top: var(--space-3);">Mode: <code>${state.pref_mode}</code>. Conversion checks compare each preferred holder's pref payout to their pro-rata share if converted to common. The waterfall is illustrative; real term sheets have caps, qualified IPOs, and management carve-outs not modeled here.</p>`;
+    document.getElementById('waterfall').innerHTML = html;
+  }
+
+  function renderOutputs() {
+    const stakes = computeCap();
+    renderCapTable(stakes);
+    renderWaterfall(stakes);
+  }
+
+  // listeners
+  document.getElementById('btn-add-round').addEventListener('click', () => {
+    const idx = state.rounds.length;
+    state.rounds.push({ name: 'Round ' + (idx+1), pre: 50, inv: 15, pref: 1.0 });
+    persist(); renderInputs(); renderOutputs();
+  });
+  document.getElementById('btn-add-common').addEventListener('click', () => {
+    state.commons.push({ name: 'Holder', pct: 0 });
+    persist(); renderInputs(); renderOutputs();
+  });
+  document.getElementById('btn-clear').addEventListener('click', () => {
+    if (!confirm('Reset cap table to defaults?')) return;
+    state = JSON.parse(JSON.stringify(DEFAULT));
+    persist(); renderInputs(); renderOutputs();
+  });
+  ['optpool','exit_low','exit_base','exit_high','pref_mode'].forEach(id => {
+    document.getElementById(id).addEventListener('input', (e) => {
+      state[id] = (id === 'pref_mode') ? e.target.value : PEVC.num(e.target.value, 0);
+      persist(); renderOutputs();
+    });
+  });
+
+  renderInputs(); renderOutputs();
+})();
+</script>
+</body></html>

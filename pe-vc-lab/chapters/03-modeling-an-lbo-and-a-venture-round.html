@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ch. 03 — Modeling an LBO and a venture round · The PE/VC Operator's Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../index.html"><span class="brand__mark"></span><span>The PE/VC Operator's Lab</span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../index.html">Cover</a>
+  <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
+  <a class="nav-link" href="../tools/">Tools</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<article class="article reveal">
+  <div class="eyebrow">Chapter 03 · ~10 min</div>
+  <h1>Modeling an LBO and a <em>venture round</em></h1>
+  <p class="muted" style="font-size: var(--text-lg);">The arithmetic each side of private investing keeps coming back to. Two formulas, two intuitions, no Excel required.</p>
+
+  <h2>LBO: MOIC and IRR</h2>
+  <p>An LBO is a story told as a single equation: enterprise value is bought at entry, cash flow services debt for a few years, the company is sold at exit, and the equity check is multiplied. The two metrics worth memorising:</p>
+  <ul>
+    <li><strong>MOIC = exit equity ÷ entry equity</strong>. A 2.0× MOIC means you doubled the money. A 3.0× MOIC over five years is the rough industry yardstick.</li>
+    <li><strong>IRR ≈ MOIC<sup>(1/years)</sup> − 1</strong>. A 3× over 5 years is ≈25% IRR. A 2.5× over 5 is ≈20%. A 2× over 4 is ≈19%.</li>
+  </ul>
+  <p>Two things move the answer: how much debt you put on at entry (more leverage → higher MOIC if the company performs, more bankruptcy risk if it doesn't), and how much the exit multiple compresses (multiple compression eats almost every other source of return).</p>
+
+  <h2>Venture: pre-money, post-money, dilution</h2>
+  <p>A priced round has three numbers and one identity:</p>
+  <ul>
+    <li><strong>Pre-money valuation</strong>: what the company is worth before the new money lands.</li>
+    <li><strong>Investment</strong>: the new cheque.</li>
+    <li><strong>Post-money valuation</strong> = pre-money + investment.</li>
+    <li><strong>New investor's stake</strong> = investment ÷ post-money.</li>
+  </ul>
+  <p>If founders own 80% before a $5M raise at a $20M pre, the post is $25M. The new investors take 20%. The founders are diluted to 64% (80% × 80%). This is the only formula you need to argue about a term sheet at 11pm.</p>
+
+  <h2>Option pool shuffle</h2>
+  <p>An <strong>option-pool top-up</strong> done before the round comes out of founder dilution, not investor dilution. A 10% post-money pool top-up at the same $20M pre is roughly equivalent to a $2M discount on the pre. This is where most ten-minute "we agree" moments unwind.</p>
+
+  <h2>Liquidation preferences</h2>
+  <p>A 1× non-participating preference means the investor takes either their money back or their share of the exit, whichever is more. Participating means they take both — money back <em>and</em> the share. Stacked preferences (later rounds paid before earlier ones) compound badly in a down exit. The <a href="../tools/cap-table.html">cap-table tool</a> shows you what the waterfall looks like at three exit prices, which is usually enough to win the argument.</p>
+
+  <p>The matching tools: <a href="../tools/lbo-vc-model.html">LBO/VC Model Builder</a>, <a href="../tools/cap-table.html">Cap table &amp; waterfall</a>.</p>
+
+  <p style="margin-top: var(--space-10);"><a href="04-balance-sheet-tells.html">Next → Ch. 04 — Balance-sheet tells</a></p>
+</article>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span>© 2026 Reports Lab · No. 05 · Ch. 03</span>
+  <span><a href="../index.html">↑ cover</a></span>
+</div></footer>
+<script src="../js/site.js"></script>
+</body></html>

@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Lab — eight in-browser PE/VC tools · Reports Lab №05</title>
+<meta name="description" content="Eight static, in-browser tools for working through PE/VC case studies. All computation happens locally; no data leaves your device.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+</head>
+<body>
+
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../index.html"><span class="brand__mark"></span><span>The PE/VC Operator's Lab</span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../index.html">Cover</a>
+  <a class="nav-link" href="../index.html#chapters">Chapters</a>
+  <a class="nav-link nav-link--active" href="./">Tools</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main>
+  <section class="hero reveal" style="padding-bottom: var(--space-8);">
+    <div>
+      <div class="hero__eyebrow">The Lab · 8 tools · 100% client-side</div>
+      <h1 class="hero__title">Open the <em>lab</em></h1>
+      <p class="hero__lede">Each tool is a single static page. Inputs persist locally, exports are downloads, and there is no analytics. Pick a tool — or run the chapters first, then come back.</p>
+    </div>
+    <div aria-hidden="true">
+      <svg viewBox="0 0 320 280" width="100%" style="max-width:340px;display:block;margin:0 auto;">
+        <defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="var(--color-divider)" stroke-width="0.5"/>
+        </pattern></defs>
+        <rect x="0" y="0" width="320" height="280" fill="url(#grid)"/>
+        <g stroke="var(--color-primary)" stroke-width="1.4" fill="none">
+          <rect x="30" y="30" width="80" height="50" rx="4"/>
+          <rect x="130" y="30" width="80" height="50" rx="4"/>
+          <rect x="230" y="30" width="60" height="50" rx="4"/>
+          <rect x="30" y="100" width="80" height="50" rx="4"/>
+          <rect x="130" y="100" width="80" height="50" rx="4"/>
+          <rect x="230" y="100" width="60" height="50" rx="4"/>
+          <rect x="30" y="170" width="80" height="50" rx="4"/>
+          <rect x="130" y="170" width="160" height="50" rx="4"/>
+        </g>
+        <g fill="var(--color-accent-copper)">
+          <circle cx="70" cy="55" r="3"/><circle cx="170" cy="55" r="3"/><circle cx="260" cy="55" r="3"/>
+          <circle cx="70" cy="125" r="3"/><circle cx="170" cy="125" r="3"/><circle cx="260" cy="125" r="3"/>
+          <circle cx="70" cy="195" r="3"/><circle cx="210" cy="195" r="3"/>
+        </g>
+      </svg>
+    </div>
+  </section>
+
+  <div class="tools-grid reveal">
+    <a class="tile" href="case-analyzer.html"><div class="tile__num">T1</div><div class="tile__title">Case Study <em>Analyzer</em></div><p class="tile__desc">A guided checklist across company, market, unit economics, risks, and thesis. Saves locally; exports to Markdown.</p></a>
+    <a class="tile" href="lbo-vc-model.html"><div class="tile__num">T2</div><div class="tile__title">LBO / VC <em>Model</em></div><p class="tile__desc">Editable assumptions; computes IRR, MOIC, pre/post-money, dilution and a small sensitivity grid.</p></a>
+    <a class="tile" href="balance-sheet-check.html"><div class="tile__num">T3</div><div class="tile__title">Balance-sheet <em>checker</em></div><p class="tile__desc">Enter a few rows; verifies the accounting identity and runs eight red-flag heuristics.</p></a>
+    <a class="tile" href="cap-table.html"><div class="tile__num">T4</div><div class="tile__title">Cap table &amp; <em>waterfall</em></div><p class="tile__desc">Founders, options, multiple priced rounds, and a 1× / participating / stacked exit waterfall.</p></a>
+    <a class="tile" href="ic-memo.html"><div class="tile__num">T5</div><div class="tile__title">IC memo <em>builder</em></div><p class="tile__desc">Structures raw notes into the seven-block memo from Ch. 05; copy as Markdown.</p></a>
+    <a class="tile" href="diligence-redflags.html"><div class="tile__num">T6</div><div class="tile__title">Diligence <em>red flags</em></div><p class="tile__desc">A scored checklist of patterns that have killed deals at the table; outputs a verdict band.</p></a>
+    <a class="tile" href="sector-canvas.html"><div class="tile__num">T7</div><div class="tile__title">Sector thesis <em>canvas</em></div><p class="tile__desc">Six-field canvases for AI, deep-tech, and space; loadable templates plus blank.</p></a>
+    <a class="tile" href="capability-drills.html"><div class="tile__num">T8</div><div class="tile__title">Capability <em>drills</em></div><p class="tile__desc">Beginner / intermediate / expert drills mapped to each tool, with self-assessment.</p></a>
+  </div>
+
+  <section class="wrap reveal" style="padding-top: var(--space-10); padding-bottom: var(--space-16);">
+    <h2 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-xl); margin-bottom: var(--space-3);">Channeling the lab</h2>
+    <p class="muted" style="max-width: 60ch;">The tools are designed to be used in order. Read a real case (10-K, S-1, founder deck), open the <a href="case-analyzer.html">Case Study Analyzer</a>, then move to the <a href="lbo-vc-model.html">LBO/VC model</a> and the <a href="balance-sheet-check.html">balance-sheet checker</a>. The <a href="ic-memo.html">IC memo</a> consolidates everything into a one-page output.</p>
+  </section>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span>© 2026 Reports Lab · No. 05 · Lab</span>
+  <span><a href="../index.html">↑ cover</a></span>
+</div></footer>
+<script src="../js/site.js"></script>
+</body></html>
