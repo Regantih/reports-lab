@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tool 16 · LP Waterfall · PE/VC Lab</title>
+<link rel="stylesheet" href="../css/lab.css">
+<style>
+.tool-wrap{max-width:860px;margin:2rem auto;padding:0 1.25rem}
+h1{font-size:1.5rem;margin-bottom:.25rem}
+.sub{color:var(--text-2);font-size:.9rem;margin-bottom:2rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
+@media(max-width:600px){.grid2{grid-template-columns:1fr}}
+.card{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:1.25rem}
+.card h3{margin:0 0 .75rem;font-size:1rem;color:var(--accent)}
+label{display:block;font-size:.82rem;color:var(--text-2);margin-bottom:.15rem;margin-top:.6rem}
+input{width:100%;box-sizing:border-box;padding:.4rem .6rem;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text-1);font-size:.92rem}
+.btn{margin-top:1.25rem;padding:.55rem 1.4rem;background:var(--accent);color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:.95rem;font-weight:600}
+.results{margin-top:2rem}
+.wt{width:100%;border-collapse:collapse;font-size:.87rem;margin-top:1rem}
+.wt th{background:var(--surface);padding:.5rem;border:1px solid var(--border);font-weight:600;text-align:right}
+.wt th:first-child{text-align:left}
+.wt td{padding:.4rem .5rem;border:1px solid var(--border);text-align:right}
+.wt td:first-child{text-align:left;font-weight:500}
+.wt tr.total td{font-weight:700;background:var(--surface-2)}
+.metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.25rem}
+.metric-box{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}
+.metric-box .val{font-size:1.5rem;font-weight:700;color:var(--accent)}
+.metric-box .lbl{font-size:.8rem;color:var(--text-2)}
+.flag{border-left:3px solid var(--accent);padding:.55rem 1rem;margin-top:.6rem;background:var(--surface-2);font-size:.87rem;border-radius:0 4px 4px 0}
+.flag.warn{border-left-color:#f5a623}.flag.ok{border-left-color:#22a75c}
+.concept-box{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin-top:2rem}
+.concept-box h3{margin:0 0 .75rem;font-size:1rem}
+.concept-box ul{margin:0;padding-left:1.2rem;font-size:.87rem;line-height:1.75}
+.back-link{display:inline-block;margin-bottom:1.5rem;font-size:.88rem;color:var(--accent)}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../../index.html"><span class="brand__mark"></span><span>PE/VC<span class="brand__sub"> · the practitioner's lab</span></span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../">Lab home</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+<div class="tool-wrap">
+  <a class="back-link" href="../">← Back to lab</a>
+  <h1>LP Capital Call &amp; Distribution <em>Waterfall</em></h1>
+  <p class="sub">Tool 16 · Ch. 30–32 · European waterfall · carry · hurdle · GP catch-up · clawback</p>
+  <div class="grid2">
+    <div class="card">
+      <h3>Fund Structure</h3>
+      <label>Fund Size ($M)</label><input id="fs" type="number" value="100">
+      <label>Fund Life (years)</label><input id="fl" type="number" value="10">
+      <label>GP Commit (% of fund)</label><input id="gpc" type="number" value="1" step="0.5">
+    </div>
+    <div class="card">
+      <h3>Waterfall Terms</h3>
+      <label>Hurdle Rate (%)</label><input id="hr" type="number" value="8" step="0.5">
+      <label>GP Catch-up (%)</label><input id="cu" type="number" value="100" step="10">
+      <label>Carried Interest (%)</label><input id="ci" type="number" value="20">
+    </div>
+    <div class="card">
+      <h3>Performance</h3>
+      <label>Total Capital Called ($M)</label><input id="cc" type="number" value="95">
+      <label>Total Gross Distributions ($M)</label><input id="td" type="number" value="237">
+    </div>
+    <div class="card">
+      <h3>LP View</h3>
+      <label>LP Commitment ($M)</label><input id="lc" type="number" value="10">
+    </div>
+  </div>
+  <button class="btn" onclick="run()">Run Waterfall</button>
+  <div class="results" id="res" style="display:none">
+    <h2 style="margin:0 0 .75rem;font-size:1.05rem">Waterfall Layers</h2>
+    <table class="wt"><thead><tr><th>Layer</th><th>LP Receives</th><th>GP Receives</th><th>Remaining Pool</th></tr></thead>
+    <tbody id="tbody"></tbody></table>
+    <div class="metrics" id="metrics"></div>
+    <div id="flags" style="margin-top:1rem"></div>
+  </div>
+  <div class="concept-box">
+    <h3>Waterfall Mechanics — European Model (Whole-Fund)</h3>
+    <ul>
+      <li><strong>Layer 1 – Return of Capital:</strong> 100% of proceeds go to LPs (and GP pro-rata) until all invested capital is returned.</li>
+      <li><strong>Layer 2 – Preferred Return:</strong> LPs receive the hurdle rate (typically 8% compounded annually) on contributed capital before any carry is paid.</li>
+      <li><strong>Layer 3 – GP Catch-up:</strong> GP receives 100% of distributions (or per catch-up %) until GP has received carry% of total profits above hurdle.</li>
+      <li><strong>Layer 4 – Carried Interest Split:</strong> Remaining profits split (e.g. 80/20) between LPs and GP indefinitely.</li>
+      <li><strong>American Waterfall:</strong> Deal-by-deal carry paid on winners; requires clawback if losers reduce aggregate carry entitlement.</li>
+      <li><strong>Clawback:</strong> GP must return excess carry received if total fund carry exceeds entitlement at end of fund life.</li>
+      <li><strong>GP Commit:</strong> LPs expect 1–3% to align GP incentives. Below 1% triggers LP advisory board scrutiny.</li>
+    </ul>
+  </div>
+</div>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const M=v=>'$'+v.toFixed(1)+'M';
+const X=v=>v.toFixed(2)+'x';
+window.run=function(){
+  const fs=+$('fs').value,fl=+$('fl').value,gpc=+$('gpc').value/100;
+  const hr=+$('hr').value/100,cu=+$('cu').value/100,ci=+$('ci').value/100;
+  const cc=+$('cc').value,td=+$('td').value,lc=+$('lc').value;
+  const gpAmt=fs*gpc,lpTotal=fs-gpAmt;
+  const lpFrac=lc/lpTotal;
+  const lpCalled=cc*(1-gpc)*lpFrac;
+  const gpCalled=cc*gpc;
+  let pool=td;
+  // L1 RoC
+  const l1lp=Math.min(lpCalled,pool*(1-gpc));
+  const l1gp=Math.min(gpCalled,pool*gpc);
+  pool=Math.max(0,pool-l1lp-l1gp);
+  // L2 Pref
+  const pref=lpCalled*(Math.pow(1+hr,fl)-1);
+  const l2lp=Math.min(pref,pool);
+  pool=Math.max(0,pool-l2lp);
+  // L3 Catchup
+  const totalProfit=td-cc;
+  const targetCarry=Math.max(0,totalProfit)*ci;
+  const l3gp=Math.min(targetCarry,pool*cu);
+  const l3lp=cu>=1?0:l3gp*(1-cu)/cu;
+  pool=Math.max(0,pool-l3gp-l3lp);
+  // L4 split
+  const l4lp=pool*(1-ci),l4gp=pool*ci;
+  const totalLP=l1lp+l2lp+l3lp+l4lp;
+  const totalGP=l1gp+l3gp+l4gp;
+  const moic=lpCalled>0?totalLP/lpCalled:0;
+  const carry=l3gp+l4gp;
+  const effCarry=totalProfit>0?carry/totalProfit:0;
+  $('tbody').innerHTML=[
+    ['1. Return of Capital',M(l1lp),M(l1gp),M(td-l1lp-l1gp)],
+    ['2. Preferred Return ('+(hr*100).toFixed(0)+'%)',M(l2lp),'--',M(td-l1lp-l1gp-l2lp)],
+    ['3. GP Catch-up',M(l3lp),M(l3gp),M(Math.max(0,td-l1lp-l1gp-l2lp-l3lp-l3gp))],
+    ['4. Carry Split ('+(((1-ci)*100).toFixed(0))+'/'+(ci*100).toFixed(0)+')',M(l4lp),M(l4gp),'$0.0M'],
+    ['TOTAL','<strong>'+M(totalLP)+'</strong>','<strong>'+M(totalGP)+'</strong>','']
+  ].map((r,i)=>`<tr${i===4?' class="total"':''}><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td></tr>`).join('');
+  $('metrics').innerHTML=[
+    [X(moic),'LP Net MOIC'],[M(carry),'GP Net Carry'],[(effCarry*100).toFixed(1)+'%','Effective Carry %']
+  ].map(m=>`<div class="metric-box"><div class="val">${m[0]}</div><div class="lbl">${m[1]}</div></div>`).join('');
+  const flags=[];
+  if(moic<1.5) flags.push({c:'warn',m:'Net MOIC < 1.5x: LP disappointment threshold — GP will face scrutiny in next fundraise.'});
+  if(moic>=2.5) flags.push({c:'ok',m:'Net MOIC ≥ 2.5x: top-quartile return. GP should have strong next fund close.'});
+  if(gpc<0.01) flags.push({c:'warn',m:'GP commit < 1%: below LP market standard. Expect LP pushback at next capital raise.'});
+  if(effCarry<ci*0.5) flags.push({c:'warn',m:'GP receiving less than 50% of nominal carry rate — hurdle is consuming the spread.'});
+  $('flags').innerHTML=flags.map(f=>`<div class="flag ${f.c}">${f.m}</div>`).join('');
+  $('res').style.display='block';
+};
+const btn=document.querySelector('[data-theme-toggle]');
+if(btn){const s=localStorage.getItem('theme');if(s)document.documentElement.setAttribute('data-theme',s);btn.addEventListener('click',()=>{const c=document.documentElement.getAttribute('data-theme');const n=c==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',n);localStorage.setItem('theme',n);});}
+})();
+</script>
+</body></html>
