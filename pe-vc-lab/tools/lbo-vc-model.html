@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T2 — LBO / VC Model · The PE/VC Operator's Lab</title>
+<meta name="description" content="Editable assumptions; computes IRR, MOIC, pre/post-money, dilution and a small sensitivity grid. All client-side.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+</head>
+<body>
+
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../index.html"><span class="brand__mark"></span><span>The PE/VC Operator's Lab</span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../index.html">Cover</a>
+  <a class="nav-link" href="../index.html#chapters">Chapters</a>
+  <a class="nav-link nav-link--active" href="./">Tools</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap wrap--wide">
+  <section style="padding: var(--space-10) 0 var(--space-4);">
+    <div class="eyebrow" style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-accent-copper);">Tool T2 · in-browser only</div>
+    <h1 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-2xl); margin: var(--space-2) 0 var(--space-3);">LBO / VC <em>Model</em></h1>
+    <p class="muted" style="max-width: 60ch;">Two side-by-side mini-models. Pick a mode and edit the assumptions; computations run live. The output is the four numbers that move IC discussions.</p>
+  </section>
+
+  <section class="tool-toolbar">
+    <button class="btn" id="mode-lbo" type="button">LBO mode</button>
+    <button class="btn btn--ghost" id="mode-vc" type="button">Venture round</button>
+    <span class="nav-spacer" style="flex:1;"></span>
+    <button class="btn btn--ghost" id="btn-clear" type="button">Reset</button>
+  </section>
+
+  <!-- LBO mode -->
+  <section id="panel-lbo">
+    <div class="row">
+      <div class="card">
+        <h3 style="font-family: var(--font-display); font-weight: 500; margin-bottom: var(--space-3);">Entry assumptions</h3>
+        <div class="field--inline">
+          <div class="field"><label>Entry EBITDA ($M)</label><input type="number" step="0.1" data-persist="lbo_ebitda" value="50"></div>
+          <div class="field"><label>Entry multiple (×)</label><input type="number" step="0.1" data-persist="lbo_entryMult" value="10"></div>
+        </div>
+        <div class="field--inline">
+          <div class="field"><label>Debt / EV (%)</label><input type="number" step="1" data-persist="lbo_debtPct" value="55"></div>
+          <div class="field"><label>Cost of debt (%)</label><input type="number" step="0.1" data-persist="lbo_kd" value="8"></div>
+        </div>
+        <div class="field--inline">
+          <div class="field"><label>EBITDA growth (%/yr)</label><input type="number" step="0.5" data-persist="lbo_g" value="8"></div>
+          <div class="field"><label>FCF / EBITDA (%)</label><input type="number" step="1" data-persist="lbo_fcfPct" value="60"></div>
+        </div>
+        <div class="field--inline">
+          <div class="field"><label>Hold period (years)</label><input type="number" step="1" data-persist="lbo_years" value="5"></div>
+          <div class="field"><label>Exit multiple (×)</label><input type="number" step="0.1" data-persist="lbo_exitMult" value="10"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-family: var(--font-display); font-weight: 500; margin-bottom: var(--space-3);">Output</h3>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi__label">MOIC</div><div class="kpi__value" id="lbo_moic">—</div></div>
+          <div class="kpi"><div class="kpi__label">IRR</div><div class="kpi__value" id="lbo_irr">—</div></div>
+          <div class="kpi"><div class="kpi__label">Equity in</div><div class="kpi__value" id="lbo_eqIn">—</div></div>
+          <div class="kpi"><div class="kpi__label">Equity out</div><div class="kpi__value" id="lbo_eqOut">—</div></div>
+        </div>
+        <div id="lbo_sched_wrap" style="margin-top: var(--space-4);"></div>
+      </div>
+    </div>
+
+    <h2 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-xl); margin: var(--space-10) 0 var(--space-3);">Sensitivity — exit multiple × growth</h2>
+    <div id="lbo_sens" style="overflow-x:auto;"></div>
+  </section>
+
+  <!-- VC mode -->
+  <section id="panel-vc" hidden>
+    <div class="row">
+      <div class="card">
+        <h3 style="font-family: var(--font-display); font-weight: 500; margin-bottom: var(--space-3);">Round terms</h3>
+        <div class="field--inline">
+          <div class="field"><label>Pre-money ($M)</label><input type="number" step="0.5" data-persist="vc_pre" value="20"></div>
+          <div class="field"><label>Investment ($M)</label><input type="number" step="0.5" data-persist="vc_inv" value="5"></div>
+        </div>
+        <div class="field--inline">
+          <div class="field"><label>Pre-round options pool (%)</label><input type="number" step="0.5" data-persist="vc_optPre" value="10"></div>
+          <div class="field"><label>Top-up to (%)</label><input type="number" step="0.5" data-persist="vc_optPost" value="15"></div>
+        </div>
+        <div class="field--inline">
+          <div class="field"><label>Founders' pre-round %</label><input type="number" step="0.5" data-persist="vc_foundersPre" value="80"></div>
+          <div class="field"><label>Existing investors' %</label><input type="number" step="0.5" data-persist="vc_existPre" value="10"></div>
+        </div>
+
+        <h3 style="font-family: var(--font-display); font-weight: 500; margin: var(--space-6) 0 var(--space-3);">Exit assumptions (for IRR)</h3>
+        <div class="field--inline">
+          <div class="field"><label>Exit equity value ($M)</label><input type="number" step="1" data-persist="vc_exit" value="500"></div>
+          <div class="field"><label>Years to exit</label><input type="number" step="1" data-persist="vc_years" value="6"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-family: var(--font-display); font-weight: 500; margin-bottom: var(--space-3);">Round &amp; exit math</h3>
+        <table class="data" id="vc_table">
+          <thead><tr><th>Stake</th><th class="num">Pre-round %</th><th class="num">Post-round %</th><th class="num">Exit value</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="kpi-row" style="margin-top: var(--space-4);">
+          <div class="kpi"><div class="kpi__label">Post-money</div><div class="kpi__value" id="vc_post">—</div></div>
+          <div class="kpi"><div class="kpi__label">New investor stake</div><div class="kpi__value" id="vc_newStake">—</div></div>
+          <div class="kpi"><div class="kpi__label">New investor MOIC</div><div class="kpi__value" id="vc_moic">—</div></div>
+          <div class="kpi"><div class="kpi__label">New investor IRR</div><div class="kpi__value" id="vc_irr">—</div></div>
+        </div>
+        <p class="muted tiny" style="margin-top: var(--space-3);">Simplification: the option-pool top-up here dilutes the pre-round group pro-rata (founders + existing + original pool), not founders only. Real term sheets often allocate the top-up against pre-money — the <a href="cap-table.html">Cap-table tool</a> models the cleaner case.</p>
+      </div>
+    </div>
+  </section>
+
+  <div style="height: var(--space-16);"></div>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span>© 2026 Reports Lab · No. 05 · T2</span>
+  <span><a href="../index.html">↑ cover</a></span>
+</div></footer>
+
+<script src="../js/site.js"></script>
+<script src="../js/tools.js"></script>
+<script>
+(function () {
+  const SLOT = 'lbo-vc-model';
+  const root = document.querySelector('main');
+  PEVC.bindPersistence(root, SLOT);
+
+  const panelLbo = document.getElementById('panel-lbo');
+  const panelVc = document.getElementById('panel-vc');
+  const btnLbo = document.getElementById('mode-lbo');
+  const btnVc = document.getElementById('mode-vc');
+  function showMode(mode) {
+    panelLbo.hidden = (mode !== 'lbo');
+    panelVc.hidden = (mode !== 'vc');
+    btnLbo.classList.toggle('btn--primary', mode === 'lbo');
+    btnLbo.classList.toggle('btn--ghost', mode !== 'lbo');
+    btnVc.classList.toggle('btn--primary', mode === 'vc');
+    btnVc.classList.toggle('btn--ghost', mode !== 'vc');
+    const cur = PEVC.load(SLOT, {}) || {}; cur.__mode = mode; PEVC.save(SLOT, cur);
+  }
+  btnLbo.addEventListener('click', () => showMode('lbo'));
+  btnVc.addEventListener('click', () => showMode('vc'));
+  showMode((PEVC.load(SLOT, {}) || {}).__mode || 'lbo');
+
+  // ---- LBO math --------------------------------------------------------
+  function lboCompute() {
+    const d = PEVC.load(SLOT, {}) || {};
+    const ebitda = PEVC.num(d.lbo_ebitda, 50);
+    const entryMult = PEVC.num(d.lbo_entryMult, 10);
+    const debtPct = PEVC.num(d.lbo_debtPct, 55) / 100;
+    const kd = PEVC.num(d.lbo_kd, 8) / 100;
+    const g = PEVC.num(d.lbo_g, 8) / 100;
+    const fcfPct = PEVC.num(d.lbo_fcfPct, 60) / 100;
+    const years = Math.max(1, Math.round(PEVC.num(d.lbo_years, 5)));
+    const exitMult = PEVC.num(d.lbo_exitMult, 10);
+
+    const ev0 = ebitda * entryMult;
+    const debt0 = ev0 * debtPct;
+    const eq0 = ev0 - debt0;
+
+    const rows = [];
+    let curEbitda = ebitda;
+    let curDebt = debt0;
+    for (let t = 1; t <= years; t++) {
+      curEbitda = curEbitda * (1 + g);
+      const interest = curDebt * kd;
+      const fcf = Math.max(0, curEbitda * fcfPct - interest);
+      curDebt = Math.max(0, curDebt - fcf);
+      rows.push({ year: t, ebitda: curEbitda, interest, fcf, debt: curDebt });
+    }
+    const evExit = rows[rows.length - 1].ebitda * exitMult;
+    const eqExit = Math.max(0, evExit - rows[rows.length - 1].debt);
+    const moic = eqExit / Math.max(1e-9, eq0);
+    const irr = Math.pow(moic, 1 / years) - 1;
+
+    return { ev0, debt0, eq0, rows, evExit, eqExit, moic, irr, years, exitMult, growth: g };
+  }
+  function renderLbo() {
+    const r = lboCompute();
+    document.getElementById('lbo_moic').textContent = PEVC.fmtMult(r.moic);
+    document.getElementById('lbo_irr').textContent = PEVC.fmtPct(r.irr);
+    document.getElementById('lbo_eqIn').textContent = '$' + r.eq0.toFixed(1) + 'M';
+    document.getElementById('lbo_eqOut').textContent = '$' + r.eqExit.toFixed(1) + 'M';
+
+    // schedule
+    const wrap = document.getElementById('lbo_sched_wrap');
+    let html = '<table class="data"><thead><tr><th>Year</th><th class="num">EBITDA</th><th class="num">Interest</th><th class="num">FCF → debt</th><th class="num">Debt end</th></tr></thead><tbody>';
+    r.rows.forEach((row) => {
+      html += `<tr><td>${row.year}</td><td class="num">$${row.ebitda.toFixed(1)}M</td><td class="num">$${row.interest.toFixed(1)}M</td><td class="num">$${row.fcf.toFixed(1)}M</td><td class="num">$${row.debt.toFixed(1)}M</td></tr>`;
+    });
+    html += '</tbody></table>';
+    wrap.innerHTML = html;
+
+    // sensitivity: exit multiple × growth
+    const exitMults = [r.exitMult - 2, r.exitMult - 1, r.exitMult, r.exitMult + 1, r.exitMult + 2].filter(x => x > 0);
+    const growths = [-0.02, 0, 0.02, 0.04, 0.06].map(x => r.growth + x);
+    let sh = '<table class="data"><thead><tr><th>g \\ exit×</th>';
+    exitMults.forEach(em => sh += `<th class="num">${em.toFixed(1)}×</th>`);
+    sh += '</tr></thead><tbody>';
+    growths.forEach((gr) => {
+      sh += `<tr><td class="mono">${(gr*100).toFixed(1)}%</td>`;
+      exitMults.forEach((em) => {
+        // recompute MOIC for this combo
+        const d = PEVC.load(SLOT, {}) || {};
+        const ebitda = PEVC.num(d.lbo_ebitda, 50);
+        const entryMult = PEVC.num(d.lbo_entryMult, 10);
+        const debtPct = PEVC.num(d.lbo_debtPct, 55) / 100;
+        const kd = PEVC.num(d.lbo_kd, 8) / 100;
+        const fcfPct = PEVC.num(d.lbo_fcfPct, 60) / 100;
+        const years = Math.max(1, Math.round(PEVC.num(d.lbo_years, 5)));
+        const ev0 = ebitda * entryMult;
+        let curD = ev0 * debtPct;
+        const eq0 = ev0 - curD;
+        let curE = ebitda;
+        for (let t = 1; t <= years; t++) {
+          curE = curE * (1 + gr);
+          const interest = curD * kd;
+          const fcf = Math.max(0, curE * fcfPct - interest);
+          curD = Math.max(0, curD - fcf);
+        }
+        const evX = curE * em;
+        const eqX = Math.max(0, evX - curD);
+        const m = eqX / Math.max(1e-9, eq0);
+        sh += `<td class="num">${PEVC.fmtMult(m)}</td>`;
+      });
+      sh += '</tr>';
+    });
+    sh += '</tbody></table>';
+    document.getElementById('lbo_sens').innerHTML = sh;
+  }
+
+  // ---- VC math ---------------------------------------------------------
+  function vcCompute() {
+    const d = PEVC.load(SLOT, {}) || {};
+    const pre = PEVC.num(d.vc_pre, 20);
+    const inv = PEVC.num(d.vc_inv, 5);
+    const optPre = PEVC.num(d.vc_optPre, 10) / 100;
+    const optPost = PEVC.num(d.vc_optPost, 15) / 100;
+    const foundersPre = PEVC.num(d.vc_foundersPre, 80) / 100;
+    const existPre = PEVC.num(d.vc_existPre, 10) / 100;
+    const exitV = PEVC.num(d.vc_exit, 500);
+    const years = Math.max(1, Math.round(PEVC.num(d.vc_years, 6)));
+
+    // Pre-round shares — normalize to (founders + existing + optionPool) = 100%.
+    // Anything missing falls into a "other/unallocated" bucket.
+    const otherPre = Math.max(0, 1 - (foundersPre + existPre + optPre));
+
+    // The pool top-up to optPost happens BEFORE the round (pre-money dilutes
+    // existing holders; new investors come in clean against the new pool).
+    const poolTopUp = Math.max(0, optPost - optPre); // expressed as % of post-round
+    // Compute the new investor's stake first.
+    const post = pre + inv;
+    const newStake = inv / post;
+
+    // After the round and the top-up, the pool is `optPost` of post-round.
+    // Existing holders (founders, existing investors, otherPre, optPre) collectively own (1 - newStake - poolTopUp).
+    // Their proportions are kept as-is among themselves.
+    const existingTotalPre = foundersPre + existPre + otherPre + optPre;
+    const survivingShare = 1 - newStake - poolTopUp;
+    function postShare(prePct) { return existingTotalPre > 0 ? survivingShare * (prePct / existingTotalPre) : 0; }
+
+    const stakes = [
+      { name: 'Founders', pre: foundersPre, post: postShare(foundersPre) },
+      { name: 'Existing investors', pre: existPre, post: postShare(existPre) },
+      { name: 'Option pool (existing)', pre: optPre, post: postShare(optPre) },
+      { name: 'Option pool (top-up)', pre: 0, post: poolTopUp },
+      { name: 'Other / unallocated', pre: otherPre, post: postShare(otherPre) },
+      { name: 'New investor', pre: 0, post: newStake },
+    ];
+    // Drop zero rows
+    const visible = stakes.filter(s => s.pre > 0.0005 || s.post > 0.0005);
+
+    const newMoic = (newStake * exitV) / Math.max(1e-9, inv);
+    const newIrr = Math.pow(Math.max(0, newMoic), 1 / years) - 1;
+
+    return { pre, inv, post, newStake, stakes: visible, exitV, years, newMoic, newIrr };
+  }
+  function renderVc() {
+    const r = vcCompute();
+    document.getElementById('vc_post').textContent = '$' + r.post.toFixed(1) + 'M';
+    document.getElementById('vc_newStake').textContent = (r.newStake * 100).toFixed(1) + '%';
+    document.getElementById('vc_moic').textContent = PEVC.fmtMult(r.newMoic);
+    document.getElementById('vc_irr').textContent = PEVC.fmtPct(r.newIrr);
+
+    const tbody = document.querySelector('#vc_table tbody');
+    let html = '';
+    r.stakes.forEach((s) => {
+      const exitV = s.post * r.exitV;
+      html += `<tr${s.name === 'New investor' ? ' class="highlight"' : ''}><td>${s.name}</td><td class="num">${(s.pre * 100).toFixed(1)}%</td><td class="num">${(s.post * 100).toFixed(1)}%</td><td class="num">$${exitV.toFixed(1)}M</td></tr>`;
+    });
+    tbody.innerHTML = html;
+  }
+
+  // ---- wire-up ---------------------------------------------------------
+  function recompute() { try { renderLbo(); renderVc(); } catch (e) { console.error(e); } }
+  document.querySelectorAll('input').forEach((el) => el.addEventListener('input', recompute));
+  document.getElementById('btn-clear').addEventListener('click', () => {
+    if (!confirm('Reset all assumptions?')) return;
+    PEVC.clear(SLOT); location.reload();
+  });
+  recompute();
+})();
+</script>
+</body></html>

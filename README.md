@@ -9,6 +9,10 @@ A workshop for long-form, image-first essays on the systems behind modern intell
 | № | Title | Chapters | Status |
 |---|---|---:|---|
 | 01 | [From Sand to Superintelligence](./sand-to-superintelligence/) | 42 | Published · 2026 |
+| 02 | [The Agentic Enterprise](./agentic-ai-readiness/) | 40 | Published · 2026 |
+| 03 | [Building an Agentic Enterprise](./agentic-enterprise/) | 21 | Published · 2026 |
+| 04 | [Private Equity and Venture Capital](./private-equity-venture-capital-complete-professional-guide/) | 38 | Published · 2026 |
+| 05 | [The PE/VC Operator's Lab](./pe-vc-lab/) | 6 + 8 tools | Published · 2026 |
 
 ## Structure
 

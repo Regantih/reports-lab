@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T5 — IC Memo Builder · The PE/VC Operator's Lab</title>
+<meta name="description" content="Structures raw notes into the seven-block memo from Ch. 05; copy as Markdown.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../index.html"><span class="brand__mark"></span><span>The PE/VC Operator's Lab</span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../index.html">Cover</a>
+  <a class="nav-link" href="../index.html#chapters">Chapters</a>
+  <a class="nav-link nav-link--active" href="./">Tools</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap">
+  <section style="padding: var(--space-10) 0 var(--space-4);">
+    <div class="eyebrow" style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-accent-copper);">Tool T5 · in-browser only</div>
+    <h1 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-2xl); margin: var(--space-2) 0 var(--space-3);">IC memo <em>builder</em></h1>
+    <p class="muted" style="max-width: 60ch;">Fill the seven blocks. The preview on the right renders the memo as you type. Export to Markdown when you're ready to paste into your IC system.</p>
+  </section>
+
+  <section class="tool-toolbar">
+    <button class="btn" id="btn-export" type="button">Export Markdown</button>
+    <button class="btn" id="btn-copy" type="button">Copy as Markdown</button>
+    <button class="btn btn--ghost" id="btn-clear" type="button">Clear</button>
+  </section>
+
+  <div class="row" style="align-items:flex-start;">
+    <div>
+      <div class="field"><label>Deal name &amp; date</label><input type="text" data-persist="deal" placeholder="Foo, Inc. — Series B · 2026-05-03"></div>
+      <div class="field"><label>Author</label><input type="text" data-persist="author" placeholder="Your name"></div>
+
+      <h3 style="font-family: var(--font-display); font-weight:500; margin-top: var(--space-6); margin-bottom: var(--space-2);">1. Recommendation</h3>
+      <div class="field"><textarea data-persist="b1" placeholder="One sentence. Approve / pass / approve with conditions, with cheque size and price."></textarea></div>
+
+      <h3 style="font-family: var(--font-display); font-weight:500; margin-top: var(--space-6); margin-bottom: var(--space-2);">2. Thesis</h3>
+      <div class="field"><textarea data-persist="b2" placeholder="Three sentences. What it is. What's changing. Why it wins because of that change."></textarea></div>
+
+      <h3 style="font-family: var(--font-display); font-weight:500; margin-top: var(--space-6); margin-bottom: var(--space-2);">3. Numbers</h3>
+      <div class="field"><textarea data-persist="b3" placeholder="Today's revenue, growth, margin. Three-year pro-forma. MOIC and IRR at base/down/up."></textarea></div>
+
+      <h3 style="font-family: var(--font-display); font-weight:500; margin-top: var(--space-6); margin-bottom: var(--space-2);">4. Diligence</h3>
+      <div class="field"><textarea data-persist="b4" placeholder="What we did, what we found, what's still open. List open items, don't bury them."></textarea></div>
+
+      <h3 style="font-family: var(--font-display); font-weight:500; margin-top: var(--space-6); margin-bottom: var(--space-2);">5. Risks</h3>
+      <div class="field"><textarea data-persist="b5" placeholder="Top three failure modes ranked by probability × severity, each with a mitigant."></textarea></div>
+
+      <h3 style="font-family: var(--font-display); font-weight:500; margin-top: var(--space-6); margin-bottom: var(--space-2);">6. Structure</h3>
+      <div class="field"><textarea data-persist="b6" placeholder="Cheque, security, board seat, governance, follow-on reserves."></textarea></div>
+
+      <h3 style="font-family: var(--font-display); font-weight:500; margin-top: var(--space-6); margin-bottom: var(--space-2);">7. Path (first 90 days)</h3>
+      <div class="field"><textarea data-persist="b7" placeholder="What happens post-close. The first KPI we'll judge ourselves against."></textarea></div>
+    </div>
+
+    <div>
+      <h3 style="font-family: var(--font-display); font-weight:500; margin-bottom: var(--space-3);">Preview</h3>
+      <div class="card" id="preview" style="font-family: var(--font-mono); white-space: pre-wrap; font-size: 13px; min-height: 400px; line-height: 1.5;"></div>
+    </div>
+  </div>
+
+  <div style="height: var(--space-16);"></div>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span>© 2026 Reports Lab · No. 05 · T5</span>
+  <span><a href="../index.html">↑ cover</a></span>
+</div></footer>
+
+<script src="../js/site.js"></script>
+<script src="../js/tools.js"></script>
+<script>
+(function () {
+  const SLOT = 'ic-memo';
+  const root = document.querySelector('main');
+  PEVC.bindPersistence(root, SLOT);
+
+  function build() {
+    const d = PEVC.load(SLOT, {}) || {};
+    const blocks = [
+      { n: '1. Recommendation', v: d.b1 },
+      { n: '2. Thesis', v: d.b2 },
+      { n: '3. Numbers', v: d.b3 },
+      { n: '4. Diligence', v: d.b4 },
+      { n: '5. Risks', v: d.b5 },
+      { n: '6. Structure', v: d.b6 },
+      { n: '7. Path (first 90 days)', v: d.b7 },
+    ];
+    let md = '# IC Memo — ' + (d.deal || 'Untitled');
+    if (d.author) md += '\n_Author: ' + d.author + '_';
+    md += '\n';
+    blocks.forEach(b => {
+      md += '\n## ' + b.n + '\n';
+      md += (b.v && b.v.trim()) ? b.v.trim() : '_to fill_';
+      md += '\n';
+    });
+    md += '\n---\n_Drafted in The PE/VC Operator\'s Lab — no data transmitted._\n';
+    return md;
+  }
+  function refresh() { document.getElementById('preview').textContent = build(); }
+  root.addEventListener('input', refresh);
+  refresh();
+
+  document.getElementById('btn-export').addEventListener('click', () => PEVC.downloadFile('ic-memo.md', build(), 'text/markdown;charset=utf-8'));
+  document.getElementById('btn-copy').addEventListener('click', () => PEVC.copyText(build()));
+  document.getElementById('btn-clear').addEventListener('click', () => {
+    if (!confirm('Clear the memo? Affects this device only.')) return;
+    PEVC.clear(SLOT);
+    root.querySelectorAll('[data-persist]').forEach(el => { el.value = ''; });
+    refresh();
+  });
+})();
+</script>
+</body></html>

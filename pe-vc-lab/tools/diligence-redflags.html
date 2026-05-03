@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T6 — Diligence Red Flags · The PE/VC Operator's Lab</title>
+<meta name="description" content="A scored checklist of patterns that have killed deals at the table; outputs a verdict band.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<style>
+.dd-item { border-top: 1px solid var(--color-divider); padding: var(--space-3) 0; display: grid; grid-template-columns: auto 1fr auto; gap: var(--space-3); align-items: start; }
+.dd-item:first-child { border-top: none; }
+.dd-item__cat { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--color-accent-copper); padding-top: 4px; }
+.dd-item__body { color: var(--color-text); }
+.dd-item__title { font-weight: 600; }
+.dd-item__hint { color: var(--color-text-muted); font-size: var(--text-sm); margin-top: 2px; }
+.dd-item__pick label { display: inline-flex; align-items: center; gap: 4px; margin-right: var(--space-2); font-family: var(--font-mono); text-transform: none; letter-spacing: 0; font-size: 12px; color: var(--color-text); }
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../index.html"><span class="brand__mark"></span><span>The PE/VC Operator's Lab</span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../index.html">Cover</a>
+  <a class="nav-link" href="../index.html#chapters">Chapters</a>
+  <a class="nav-link nav-link--active" href="./">Tools</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap">
+  <section style="padding: var(--space-10) 0 var(--space-4);">
+    <div class="eyebrow" style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--color-accent-copper);">Tool T6 · in-browser only</div>
+    <h1 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-2xl); margin: var(--space-2) 0 var(--space-3);">Diligence <em>red flags</em></h1>
+    <p class="muted" style="max-width: 60ch;">For each pattern, mark whether it's clean, a yellow flag, or a red flag. The score weights commercial &gt; financial &gt; legal &gt; team &gt; tech. The verdict band is a sanity check, not a decision.</p>
+  </section>
+
+  <section class="tool-toolbar">
+    <button class="btn btn--ghost" id="btn-clear" type="button">Clear</button>
+    <span class="nav-spacer" style="flex:1;"></span>
+    <span id="status" class="chip">unscored</span>
+  </section>
+
+  <div id="checklist"></div>
+
+  <h2 style="font-family: var(--font-display); font-weight: 500; font-size: var(--text-xl); margin: var(--space-10) 0 var(--space-3);">Score</h2>
+  <div class="kpi-row">
+    <div class="kpi"><div class="kpi__label">Reviewed</div><div class="kpi__value" id="kpi-rev">—</div></div>
+    <div class="kpi"><div class="kpi__label">Yellow flags</div><div class="kpi__value kpi__value--warn" id="kpi-yel">—</div></div>
+    <div class="kpi"><div class="kpi__label">Red flags</div><div class="kpi__value kpi__value--bad" id="kpi-red">—</div></div>
+    <div class="kpi"><div class="kpi__label">Weighted score</div><div class="kpi__value" id="kpi-score">—</div></div>
+  </div>
+  <div id="verdict" class="card" style="margin-top: var(--space-4); display:none;"></div>
+
+  <div style="height: var(--space-16);"></div>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span>© 2026 Reports Lab · No. 05 · T6</span>
+  <span><a href="../index.html">↑ cover</a></span>
+</div></footer>
+
+<script src="../js/site.js"></script>
+<script src="../js/tools.js"></script>
+<script>
+(function () {
+  const SLOT = 'diligence-redflags';
+  const ITEMS = [
+    // Commercial — weight 3
+    { id: 'c1', cat: 'commercial', w: 3, title: 'Top customer concentration', hint: 'Any single customer > 20% of revenue, or top 5 > 50%.' },
+    { id: 'c2', cat: 'commercial', w: 3, title: 'Logo churn ≥ 15% annual', hint: 'Net retention can mask gross logo churn.' },
+    { id: 'c3', cat: 'commercial', w: 3, title: 'Pipeline coverage < 3× quota', hint: 'Forward bookings risk if pipeline is thin.' },
+    { id: 'c4', cat: 'commercial', w: 3, title: 'Long sales cycle, getting longer', hint: '12+ months and creeping suggests buyer doesn\'t see urgency.' },
+    { id: 'c5', cat: 'commercial', w: 2, title: 'No second sales motion', hint: 'Company depends on a single channel/playbook.' },
+    // Financial — weight 3
+    { id: 'f1', cat: 'financial', w: 3, title: 'Revenue recognition aggressive', hint: 'Multi-year deals booked up-front, professional services recognized too early.' },
+    { id: 'f2', cat: 'financial', w: 3, title: 'Burn multiple > 2.0', hint: 'Net burn ÷ net new ARR. >2.0 in 2026 needs a story.' },
+    { id: 'f3', cat: 'financial', w: 3, title: 'Adjusted EBITDA hides recurring add-backs', hint: 'Stock-based comp, "transition" costs, "one-time" items that recur.' },
+    { id: 'f4', cat: 'financial', w: 2, title: 'AR days creeping up', hint: '+30 days YoY suggests revenue pull-forward or stretching customers.' },
+    // Legal & governance — weight 2
+    { id: 'l1', cat: 'legal', w: 2, title: 'Founder employment / IP assignments', hint: 'IP not fully assigned, side projects, prior employer claims.' },
+    { id: 'l2', cat: 'legal', w: 2, title: 'Litigation pending or threatened', hint: 'Open IP, employment, customer disputes.' },
+    { id: 'l3', cat: 'legal', w: 2, title: 'Cap table inconsistencies', hint: 'SAFEs not converted, undocumented promises, missing 409A.' },
+    { id: 'l4', cat: 'legal', w: 2, title: 'Regulatory exposure unaddressed', hint: 'GDPR, HIPAA, export control, sectoral licensing.' },
+    // Team — weight 2
+    { id: 't1', cat: 'team', w: 2, title: 'Single point of failure', hint: 'Founder is also CTO is also head of sales.' },
+    { id: 't2', cat: 'team', w: 2, title: 'Recent senior departures', hint: 'Two or more senior exits in last 12 months without good reasons.' },
+    { id: 't3', cat: 'team', w: 1, title: 'No reference call willingness', hint: 'Founder slow-rolls or restricts customer/employee references.' },
+    // Tech — weight 1
+    { id: 'x1', cat: 'tech', w: 1, title: 'Architecture immaturity', hint: 'No tests, single-region, monolith with growing load issues.' },
+    { id: 'x2', cat: 'tech', w: 1, title: 'AI/ML provenance unclear', hint: 'Training data origin, license terms, evals not documented.' },
+    { id: 'x3', cat: 'tech', w: 1, title: 'Vendor concentration', hint: 'Critical dependency on a single hyperscaler, model provider, or data source.' },
+  ];
+
+  const root = document.getElementById('checklist');
+  const stored = PEVC.load(SLOT, {}) || {};
+  function render() {
+    root.innerHTML = '';
+    ITEMS.forEach(it => {
+      const cur = stored[it.id] || '';
+      const row = document.createElement('div');
+      row.className = 'dd-item';
+      row.innerHTML = `
+        <div class="dd-item__cat">${it.cat} · w${it.w}</div>
+        <div class="dd-item__body">
+          <div class="dd-item__title">${it.title}</div>
+          <div class="dd-item__hint">${it.hint}</div>
+        </div>
+        <div class="dd-item__pick">
+          <label><input type="radio" name="${it.id}" value="0" ${cur==='0'?'checked':''}> clean</label>
+          <label><input type="radio" name="${it.id}" value="y" ${cur==='y'?'checked':''}> yellow</label>
+          <label><input type="radio" name="${it.id}" value="r" ${cur==='r'?'checked':''}> red</label>
+          <label><input type="radio" name="${it.id}" value="" ${cur===''?'checked':''}> n/a</label>
+        </div>`;
+      root.appendChild(row);
+    });
+    root.querySelectorAll('input[type="radio"]').forEach(el => el.addEventListener('change', () => {
+      stored[el.name] = el.value;
+      PEVC.save(SLOT, stored);
+      score();
+    }));
+    score();
+  }
+
+  function score() {
+    let reviewed = 0, yellow = 0, red = 0, sum = 0, max = 0;
+    ITEMS.forEach(it => {
+      const v = stored[it.id];
+      if (v === undefined || v === '') return;
+      reviewed += 1;
+      max += it.w * 2;
+      if (v === '0') sum += 0;
+      else if (v === 'y') { sum += it.w * 1; yellow += 1; }
+      else if (v === 'r') { sum += it.w * 2; red += 1; }
+    });
+    document.getElementById('kpi-rev').textContent = reviewed + ' / ' + ITEMS.length;
+    document.getElementById('kpi-yel').textContent = yellow;
+    document.getElementById('kpi-red').textContent = red;
+    const pct = max > 0 ? sum / max : 0;
+    document.getElementById('kpi-score').textContent = (pct * 100).toFixed(0) + '%';
+    document.getElementById('status').textContent = reviewed === ITEMS.length ? 'fully reviewed' : 'in progress';
+
+    const verdict = document.getElementById('verdict');
+    if (reviewed >= 6) {
+      let band, color;
+      if (pct < 0.10) { band = 'Pristine — no material flags. Press on diligence; the issue is probably valuation, not the company.'; color = 'good'; }
+      else if (pct < 0.25) { band = 'Workable — a few yellows. Document mitigants in the IC memo (block 5).'; color = 'good'; }
+      else if (pct < 0.45) { band = 'Cautious — material concerns. Slow the timeline, run focused workstreams, decide if the price still works.'; color = 'warn'; }
+      else { band = 'Stop and re-think. Either the price has to drop substantially, or this is the wrong deal.'; color = 'bad'; }
+      verdict.style.display = 'block';
+      verdict.innerHTML = `<span class="chip chip--${color}">${(pct*100).toFixed(0)}%</span> &nbsp; ${band}`;
+    } else {
+      verdict.style.display = 'none';
+    }
+  }
+
+  document.getElementById('btn-clear').addEventListener('click', () => {
+    if (!confirm('Clear all answers?')) return;
+    PEVC.clear(SLOT); for (const k in stored) delete stored[k]; render();
+  });
+  render();
+})();
+</script>
+</body></html>
