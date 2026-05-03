@@ -1388,12 +1388,18 @@ body[data-print-mode="book"] .print-chapter { break-before: page; }
    Uses only existing design tokens. Additive.
    =================================================================== */
 
-/* Quiz button — use copper accent to mark the new affordance */
+/* Quiz button — neutral at rest, copper on hover and when active */
 .toolbar__btn--accent {
-  border-color: var(--color-accent-copper);
-  color: var(--color-accent-copper);
+  /* Inherits the neutral resting style from .toolbar__btn so it does not
+     look pre-selected. Affordance comes from the icon and hover/active. */
 }
 .toolbar__btn--accent:hover {
+  background: var(--color-accent-copper);
+  color: var(--color-text-inverse);
+  border-color: var(--color-accent-copper);
+}
+.toolbar__btn--accent[aria-pressed="true"],
+.toolbar__btn--accent.is-active {
   background: var(--color-accent-copper);
   color: var(--color-text-inverse);
   border-color: var(--color-accent-copper);
