@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VC Dilution &amp; Option-Pool Solver — PE/VC Finance Lab</title>
+<meta name="description" content="A working VC round mechanics solver: pre-money, investment, option pool top-up. Computes post-money, price-per-share, founder dilution, and quantifies the cost of the option-pool shuffle.">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cormorant-garamond@400,500,500i&f[]=jetbrains-mono@400,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/tools.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar__inner">
+    <a class="brand" href="../"><span class="brand__mark"></span><span>Reports Lab</span></a>
+    <nav class="nav">
+      <a href="../">Cover</a>
+      <a href="./">Lab</a>
+      <a href="../../">All reports</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="tool reveal">
+    <div class="tool__eyebrow">Tool 02 · <a href="./">The Lab</a> · <a href="../chapters/03-cap-tables.html">Read: Ch. 03 — Where Founders Lose Their Company</a></div>
+    <h1 class="tool__title">VC Dilution &amp; Option-Pool <em>Solver</em></h1>
+    <p class="tool__lede">Enter the round. The solver computes the post-money, price-per-share, and dilution to existing holders. It also quantifies the option-pool shuffle: the term sheet's most quietly expensive line.</p>
+
+    <form class="solver" id="vc" autocomplete="off" onsubmit="return false;">
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>01</strong> Pre-round cap table</h2>
+
+        <div class="row">
+          <div class="field">
+            <label class="field__label" for="founderShares">Founder shares (M)</label>
+            <input type="number" id="founderShares" value="8" step="0.5" min="0">
+          </div>
+          <div class="field">
+            <label class="field__label" for="prevInvShares">Existing investor shares (M)</label>
+            <input type="number" id="prevInvShares" value="1.5" step="0.1" min="0">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label class="field__label" for="existingPool">Existing option pool (M)</label>
+            <input type="number" id="existingPool" value="0.5" step="0.1" min="0">
+            <div class="field__hint">Allocated and unallocated combined.</div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="poolUnused">Of which unallocated</label>
+            <input type="number" id="poolUnused" value="0.1" step="0.1" min="0">
+          </div>
+        </div>
+
+        <h2 class="panel__title" style="margin-top:24px;"><strong>02</strong> Round terms</h2>
+
+        <div class="row">
+          <div class="field">
+            <label class="field__label" for="preMoney">Pre-money valuation ($M)</label>
+            <input type="number" id="preMoney" value="20" step="1" min="0">
+          </div>
+          <div class="field">
+            <label class="field__label" for="investment">Investment ($M)</label>
+            <input type="number" id="investment" value="5" step="0.5" min="0">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label class="field__label" for="targetPool">Target post-round option pool (% post-money)</label>
+            <input type="number" id="targetPool" value="15" step="0.5" min="0" max="40">
+          </div>
+          <div class="field">
+            <label class="field__label" for="poolTiming">Pool top-up timing</label>
+            <select id="poolTiming">
+              <option value="pre" selected>Pre-money (the shuffle)</option>
+              <option value="post">Post-money (the fair version)</option>
+            </select>
+            <div class="field__hint">Pre-money: pool comes out of the founders. Post-money: everyone shares it.</div>
+          </div>
+        </div>
+
+        <div class="assumption">
+          <strong>Convention:</strong> single class of common, no SAFEs/notes converting in this round, no pro-rata participation, no anti-dilution adjustments. To model SAFEs, fold the as-converted shares into existing investor shares first.
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>03</strong> Post-round cap table</h2>
+        <div class="output">
+          <div class="output__row"><span class="output__label">Post-money valuation</span><span class="output__value" id="o-post">—</span></div>
+          <div class="output__row"><span class="output__label">Price per share</span><span class="output__value" id="o-pps">—</span></div>
+          <div class="output__row"><span class="output__label">New investor shares (M)</span><span class="output__value" id="o-newInv">—</span></div>
+          <div class="output__row"><span class="output__label">New options created (M)</span><span class="output__value" id="o-newOpt">—</span></div>
+          <div class="output__row"><span class="output__label">Total fully-diluted shares (M)</span><span class="output__value" id="o-fd">—</span></div>
+        </div>
+
+        <h2 class="panel__title" style="margin-top:24px;"><strong>04</strong> Ownership %</h2>
+        <table class="t" id="ownTable">
+          <thead><tr><th>Holder</th><th>Pre %</th><th>Post %</th><th>Δ</th></tr></thead>
+          <tbody></tbody>
+        </table>
+
+        <h2 class="panel__title" style="margin-top:24px;"><strong>05</strong> The option-pool shuffle, priced</h2>
+        <div id="shuffle"></div>
+        <div class="field__hint" style="margin-top:8px;">If the pool comes pre-money, the founders fund 100% of it. If post-money, every existing holder shares the dilution.</div>
+
+        <h2 class="panel__title" style="margin-top:24px;"><strong>06</strong> Red flags</h2>
+        <ul class="flag-list" id="flags"></ul>
+      </div>
+    </form>
+  </section>
+
+  <section class="reveal">
+    <div class="note">
+      <span class="note__head">How the math works</span>
+      <strong>Effective pre-money</strong> = pre-money − pool top-up dollar value (when pool is pre).<br>
+      <strong>Price per share</strong> = effective pre-money ÷ existing fully-diluted shares (after pool top-up if pre).<br>
+      <strong>New investor shares</strong> = investment ÷ price per share. <br>
+      <strong>Pool top-up</strong> is sized so unallocated options = target % × post-money fully diluted, after the round.
+    </div>
+
+    <div class="note note--bad">
+      <span class="note__head">The shuffle, in plain English</span>
+      A founder with 80% takes a $5M investment at a $20M pre-money. They should expect to own 64% post (80% × 25/30). But if the term sheet asks for a 15% post-money pool, <em>pre-money</em>, the price per share drops, the investor still gets the same %, and the founder's slice drops to ~54%. The investor pays nothing for the pool. The founders pay for all of it. The number is small only if the pool you already had was close to the target.
+    </div>
+  </section>
+
+  <section class="reveal">
+    <h2 style="font-family:var(--font-display); font-weight:500; font-size:28px; margin: 48px 0 12px;">Capability drill</h2>
+    <details class="drill"><summary class="drill__q">A $4M raise on a $16M pre. The investor wants a 10% post pool, founders had 0%. How much extra dilution does pre-money pool create vs. post?</summary>
+      <div class="drill__a">Round size = $20M post. Investor wants 20%. <strong>Post-money pool</strong>: founders + existing = 80% × (1 − 10%) = 72% — i.e. 8 points to the pool, 20 to the investor. <strong>Pre-money pool</strong>: investor still gets 20%, pool still 10%, but founders absorb the entire 10% — they end at 70%. ~2 points of extra dilution from one line on the term sheet.</div>
+    </details>
+    <details class="drill"><summary class="drill__q">Why might a founder agree to the pre-money pool anyway?</summary>
+      <div class="drill__a">Because it preserves the headline pre-money valuation. The founder wants to tell the press "$20M pre"; the investor is happy with the lower effective price. Both look better than they are. The cost is real and shows up only in the cap table.</div>
+    </details>
+  </section>
+
+</main>
+
+<footer class="wrap">
+  <span>© 2026 Reports Lab · Report No. 04 · Tool 02</span>
+  <span><a href="./">Lab</a> · <a href="../">Cover</a></span>
+</footer>
+
+<script src="../js/finance.js"></script>
+<script>
+(function () {
+  const F = window.Fin;
+  const $ = F.$;
+
+  function compute() {
+    const f = F.parse($('#founderShares').value);
+    const p = F.parse($('#prevInvShares').value);
+    const exPool = F.parse($('#existingPool').value);
+    const exUnused = Math.min(F.parse($('#poolUnused').value), exPool);
+    const preMoneyM = F.parse($('#preMoney').value);
+    const invM = F.parse($('#investment').value);
+    const targetPoolPct = F.parse($('#targetPool').value) / 100;
+    const timing = $('#poolTiming').value;
+
+    const preFD = f + p + exPool; // existing fully diluted (M shares)
+    if (preFD <= 0 || preMoneyM <= 0 || invM < 0) return;
+
+    const postMoneyM = preMoneyM + invM;
+
+    // We need to find: new options created (top-up) and price-per-share.
+    // Constraint: after the round, unallocated pool = targetPoolPct × postFD (in shares).
+    // postFD = preFD + topUp + newInv  (in M shares)
+    // pool_post = (exUnused + topUp). Setting (exUnused + topUp) = targetPoolPct * postFD.
+    // PPS depends on timing:
+    //   pre-money pool: PPS = preMoney / (preFD + topUp).
+    //   post-money pool: PPS = preMoney / preFD.
+    // newInv = invM / PPS.
+
+    let pps, topUp, newInv;
+
+    if (timing === 'post') {
+      pps = preMoneyM / preFD; // $M per M shares = $/share
+      newInv = invM / pps;
+      // Solve: exUnused + topUp = targetPoolPct * (preFD + topUp + newInv)
+      // topUp = (targetPoolPct * (preFD + newInv) − exUnused) / (1 − targetPoolPct)
+      topUp = (targetPoolPct * (preFD + newInv) - exUnused) / (1 - targetPoolPct);
+      if (topUp < 0) topUp = 0;
+    } else {
+      // Pre-money: top-up depresses pre-round PPS.
+      // Iterate (small fixed-point) since topUp depends on PPS.
+      topUp = 0;
+      for (let i = 0; i < 60; i++) {
+        pps = preMoneyM / (preFD + topUp);
+        newInv = invM / pps;
+        const newTop = (targetPoolPct * (preFD + topUp + newInv) - exUnused) / (1 - targetPoolPct);
+        const t = Math.max(0, newTop);
+        if (Math.abs(t - topUp) < 1e-9) { topUp = t; break; }
+        topUp = t;
+      }
+    }
+
+    const postFD = preFD + topUp + newInv;
+    const totalPool = exPool + topUp;
+
+    // Render top numbers (shares are in millions; PPS is $/share where shares are in M units → $M / M shares = $/share)
+    $('#o-post').textContent = F.money(postMoneyM * 1e6, 1);
+    $('#o-pps').textContent = '$' + (pps).toFixed(2);
+    $('#o-newInv').textContent = newInv.toFixed(3) + 'M';
+    $('#o-newOpt').textContent = topUp.toFixed(3) + 'M';
+    $('#o-fd').textContent = postFD.toFixed(3) + 'M';
+
+    // Ownership table
+    const rows = [
+      ['Founders', f, f / preFD, f / postFD],
+      ['Existing investors', p, p / preFD, p / postFD],
+      ['Option pool', exPool + topUp, exPool / preFD, (exPool + topUp) / postFD],
+      ['New investors', newInv, 0, newInv / postFD],
+    ];
+    const body = rows.map(([name, _, pre, post]) => {
+      const d = post - pre;
+      const dCls = d > 0.005 ? 'output__value--good' : d < -0.005 ? 'output__value--bad' : '';
+      return `<tr><td>${name}</td><td>${(pre * 100).toFixed(1)}%</td><td>${(post * 100).toFixed(1)}%</td><td class="${dCls}">${d >= 0 ? '+' : ''}${(d * 100).toFixed(1)}pp</td></tr>`;
+    }).join('');
+    $('#ownTable tbody').innerHTML = body;
+
+    // Shuffle delta: compare what founders+existing would have got under post vs current setting
+    // Compute hypothetical "fair" version (post-money pool) for comparison
+    const ppsFair = preMoneyM / preFD;
+    const newInvFair = invM / ppsFair;
+    let topFair = (targetPoolPct * (preFD + newInvFair) - exUnused) / (1 - targetPoolPct);
+    if (topFair < 0) topFair = 0;
+    const postFDFair = preFD + topFair + newInvFair;
+
+    const founderPostCurrent = f / postFD;
+    const founderPostFair = f / postFDFair;
+    const founderDeltaPP = (founderPostFair - founderPostCurrent) * 100; // positive means current setting cost the founder this many points
+    const founderDeltaDollar = (founderPostFair - founderPostCurrent) * postMoneyM;
+
+    const isPre = timing === 'pre';
+    $('#shuffle').innerHTML = `
+      <div class="output">
+        <div class="output__row"><span class="output__label">Pool top-up (this setting)</span><span class="output__value">${topUp.toFixed(3)}M shares</span></div>
+        <div class="output__row"><span class="output__label">Pool top-up (post-money equivalent)</span><span class="output__value">${topFair.toFixed(3)}M shares</span></div>
+        <div class="output__row"><span class="output__label">Cost to founders of <strong>pre-money</strong> pool</span><span class="output__value ${isPre ? 'output__value--bad' : 'output__value--good'}">${founderDeltaPP > 0.05 ? founderDeltaPP.toFixed(2) + 'pp · $' + founderDeltaDollar.toFixed(2) + 'M' : 'no incremental cost'}</span></div>
+      </div>
+    `;
+
+    // Flags
+    const flags = [];
+    if (isPre && founderDeltaPP > 0.5) flags.push(['bad', `Pre-money pool top-up is costing founders ~${founderDeltaPP.toFixed(1)}pp of post-money ownership versus a post-money pool. Push back: ask for the pool to be sized to the next 12 months of hires, not 'industry standard 15%'.`]);
+    if (targetPoolPct > 0.20) flags.push(['warn', `Target pool of ${(targetPoolPct*100).toFixed(0)}% is large for a single round. Sized properly, a Series A pool covers ~12 months of hires; ask for a hiring plan that justifies it.`]);
+    if (invM / preMoneyM > 0.6) flags.push(['warn', `Round is more than 60% of pre-money — the founders are likely going below 50% in a single round. Consider whether you can split into two raises.`]);
+    if (rows[0][3] < 0.40) flags.push(['warn', `Founders end below 40% post-Series-A. By Series C this typically dilutes to <20% before exit; calibrate accordingly.`]);
+    if (exPool > 0 && exUnused / exPool < 0.05 && exPool > 0.05) flags.push(['info', 'Existing pool is almost fully allocated. Top-up burden in this round is therefore close to the full target pool.']);
+    if (!flags.length) flags.push(['good', 'Round mechanics look conventional. Confirm the hiring plan justifies the pool size.']);
+    $('#flags').innerHTML = flags.map(([k, t]) => `<li><span class="pill pill--${k}">${k.toUpperCase()}</span><span>${t}</span></li>`).join('');
+  }
+
+  F.bind(document.getElementById('vc'), compute);
+})();
+</script>
+</body>
+</html>

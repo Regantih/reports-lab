@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Case Study Analyzer — PE/VC Finance Lab</title>
+<meta name="description" content="A case study analyzer. Paste a deal description; the analyzer surfaces the five hidden questions in any PE/VC case prompt and coaches you to the answer.">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cormorant-garamond@400,500,500i&f[]=jetbrains-mono@400,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/tools.css">
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../"><span class="brand__mark"></span><span>Reports Lab</span></a>
+  <nav class="nav"><a href="../">Cover</a><a href="./">Lab</a><a href="../../">All reports</a></nav>
+</div></header>
+
+<main class="wrap">
+  <section class="tool reveal">
+    <div class="tool__eyebrow">Tool 07 · <a href="./">The Lab</a> · <a href="../chapters/08-cases.html">Read: Ch. 08 — The Five Questions Inside the Case</a></div>
+    <h1 class="tool__title">Case Study <em>Analyzer</em></h1>
+    <p class="tool__lede">Drop in any PE/VC case prompt. The analyzer extracts the numbers, identifies the five questions every interviewer is testing, and offers an answer scaffold you can speak from in the room.</p>
+
+    <form id="case" autocomplete="off" onsubmit="return false;" class="solver">
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>01</strong> The prompt</h2>
+        <div class="field">
+          <textarea id="prompt" rows="14" placeholder="Paste the case description here. Numbers like &apos;$50M EBITDA&apos;, &apos;7x multiple&apos;, &apos;5-year hold&apos; are detected automatically.">A $300M business services company with $50M of EBITDA, growing 6% per year, is for sale. The owner is retiring. There are three bidders. You can finance it at 5.5x EBITDA at 9% interest. The market multiple is 7x EBITDA. The thesis is to roll up three regional competitors over four years at 5x EBITDA, taking the platform to $90M of EBITDA. Exit in year 5 at the market multiple. Should you bid?</textarea>
+        </div>
+        <div class="btn-row"><button class="btn" type="button" id="analyze">Analyse</button><button class="btn btn--ghost" type="button" id="example2">Load example: VC seed</button></div>
+        <div class="assumption" style="margin-top:14px;">Heuristic parser: it pulls $-figures, multiples, growth rates, and hold periods. It does not "understand" the case the way a human does — it gives you the questions in the right order.</div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>02</strong> Extracted facts</h2>
+        <ul class="flag-list" id="facts"></ul>
+
+        <h2 class="panel__title" style="margin-top:24px;"><strong>03</strong> The five hidden questions</h2>
+        <ol id="questions" style="padding-left:20px; line-height:1.65;"></ol>
+
+        <h2 class="panel__title" style="margin-top:24px;"><strong>04</strong> Answer scaffold</h2>
+        <div id="scaffold" class="prose" style="font-size:14px;"></div>
+      </div>
+    </form>
+  </section>
+
+  <section class="reveal">
+    <div class="note">
+      <span class="note__head">The five questions, every time</span>
+      <ol style="margin:8px 0 0 18px; padding:0; color:var(--ink-soft);">
+        <li><strong>Capital structure:</strong> what's the equity check, and how much debt is realistic?</li>
+        <li><strong>Returns:</strong> what's the MOIC and IRR under base, downside, upside?</li>
+        <li><strong>Value-creation lever:</strong> growth, multiple, leverage, M&amp;A — which one drives the thesis?</li>
+        <li><strong>Exit:</strong> who buys this, at what size, at what multiple, and why would they pay?</li>
+        <li><strong>Deal-killer risk:</strong> the one thing that, if it happened, makes this a 0.8x return?</li>
+      </ol>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap"><span>© 2026 Reports Lab · Report No. 04 · Tool 07</span><span><a href="./">Lab</a> · <a href="../">Cover</a></span></footer>
+
+<script src="../js/finance.js"></script>
+<script>
+(function () {
+  const F = window.Fin;
+  const $ = F.$;
+
+  const examples = {
+    vc: `A bootstrapped vertical SaaS company in dental practice management has 1,200 customers, $4M ARR, 110% net retention, 92% gross margin. It is raising a $20M Series B at a $80M pre-money. The founder owns 70%, existing investors 25%, and the option pool is 5%. The Series B investor wants a 12% post-money pool, taken pre-money, and a 1x non-participating preference. They want a 3-year board observer seat and pro-rata. The founder is asking whether to take the deal or grow another year on $4M of cash and $1M of net annual losses. What's your view?`
+  };
+
+  function extract(text) {
+    const facts = {};
+    const dollarRe = /\$\s?([0-9]+(?:\.[0-9]+)?)\s?(B|M|K|bn|m|k)?/gi;
+    const moneyHits = [];
+    let m;
+    while ((m = dollarRe.exec(text)) !== null) {
+      const n = parseFloat(m[1]);
+      const u = (m[2] || '').toLowerCase();
+      const mult = u.startsWith('b') ? 1e9 : u.startsWith('m') ? 1e6 : u.startsWith('k') ? 1e3 : 1;
+      moneyHits.push({ n: n * mult, raw: m[0], idx: m.index, surround: text.substring(Math.max(0, m.index - 30), Math.min(text.length, m.index + 30)) });
+    }
+    facts.money = moneyHits;
+
+    const multRe = /([0-9]+(?:\.[0-9]+)?)\s?x/gi;
+    const multHits = [];
+    while ((m = multRe.exec(text)) !== null) {
+      multHits.push({ n: parseFloat(m[1]), raw: m[0], idx: m.index, surround: text.substring(Math.max(0, m.index - 30), Math.min(text.length, m.index + 30)) });
+    }
+    facts.multiples = multHits;
+
+    const pctRe = /([0-9]+(?:\.[0-9]+)?)\s?%/g;
+    const pctHits = [];
+    while ((m = pctRe.exec(text)) !== null) {
+      pctHits.push({ n: parseFloat(m[1]), raw: m[0], idx: m.index, surround: text.substring(Math.max(0, m.index - 30), Math.min(text.length, m.index + 30)) });
+    }
+    facts.percents = pctHits;
+
+    const yearMatch = text.match(/(\d+)[-\s]?year (?:hold|exit|investment)|exit in year (\d+)|hold of (\d+)|over (\d+) years?/i);
+    if (yearMatch) facts.hold = +(yearMatch[1] || yearMatch[2] || yearMatch[3] || yearMatch[4]);
+
+    facts.isVC = /seed|series\s?[a-d]|saas|arr|founder|equity round|pre[\-\s]?money|post[\-\s]?money|cap table|option pool|preference|preferred/i.test(text);
+    facts.isPE = /buyout|lbo|ebitda|leverage|debt|covenant|sponsor|exit multiple|roll[-\s]?up|tuck[-\s]?in|carve[-\s]?out/i.test(text);
+
+    return facts;
+  }
+
+  function classify(s) {
+    const t = s.toLowerCase();
+    if (/ebitda/.test(t)) return 'EBITDA';
+    if (/arr|recurring/.test(t)) return 'ARR';
+    if (/revenue|sales/.test(t)) return 'Revenue';
+    if (/raise|invest|round|series|seed|pre|post/.test(t)) return 'Round size / valuation';
+    if (/debt|loan|notes/.test(t)) return 'Debt';
+    if (/equity|check/.test(t)) return 'Equity';
+    if (/exit|sale|return/.test(t)) return 'Exit';
+    return 'Figure';
+  }
+
+  function analyse() {
+    const text = $('#prompt').value;
+    const f = extract(text);
+
+    // Facts
+    const factHTML = [];
+    f.money.slice(0, 8).forEach(x => factHTML.push(['info', `<strong>${F.money(x.n)}</strong> — ${classify(x.surround)} · <span class="muted">"…${x.surround.trim()}…"</span>`]));
+    f.multiples.slice(0, 6).forEach(x => factHTML.push(['info', `<strong>${x.raw}</strong> — likely a multiple · <span class="muted">"…${x.surround.trim()}…"</span>`]));
+    f.percents.slice(0, 6).forEach(x => factHTML.push(['info', `<strong>${x.raw}</strong> · <span class="muted">"…${x.surround.trim()}…"</span>`]));
+    if (f.hold) factHTML.push(['info', `<strong>Hold: ${f.hold} years</strong>`]);
+    if (factHTML.length === 0) factHTML.push(['warn', 'No numbers detected. Either the prompt is qualitative or numbers are written without symbols. Add $/x/% notation for the parser.']);
+    $('#facts').innerHTML = factHTML.map(([k, t]) => `<li><span class="pill pill--${k}">${k.toUpperCase()}</span><span>${t}</span></li>`).join('');
+
+    // Tailored questions
+    const isVC = f.isVC && !f.isPE;
+    const qs = isVC ? [
+      'Cap table & dilution — what does the founder own pre and post? What does the option-pool shuffle cost them?',
+      'Returns to the new investor — at what exit value does this clear the fund\'s 3x / 25% bar?',
+      'Value-creation lever — is this a "growth at all costs" deal, a category-leader play, or a margin story? What proves it?',
+      'Exit — strategic acquirer or IPO? At what ARR / growth combo does the comp set pay this multiple?',
+      'Deal-killer — is it a single-customer concentration, a regulatory shift, founder churn, or capital efficiency turning?'
+    ] : [
+      'Capital structure — what\'s the equity check, what leverage do covenants permit, and what does FCF look like in year 1?',
+      'Returns — base / down / up. Use the LBO solver in the lab to pencil it (link below).',
+      'Value-creation lever — is the IRR driven by EBITDA growth, multiple expansion, debt paydown, or M&A? Rank them.',
+      'Exit — who is the buyer at year 5 (strategic, larger sponsor, public)? At what scale and why would they pay the assumed multiple?',
+      'Deal-killer — what single event makes this a 1x or 0.8x? Customer concentration? Regulation? Loss of management?'
+    ];
+    $('#questions').innerHTML = qs.map(q => `<li style="margin-bottom:8px;">${q}</li>`).join('');
+
+    // Scaffold
+    const scaffold = isVC ? `
+      <h3>Suggested answer arc (60-90 sec)</h3>
+      <p>"My first cut: this round is doing two jobs at once — funding 24 months of runway and pricing the company at a premium. The founder loses ~10pp from the option-pool shuffle, on top of the ~20pp from the round itself, so they\'re going from 70% to ~50% post."</p>
+      <p>"On returns: at $80M post and a 3x fund target, this needs to exit at $240M+. With 110% NRR and 100% growth, that\'s plausible inside 4 years if they stay disciplined on burn. The risk is they raise twice more before exit."</p>
+      <p>"My non-consensus call would be ___. The deal-killer is ___ — that\'s what I\'d diligence first."</p>
+    ` : `
+      <h3>Suggested answer arc (60-90 sec)</h3>
+      <p>"At entry, the equity check is roughly $___M. With ${f.multiples.length ? f.multiples[0].raw : 'the multiple'} on $${f.money.length ? F.money(f.money[0].n) : '___'}, that\'s manageable for the fund."</p>
+      <p>"Returns under the base case ${f.hold ? '(' + f.hold + '-year hold)' : ''}: I\'d expect ~2.5-3.0x and a low-20s IRR, driven mostly by ___. ${/roll[-\s]?up|tuck[-\s]?in/i.test(text) ? 'The roll-up math depends on actually closing the add-ons — pipeline thinness is the first thing I\'d check.' : 'Multiple expansion is a market call, so I\'d look for a structural reason a future buyer pays more.'}"</p>
+      <p>"My deal-killer is ___. Before I\'d bid, I\'d need diligence on ___."</p>
+      <p style="margin-top:14px;"><a href="lbo-irr.html" style="color:var(--brass);">Pencil the LBO returns →</a></p>
+    `;
+    $('#scaffold').innerHTML = scaffold;
+  }
+
+  $('#analyze').addEventListener('click', analyse);
+  $('#example2').addEventListener('click', () => { $('#prompt').value = examples.vc; analyse(); });
+  analyse();
+})();
+</script>
+</body>
+</html>

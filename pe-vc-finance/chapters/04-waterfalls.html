@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ch. 04 · Whose Money Comes Out First — The Numbers Behind the Deal</title>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cormorant-garamond@400,500,500i&f[]=jetbrains-mono@400,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/tools.css"></head><body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../"><span class="brand__mark"></span><span>Reports Lab</span></a>
+  <nav class="nav"><a href="../">Cover</a><a href="../tools/">Lab</a><a href="../../">All reports</a></nav>
+</div></header>
+
+<main class="wrap wrap--narrow"><article class="tool reveal">
+  <div class="tool__eyebrow">Chapter 04 · <a href="03-cap-tables.html">← Prev</a> · <a href="05-diligence.html">Next →</a></div>
+  <h1 class="tool__title">Whose Money <em>Comes Out</em> First.</h1>
+  <p class="tool__lede">Liquidation preferences look like a footnote. They are the line that decides who gets paid when the company sells.</p>
+
+  <div class="prose">
+    <p>A liquidation preference is the right of preferred shareholders to be paid out before common shareholders in any liquidity event. The mechanics live in three knobs: the <strong>multiple</strong> (1x, 2x, 3x of invested capital), the <strong>participation</strong> (whether the preferred also shares the residual after their preference is paid), and — in the participating case — the <strong>cap</strong> (the total amount, expressed as a multiple of invested capital, beyond which they convert to common).</p>
+
+    <h2>1x non-participating: the standard</h2>
+    <p>A 1x non-participating preference says: at exit, the preferred either takes their invested capital back or converts to common and shares pro-rata, whichever yields more. This is the founder-friendly default and the most common term in modern VC. At low exits, the preferred takes their preference (their pro-rata share would be smaller). At high exits, they convert to common (their pro-rata share dominates). The <em>convert-to-common breakpoint</em> is the exit value where the two are equal.</p>
+
+    <h2>2x participating: the founder-killer</h2>
+    <p>A 2x participating preference says: the preferred takes 2x their invested capital, <em>and then</em> shares the residual pro-rata as if they had also converted to common. This is the worst term founders sign and they almost always sign it without realising the price. On a $100M exit with $20M of 2x participating preferred and 70% common, the preferred takes $40M off the top, and then takes 30% of the remaining $60M. The preferred ends up with $58M. The founders take the rest. They thought they sold the company for $100M; they walked away with $42M.</p>
+
+    <h2>The cap, the only mercy</h2>
+    <p>A capped participating preferred is participating up to a cap — typically 2x or 3x of invested capital — beyond which the preferred converts to common. The cap creates a second breakpoint. At exits below the cap, participation pays better. Above the cap, conversion does. The result is two regimes: a flat region where the preferred takes their full participation, and an upward region where they convert and ride the upside as common.</p>
+
+    <h2>Stacked preferences</h2>
+    <p>In a multi-round company, every priced round has its own preference, and the preferences usually stack: senior rounds get paid first, then junior rounds, then common. A Series C with a 1x preference, sitting above a Series B with a 1x preference, sitting above a Series A with a 1x preference, can mean the first $40-60M of any exit goes entirely to the preferred. Founders often don't realise their company has to sell for above this amount before they see a dollar.</p>
+    <p>The <a href="../tools/liquidation-waterfall.html">waterfall solver</a> in the lab models stacked preferences with multiples, participation, and caps, and runs an exit-value sweep so you can find the breakpoints. Use it before you sign any term sheet with a multiple above 1x or any participation feature.</p>
+
+    <h2>The convert decision, geometrically</h2>
+    <p>For a single non-participating tranche: convert when as-converted-share &gt; preference. For stacked non-participating preferences, the decision is interactive — converting senior tranches changes the residual pool that junior tranches play in. The solver iterates this to a stable answer; in practice, this is what good cap-table software (and a spreadsheet that took someone an afternoon to build) does for you.</p>
+  </div>
+
+  <div class="note note--vault">
+    <span class="note__head">Run it</span>
+    Open the <a href="../tools/liquidation-waterfall.html">waterfall solver</a> with the default stack. Run the sweep. Now change one Series B from 1x non-participating to 2x participating with no cap, and look at the % to common at the $100M exit. That's the cost of one term.
+  </div>
+
+  <p class="muted" style="margin-top:32px;"><a href="05-diligence.html" style="color:var(--brass);">Next: Reading the Three Statements →</a></p>
+</article></main>
+
+<footer class="wrap"><span>© 2026 Reports Lab · Report No. 04</span><span><a href="../">Cover</a> · <a href="../tools/">Lab</a></span></footer>
+<script src="../js/finance.js"></script></body></html>

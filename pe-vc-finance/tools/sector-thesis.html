@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sector Thesis Canvas — PE/VC Finance Lab</title>
+<meta name="description" content="A one-page sector thesis canvas. Why now, the unit economics that have to be true, the wedge, kill criteria. Saved locally; export to JSON or printable HTML.">
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cormorant-garamond@400,500,500i&f[]=jetbrains-mono@400,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/tools.css">
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../"><span class="brand__mark"></span><span>Reports Lab</span></a>
+  <nav class="nav"><a href="../">Cover</a><a href="./">Lab</a><a href="../../">All reports</a></nav>
+</div></header>
+
+<main class="wrap">
+  <section class="tool reveal">
+    <div class="tool__eyebrow">Tool 08 · <a href="./">The Lab</a> · <a href="../chapters/09-thesis.html">Read: Ch. 09 — Why This Sector, Why Now</a></div>
+    <h1 class="tool__title">Sector Thesis <em>Canvas</em></h1>
+    <p class="tool__lede">A thesis is not a deck. It is a single page that says where you'll deploy capital, what has to be true for that to work, and what would prove you wrong. Save your work locally — nothing leaves your browser.</p>
+
+    <form id="canvas" autocomplete="off" onsubmit="return false;" class="stack">
+
+      <div class="row">
+        <div class="field"><label class="field__label" for="sector">Sector / segment</label><input type="text" id="sector" placeholder="e.g. Vertical SaaS for residential trades"></div>
+        <div class="field"><label class="field__label" for="geography">Geography</label><input type="text" id="geography" placeholder="e.g. North America"></div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>01</strong> Why now</h2>
+        <div class="field"><label class="field__label" for="whyNow">The structural reason this sector is interesting today, that wasn't true three years ago.</label>
+          <textarea id="whyNow" rows="3" placeholder="e.g. Field-service software adoption crossed 35% in 2024; the next 50% is the platform-consolidation cohort. Margins improve as data accumulates; AI dispatch is now real, not promised."></textarea>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>02</strong> The wedge</h2>
+        <div class="field"><label class="field__label" for="wedge">Where you enter the market and why incumbents won't follow there.</label>
+          <textarea id="wedge" rows="3" placeholder="e.g. We back companies serving sub-50-tech contractors — too small for ServiceTitan, too sophisticated for spreadsheets. Distribution via trade-association partnerships, not paid ads."></textarea>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>03</strong> Unit economics that must be true</h2>
+        <div class="row">
+          <div class="field"><label class="field__label" for="ltv">LTV ($)</label><input type="number" id="ltv" step="100"></div>
+          <div class="field"><label class="field__label" for="cac">CAC ($)</label><input type="number" id="cac" step="100"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label class="field__label" for="gm">Gross margin (%)</label><input type="number" id="gm" step="1"></div>
+          <div class="field"><label class="field__label" for="payback">CAC payback (months)</label><input type="number" id="payback" step="1"></div>
+        </div>
+        <div class="field"><label class="field__label" for="economicsNote">What has to be true for these numbers to hold</label>
+          <textarea id="economicsNote" rows="3" placeholder="e.g. NRR &gt; 105% within 24 months. Gross margin reaches 75% at scale because of multi-tenant infra; CAC payback &lt; 18mo if our distribution channel works."></textarea>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>04</strong> Target portfolio shape</h2>
+        <div class="row--3">
+          <div class="field"><label class="field__label" for="checkSize">Check size</label><input type="text" id="checkSize" placeholder="$3-8M"></div>
+          <div class="field"><label class="field__label" for="numDeals">Deals over fund</label><input type="text" id="numDeals" placeholder="12-15"></div>
+          <div class="field"><label class="field__label" for="ownership">Initial ownership</label><input type="text" id="ownership" placeholder="15-20%"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>05</strong> Kill criteria</h2>
+        <div class="field"><label class="field__label" for="kill">What would make us walk away from the thesis (not just one deal, but the entire bucket)?</label>
+          <textarea id="kill" rows="3" placeholder="e.g. (1) NRR for the cohort drops below 100% on average. (2) A platform incumbent moves down-market with a free tier. (3) Channel partners take economics &gt; 25% of ACV."></textarea>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>06</strong> Non-consensus call</h2>
+        <div class="field"><label class="field__label" for="nonConsensus">What do you believe that the market doesn't?</label>
+          <textarea id="nonConsensus" rows="3" placeholder="e.g. Most LPs see this as 'commodity SaaS'. We think the data flywheel from accumulated dispatch and pricing data creates a durable margin advantage that won't show up until year 4."></textarea>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>07</strong> Diligence checklist for any deal in this thesis</h2>
+        <div class="field"><label class="field__label" for="diligence">Three things you'll always check first.</label>
+          <textarea id="diligence" rows="3" placeholder="1) NRR of the cohort acquired in the last 18 months. 2) Whether the channel actually closes deals or just sources leads. 3) Build vs. buy posture vs. nearest incumbent."></textarea>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn" type="button" id="save">Save locally</button>
+        <button class="btn btn--ghost" type="button" id="export">Export JSON</button>
+        <button class="btn btn--ghost" type="button" id="print">Print preview</button>
+        <button class="btn btn--ghost" type="button" id="reset">Reset</button>
+      </div>
+      <div class="muted mono" style="font-size:11px; letter-spacing:0.06em;" id="status">Saved locally · auto-loads next visit</div>
+    </form>
+
+    <div id="preview" class="memo" style="margin-top:32px;"></div>
+  </section>
+
+  <section class="reveal">
+    <div class="note note--vault">
+      <span class="note__head">A test for the canvas</span>
+      Hand it to a smart skeptic in your firm who works in another sector. They should be able to read it once and tell you the riskiest assumption without asking a follow-up. If they can't, you're hiding something behind generalities.
+    </div>
+  </section>
+</main>
+
+<footer class="wrap"><span>© 2026 Reports Lab · Report No. 04 · Tool 08</span><span><a href="./">Lab</a> · <a href="../">Cover</a></span></footer>
+
+<script src="../js/finance.js"></script>
+<script>
+(function () {
+  const F = window.Fin;
+  const $ = F.$;
+  const KEY = 'reports-lab-pevc-thesis-v1';
+
+  const fields = ['sector', 'geography', 'whyNow', 'wedge', 'ltv', 'cac', 'gm', 'payback', 'economicsNote', 'checkSize', 'numDeals', 'ownership', 'kill', 'nonConsensus', 'diligence'];
+  const escape = (s) => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  function read() { const o = {}; fields.forEach(f => { o[f] = $('#' + f).value; }); return o; }
+  function write(o) { fields.forEach(f => { if (o[f] != null) $('#' + f).value = o[f]; }); }
+
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(read())); $('#status').textContent = 'Saved · ' + new Date().toLocaleTimeString(); }
+    catch (e) { $('#status').textContent = 'Save failed: ' + e.message; }
+  }
+  function load() {
+    try { const raw = localStorage.getItem(KEY); if (raw) write(JSON.parse(raw)); } catch (e) {}
+  }
+
+  function preview() {
+    const o = read();
+    const ltv = F.parse(o.ltv), cac = F.parse(o.cac);
+    const ratio = (ltv > 0 && cac > 0) ? (ltv / cac).toFixed(1) + 'x' : '—';
+    $('#preview').innerHTML = `
+      <div class="meta">${escape(o.sector || 'Sector')} · ${escape(o.geography || 'Geography')}</div>
+      <h1>${escape(o.sector || 'Sector')} — Thesis Canvas</h1>
+      <h2>Why now</h2><p>${escape(o.whyNow)}</p>
+      <h2>Wedge</h2><p>${escape(o.wedge)}</p>
+      <h2>Unit economics</h2>
+      <p>LTV $${escape(o.ltv)} · CAC $${escape(o.cac)} · LTV/CAC <strong>${ratio}</strong> · GM ${escape(o.gm)}% · Payback ${escape(o.payback)}mo</p>
+      <p>${escape(o.economicsNote)}</p>
+      <h2>Portfolio shape</h2>
+      <p>Check ${escape(o.checkSize)} · ${escape(o.numDeals)} deals · ${escape(o.ownership)} ownership</p>
+      <h2>Kill criteria</h2><p>${escape(o.kill)}</p>
+      <h2>Non-consensus call</h2><p>${escape(o.nonConsensus)}</p>
+      <h2>Standing diligence</h2><p>${escape(o.diligence)}</p>
+    `;
+  }
+
+  $('#save').addEventListener('click', save);
+  $('#export').addEventListener('click', () => {
+    const data = JSON.stringify(read(), null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'thesis-canvas.json'; a.click();
+    setTimeout(() => URL.revokeObjectURL(url), 100);
+  });
+  $('#print').addEventListener('click', () => {
+    const w = window.open('', '_blank');
+    if (!w) return;
+    const css = '<style>body{font-family:Georgia,serif;max-width:720px;margin:48px auto;padding:0 24px;line-height:1.55;color:#111;} h1{font-size:24px;} h2{font-size:14px;color:#1f3a5b;border-bottom:1px solid #ccc;padding-bottom:2px;text-transform:uppercase;letter-spacing:0.05em;margin:18px 0 4px;} p{font-size:14px;margin:0 0 10px;} .meta{font-family:monospace;font-size:11px;color:#666;letter-spacing:0.06em;text-transform:uppercase;}</style>';
+    w.document.write('<!doctype html><html><head><meta charset="utf-8">' + css + '</head><body>' + $('#preview').innerHTML + '</body></html>');
+    w.document.close();
+    setTimeout(() => w.print(), 200);
+  });
+  $('#reset').addEventListener('click', () => {
+    if (!confirm('Clear all canvas fields?')) return;
+    fields.forEach(f => $('#' + f).value = '');
+    localStorage.removeItem(KEY);
+    preview();
+    $('#status').textContent = 'Reset · localStorage cleared';
+  });
+
+  load();
+  F.bind(document.getElementById('canvas'), () => { preview(); save(); });
+  preview();
+})();
+</script>
+</body>
+</html>

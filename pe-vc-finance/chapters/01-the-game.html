@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ch. 01 · The Game in Two Numbers — The Numbers Behind the Deal</title>
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=cormorant-garamond@400,500,500i&f[]=jetbrains-mono@400,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/tools.css">
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../"><span class="brand__mark"></span><span>Reports Lab</span></a>
+  <nav class="nav"><a href="../">Cover</a><a href="../tools/">Lab</a><a href="../../">All reports</a></nav>
+</div></header>
+
+<main class="wrap wrap--narrow">
+  <article class="tool reveal">
+    <div class="tool__eyebrow">Chapter 01 · <a href="../">Cover</a> · <a href="02-buyout-math.html">Next →</a></div>
+    <h1 class="tool__title">The Game in <em>Two</em> Numbers.</h1>
+    <p class="tool__lede">Private capital is judged on two numbers: MOIC and IRR. Confuse them and you'll mis-price every deal you see.</p>
+
+    <div class="prose">
+      <p>MOIC — multiple of invested capital — is the simplest possible measure: how many dollars came back per dollar in. A 2.5x MOIC is two-and-a-half dollars out for every one dollar in. It tells you how big the win was. It says nothing about how long it took.</p>
+      <p>IRR — internal rate of return — closes that gap. It is the annualised return that, compounded across the holding period, takes the equity check up to the exit value. A 2.5x in three years is about a 36% IRR; the same 2.5x in seven years is about 14%. The first one is a great deal. The second one might not even clear the fund's hurdle.</p>
+
+      <h2>Why both, always</h2>
+      <p>If you only watch MOIC, you reward sponsors for sitting on assets too long. A 3x return looks fantastic until you find out it took twelve years; the LP would have done better in equities. If you only watch IRR, you reward early exits at the cost of <em>scale</em>. A 50% IRR on a $5M check that doubles in eighteen months is gorgeous arithmetic and irrelevant to the fund's results. A $50M check that delivers 2.8x over five years actually moves the needle.</p>
+      <p>In practice, IRR is the gating number — fund hurdles are quoted as IRR — and MOIC is the satisfaction number. LPs want to see both above the line. The deal team's job is to underwrite to a number they can defend in both.</p>
+
+      <h2>The arithmetic shortcut</h2>
+      <p>You will need this constantly. The relationship between MOIC and IRR for a single bullet (one cash in, one cash out, no interim flows):</p>
+      <p class="mono" style="background:var(--bg-soft); padding:12px 14px; border-radius:3px; display:inline-block;">IRR ≈ MOIC^(1/years) − 1</p>
+      <p>So 2.0x in 4 years ≈ 19%. 2.5x in 5 years ≈ 20%. 3.0x in 5 years ≈ 25%. 4.0x in 5 years ≈ 32%. Memorise the table — you'll use it on every deal.</p>
+
+      <h2>Where it gets harder</h2>
+      <p>Real deals have interim flows: dividend recaps, follow-on investments, partial exits. The shortcut above breaks; you need a proper IRR. The <a href="../tools/lbo-irr.html">LBO solver in the lab</a> computes both MOIC and IRR from a full cashflow stream, including amortisation, dividend recaps if you turn them on, and the value-creation bridge that explains where the return came from.</p>
+      <p>The chapters that follow walk through the canonical situations: a buyout, a venture round, a waterfall at exit, a diligence cycle. Each chapter has a tool you can run while you read.</p>
+    </div>
+
+    <div class="note note--vault">
+      <span class="note__head">Run it</span>
+      Open the <a href="../tools/lbo-irr.html">LBO solver</a> and try this: enter a vanilla buyout, then change the hold period from 5 to 7 years, holding everything else constant. Watch what happens to MOIC vs. IRR. The deal didn't get worse; the time changed.
+    </div>
+
+    <p class="muted" style="margin-top:32px;"><a href="02-buyout-math.html" style="color:var(--brass);">Next: The Buyout, in Cash →</a></p>
+  </article>
+</main>
+
+<footer class="wrap"><span>© 2026 Reports Lab · Report No. 04</span><span><a href="../">Cover</a> · <a href="../tools/">Lab</a></span></footer>
+<script src="../js/finance.js"></script>
+</body>
+</html>
