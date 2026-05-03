@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tool 17 · VC Deal Scorecard · PE/VC Lab</title>
+<link rel="stylesheet" href="../css/lab.css">
+<style>
+.tool-wrap{max-width:860px;margin:2rem auto;padding:0 1.25rem}
+h1{font-size:1.5rem;margin-bottom:.25rem}
+.sub{color:var(--text-2);font-size:.9rem;margin-bottom:2rem}
+.back-link{display:inline-block;margin-bottom:1.5rem;font-size:.88rem;color:var(--accent)}
+.score-table{width:100%;border-collapse:collapse;font-size:.89rem}
+.score-table th{background:var(--surface);padding:.55rem .75rem;border:1px solid var(--border);font-weight:600;text-align:left}
+.score-table td{padding:.45rem .75rem;border:1px solid var(--border);vertical-align:middle}
+.score-table td:last-child{text-align:center}
+select{padding:.3rem .5rem;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text-1);font-size:.87rem;width:100%}
+.btn{margin-top:1.25rem;padding:.55rem 1.4rem;background:var(--accent);color:#fff;border:none;border-radius:5px;cursor:pointer;font-size:.95rem;font-weight:600}
+.results{margin-top:2rem;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:1.5rem;display:none}
+.verdict{font-size:1.6rem;font-weight:700;margin:.5rem 0}
+.verdict.pass{color:#22a75c}.verdict.watch{color:#f5a623}.verdict.fail{color:#d93025}
+.bar-row{display:flex;align-items:center;gap:.75rem;margin:.4rem 0;font-size:.87rem}
+.bar-bg{flex:1;background:var(--border);border-radius:3px;height:8px}
+.bar-fill{height:8px;border-radius:3px;background:var(--accent);transition:width .4s}
+.cat-score{min-width:3rem;text-align:right;font-weight:600}
+.concept-box{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin-top:2rem}
+.concept-box h3{margin:0 0 .75rem;font-size:1rem}
+.concept-box ul{margin:0;padding-left:1.2rem;font-size:.87rem;line-height:1.75}
+.flag{border-left:3px solid var(--accent);padding:.55rem 1rem;margin-top:.6rem;background:var(--surface-2);font-size:.87rem;border-radius:0 4px 4px 0}
+.flag.warn{border-left-color:#f5a623}.flag.ok{border-left-color:#22a75c}.flag.fail{border-left-color:#d93025}
+input[type=text]{width:100%;box-sizing:border-box;padding:.4rem .6rem;border:1px solid var(--border);border-radius:4px;background:var(--surface);color:var(--text-1);font-size:.92rem;margin-bottom:.75rem}
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../../index.html"><span class="brand__mark"></span><span>PE/VC<span class="brand__sub"> · the practitioner's lab</span></span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../">Lab home</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+<div class="tool-wrap">
+  <a class="back-link" href="../">← Back to lab</a>
+  <h1>VC Deal <em>Scorecard</em></h1>
+  <p class="sub">Tool 17 · Ch. 13–15 · Deal sourcing, evaluation, and prioritization framework</p>
+  <label style="font-size:.88rem;color:var(--text-2)">Company / Deal Name</label>
+  <input type="text" id="dealName" placeholder="e.g. Acme AI, Series A">
+  <table class="score-table">
+    <thead><tr><th>Criterion</th><th>Weight</th><th>Score (1–5)</th></tr></thead>
+    <tbody id="criteria"></tbody>
+  </table>
+  <button class="btn" onclick="score()">Score Deal</button>
+  <div class="results" id="results">
+    <h2 style="margin:0 0 .25rem;font-size:1rem">Scorecard: <span id="dname"></span></h2>
+    <div class="verdict" id="verdict"></div>
+    <p id="score-summary" style="color:var(--text-2);font-size:.9rem"></p>
+    <div id="cat-bars" style="margin-top:1rem"></div>
+    <div id="flags" style="margin-top:1rem"></div>
+  </div>
+  <div class="concept-box">
+    <h3>How to Use This Scorecard</h3>
+    <ul>
+      <li><strong>Sourcing quality:</strong> Was the deal referred by a trusted co-investor or found in a cold inbound? Sourcing channel predicts win rate.</li>
+      <li><strong>Market size:</strong> The VC power law demands a TAM ≥10B capable of producing a fund-returning outcome. Small markets can’t support outlier returns.</li>
+      <li><strong>Team:</strong> The #1 signal per most top-quartile VCs — unique insight, relevant domain experience, and willingness to iterate are paramount.</li>
+      <li><strong>Traction:</strong> Revenue run-rate, growth rate, retention, NPS — quantitative evidence the product has product-market fit, or is close.</li>
+      <li><strong>Competition &amp; moat:</strong> Structural advantages that get stronger with scale: network effects, switching costs, proprietary data, regulatory licenses.</li>
+      <li><strong>Business model:</strong> Unit economics: LTV/CAC ratio, gross margin, payback period. Negative margin businesses require a clear path to profitability.</li>
+      <li><strong>Exit potential:</strong> Does this fit the portfolio of an acquirer? Is there a credible IPO path? Is there a comp set of outcomes at 10–50×?</li>
+      <li><strong>Valuation:</strong> Entry price vs. stage-appropriate comp set. At Seed: $5–15M pre. Series A: $20–60M. Over-priced entries compress returns even at 50× outcomes.</li>
+    </ul>
+  </div>
+</div>
+<script>
+(function(){
+const CRITERIA=[
+  {cat:'Sourcing',label:'Deal quality & channel (warm referral vs cold)',weight:1},
+  {cat:'Market',label:'TAM size & growth rate (>$10B for VC returns)',weight:2},
+  {cat:'Market',label:'Secular tailwind strength & timing',weight:1},
+  {cat:'Team',label:'Founder domain expertise & unfair advantage',weight:3},
+  {cat:'Team',label:'Team completeness (technical + commercial)',weight:2},
+  {cat:'Team',label:'Founder coachability & self-awareness',weight:1},
+  {cat:'Traction',label:'Revenue / user growth rate (MoM)',weight:2},
+  {cat:'Traction',label:'Retention & engagement quality',weight:2},
+  {cat:'Moat',label:'Network effects, switching costs, or data moat',weight:3},
+  {cat:'Moat',label:'Regulatory or IP defensibility',weight:1},
+  {cat:'Business Model',label:'Unit economics (LTV/CAC > 3x)',weight:2},
+  {cat:'Business Model',label:'Gross margin profile (>50% for SaaS)',weight:1},
+  {cat:'Exit',label:'Realistic 10-50x exit path in 7-10 yrs',weight:3},
+  {cat:'Exit',label:'Acquirer landscape depth',weight:1},
+  {cat:'Valuation',label:'Entry price vs stage-appropriate comps',weight:2},
+  {cat:'Valuation',label:'Ownership % achievable at this price',weight:1},
+];
+const tbody=document.getElementById('criteria');
+tbody.innerHTML=CRITERIA.map((c,i)=>`
+  <tr>
+    <td>${c.cat} · ${c.label}</td>
+    <td style="text-align:center;color:var(--text-2)">${c.weight}x</td>
+    <td>
+      <select id="s${i}">
+        <option value="0">-- Not scored</option>
+        <option value="1">1 – Very Weak</option>
+        <option value="2">2 – Below Avg</option>
+        <option value="3">3 – Average</option>
+        <option value="4">4 – Strong</option>
+        <option value="5">5 – Exceptional</option>
+      </select>
+    </td>
+  </tr>`).join('');
+window.score=function(){
+  const name=document.getElementById('dealName').value||'Unnamed Deal';
+  document.getElementById('dname').textContent=name;
+  const cats={};
+  let totalScore=0,totalWeight=0;
+  CRITERIA.forEach((c,i)=>{
+    const v=+document.getElementById('s'+i).value;
+    if(!cats[c.cat]) cats[c.cat]={score:0,weight:0,maxScore:0};
+    cats[c.cat].score+=v*c.weight;
+    cats[c.cat].weight+=c.weight;
+    cats[c.cat].maxScore+=5*c.weight;
+    totalScore+=v*c.weight;
+    totalWeight+=c.weight;
+  });
+  const maxTotal=5*totalWeight;
+  const pct=totalScore/maxTotal;
+  const vEl=document.getElementById('verdict');
+  const labels=['Pass — Strong Conviction','Watch — Conditional Interest','Pass on This Deal'];
+  const cls=['pass','watch','fail'];
+  const idx=pct>=0.72?0:pct>=0.48?1:2;
+  vEl.textContent=(Math.round(pct*100))+'% — '+labels[idx];
+  vEl.className='verdict '+cls[idx];
+  document.getElementById('score-summary').textContent=`Weighted score: ${totalScore}/${maxTotal} across ${CRITERIA.length} criteria in ${Object.keys(cats).length} categories.`;
+  document.getElementById('cat-bars').innerHTML=Object.entries(cats).map(([cat,d])=>{
+    const catPct=d.score/d.maxScore;
+    return `<div class="bar-row"><span style="min-width:110px">${cat}</span><div class="bar-bg"><div class="bar-fill" style="width:${(catPct*100).toFixed(0)}%"></div></div><span class="cat-score">${(catPct*100).toFixed(0)}%</span></div>`;
+  }).join('');
+  const flags=[];
+  const teamCat=cats['Team'];
+  if(teamCat&&teamCat.score/teamCat.maxScore<0.5) flags.push({c:'fail',m:'Team scored < 50% — most top VCs rank team as #1 signal. High bar to invest without conviction on founders.'});
+  const mktCat=cats['Market'];
+  if(mktCat&&mktCat.score/mktCat.maxScore<0.5) flags.push({c:'warn',m:'Market scored < 50% — small or unclear TAM limits upside. Power law requires a large market to produce outlier returns.'});
+  const valCat=cats['Valuation'];
+  if(valCat&&valCat.score/valCat.maxScore<0.5) flags.push({c:'warn',m:'Valuation scored < 50% — entry price risk. Even great companies underperform at the wrong price.'});
+  if(pct>=0.72) flags.push({c:'ok',m:'Strong conviction pass — move to partner meeting. Flag any single category below 40% for deeper diligence.'});
+  document.getElementById('flags').innerHTML=flags.map(f=>`<div class="flag ${f.c}">${f.m}</div>`).join('');
+  document.getElementById('results').style.display='block';
+};
+const btn=document.querySelector('[data-theme-toggle]');
+if(btn){const s=localStorage.getItem('theme');if(s)document.documentElement.setAttribute('data-theme',s);btn.addEventListener('click',()=>{const c=document.documentElement.getAttribute('data-theme');const n=c==='dark'?'light':'dark';document.documentElement.setAttribute('data-theme',n);localStorage.setItem('theme',n);});}
+})();
+</script>
+</body></html>
