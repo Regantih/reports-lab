@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tool 12 — VC Portfolio Construction & Power Law — PE/VC Lab</title>
+<meta name="description" content="Model fund size, check count, ownership targets, and simulate power-law return distributions to stress-test your portfolio construction thesis.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/lab.css">
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../../index.html"><span class="brand__mark"></span><span>PE/VC<span class="brand__sub"> &middot; the practitioner&apos;s lab</span></span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../../index.html">Report cover</a>
+  <a class="nav-link" href="../../index.html#chapters">Chapters</a>
+  <a class="nav-link nav-link--active" href="../index.html">Lab</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap">
+<section style="padding: var(--space-10) 0 var(--space-4);">
+  <div class="eyebrow" style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--color-accent-copper);">Tool 12 &middot; <a href="../index.html" style="font-family:inherit;letter-spacing:inherit;color:inherit;">the lab</a> &middot; Read: Ch. 9 &mdash; Fund Economics</div>
+  <h1 style="font-family:var(--font-display);font-weight:500;font-size:var(--text-2xl);margin:var(--space-2) 0 var(--space-2);">VC Portfolio Construction <em>&amp; Power Law</em> Simulator</h1>
+  <p style="max-width:62ch;color:var(--ink-soft);font-size:var(--text-sm);">Set fund size, check strategy, ownership targets, and reserve ratio. The simulator distributes investments across a power-law return curve and shows whether the portfolio can return the fund.</p>
+</section>
+
+<div class="tool reveal">
+  <form class="solver" id="pc">
+
+    <div class="panel">
+      <div class="panel__title">Fund Parameters</div>
+      <div class="row">
+        <div class="field">
+          <label class="field__label" for="fundSize">Fund Size ($M)</label>
+          <input id="fundSize" type="number" value="100" min="10" max="5000" step="10">
+        </div>
+        <div class="field">
+          <label class="field__label" for="targetOwn">Target Ownership (%)</label>
+          <input id="targetOwn" type="number" value="10" min="1" max="40" step="0.5">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label class="field__label" for="reserveRatio">Reserve Ratio (follow-on %)</label>
+          <div class="field__hint">% of fund held back for follow-on</div>
+          <input id="reserveRatio" type="number" value="40" min="0" max="70" step="5">
+        </div>
+        <div class="field">
+          <label class="field__label" for="mgmtFee">Mgmt Fee Draw (% of fund, total life)</label>
+          <input id="mgmtFee" type="number" value="20" min="0" max="30" step="1">
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel__title">Check & Stage Strategy</div>
+      <div class="row">
+        <div class="field">
+          <label class="field__label" for="initCheck">Initial Check Size ($M)</label>
+          <input id="initCheck" type="number" value="2" min="0.1" max="100" step="0.1">
+        </div>
+        <div class="field">
+          <label class="field__label" for="followCheck">Avg Follow-on per Company ($M)</label>
+          <input id="followCheck" type="number" value="3" min="0" max="100" step="0.1">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label class="field__label" for="followRate">Follow-on Rate (% of portfolio)</label>
+          <div class="field__hint">% of companies that receive follow-on capital</div>
+          <input id="followRate" type="number" value="50" min="0" max="100" step="5">
+        </div>
+        <div class="field">
+          <label class="field__label" for="lossRate">Expected Loss Rate (%)</label>
+          <div class="field__hint">% of companies returning &lt; 1x</div>
+          <input id="lossRate" type="number" value="50" min="0" max="90" step="5">
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel__title">Power-Law Return Distribution</div>
+      <p style="font-size:var(--text-sm);color:var(--ink-soft);margin-bottom:var(--space-3);">Allocate the non-loss portfolio across outcome bands. Must sum to 100%.</p>
+      <div class="row">
+        <div class="field">
+          <label class="field__label" for="b1to3">1x–3x bucket (%)</label>
+          <input id="b1to3" type="number" value="30" min="0" max="100" step="5">
+        </div>
+        <div class="field">
+          <label class="field__label" for="b3to10">3x–10x bucket (%)</label>
+          <input id="b3to10" type="number" value="40" min="0" max="100" step="5">
+        </div>
+      </div>
+      <div class="row">
+        <div class="field">
+          <label class="field__label" for="b10to30">10x–30x bucket (%)</label>
+          <input id="b10to30" type="number" value="20" min="0" max="100" step="5">
+        </div>
+        <div class="field">
+          <label class="field__label" for="b30plus">30x+ (breakout) bucket (%)</label>
+          <input id="b30plus" type="number" value="10" min="0" max="100" step="5">
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <div class="output" id="out" style="margin-top:var(--space-6);">
+    <!-- dynamic -->
+  </div>
+
+  <div style="margin-top:var(--space-6);">
+    <div style="font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:var(--space-2);">Power Law — Return Contribution by Bucket</div>
+    <div id="bridge"></div>
+  </div>
+
+  <ul class="flag-list" id="flags" style="margin-top:var(--space-4);"></ul>
+</div>
+
+<div class="note" style="margin-top:var(--space-8);">
+  <div class="note__head">Concepts reinforced</div>
+  <ul style="margin:8px 0 0 18px;padding:0;color:var(--ink-soft);">
+    <li>Power law: a small number of outliers drive total fund returns</li>
+    <li>Reserve ratio discipline prevents pro-rata dilution in winners</li>
+    <li>Ownership matters: 10% entry stake erodes through future rounds</li>
+    <li>Meaningful exit threshold: need at least one company returning 3–5× the fund</li>
+    <li>Portfolio size: too few bets = concentration risk; too many = diluted attention</li>
+  </ul>
+</div>
+</main>
+
+<script src="../js/finance.js"></script>
+<script src="../js/site.js"></script>
+<script>
+(function(){
+  const F = window.Fin;
+  const KEY = 'pevc_t12';
+
+  function compute() {
+    const fundSize   = F.parse(document.getElementById('fundSize').value, 100);
+    const targetOwn  = F.parse(document.getElementById('targetOwn').value, 10) / 100;
+    const reservePct = F.parse(document.getElementById('reserveRatio').value, 40) / 100;
+    const mgmtFeePct = F.parse(document.getElementById('mgmtFee').value, 20) / 100;
+    const initCheck  = F.parse(document.getElementById('initCheck').value, 2);
+    const followChk  = F.parse(document.getElementById('followCheck').value, 3);
+    const followRate = F.parse(document.getElementById('followRate').value, 50) / 100;
+    const lossRate   = F.parse(document.getElementById('lossRate').value, 50) / 100;
+    const b1to3      = F.parse(document.getElementById('b1to3').value, 30) / 100;
+    const b3to10     = F.parse(document.getElementById('b3to10').value, 40) / 100;
+    const b10to30    = F.parse(document.getElementById('b10to30').value, 20) / 100;
+    const b30plus    = F.parse(document.getElementById('b30plus').value, 10) / 100;
+
+    const deployable    = fundSize * (1 - mgmtFeePct);
+    const initPool      = deployable * (1 - reservePct);
+    const numCompanies  = Math.round(initPool / initCheck);
+    const followCost    = numCompanies * followRate * followChk;
+    const totalDeploy   = (numCompanies * initCheck) + followCost;
+    const reserveUsed   = followCost;
+    const reserveActual = deployable - (numCompanies * initCheck);
+
+    // Return simulation
+    const survivors     = numCompanies * (1 - lossRate);
+    const bucketSum     = b1to3 + b3to10 + b10to30 + b30plus;
+    const norm          = bucketSum > 0 ? 1 / bucketSum : 1;
+    const n_b1  = survivors * b1to3  * norm;
+    const n_b2  = survivors * b3to10 * norm;
+    const n_b3  = survivors * b10to30 * norm;
+    const n_b4  = survivors * b30plus * norm;
+
+    // Mid-point returns per bucket
+    const ret_b1 = 2.0;
+    const ret_b2 = 6.0;
+    const ret_b3 = 18.0;
+    const ret_b4 = 50.0;
+
+    const rv_b1  = n_b1 * initCheck * ret_b1;
+    const rv_b2  = n_b2 * initCheck * ret_b2;
+    const rv_b3  = n_b3 * initCheck * ret_b3;
+    const rv_b4  = n_b4 * initCheck * ret_b4;
+    const totalReturns = rv_b1 + rv_b2 + rv_b3 + rv_b4;
+
+    const grossMOIC = totalDeploy > 0 ? totalReturns / totalDeploy : 0;
+    const fundMOIC  = deployable  > 0 ? totalReturns / deployable  : 0;
+    const impliedVal = targetOwn > 0 ? initCheck / targetOwn : 0;
+
+    const topBucketShare = totalReturns > 0 ? rv_b4 / totalReturns : 0;
+
+    // Render output
+    const out = document.getElementById('out');
+    out.innerHTML = [
+      '<div class="output__row"><span class="output__label">Deployable Capital (after fees)</span><span class="output__value output__big">' + F.money(deployable) + 'M</span></div>',
+      '<div class="output__row"><span class="output__label">Portfolio Companies (initial checks)</span><span class="output__value output__big mono">' + numCompanies + '</span></div>',
+      '<div class="output__row"><span class="output__label">Implied Entry Valuation (at target ownership)</span><span class="output__value">' + F.money(impliedVal) + 'M post-money</span></div>',
+      '<div class="output__row"><span class="output__label">Reserve Budget Available</span><span class="output__value">' + F.money(reserveActual) + 'M</span></div>',
+      '<div class="output__row"><span class="output__label">Follow-on Capital Required</span><span class="output__value">' + F.money(followCost) + 'M (' + (numCompanies * followRate).toFixed(0) + ' cos)</span></div>',
+      '<div class="output__row" style="border-top:1px solid var(--color-divider);margin-top:8px;padding-top:8px;"><span class="output__label">Simulated Gross Returns</span><span class="output__value output__big">' + F.money(totalReturns) + 'M</span></div>',
+      '<div class="output__row"><span class="output__label">Gross MOIC (on deployed)</span><span class="output__value output__big">' + F.x(grossMOIC) + '</span></div>',
+      '<div class="output__row"><span class="output__label">Fund MOIC (on fund size)</span><span class="output__value">' + F.x(fundMOIC) + '</span></div>',
+      '<div class="output__row"><span class="output__label">Top-Bucket (30x+) Share of Returns</span><span class="output__value">' + F.pct(topBucketShare) + '</span></div>',
+    ].join('');
+
+    // Bridge bars
+    const maxRv = Math.max(rv_b1, rv_b2, rv_b3, rv_b4, 0.01);
+    document.getElementById('bridge').innerHTML = [
+      F.bar('1x–3x (' + n_b1.toFixed(1) + ' cos)', rv_b1, maxRv, 'muted', F.money(rv_b1) + 'M'),
+      F.bar('3x–10x (' + n_b2.toFixed(1) + ' cos)', rv_b2, maxRv, 'neutral', F.money(rv_b2) + 'M'),
+      F.bar('10x–30x (' + n_b3.toFixed(1) + ' cos)', rv_b3, maxRv, 'good', F.money(rv_b3) + 'M'),
+      F.bar('30x+ breakout (' + n_b4.toFixed(1) + ' cos)', rv_b4, maxRv, 'great', F.money(rv_b4) + 'M'),
+    ].join('');
+
+    // Flags
+    const flags = [];
+    if (bucketSum < 0.99 || bucketSum > 1.01) flags.push('Bucket percentages must sum to 100% — currently ' + F.pct(bucketSum));
+    if (numCompanies < 10) flags.push('Portfolio of ' + numCompanies + ' companies is highly concentrated — consider more bets or smaller checks');
+    if (numCompanies > 60) flags.push('Portfolio of ' + numCompanies + ' companies may dilute GP attention and signal-power at follow-on');
+    if (followCost > reserveActual * 1.1) flags.push('Follow-on budget exceeds available reserves by ' + F.money(followCost - reserveActual) + 'M — adjust reserve ratio or follow-on rate');
+    if (topBucketShare > 0.7) flags.push('Top bucket drives >' + F.pct(topBucketShare) + ' of returns — fund outcome is highly binary on one breakout company');
+    if (fundMOIC < 2.5) flags.push('Fund MOIC of ' + F.x(fundMOIC) + ' is below typical 3x net threshold — revisit loss rate, bucket sizing, or check strategy');
+    if (targetOwn < 0.05) flags.push('Target ownership <5% — dilution through Series A/B may erode economics below meaningful threshold');
+    document.getElementById('flags').innerHTML = flags.map(f => '<li>' + f + '</li>').join('');
+  }
+
+  F.bind(document.getElementById('pc'), compute);
+  compute();
+})();
+</script>
+</body>
+</html>
