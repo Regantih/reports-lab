@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tool 14 — Startup Valuation Multi-Method Comparator — PE/VC Lab</title>
+<meta name="description" content="Run five valuation methods side by side: VC Method, Revenue Multiple, Comparable Transactions, Scorecard (Seed), and First Chicago. Reconcile to a range and implied ownership.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/lab.css">
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../../index.html"><span class="brand__mark"></span><span>PE/VC<span class="brand__sub"> &middot; the practitioner&apos;s lab</span></span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../../index.html">Report cover</a>
+  <a class="nav-link" href="../../index.html#chapters">Chapters</a>
+  <a class="nav-link nav-link--active" href="../index.html">Lab</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap">
+<section style="padding: var(--space-10) 0 var(--space-4);">
+  <div class="eyebrow" style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--color-accent-copper);">Tool 14 &middot; <a href="../index.html" style="font-family:inherit;letter-spacing:inherit;color:inherit;">the lab</a> &middot; Read: Ch. 17 &ndash; 18 &mdash; Valuation</div>
+  <h1 style="font-family:var(--font-display);font-weight:500;font-size:var(--text-2xl);margin:var(--space-2) 0 var(--space-2);">Startup Valuation <em>Multi-Method</em> Comparator</h1>
+  <p style="max-width:62ch;color:var(--ink-soft);font-size:var(--text-sm);">Enter company fundamentals once. Five valuation methods compute simultaneously: VC Method, Revenue Multiple, Comparable Transactions, Berkus/Scorecard (pre-revenue Seed), and First Chicago (scenario-weighted). Reconcile to a defensible range and implied ownership at your check size.</p>
+  <p style="font-size:var(--text-xs);color:var(--ink-soft);margin-top:6px;">Inspired by Sutton Capital &ldquo;PE/VC Analyst&rsquo;s Valuation Trick&rdquo; framework.</p>
+</section>
+
+<div class="tool reveal">
+  <form class="solver" id="val">
+    <div class="panel">
+      <div class="panel__title">Company Fundamentals</div>
+      <div class="row">
+        <div class="field"><label class="field__label" for="arr">Current ARR / Revenue ($M)</label><input id="arr" type="number" value="5" min="0" step="0.1"></div>
+        <div class="field"><label class="field__label" for="growth">Revenue Growth Rate (%)</label><input id="growth" type="number" value="150" min="0" step="5"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label class="field__label" for="nrr">Net Revenue Retention (%)</label><div class="field__hint">100% = flat; 120% = strong expansion</div><input id="nrr" type="number" value="110" min="50" max="200" step="5"></div>
+        <div class="field"><label class="field__label" for="grossMgn">Gross Margin (%)</label><input id="grossMgn" type="number" value="75" min="0" max="100" step="5"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label class="field__label" for="checkSize">Your Check Size ($M)</label><input id="checkSize" type="number" value="2" min="0.1" step="0.1"></div>
+        <div class="field"><label class="field__label" for="stage">Stage</label>
+          <select id="stage">
+            <option value="pre">Pre-Revenue / Idea</option>
+            <option value="seed">Seed ($0-2M ARR)</option>
+            <option value="seriesa" selected>Series A ($2-10M ARR)</option>
+            <option value="seriesb">Series B ($10-30M ARR)</option>
+            <option value="growth">Growth ($30M+ ARR)</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel__title">Method 1 — VC Method (Backward from Exit)</div>
+      <div class="row">
+        <div class="field"><label class="field__label" for="exitArr">Expected ARR at Exit ($M)</label><input id="exitArr" type="number" value="100" min="1" step="5"></div>
+        <div class="field"><label class="field__label" for="exitMult">Exit ARR Multiple (x)</label><input id="exitMult" type="number" value="10" min="1" step="0.5"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label class="field__label" for="holdYrs">Hold Period (years)</label><input id="holdYrs" type="number" value="5" min="1" max="15" step="1"></div>
+        <div class="field"><label class="field__label" for="targetMOIC">Target Fund MOIC (x)</label><input id="targetMOIC" type="number" value="10" min="2" step="0.5"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel__title">Method 2 — Revenue Multiple (Comps)</div>
+      <div class="row">
+        <div class="field"><label class="field__label" for="revMultLow">Low Sector ARR Multiple (x)</label><input id="revMultLow" type="number" value="8" min="1" step="0.5"></div>
+        <div class="field"><label class="field__label" for="revMultHigh">High Sector ARR Multiple (x)</label><input id="revMultHigh" type="number" value="15" min="1" step="0.5"></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel__title">Method 3 — First Chicago (Scenario-Weighted)</div>
+      <p style="font-size:var(--text-xs);color:var(--ink-soft);margin-bottom:var(--space-3);">Assign exit values and probabilities across three scenarios. Probabilities must sum to 100%.</p>
+      <div class="row">
+        <div class="field"><label class="field__label" for="baseVal">Base Case Exit Value ($M)</label><input id="baseVal" type="number" value="200" min="0" step="10"></div>
+        <div class="field"><label class="field__label" for="baseProb">Base Probability (%)</label><input id="baseProb" type="number" value="50" min="0" max="100" step="5"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label class="field__label" for="upVal">Upside Exit Value ($M)</label><input id="upVal" type="number" value="800" min="0" step="10"></div>
+        <div class="field"><label class="field__label" for="upProb">Upside Probability (%)</label><input id="upProb" type="number" value="20" min="0" max="100" step="5"></div>
+      </div>
+      <div class="row">
+        <div class="field"><label class="field__label" for="downVal">Downside Exit Value ($M)</label><input id="downVal" type="number" value="30" min="0" step="10"></div>
+        <div class="field"><label class="field__label" for="downProb">Downside Probability (%)</label><input id="downProb" type="number" value="30" min="0" max="100" step="5"></div>
+      </div>
+    </div>
+  </form>
+
+  <div class="output" id="out" style="margin-top:var(--space-6);"></div>
+  <div style="margin-top:var(--space-5);">
+    <div style="font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:var(--space-2);">Valuation by Method — Pre-Money ($M)</div>
+    <div id="bridge"></div>
+  </div>
+  <ul class="flag-list" id="flags" style="margin-top:var(--space-4);"></ul>
+</div>
+
+<div class="note" style="margin-top:var(--space-8);">
+  <div class="note__head">Sutton Capital — Analyst Valuation Tricks</div>
+  <ul style="margin:8px 0 0 18px;padding:0;color:var(--ink-soft);">
+    <li><strong>VC Method</strong>: Work backward from exit; adjust for dilution in future rounds (typically 25-30% per round)</li>
+    <li><strong>Revenue Multiple</strong>: Quality-adjust the multiple &mdash; NRR &gt;120%, Gross Margin &gt;75%, growth &gt;100% = premium multiple</li>
+    <li><strong>First Chicago</strong>: Used at growth stage; forces explicit probability weighting, reveals that most value comes from upside scenario</li>
+    <li><strong>Scorecard/Berkus</strong>: Only for pre-revenue; benchmarks team, IP, execution, market, and product against median Seed value</li>
+    <li><strong>Reconciliation</strong>: A defensible valuation sits at the intersection of 3+ methods; outlier methods identify assumptions to stress-test</li>
+  </ul>
+</div>
+</main>
+
+<script src="../js/finance.js"></script>
+<script src="../js/site.js"></script>
+<script>
+(function(){
+  const F = window.Fin;
+
+  function getVal(id, def) { return F.parse(document.getElementById(id).value, def); }
+
+  function compute() {
+    const arr       = getVal('arr', 5);
+    const growth    = getVal('growth', 150) / 100;
+    const nrr       = getVal('nrr', 110) / 100;
+    const gm        = getVal('grossMgn', 75) / 100;
+    const check     = getVal('checkSize', 2);
+    const stage     = document.getElementById('stage').value;
+
+    // Method 1 — VC Method
+    const exitArr   = getVal('exitArr', 100);
+    const exitMult  = getVal('exitMult', 10);
+    const holdYrs   = getVal('holdYrs', 5);
+    const tMOIC     = getVal('targetMOIC', 10);
+    const exitEV    = exitArr * exitMult;
+    const dilution  = Math.pow(0.75, 2); // ~2 future rounds, ~25% each
+    const vc_pre    = (exitEV * dilution) / tMOIC;
+    const vc_ownership = check / (vc_pre + check);
+
+    // Method 2 — Revenue Multiple
+    const rml  = getVal('revMultLow', 8);
+    const rmh  = getVal('revMultHigh', 15);
+    // Quality adjustment: NRR >120, GM>75, growth>100 = +20% to multiple
+    const qualAdj = (nrr > 1.20 ? 0.1 : 0) + (gm > 0.75 ? 0.05 : 0) + (growth > 1.0 ? 0.05 : 0);
+    const rm_low  = arr * rml * (1 + qualAdj);
+    const rm_high = arr * rmh * (1 + qualAdj);
+    const rm_mid  = (rm_low + rm_high) / 2;
+
+    // Method 3 — First Chicago
+    const bv = getVal('baseVal', 200), bp = getVal('baseProb', 50) / 100;
+    const uv = getVal('upVal', 800),   up = getVal('upProb', 20) / 100;
+    const dv = getVal('downVal', 30),  dp = getVal('downProb', 30) / 100;
+    const probSum = bp + up + dp;
+    const fc_ev   = (bv * bp + uv * up + dv * dp);
+    const fc_pre  = probSum > 0.95 ? fc_ev / tMOIC : null;
+
+    // Method 4 — Scorecard (Seed only)
+    const median_seed = stage === 'pre' ? 4 : stage === 'seed' ? 8 : null;
+    // Scoring: growth (30%), NRR (20%), GM (20%), stage (30%)
+    let scorecard_pre = null;
+    if (median_seed) {
+      const growthScore  = Math.min(growth / 2.0, 1.5);  // max 150% of weight
+      const nrrScore     = Math.min(nrr / 1.2, 1.3);
+      const gmScore      = Math.min(gm / 0.7, 1.2);
+      const composite    = (growthScore * 0.3 + nrrScore * 0.2 + gmScore * 0.2) / 0.7;
+      scorecard_pre      = median_seed * composite;
+    }
+
+    // Reconciliation
+    const methods = [vc_pre, rm_mid, fc_pre, scorecard_pre].filter(v => v !== null && v > 0);
+    const recon_low  = Math.min(...methods);
+    const recon_high = Math.max(...methods);
+    const recon_mid  = methods.reduce((a,b) => a+b, 0) / methods.length;
+
+    // Implied ownership
+    const own_low  = check / (recon_high + check);
+    const own_high = check / (recon_low  + check);
+    const own_mid  = check / (recon_mid  + check);
+
+    // Output
+    const out = document.getElementById('out');
+    out.innerHTML = [
+      '<div style="font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:var(--space-2);">Method Results — Pre-Money Valuation</div>',
+      `<div class="output__row"><span class="output__label">Method 1 — VC Method</span><span class="output__value output__big">${F.money(vc_pre)}M</span></div>`,
+      `<div class="output__row"><span class="output__label">Method 2 — Revenue Multiple (low/high)</span><span class="output__value">${F.money(rm_low)}M – ${F.money(rm_high)}M (mid: ${F.money(rm_mid)}M)</span></div>`,
+      fc_pre ? `<div class="output__row"><span class="output__label">Method 3 — First Chicago (prob-weighted)</span><span class="output__value">${F.money(fc_pre)}M</span></div>` : `<div class="output__row"><span class="output__label">Method 3 — First Chicago</span><span class="output__value muted">Probabilities must sum to 100%</span></div>`,
+      scorecard_pre ? `<div class="output__row"><span class="output__label">Method 4 — Scorecard (Seed benchmark)</span><span class="output__value">${F.money(scorecard_pre)}M</span></div>` : `<div class="output__row"><span class="output__label">Method 4 — Scorecard</span><span class="output__value muted">Only for Pre/Seed stage</span></div>`,
+      `<div class="output__row" style="border-top:1px solid var(--color-divider);margin-top:8px;padding-top:8px;"><span class="output__label">Reconciled Range</span><span class="output__value output__big">${F.money(recon_low)}M – ${F.money(recon_high)}M</span></div>`,
+      `<div class="output__row"><span class="output__label">Reconciled Mid-Point</span><span class="output__value output__big">${F.money(recon_mid)}M pre-money</span></div>`,
+      `<div class="output__row"><span class="output__label">Implied Ownership at ${F.money(check)}M check</span><span class="output__value output__big">${F.pct(own_mid)} (range: ${F.pct(own_low)}–${F.pct(own_high)})</span></div>`,
+    ].join('');
+
+    // Bridge bars
+    const vals = [vc_pre, rm_mid, fc_pre, scorecard_pre].filter(v => v);
+    const maxV = Math.max(...vals, 0.01);
+    document.getElementById('bridge').innerHTML = [
+      F.bar('VC Method', vc_pre, maxV, 'good', F.money(vc_pre) + 'M'),
+      F.bar('Revenue Multiple (mid)', rm_mid, maxV, 'neutral', F.money(rm_mid) + 'M'),
+      fc_pre ? F.bar('First Chicago', fc_pre, maxV, 'neutral', F.money(fc_pre) + 'M') : '',
+      scorecard_pre ? F.bar('Scorecard', scorecard_pre, maxV, 'muted', F.money(scorecard_pre) + 'M') : '',
+    ].join('');
+
+    // Flags
+    const flags = [];
+    if (recon_high / recon_low > 3) flags.push('Wide valuation spread (' + F.x(recon_high/recon_low) + ') — methods disagree significantly; one method has outlier assumptions. Identify which and stress-test.');
+    if (own_mid < 0.05) flags.push('Implied ownership of ' + F.pct(own_mid) + ' is below 5% — dilution through Series A/B may erode GP economics. Consider higher entry price or larger check.');
+    if (own_mid > 0.25) flags.push('Implied ownership >25% at entry — signals early stage or distressed. High ownership comes with high founder sensitivity; manage carefully.');
+    if (!fc_pre && (bp + up + dp) > 0) flags.push('First Chicago probabilities sum to ' + F.pct(bp + up + dp) + ' — must equal 100% for method to compute.');
+    if (nrr < 1.0 && stage !== 'pre') flags.push('NRR <100% signals net customer churn — critical red flag for SaaS valuation. Revenue multiples should be discounted 30-50%.');
+    if (gm < 0.5) flags.push('Gross margin <50% — below software thresholds. Verify whether this is services-heavy revenue; pure SaaS should be 70-80%.');
+    document.getElementById('flags').innerHTML = flags.map(f => '<li>' + f + '</li>').join('');
+  }
+
+  F.bind(document.getElementById('val'), compute);
+  compute();
+})();
+</script>
+</body>
+</html>
