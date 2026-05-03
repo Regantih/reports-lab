@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tool 15 — Fund Return Metrics: DPI / TVPI / RVPI / Net IRR — PE/VC Lab</title>
+<meta name="description" content="Track fund performance metrics LPs actually care about: DPI, TVPI, RVPI, Net IRR, and the J-Curve. Enter capital calls, distributions, and NAV per period to compute all standard LP reporting metrics.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/lab.css">
+<style>
+.period-row { display:grid; grid-template-columns:60px 1fr 1fr 1fr; gap:var(--space-2); align-items:center; padding:6px 0; border-bottom:1px solid var(--color-divider); }
+.period-row:last-child { border-bottom:none; }
+.period-row label { font-size:11px; font-family:var(--font-mono); color:var(--ink-soft); }
+.period-row input { font-size:13px; padding:4px 8px; border:1px solid var(--color-divider); border-radius:4px; background:var(--surface-base); color:var(--color-text); width:100%; }
+.col-head { font-family:var(--font-mono); font-size:10px; text-transform:uppercase; letter-spacing:0.1em; color:var(--ink-soft); }
+</style>
+</head>
+<body>
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../../index.html"><span class="brand__mark"></span><span>PE/VC<span class="brand__sub"> &middot; the practitioner&apos;s lab</span></span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../../index.html">Report cover</a>
+  <a class="nav-link" href="../../index.html#chapters">Chapters</a>
+  <a class="nav-link nav-link--active" href="../index.html">Lab</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap">
+<section style="padding: var(--space-10) 0 var(--space-4);">
+  <div class="eyebrow" style="font-family:var(--font-mono);font-size:11px;letter-spacing:0.18em;text-transform:uppercase;color:var(--color-accent-copper);">Tool 15 &middot; <a href="../index.html" style="font-family:inherit;letter-spacing:inherit;color:inherit;">the lab</a> &middot; Read: Ch. 9 &mdash; Fund Economics &amp; Ch. 6 &mdash; Performance Benchmarks</div>
+  <h1 style="font-family:var(--font-display);font-weight:500;font-size:var(--text-2xl);margin:var(--space-2) 0 var(--space-2);">Fund Return Metrics: <em>DPI / TVPI / RVPI / Net IRR</em></h1>
+  <p style="max-width:62ch;color:var(--ink-soft);font-size:var(--text-sm);">Enter capital calls, distributions, and period-end NAV for up to 10 fund years. Computes the four LP reporting metrics every GP must know: DPI (distributed to paid-in), RVPI (residual value to paid-in), TVPI (total value), and Net IRR. Includes J-Curve visualization and LP-grade verdict commentary.</p>
+  <p style="font-size:var(--text-xs);color:var(--ink-soft);margin-top:6px;">Based on Sutton Capital LP Wish List framework: &ldquo;Net IRR/DPI/TVPI + last-round valuation &mdash; the four numbers every GP must have cold.&rdquo;</p>
+</section>
+
+<div class="tool reveal">
+  <div class="panel">
+    <div class="panel__title">Fund Parameters</div>
+    <div class="row">
+      <div class="field"><label class="field__label" for="fundCommit">Total Fund Commitments ($M)</label><input id="fundCommit" type="number" value="100" min="1" step="5"></div>
+      <div class="field"><label class="field__label" for="mgmtFeeT">Management Fee (% p.a.)</label><input id="mgmtFeeT" type="number" value="2" min="0" max="5" step="0.25"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label class="field__label" for="carry">Carried Interest (%)</label><input id="carry" type="number" value="20" min="0" max="30" step="1"></div>
+      <div class="field"><label class="field__label" for="hurdle">Preferred Return / Hurdle (%)</label><input id="hurdle" type="number" value="8" min="0" max="15" step="0.5"></div>
+    </div>
+  </div>
+
+  <div class="panel" style="margin-top:var(--space-4);">
+    <div class="panel__title">Annual Fund Activity (Year 1 – 10)</div>
+    <p style="font-size:var(--text-xs);color:var(--ink-soft);margin-bottom:var(--space-3);">Enter capital calls (positive = LP pays in), distributions (positive = LP receives), and period-end NAV of unrealized portfolio. All figures in $M.</p>
+    <div class="period-row" style="border-bottom:2px solid var(--color-divider);">
+      <span class="col-head">Year</span>
+      <span class="col-head">Capital Called ($M)</span>
+      <span class="col-head">Distributions ($M)</span>
+      <span class="col-head">NAV ($M)</span>
+    </div>
+    <div id="periods"></div>
+  </div>
+
+  <div class="output" id="out" style="margin-top:var(--space-6);"></div>
+  <div style="margin-top:var(--space-5);">
+    <div style="font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:var(--space-2);">J-Curve — Cumulative Net Cash Flow by Year ($M)</div>
+    <div id="bridge"></div>
+  </div>
+  <ul class="flag-list" id="flags" style="margin-top:var(--space-4);"></ul>
+</div>
+
+<div class="note" style="margin-top:var(--space-8);">
+  <div class="note__head">LP Reporting Definitions (Sutton Capital / GoingVC Ch. 9)</div>
+  <ul style="margin:8px 0 0 18px;padding:0;color:var(--ink-soft);">
+    <li><strong>DPI</strong> (Distributed to Paid-In): Total distributions ÷ total capital called. The only &ldquo;real money back&rdquo; metric. DPI &gt;1.0x = LP has received full capital back.</li>
+    <li><strong>RVPI</strong> (Residual Value to Paid-In): Current NAV ÷ total capital called. Measures unrealized portfolio value. High RVPI late in fund life is a yellow flag.</li>
+    <li><strong>TVPI</strong> (Total Value to Paid-In): DPI + RVPI. The headline MOIC for LPs. Top-quartile = 2.5x+ for PE, 3x+ for VC.</li>
+    <li><strong>Net IRR</strong>: Time-weighted return accounting for timing of cash flows, net of fees and carry. LP benchmark: 15%+ for PE, 20%+ for VC.</li>
+    <li><strong>J-Curve</strong>: Early fund years show negative net cash flow (capital calls &gt; distributions). Inflection typically years 4-6 as portfolio matures and distributions begin.</li>
+    <li><strong>LP Wish List</strong> (Sutton Capital): &ldquo;Decks with the right metrics, clearly mapped (Net IRR/DPI/TVPI + last-round valuation).&rdquo; Know these four numbers cold.</li>
+  </ul>
+</div>
+</main>
+
+<script src="../js/finance.js"></script>
+<script src="../js/site.js"></script>
+<script>
+(function(){
+  const F = window.Fin;
+  const YEARS = 10;
+  const KEY = 'pevc_t15';
+
+  // Default J-Curve pattern
+  const defaults = [
+    { call:20, dist:0,  nav:18  },
+    { call:25, dist:0,  nav:42  },
+    { call:20, dist:5,  nav:62  },
+    { call:15, dist:10, nav:80  },
+    { call:10, dist:20, nav:90  },
+    { call:5,  dist:30, nav:95  },
+    { call:0,  dist:40, nav:85  },
+    { call:0,  dist:50, nav:65  },
+    { call:0,  dist:60, nav:30  },
+    { call:0,  dist:80, nav:5   },
+  ];
+
+  function buildRows() {
+    const container = document.getElementById('periods');
+    container.innerHTML = defaults.map((d,i) => `
+      <div class="period-row">
+        <label>Yr ${i+1}</label>
+        <input type="number" class="yr-call" data-yr="${i}" value="${d.call}" min="0" step="1">
+        <input type="number" class="yr-dist" data-yr="${i}" value="${d.dist}" min="0" step="1">
+        <input type="number" class="yr-nav"  data-yr="${i}" value="${d.nav}"  min="0" step="1">
+      </div>`).join('');
+
+    container.querySelectorAll('input').forEach(inp => {
+      inp.addEventListener('input', compute);
+    });
+  }
+
+  function getData() {
+    return Array.from({length: YEARS}, (_,i) => ({
+      call: F.parse(document.querySelector(`.yr-call[data-yr="${i}"]`).value, 0),
+      dist: F.parse(document.querySelector(`.yr-dist[data-yr="${i}"]`).value, 0),
+      nav:  F.parse(document.querySelector(`.yr-nav[data-yr="${i}"]`).value,  0),
+    }));
+  }
+
+  function compute() {
+    const fundCommit = F.parse(document.getElementById('fundCommit').value, 100);
+    const mgmtFee    = F.parse(document.getElementById('mgmtFeeT').value, 2) / 100;
+    const carry      = F.parse(document.getElementById('carry').value, 20) / 100;
+    const hurdle     = F.parse(document.getElementById('hurdle').value, 8) / 100;
+
+    const data = getData();
+    const totalCalled = data.reduce((s,d) => s + d.call, 0);
+    const totalDist   = data.reduce((s,d) => s + d.dist, 0);
+    const lastNAV     = data[YEARS-1].nav;
+
+    // DPI, RVPI, TVPI
+    const dpi  = totalCalled > 0 ? totalDist / totalCalled : 0;
+    const rvpi = totalCalled > 0 ? lastNAV   / totalCalled : 0;
+    const tvpi = dpi + rvpi;
+
+    // Net IRR: cashflows array (t=0 is first call as negative, distributions as positive)
+    // Build annual net cash flows: -call + dist
+    const netCFs = data.map(d => d.dist - d.call);
+    // Add final NAV as terminal value in last year
+    netCFs[YEARS-1] += lastNAV;
+    // Prepend t=0 = 0 (fund hasn't started), actual first call is year 1
+    const cfs = [0, ...netCFs];
+    const netIRR = F.irr(cfs, 0.15);
+
+    // Carry waterfall (simplified American waterfall)
+    const hurdleReturn = totalCalled * Math.pow(1 + hurdle, YEARS);
+    const profitAboveHurdle = Math.max(0, totalDist + lastNAV - hurdleReturn);
+    const carryAmount = profitAboveHurdle * carry;
+    const netToLP = totalDist + lastNAV - carryAmount - (fundCommit * mgmtFee * YEARS);
+
+    // DPI verdicts
+    let dpiVerdict, tvpiVerdict, irrVerdict;
+    dpiVerdict = dpi < 0.5 ? 'Early / J-Curve' : dpi < 1.0 ? 'Partial return' : dpi < 1.5 ? 'Capital returned' : 'Strong DPI';
+    tvpiVerdict = tvpi < 1.5 ? 'Below threshold' : tvpi < 2.5 ? 'Decent' : tvpi < 3.5 ? 'Good' : 'Top Quartile';
+    irrVerdict = !netIRR ? 'N/A' : netIRR < 0.1 ? 'Below hurdle' : netIRR < 0.15 ? 'Near hurdle' : netIRR < 0.25 ? 'Good' : 'Top Quartile';
+
+    // Cumulative J-Curve
+    let cumCF = 0;
+    const jcurve = data.map(d => { cumCF += (d.dist - d.call); return cumCF; });
+    const maxAbs = Math.max(...jcurve.map(Math.abs), 0.01);
+
+    // Output
+    const out = document.getElementById('out');
+    out.innerHTML = [
+      `<div class="output__row"><span class="output__label">Total Capital Called</span><span class="output__value output__big">${F.money(totalCalled)}M</span></div>`,
+      `<div class="output__row"><span class="output__label">Total Distributions</span><span class="output__value output__big">${F.money(totalDist)}M</span></div>`,
+      `<div class="output__row"><span class="output__label">Period-End NAV (unrealized)</span><span class="output__value">${F.money(lastNAV)}M</span></div>`,
+      `<div class="output__row" style="border-top:1px solid var(--color-divider);margin-top:8px;padding-top:8px;"><span class="output__label">DPI (Distributed / Paid-In)</span><span class="output__value output__big">${F.x(dpi, 2)} &mdash; ${dpiVerdict}</span></div>`,
+      `<div class="output__row"><span class="output__label">RVPI (Residual / Paid-In)</span><span class="output__value">${F.x(rvpi, 2)}</span></div>`,
+      `<div class="output__row"><span class="output__label">TVPI (Total Value / Paid-In)</span><span class="output__value output__big">${F.x(tvpi, 2)} &mdash; ${tvpiVerdict}</span></div>`,
+      netIRR ? `<div class="output__row"><span class="output__label">Net IRR (estimated)</span><span class="output__value output__big">${F.pct(netIRR)} &mdash; ${irrVerdict}</span></div>` : '',
+      `<div class="output__row" style="border-top:1px solid var(--color-divider);margin-top:8px;padding-top:8px;"><span class="output__label">Estimated Carry Earned</span><span class="output__value">${F.money(carryAmount)}M</span></div>`,
+      `<div class="output__row"><span class="output__label">Est. Net Proceeds to LP</span><span class="output__value">${F.money(Math.max(0, netToLP))}M</span></div>`,
+    ].join('');
+
+    // J-Curve bars
+    document.getElementById('bridge').innerHTML = jcurve.map((v,i) => {
+      const kind = v < 0 ? 'bad' : v < totalCalled * 0.3 ? 'neutral' : 'good';
+      return F.bar('Yr ' + (i+1), Math.abs(v), maxAbs, kind, (v >= 0 ? '+' : '-') + F.money(Math.abs(v)) + 'M');
+    }).join('');
+
+    // Flags
+    const flags = [];
+    if (dpi < 1.0 && tvpi > 2.0) flags.push('DPI < 1.0 with high TVPI = unrealized value dominates. LPs will pressure for distributions (secondary sales, dividend recaps). Monitor carefully.');
+    if (tvpi < 1.5) flags.push('TVPI < 1.5x — fund is currently below the typical 2.5x PE / 3x VC top-quartile threshold. Revisit exit planning and portfolio support.');
+    if (netIRR && netIRR < hurdle) flags.push('Net IRR (' + F.pct(netIRR) + ') is below the ' + F.pct(hurdle) + ' preferred return hurdle — no carry is payable under standard waterfall until hurdle is cleared.');
+    if (lastNAV / totalCalled > 0.8 && tvpi > 2) flags.push('RVPI is ' + F.pct(lastNAV/totalCalled) + ' of called capital — very high proportion still unrealized. LP quarterly letters should address exit timeline for top positions.');
+    if (totalCalled > fundCommit) flags.push('Capital called ($' + totalCalled + 'M) exceeds fund commitments ($' + fundCommit + 'M) — check recycling provisions in LPA.');
+    document.getElementById('flags').innerHTML = flags.map(f => '<li>' + f + '</li>').join('');
+  }
+
+  // Wire fund-level inputs
+  ['fundCommit','mgmtFeeT','carry','hurdle'].forEach(id => {
+    document.getElementById(id).addEventListener('input', compute);
+  });
+
+  buildRows();
+  compute();
+})();
+</script>
+</body>
+</html>
