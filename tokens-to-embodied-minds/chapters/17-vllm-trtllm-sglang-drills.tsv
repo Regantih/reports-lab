@@ -1,0 +1,10 @@
+What is PagedAttention's core memory management innovation?	Non-contiguous paged KV cache allocation via a page table, inspired by OS virtual memory — reducing fragmentation from 20–30% to 1–4%.
+What is continuous batching and why does it improve GPU utilization?	Processing tokens from different requests in the same forward pass as they arrive, rather than waiting for a full batch. Improves GPU utilization from 30–40% to 80–90%.
+What data structure does SGLang's RadixAttention use?	A radix tree (prefix tree) where each node is a token sequence and shared prefixes form common tree roots with cached KV states.
+For what workload class does SGLang most outperform vLLM?	Agentic multi-call workloads with a dominant shared system prompt — where high prefix cache hit rate eliminates repeated prefill computation.
+What is TensorRT-LLM's primary advantage and primary disadvantage?	Advantage: 10–30% higher throughput than vLLM on NVIDIA hardware via hardware-specific fused kernels and FP8. Disadvantage: vendor lock-in, complex compilation pipeline, limited community support.
+Which framework has the broadest model support in 2026?	vLLM — supports Llama, Mistral, Qwen, DeepSeek, Gemma, Phi, Falcon, and more.
+What does SGLang's LRU eviction policy prioritize?	Tree roots (most-shared prefixes) are kept longest; tree leaves (less-shared prefixes) are evicted first under memory pressure.
+What is TTFT and why does it matter for agentic workloads?	Time-To-First-Token — the latency from request submission to receiving the first output token. Agentic systems make sequential calls, so TTFT compounds across tool-use steps.
+Which framework should you use for DealLens's fixed-prompt screening loop?	SGLang — the screening system prompt is shared across all deal requests, giving near-100% prefix cache hit rate and ~4–10× cost reduction over uncached serving.
+Name one feature vLLM has that enables safe speculative decoding integration.	Built-in speculative decoding support with a draft model — included as a first-class feature in vLLM's engine, configurable via the draft_model parameter.

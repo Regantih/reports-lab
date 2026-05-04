@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 28 · Reinforcement learning, refreshed — From Tokens to Embodied Minds</title>
+<meta name="description" content="You need enough RL fluency to read a 2025 robot-RL paper and identify what they actually changed — not to be an RL researcher. This chapter covers exactly that subset: MDPs, PPO, SAC, and the three places modern robot RL diverges from the textbook.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="28-rl-refresher" data-chapter-title="Reinforcement learning, refreshed">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="28-rl-refresher">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">MDP tuple</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">policy gradient</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">PPO clip objective</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">SAC entropy regularization</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">reward shaping</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">curriculum RL</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">sim-to-real gap</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="28-rl-refresher" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — for a humanoid locomotion task, would you choose PPO or SAC, and why?</h2>
+  <p class="learn__hint">Think about sample efficiency vs stability, and whether you have a simulator.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-28-rl-refresher" value="a"><span>SAC — off-policy, maximum sample efficiency, important when simulation is expensive</span></label><label class="predict__choice"><input type="radio" name="predict-28-rl-refresher" value="b"><span>PPO — on-policy, stable in high-dimensional continuous action spaces, and simulator throughput makes sample efficiency less critical than stability</span></label><label class="predict__choice"><input type="radio" name="predict-28-rl-refresher" value="c"><span>Neither — humanoid locomotion requires whole-body MPC, not RL</span></label><label class="predict__choice"><input type="radio" name="predict-28-rl-refresher" value="d"><span>SAC — because entropy regularization is essential for exploration in bipedal locomotion</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">PPO dominates humanoid locomotion precisely because modern simulators (Isaac Lab, MuJoCo MJX) provide near-unlimited samples — sample efficiency matters less than training stability across 32+ parallel environments. PPO's clipped objective prevents destructive policy updates that could destabilize a bipedal controller. SAC dominates manipulation where sample efficiency matters (real-robot data is expensive) and the action space is lower-dimensional.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 28 of 36</div>
+    <div class="ch-header__num">Chapter 28</div>
+    <h1 class="ch-header__title">Reinforcement learning, refreshed</h1>
+    <p class="ch-header__dek">MDPs, PPO, SAC, and what 2025 robot RL papers actually changed</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Define an MDP and write the PPO clipped objective with a brief explanation of why the clip is necessary</li><li>Contrast PPO (on-policy) and SAC (off-policy) on sample efficiency, stability, and typical use case in robot learning</li><li>Read a 2025 robot RL paper abstract and identify whether the contribution is in the algorithm, the reward, the curriculum, or the data pipeline</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">PPO</div><div class="stat__label">Schulman et al. July 2017 — still the dominant on-policy algorithm for humanoid locomotion</div></div><div class="stat"><div class="stat__num">SAC</div><div class="stat__label">Haarnoja et al. Jan 2018 — dominant off-policy algorithm for manipulation; sample-efficient</div></div><div class="stat"><div class="stat__num">2025</div><div class="stat__label">robot RL papers changed reward shaping, curriculum design, and real-to-sim bootstrapping — not the core algorithm</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="28-rl-refresher">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. Without looking, write the PPO objective including the clip term and state in one sentence why the clip exists.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Train PPO on HalfCheetah-v4 in Gymnasium. Plot learning curve, report episode return vs wall-clock time. Identify the three hyperparameters that matter most.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">Train PPO on a custom MuJoCo arm-reaching task. Add reward shaping (distance reward + grasp bonus). Reproduce in Isaac Lab. Compare convergence speed.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Implement SAC on a real SO-101 arm (or in MuJoCo) for a pick-and-place task. Compare data efficiency vs a BC baseline trained on 50 demonstrations. Report sample complexity to 80% success.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#mdp-basics">The MDP and policy gradients</a></li><li><a href="#sac">SAC and the off-policy alternative</a></li><li><a href="#2025-robot-rl">What 2025 robot RL papers actually changed</a></li><li><a href="#capstone">Capstone connections</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">You do not need to be an RL researcher to work on robots in 2026. You need enough fluency to read a robot RL paper and identify what they actually changed. That gap is smaller than you think: Markov decision processes, policy gradients, PPO (Schulman et al., arXiv:1707.06347, July 20, 2017), and SAC (Haarnoja et al., arXiv:1801.01290, Jan 4, 2018) cover most of the algorithmic territory. The 2025 papers changed reward shaping, curriculum design, and real-to-sim bootstrapping — not the core algorithms.
+
+Berkeley CS 285 (Sergey Levine, Fall 2024) is the deepest treatment; OpenAI Spinning Up (2018) is the fastest entry. This chapter extracts the subset that is directly relevant to the humanoid capstone and to reading GR00T N1.5 and π0.5 without confusion.</p>
+<h2 id="mdp-basics">The MDP and policy gradients</h2>
+<p>A Markov decision process is the tuple (S, A, P, R, gamma): state space S, action space A, transition dynamics P(s'|s,a), reward function R(s,a,s'), and discount factor gamma. A policy pi(a|s) maps states to action distributions. The goal is to find the policy that maximizes expected discounted return. Policy gradient methods (REINFORCE, actor-critic) optimize this directly by estimating the gradient of expected return with respect to policy parameters — the score function estimator. The variance of this estimator is the central problem: too high, and training is unstable.</p>
+<p>PPO (Proximal Policy Optimization, Schulman et al., July 2017) controls variance via a clipped objective: the ratio of new-to-old policy probabilities (r_t = pi_new(a|s) / pi_old(a|s)) is clipped to [1-epsilon, 1+epsilon] before being multiplied by the advantage estimate. This prevents large policy updates that could destabilize training — the key insight is that you want to improve the policy but not so much that the old data (collected under pi_old) becomes a bad estimator of the new policy's value. PPO is on-policy: you collect data, update the policy, discard the data, repeat.</p>
+<h2 id="sac">SAC and the off-policy alternative</h2>
+<p>SAC (Soft Actor-Critic, Haarnoja et al., Jan 2018) adds entropy regularization to the objective: maximize expected return plus alpha * H(pi), where H(pi) is the entropy of the policy and alpha is a temperature parameter. This encourages exploration and prevents premature convergence to deterministic policies in multimodal action spaces. SAC is off-policy: it uses a replay buffer, allowing data from many past policy versions to be reused — making it far more sample-efficient than PPO. The trade-off is complexity: tuning alpha (or using automatic entropy tuning) and stabilizing the twin Q-networks adds engineering surface area.</p>
+<p>For robot learning: PPO dominates locomotion (Isaac Lab provides unlimited simulator throughput; stability matters more than sample efficiency). SAC dominates real-robot manipulation (simulator is imperfect or unavailable; every rollout costs real-world time). OpenVLA and SmolVLA fine-tuning often starts from behavioral cloning (imitation learning) rather than RL, then adds online RL (SAC or PPO) for refinement — a pattern that appears in π0.5 (Physical Intelligence, arXiv:2504.16054, April 22, 2025).</p>
+<h2 id="2025-robot-rl">What 2025 robot RL papers actually changed</h2>
+<p>Reading 2025 robot RL papers, the contributions cluster in three places that are not the core algorithm. First, reward shaping: dense reward signals that decompose the task (proximity reward + contact reward + grasp success reward) replace sparse binary rewards, dramatically accelerating learning. Second, curriculum design: starting in simulation with easy task variants (short reach distance, large target) and progressively hardening them — a pattern used by NVIDIA's GR00T training pipeline and Agility Robotics' Digit locomotion work. Third, real-to-sim bootstrapping: collecting a small real dataset, building a calibrated simulation from it, training extensively in sim, and transferring back — the loop that GR00T-Dreams closes by generating 6,500 hours of synthetic data in 11 hours from real-seed demonstrations.</p>
+<p>Berkeley CS 285 (Sergey Levine, Fall 2024) is the authoritative course. Sutton and Barto's Reinforcement Learning: An Introduction (MIT Press, 2nd ed., 2018) is the textbook. The specific papers to read for robot RL in 2025 are the Isaac Lab documentation (NVIDIA), the GR00T N1 and N1.5 tech reports, and the π0.5 paper — all of which assume PPO/SAC fluency.</p>
+<h2 id="capstone">Capstone connections</h2>
+<p>For the JHU humanoid capstone, RL is used in two places. First, sim-to-real training in Isaac Lab (Chapter 29): PPO trains the low-level locomotion and manipulation controller across a distribution of randomized physics parameters. Second, post-training of SmolVLA or GR00T N1.5: if behavioral cloning from 200 demonstration episodes is insufficient for a household task, adding online RL (SAC or GRPO) can close the gap. The RL fluency you build here is the prerequisite for both.</p>
+<div class="aside" data-tone="primary"><span class="aside__label">On model-based RL</span><p>Model-based RL (Dreamer, MBPO) is not covered here because the 2025 humanoid stack uses model-free RL with a simulator rather than learned world models. The simulator is the model. Check back when GR00T-Dreams matures.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="PPO vs SAC comparison and robot RL taxonomy"><style>text{font-family:system-ui,sans-serif;font-size:12px;fill:var(--color-text)}.muted{fill:var(--color-text-muted);font-size:10px}.title{font-size:15px;font-weight:600;fill:var(--color-text)}.head{font-size:12px;font-weight:600}</style><text x="400" y="26" text-anchor="middle" class="title">Robot RL Algorithm Landscape</text><rect x="30" y="55" width="200" height="150" rx="6" fill="none" stroke="var(--color-accent-euv)" stroke-width="1.5"/><text x="130" y="78" text-anchor="middle" class="head" fill="var(--color-text)">PPO (On-Policy)</text><text x="130" y="96" text-anchor="middle" class="muted">Schulman et al. Jul 2017</text><text x="130" y="114" text-anchor="middle" class="muted">Collect → Update → Discard</text><text x="130" y="130" text-anchor="middle" class="muted">Clip ratio: [1-ε, 1+ε]</text><text x="130" y="148" text-anchor="middle" class="muted">Stable, less sample-efficient</text><text x="130" y="164" text-anchor="middle" class="muted">Best for: locomotion (Isaac Lab)</text><text x="130" y="180" text-anchor="middle" class="muted">Unlimited sim throughput</text><rect x="260" y="55" width="200" height="150" rx="6" fill="none" stroke="var(--color-primary)" stroke-width="1.5"/><text x="360" y="78" text-anchor="middle" class="head" fill="var(--color-text)">SAC (Off-Policy)</text><text x="360" y="96" text-anchor="middle" class="muted">Haarnoja et al. Jan 2018</text><text x="360" y="114" text-anchor="middle" class="muted">Replay buffer, reuse data</text><text x="360" y="130" text-anchor="middle" class="muted">Entropy reg: + alpha·H(pi)</text><text x="360" y="148" text-anchor="middle" class="muted">10-100x more sample-efficient</text><text x="360" y="164" text-anchor="middle" class="muted">Best for: manipulation (real robot)</text><text x="360" y="180" text-anchor="middle" class="muted">Real data expensive</text><rect x="490" y="55" width="280" height="150" rx="6" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.5"/><text x="630" y="78" text-anchor="middle" class="head" fill="var(--color-text)">2025 Robot RL Contributions</text><text x="630" y="100" text-anchor="middle" class="muted">Not in the algorithm —</text><text x="630" y="118" text-anchor="middle" class="muted">1. Dense reward shaping</text><text x="630" y="134" text-anchor="middle" class="muted">   (proximity + contact + success)</text><text x="630" y="150" text-anchor="middle" class="muted">2. Curriculum design</text><text x="630" y="166" text-anchor="middle" class="muted">   (easy → hard task progression)</text><text x="630" y="182" text-anchor="middle" class="muted">3. Real-to-sim bootstrapping</text><text x="130" y="250" text-anchor="middle" class="muted">JHU capstone: PPO for Isaac Lab</text><text x="130" y="266" text-anchor="middle" class="muted">locomotion + manipulation training</text><rect x="30" y="235" width="200" height="45" rx="4" fill="none" stroke="var(--color-accent-euv)" stroke-width="1" stroke-dasharray="4,3"/><text x="360" y="250" text-anchor="middle" class="muted">JHU capstone: SAC/GRPO for</text><text x="360" y="266" text-anchor="middle" class="muted">SmolVLA/GR00T post-training</text><rect x="260" y="235" width="200" height="45" rx="4" fill="none" stroke="var(--color-primary)" stroke-width="1" stroke-dasharray="4,3"/></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 28.1</span><span class="text">PPO vs SAC in robot RL. PPO dominates simulation-based locomotion training (Isaac Lab); SAC dominates real-robot manipulation. The 2025 literature&#x27;s contributions are primarily in reward shaping, curriculum design, and real-to-sim bootstrapping — not in the core algorithms.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">PPO and SAC cover most of the algorithmic territory in robot RL; 2025 papers changed reward shaping and curriculum design, not the core algorithms — you need enough fluency to tell the difference.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="http://rail.eecs.berkeley.edu/deeprlcourse/">Berkeley CS 285: Deep Reinforcement Learning, Sergey Levine, Fall 2024; OpenAI Spinning Up, 2018</a></p>
+  <p><strong>Build.</strong> Train PPO on HalfCheetah-v4 in Gymnasium (OpenAI Spinning Up or CleanRL, ~100 lines). Plot episode return vs wall-clock time. Identify the three hyperparameters that most affect convergence. Then reproduce on a custom MuJoCo arm-reaching task with distance + grasp reward shaping. Report sample complexity to 80% success rate.</p>
+  <p><strong>Capstone ladder.</strong> Required for sim-to-real in Isaac Lab (Chapter 29) and for post-training SmolVLA or GR00T N1.5 with online RL. The MuJoCo arm-reaching build directly precedes the Isaac Lab PPO setup in the next chapter.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="28-rl-refresher">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">Write the PPO clipped objective and explain why the clip is necessary.</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">L_CLIP = E[min(r_t * A_t, clip(r_t, 1-epsilon, 1+epsilon) * A_t)], where r_t = pi_new(a|s)/pi_old(a|s) and A_t is the advantage. The clip prevents the policy ratio from straying too far from 1 in a single update — large updates based on off-distribution data (collected under pi_old) can destabilize training by moving the policy into a region where the old value estimates are wrong.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does SAC outperform PPO on sample efficiency and when does that advantage matter for robotics?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">SAC is off-policy: it stores transitions in a replay buffer and trains on data from many past policy versions, reusing each sample many times. PPO discards data after each update. For real-robot manipulation where each rollout is expensive and slow, SAC's 10-100x better sample efficiency is decisive. For simulation-based locomotion training (Isaac Lab, unlimited throughput), PPO's stability advantage matters more than efficiency.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">A 2025 robot RL paper reports a 3x improvement in task success. What three non-algorithmic changes should you check before attributing it to the RL algorithm?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">1. Reward shaping: did they replace sparse binary success with a dense decomposed reward (proximity + contact + grasp)? 2. Curriculum design: did they start with easy task variants and progressively harden them? 3. Sim calibration / domain randomization: did they improve the real-to-sim fidelity, reducing the transfer gap? These three changes routinely produce 2-5x improvements without touching PPO or SAC.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="28-rl-refresher-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="27-3d-perception.html"><span class="ch-nav-link__label">← Chapter 27</span><span class="ch-nav-link__title">3D perception — NeRF, Gaussian Splatting, SAM 2</span></a>
+      <a class="ch-nav-link" data-dir="next" href="29-sim-to-real.html"><span class="ch-nav-link__label">Chapter 29 →</span><span class="ch-nav-link__title">Sim-to-real and the Isaac stack</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

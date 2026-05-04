@@ -1,0 +1,10 @@
+What does RLHF stand for and what are its two key components?	Reinforcement Learning from Human Feedback. Components: a reward model trained on human preference pairs, and PPO with a KL constraint to the reference policy.
+What does DPO eliminate compared to RLHF?	The explicit reward model and PPO rollouts — replaced by a closed-form loss on preference pairs.
+What implicit mathematical object does a trained DPO policy define?	An implicit reward function: r(x,y) = beta * log(pi_theta(y|x) / pi_ref(y|x)) + log Z(x).
+What is the GRPO group baseline?	The mean reward across G sampled outputs for the same prompt, used as the advantage baseline instead of a learned value function.
+What type of reward signal does GRPO require?	A verifiable correctness oracle — e.g., a math symbolic checker, unit test runner, or format validator — that can evaluate every sampled output.
+What paper introduced GRPO and what model used it?	DeepSeek-R1-Zero (arXiv:2501.12948, January 22, 2025) introduced GRPO and used it to train DeepSeek-R1's reasoning capabilities.
+What is the difference between an outcome reward model and a process reward model (PRM)?	Outcome: one reward at the end of a trajectory. PRM: per-step correctness scores during reasoning. PRMs give finer-grained training signal but require step-level annotation.
+What is RLAIF?	Reinforcement Learning from AI Feedback — using a stronger LLM (not human annotators) to generate preference labels, reducing annotation cost by ~100×.
+What is the KL constraint in the RLHF objective for?	To prevent reward hacking: the policy is penalized for diverging too far from the reference model, so it cannot arbitrarily maximize the reward by producing out-of-distribution responses.
+Name two variants of DPO that address specific instabilities in the original formulation.	Identity Preference Optimization (iPO) addresses over-optimization at the boundary, and SimPO uses sequence-length-normalized log probabilities to remove the reference model dependency entirely.

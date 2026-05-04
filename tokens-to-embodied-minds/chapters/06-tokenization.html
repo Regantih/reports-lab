@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 06 · Tokenization is a design decision — From Tokens to Embodied Minds</title>
+<meta name="description" content="Tokenizer choice silently sets a ceiling on multilingual quality, math accuracy, and code generation — and the tokenizer is usually the last thing engineers audit when a model underperforms.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="06-tokenization" data-chapter-title="Tokenization is a design decision">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="06-tokenization">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">BPE merge rules</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">byte-level BPE</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">Unigram LM tokenizer</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">tiktoken encoding</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">vocabulary size trade-offs</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">digit tokenization</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">cross-lingual coverage</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="06-tokenization" data-answer-key="c">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Why does GPT-4o use a 200K-vocabulary byte-level tokenizer while GPT-2 used a 50K-vocabulary BPE tokenizer?</h2>
+  <p class="learn__hint">Think about what happens to the token count for non-English text under a vocabulary trained primarily on English.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-06-tokenization" value="a"><span>Larger vocabulary means fewer tokens per sentence, reducing forward-pass compute for all languages</span></label><label class="predict__choice"><input type="radio" name="predict-06-tokenization" value="b"><span>Byte-level BPE ensures every Unicode character is representable without UNK tokens</span></label><label class="predict__choice"><input type="radio" name="predict-06-tokenization" value="c"><span>Both a and b — fewer tokens for non-English text and zero UNK tokens</span></label><label class="predict__choice"><input type="radio" name="predict-06-tokenization" value="d"><span>200K vocabulary was a compute budget decision, not a quality improvement</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">Both effects matter. A larger vocabulary trained on multilingual data gives common non-English subwords their own tokens, reducing token count for Chinese, Arabic, Korean, etc. by 3-4x compared to a vocabulary trained mainly on English. Byte-level BPE guarantees that any Unicode byte sequence is representable (no UNK), which is critical for code (arbitrary byte sequences), math notation, and non-Latin scripts. GPT-4o's 200K vocabulary is a deliberate multilingual efficiency decision.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 06 of 36</div>
+    <div class="ch-header__num">Chapter 06</div>
+    <h1 class="ch-header__title">Tokenization is a design decision</h1>
+    <p class="ch-header__dek">BPE, SentencePiece, and why your tokenizer matters</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Implement BPE from scratch: build initial character vocabulary, apply N merge rounds, produce subword merges, and encode a held-out sentence.</li><li>Explain why digit tokenization affects arithmetic accuracy and how different tokenizers handle numbers differently.</li><li>Compare the tokenization efficiency (tokens per character) of cl100k_base, Llama 3 tokenizer, and DeepSeek tokenizer on a mixed Chinese+Python corpus.</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">200K</div><div class="stat__label">vocabulary size of GPT-4o&#x27;s byte-level tokenizer for non-English compression</div></div><div class="stat"><div class="stat__num">3–4×</div><div class="stat__label">more tokens to represent the same Chinese text in GPT-2 BPE vs DeepSeek tokenizer</div></div><div class="stat"><div class="stat__num">32K→128K</div><div class="stat__label">vocabulary growth from GPT-2 to Llama 3 — context efficiency, not coverage</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="06-tokenization">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Given the string 'tokenization', trace through 5 BPE merge rounds starting from character-level tokens and show the merge table.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Train a 32K-vocab BPE tokenizer using the HuggingFace tokenizers library on a 10GB corpus. Compare its compression ratio against tiktoken cl100k_base on a Spanish + Python test set.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A model fine-tuned on legal documents shows degraded accuracy on numerical contract clauses. Diagnose whether the issue is tokenizer digit handling, context window, or domain mismatch — and propose the cheapest fix first.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">DeepSeek extends the Llama tokenizer for Chinese. Read the DeepSeek-V3 technical report (arXiv:2412.19437) tokenizer section and compute the expected tokens-per-character ratio for Chinese text under DeepSeek vs Llama 3 vs GPT-4o tokenizers. Which is most efficient and why?</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#bpe-mechanics">BPE — how the merge algorithm works</a></li><li><a href="#digit-math">Why digit tokenization matters for math</a></li><li><a href="#vocabulary-economics">Vocabulary size and context economics</a></li><li><a href="#sentencepiece-unigram">SentencePiece and Unigram — the alternative family</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">The tokenizer is the first transformation your model ever sees and the last one engineers audit when performance is poor. Tokenizer choice silently sets a ceiling on multilingual quality — a vocabulary trained primarily on English will spend 3-4 tokens on a single Chinese character that a multilingual vocabulary covers in one. It affects math accuracy because digit tokenization determines whether the model sees 1234 as one token or four. It affects code generation because identifiers and operators need compact representations to fit in context. None of this is visible in the standard perplexity metric, because perplexity is measured in tokens, not bytes or characters.
+
+The field has not converged on a single tokenization scheme. BPE (GPT-2, GPT-4o), byte-level BPE (Llama 2/3, Mistral), Unigram (T5, ALBERT), and tiktoken are not interchangeable. DeepSeek-V3 extended the Llama tokenizer with Chinese-specific merges. GPT-4o went to a 200K-vocabulary byte-level scheme for multilingual compression. For DealLens processing multilingual deal memos, the choice between these affects how many tokens a 10-page Chinese VC memo consumes relative to an English one.</p>
+<h2 id="bpe-mechanics">BPE — how the merge algorithm works</h2>
+<p>Byte Pair Encoding (Sennrich et al., arXiv:1508.07909, August 2015) starts with a character-level vocabulary and iteratively merges the most frequent pair of adjacent tokens in the training corpus. After N merges, the vocabulary contains N subword units beyond the initial character set. Encoding a new string: apply all merge rules in the order they were learned, choosing the longest applicable merge at each step. The result is a sequence of subword tokens whose lengths balance frequency (common words become single tokens) and coverage (rare words split into known subwords).</p>
+<p>Byte-level BPE (GPT-2, Llama, Mistral) starts with a 256-byte vocabulary instead of a character vocabulary. Every possible byte sequence is representable — there are no UNK tokens. The trade-off is that rare Unicode characters (e.g., mathematical symbols, CJK extensions) split into multiple bytes, increasing token count. The net effect for multilingual models is negative without a much larger vocabulary and multilingual training data, which is why GPT-4o went to 200K tokens.</p>
+<p>tiktoken's cl100k_base (used in GPT-3.5, GPT-4, and embeddings) is a regex-pre-tokenized BPE that splits on whitespace and common code patterns before applying BPE merges. This prevents merges across word boundaries and improves code tokenization. The Llama 3 tokenizer (128K vocabulary) uses a similar approach with additional merges for code identifiers.</p>
+<h2 id="digit-math">Why digit tokenization matters for math</h2>
+<p>GPT-2's 50K-vocabulary tokenizer merges common digit strings: 1000, 2000, 3000 are each single tokens, but 1234 might be [123][4] or [12][34] depending on training frequency. This creates an inconsistency: the model cannot compose arithmetic over digit tokens that are not aligned to place values. Llama 3's 128K tokenizer tokenizes each digit individually (0-9 each get their own token), sacrificing compression for arithmetic consistency. The empirical result (verified in multiple GSM8K ablations) is that individual-digit tokenization improves arithmetic accuracy by 3-7% on multi-step problems.</p>
+<p>For DealLens, numerical clauses in VC term sheets — valuations like $47.5M, equity percentages like 18.75%, and dates like 2024-Q3 — are affected by tokenizer digit handling. A tokenizer that splits 47.5 inconsistently will cause the model to see different sub-token patterns for semantically equivalent representations, degrading extraction reliability. Testing your scoring model's tokenizer behavior on representative numerical strings is a one-hour diagnostic that pays back in extraction accuracy.</p>
+<h2 id="vocabulary-economics">Vocabulary size and context economics</h2>
+<p>A larger vocabulary means fewer tokens per character — better context efficiency — but larger embedding tables (vocabulary size × d_model parameters) and output projection matrices. At 128K vocabulary and d_model=8192 (Llama 3 70B), the embedding table alone is 128K × 8192 × 2 bytes (BF16) ≈ 2.1 GB. At 200K vocabulary, this scales to 3.3 GB — meaningful at inference time on constrained hardware. The right vocabulary size is a function of the target languages, the serving hardware, and the context length.</p>
+<p>For the JHU humanoid capstone, tokenizer choice is indirect but non-trivial: if you fine-tune SmolVLA or GR00T N1.5 on task-description strings (verbal instructions like 'pick up the red cup and place it on the tray'), the instruction token count determines how much of the context window is consumed by the instruction versus the action history. A tokenizer that splits 'pick up' into three tokens instead of two wastes context budget at every inference step.</p>
+<h2 id="sentencepiece-unigram">SentencePiece and Unigram — the alternative family</h2>
+<p>SentencePiece (Kudo and Richardson, arXiv:1808.06226, August 2018) is a library that implements both BPE and Unigram tokenization directly on raw Unicode text without pre-tokenization. It is the implementation used in T5, ALBERT, and mT5. Unigram language model tokenization (Kudo, arXiv:1804.10959, April 2018) takes the opposite approach from BPE: start with a large vocabulary and prune tokens that reduce the language model likelihood the least. The result is a tokenizer that is probabilistically interpretable — each tokenization has an associated score — and supports subword regularization during training (sampling different valid tokenizations of the same word to improve robustness).</p>
+<p>For production LLM work in 2025, BPE via tiktoken or the HuggingFace tokenizers library is the dominant choice. Unigram remains relevant for multilingual NLP tasks where subword regularization matters, and for any workflow that uses T5-family models as components. For DealLens, the relevant question is: what tokenizer does the base model you are fine-tuning use? The answer determines your chunking strategy, context budget calculation, and how you handle non-English deal memo passages.</p>
+<div class="aside" data-tone="quartz"><span class="aside__label">The tokenizer is not the model</span><p>The tokenizer is fixed at training time and cannot be changed at fine-tuning time without retraining the embedding table. If the base model's tokenizer handles your domain poorly (e.g., financial abbreviations, chemical names, Chinese text), the fix is either training from scratch or accepting the overhead of embedding surgery.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="BPE tokenization process and vocabulary comparison" fill="none" xmlns="http://www.w3.org/2000/svg"><text x="400" y="26" text-anchor="middle" font-size="14" font-weight="600" fill="var(--color-text)">Tokenization — BPE Merge Process and Vocabulary Trade-offs</text><text x="150" y="56" text-anchor="middle" font-size="12" font-weight="600" fill="var(--color-text)">BPE Merge Rounds</text><rect x="30" y="66" width="240" height="28" rx="4" stroke="var(--color-text-muted)" stroke-width="1" fill="var(--color-bg)"/><text x="150" y="85" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">start: [t][o][k][e][n][i][z][a][t][i][o][n]</text><rect x="30" y="103" width="240" height="28" rx="4" stroke="var(--color-accent-euv)" stroke-width="1.4" fill="var(--color-bg)"/><text x="150" y="122" text-anchor="middle" font-size="11" fill="var(--color-accent-euv)">merge 'to': [to][k][e][n][i][z][a][ti][on]</text><rect x="30" y="140" width="240" height="28" rx="4" stroke="var(--color-accent-copper)" stroke-width="1.4" fill="var(--color-bg)"/><text x="150" y="159" text-anchor="middle" font-size="11" fill="var(--color-accent-copper)">merge 'en': [to][k][en][i][z][a][ti][on]</text><rect x="30" y="177" width="240" height="28" rx="4" stroke="var(--color-primary)" stroke-width="1.4" fill="var(--color-bg)"/><text x="150" y="196" text-anchor="middle" font-size="11" fill="var(--color-primary)">merge 'tion': [token][iz][a][tion]</text><line x1="150" y1="94" x2="150" y2="103" stroke="var(--color-text-muted)" stroke-width="1"/><line x1="150" y1="131" x2="150" y2="140" stroke="var(--color-text-muted)" stroke-width="1"/><line x1="150" y1="168" x2="150" y2="177" stroke="var(--color-text-muted)" stroke-width="1"/><text x="550" y="56" text-anchor="middle" font-size="12" font-weight="600" fill="var(--color-text)">Vocabulary Trade-offs</text><rect x="360" y="66" width="380" height="200" rx="6" stroke="var(--color-text-muted)" stroke-width="1" fill="var(--color-bg)"/><text x="380" y="90" font-size="11" font-weight="600" fill="var(--color-primary)">GPT-2 BPE (50K)</text><text x="380" y="106" font-size="10" fill="var(--color-text-muted)">English-focused · digit merges · 3-4x more CJK tokens</text><text x="380" y="130" font-size="11" font-weight="600" fill="var(--color-accent-euv)">Llama 3 BPE (128K)</text><text x="380" y="146" font-size="10" fill="var(--color-text-muted)">byte-level · individual digits · better code</text><text x="380" y="170" font-size="11" font-weight="600" fill="var(--color-accent-copper)">GPT-4o (200K byte-level)</text><text x="380" y="186" font-size="10" fill="var(--color-text-muted)">multilingual optimized · zero UNK · 3-4x fewer CJK tokens</text><text x="380" y="210" font-size="11" font-weight="600" fill="var(--color-accent-quartz)">DeepSeek-V3 (extended Llama)</text><text x="380" y="226" font-size="10" fill="var(--color-text-muted)">Chinese-specific merges on Llama base · efficiency for bilingual</text><text x="400" y="305" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">Tokenizer is frozen at pre-training · cannot be changed at fine-tuning without embedding surgery</text><text x="400" y="325" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">Digit tokenization affects arithmetic · vocabulary size affects context budget and embedding table memory</text></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 6.1</span><span class="text">BPE merge process (left) and vocabulary trade-offs across major tokenizers (right). Tokenizer choice is a training-time decision with irreversible downstream effects on multilingual quality, arithmetic accuracy, and context efficiency.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">Tokenizer choice silently sets a ceiling on multilingual quality, math accuracy, and context efficiency — the tokenizer is the first transformation the model sees and the last thing most engineers audit.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://cs336.stanford.edu/spring2025/">Stanford CS336 Lecture 01 — Overview, tokenization (Percy Liang, April 1, 2025)</a></p>
+  <p><strong>Build.</strong> Train a 32K-vocab BPE tokenizer on FineWeb-Edu sample using the HuggingFace tokenizers library. Compare compression ratio and OOV rate against tiktoken cl100k_base on a Spanish + Python mixed corpus.</p>
+  <p><strong>Capstone ladder.</strong> For DealLens, the tokenizer determines context budget per VC memo and extraction reliability for numerical clauses. For the JHU humanoid, verbal instruction token count determines how much context is consumed per action step versus available for action history.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="06-tokenization">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">Why does byte-level BPE guarantee zero UNK tokens, and what is the trade-off?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Starting from a 256-byte vocabulary ensures every possible byte sequence is representable. The trade-off is that rare Unicode characters split into multiple byte tokens, increasing token count for non-Latin scripts. A larger vocabulary trained on multilingual data recovers efficiency.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does individual-digit tokenization (Llama 3 style) improve arithmetic accuracy compared to merged-digit tokenization (GPT-2 style)?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Individual digits align place values consistently: 1234 = [1][2][3][4] regardless of training frequency. Merged tokenization creates inconsistencies — 1234 might be [12][34] or [123][4] — preventing the model from composing arithmetic over consistently-aligned digit representations.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">For DealLens processing 10-page Chinese VC memos alongside English memos, which tokenizer would minimize token count and why?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">GPT-4o's 200K byte-level BPE tokenizer or a similarly large multilingual vocabulary. Chinese text requires 3-4x fewer tokens under a multilingual vocabulary versus an English-dominated 50K vocabulary. This directly reduces the context consumed per memo, allowing more memos to be processed in a single context window during multi-memo synthesis.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="06-tokenization-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="05-transformer-block.html"><span class="ch-nav-link__label">← Chapter 05</span><span class="ch-nav-link__title">The transformer block, end to end</span></a>
+      <a class="ch-nav-link" data-dir="next" href="07-pretraining-at-scale.html"><span class="ch-nav-link__label">Chapter 07 →</span><span class="ch-nav-link__title">Pretraining at scale</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

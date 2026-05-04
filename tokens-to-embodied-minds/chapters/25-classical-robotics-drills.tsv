@@ -1,0 +1,10 @@
+What does forward kinematics compute?	Given joint angles q, FK multiplies the DH transform matrices in sequence to produce the end-effector pose as a 4x4 SE(3) matrix.
+What does the Jacobian J(q) map?	Joint velocities to end-effector velocities: dx/dt = J(q) * dq/dt.
+Why is IK non-unique for a 6-DOF arm?	Multiple joint-angle configurations (elbow-up/down, wrist-flip, etc.) produce the same end-effector pose.
+What is a Jacobian singularity?	A configuration where J loses rank — one or more task-space directions become uncontrollable. Detected via the smallest singular value of J.
+What does PD control compute?	tau = Kp * (q_des - q_act) + Kd * (dq_des - dq_act). Proportional term corrects position error; derivative term damps oscillation.
+How does impedance control differ from pure PD?	Impedance control models the arm as a mass-spring-damper in task space, allowing compliant interaction with surfaces rather than rigid position tracking.
+What is MPC and at what frequency do humanoid teams run it?	Model Predictive Control: at each step, solve a short-horizon trajectory optimization, execute the first action, re-plan. Humanoid balance MPC typically runs at 50-200 Hz.
+What is the robot dynamics equation?	tau = M(q)*ddq + C(q,dq)*dq + g(q): mass matrix times acceleration plus Coriolis-centrifugal plus gravity.
+At what frequency does a PD controller typically run vs a VLA policy?	PD controller: ~1 kHz. VLA policy: 5–30 Hz. The VLA sets targets; the PD closes the torque loop.
+What is the primary textbook for this chapter?	Modern Robotics: Mechanics, Planning, and Control, Kevin Lynch and Frank Park, Cambridge University Press, 2017. Full text and lectures free online.

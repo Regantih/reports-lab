@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 09 · Scaling laws — Kaplan, Chinchilla, and after — From Tokens to Embodied Minds</title>
+<meta name="description" content="Scaling laws are planning tools, not prediction tools. Kaplan said make models bigger. Chinchilla corrected to scale tokens equally. The reasoning era broke both by adding inference-time compute as a third scaling axis.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="09-scaling-laws" data-chapter-title="Scaling laws — Kaplan, Chinchilla, and after">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="09-scaling-laws">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">power law scaling</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">IsoFLOP analysis</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">compute-optimal frontier</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">neural scaling laws</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">token-to-parameter ratio</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">inference-time compute</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">loss vs downstream performance</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="09-scaling-laws" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">What did Kaplan et al. (2020) get wrong about scaling laws that Chinchilla (2022) corrected?</h2>
+  <p class="learn__hint">Think about what each paper held fixed when studying the effect of scale.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-09-scaling-laws" value="a"><span>Kaplan used FP16 training which caused gradient underflow, biasing their loss curves</span></label><label class="predict__choice"><input type="radio" name="predict-09-scaling-laws" value="b"><span>Kaplan held data fixed while scaling parameters, incorrectly concluding that parameters matter more than tokens</span></label><label class="predict__choice"><input type="radio" name="predict-09-scaling-laws" value="c"><span>Kaplan&#x27;s law applied to encoder models but not decoder-only models</span></label><label class="predict__choice"><input type="radio" name="predict-09-scaling-laws" value="d"><span>Kaplan measured perplexity but Chinchilla found that loss and downstream benchmarks diverge at large scale</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">Kaplan et al. (arXiv:2001.08361, January 2020) studied loss as a function of model size while holding training token count roughly fixed. This led to the conclusion that scaling parameters matters more than scaling data — so GPT-3 175B was trained on 300B tokens. Chinchilla (Hoffmann et al., arXiv:2203.15556, March 2022) ran IsoFLOP experiments holding compute fixed and varying the N/D ratio, finding that the Kaplan recipe dramatically underallocated tokens. The compute-optimal ratio is roughly equal scaling of N and D.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 09 of 36</div>
+    <div class="ch-header__num">Chapter 09</div>
+    <h1 class="ch-header__title">Scaling laws — Kaplan, Chinchilla, and after</h1>
+    <p class="ch-header__dek">Compute-optimal models and why the curves keep bending</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Reproduce a small-scale IsoFLOP analysis: train 5 model sizes at matched compute, fit the Chinchilla equation, and identify the compute-optimal model.</li><li>Explain why the compute-optimal model is not always the deployment-optimal model, and quantify the trade-off for a given inference volume.</li><li>Describe how inference-time scaling (o1, DeepSeek-R1, chain-of-thought at test time) breaks the pretraining-only scaling picture.</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">L ∝ N<sup>-0.076</sup></div><div class="stat__label">Kaplan et al. power law — loss as a function of parameter count</div></div><div class="stat"><div class="stat__num">20</div><div class="stat__label">tokens per parameter — Chinchilla&#x27;s compute-optimal training ratio</div></div><div class="stat"><div class="stat__num">3rd</div><div class="stat__label">scaling axis added by o1/DeepSeek-R1 — inference-time (test-time) compute</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="09-scaling-laws">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">State what a scaling law is, what Kaplan got wrong, and what Chinchilla corrected — in under 60 seconds without notes.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Reproduce an IsoFLOP plot: train 5 model sizes × 5 data sizes at matched compute C=1e18 FLOPs, fit a power law to loss vs N and D separately.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A team proposes training a 13B model on 500B tokens as their compute-optimal choice. Challenge or support this decision given their inference workload of 1M queries/day at 2K average context length.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Inference-time scaling (o1, DeepSeek-R1) suggests a third scaling axis. What are the limits of this axis — where does adding more test-time compute stop helping, and why?</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#kaplan-laws">What Kaplan actually found</a></li><li><a href="#chinchilla-isoflop">Chinchilla&#x27;s IsoFLOP correction</a></li><li><a href="#inference-time-scaling">The third scaling axis — inference-time compute</a></li><li><a href="#capstone-link">Scaling laws as planning tools</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">Scaling laws are power-law relationships between model loss and compute, parameter count, or data size. Kaplan et al. (arXiv:2001.08361, January 2020) established the first clean empirical laws on OpenAI's models and drew the conclusion that parameter count matters most. Chinchilla (Hoffmann et al., arXiv:2203.15556, March 2022) ran IsoFLOP experiments — training multiple model sizes at matched compute budgets — and showed that Kaplan's dataset was training-run-biased: they had held data roughly fixed. The corrected compute-optimal recipe is roughly equal scaling of parameters and tokens, producing the Chinchilla 70B model that outperforms GPT-3 175B at one-quarter the inference cost.
+
+Both papers were about pretraining loss. The 2025 reality has introduced a third axis: inference-time compute. o1, DeepSeek-R1, and the chain-of-thought family show that allowing the model to generate intermediate reasoning steps at test time produces quality improvements that no amount of pretraining tokens can substitute for on certain tasks. The clean scaling curves now require a third dimension.</p>
+<h2 id="kaplan-laws">What Kaplan actually found</h2>
+<p>Kaplan et al. (arXiv:2001.08361) fit power laws to loss as a function of N (parameters), D (tokens), and C (compute). The headline results: L(N) ~ N^(-0.076) when D is large, L(D) ~ D^(-0.095) when N is large, and L(C) ~ C^(-0.050). These suggest parameters matter slightly more than data in isolation. The prescriptive implication Kaplan drew: for a fixed compute budget, prioritize a larger model over more data. GPT-3 followed this recipe.</p>
+<p>The error was methodological: Kaplan's training runs were not held at constant compute when varying N. The 'data is fine' conclusion was an artifact of studying model-size curves along paths that did not control for total training tokens. When you hold C constant and vary N/D — the IsoFLOP experiment — the picture inverts. The optimal N/D ratio is roughly 1:20 (20 tokens per parameter), and GPT-3 was running at roughly 1:1.7 — severely undertrained.</p>
+<p>The practical relevance: if you are planning a training run for a custom VLA model on humanoid demonstration data, the Kaplan analysis would suggest maximizing parameter count. The Chinchilla analysis suggests you should instead use a smaller model with more data diversity — which is exactly what SmolVLA-450M's design philosophy reflects.</p>
+<h2 id="chinchilla-isoflop">Chinchilla&#x27;s IsoFLOP correction</h2>
+<p>The IsoFLOP experiment is the methodological contribution. Fix C (training FLOPs), vary N (parameters) from ~70M to ~16B, set D = C / (6N) (the standard FLOP-count approximation for a transformer forward-backward pass). Measure final loss. The resulting U-shaped curve (in loss vs log N) has a clear minimum — the compute-optimal model size. Fitting this across multiple C budgets yields the Chinchilla scaling law: N_opt ~ C^0.5 and D_opt ~ C^0.5.</p>
+<p>The practical implication: at C=1e23 FLOPs (roughly the compute for a frontier model), the compute-optimal model is approximately 70B parameters on 1.4T tokens — not 175B on 300B. Chinchilla 70B achieved lower perplexity than GPT-3 175B on every benchmark tested. The broader lesson: the token budget is not a free parameter — it should scale with the parameter count.</p>
+<h2 id="inference-time-scaling">The third scaling axis — inference-time compute</h2>
+<p>o1 (OpenAI, September 2024) and DeepSeek-R1 (January 2025) demonstrated that allowing the model to generate extended chains of thought at inference time — and to verify, backtrack, and revise — produces quality on mathematical reasoning and code tasks that far exceeds what pretraining alone can achieve. Importantly, this quality scales with the amount of inference compute: longer chain-of-thought sequences consistently improve accuracy on MATH, AIME, and competitive programming benchmarks.</p>
+<p>The limits of test-time scaling are real: it helps on tasks with verifiable correct answers (math, code, formal proofs) and helps much less on open-ended generation, factual recall, and multi-modal tasks where there is no clear checking mechanism. For DealLens deal scoring, inference-time reasoning (chain-of-thought over term sheet clauses) is valuable for edge cases but does not substitute for a well-trained base model on routine classification tasks. For the JHU humanoid, inference-time scaling has no direct analog in real-time control — the policy must act within the latency budget, not extend its thinking time.</p>
+<h2 id="capstone-link">Scaling laws as planning tools</h2>
+<p>For any training run you plan — fine-tuning SmolVLA on humanoid demonstrations, post-training GR00T N1.5 on your task data, or adapting a scoring model for DealLens — scaling laws give you the order-of-magnitude estimates needed to budget compute before running the experiment. A simple IsoFLOP analysis at small scale (5 model sizes, 5 data sizes, C=1e18 FLOPs each) costs under $100 on spot instances and tells you whether to invest in more data or a larger model for your specific task distribution.</p>
+<p>The honest caveat: scaling laws fit to pretraining loss may not predict downstream task performance. The loss-downstream divergence is most pronounced when the evaluation task is far from the pretraining distribution. For domain-specific fine-tuning (humanoid manipulation demonstrations, VC memos), always run small-scale ablations rather than trusting pretraining scaling law extrapolations.</p>
+<div class="aside" data-tone="quartz"><span class="aside__label">Loss vs benchmark scaling diverge</span><p>Scaling laws predict pretraining loss, not downstream benchmark performance. The relationship between loss improvement and task-specific improvement is nonlinear and task-dependent — a 10% perplexity reduction may improve coding 20% and summarization 3%. Run task-specific evals at each scale, not just loss.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="Scaling laws: Kaplan, Chinchilla, and inference-time scaling" fill="none" xmlns="http://www.w3.org/2000/svg"><text x="400" y="26" text-anchor="middle" font-size="14" font-weight="600" fill="var(--color-text)">Scaling Laws — Three Eras, Three Axes</text><rect x="30" y="50" width="220" height="120" rx="8" stroke="var(--color-text-muted)" stroke-width="1.2" fill="var(--color-bg)"/><text x="140" y="75" text-anchor="middle" font-size="12" font-weight="600" fill="var(--color-primary)">Kaplan et al. (2020)</text><text x="50" y="98" font-size="10" fill="var(--color-text-muted)">L ~ N^(-0.076): params dominate</text><text x="50" y="114" font-size="10" fill="var(--color-text-muted)">GPT-3 recipe: scale params,</text><text x="50" y="130" font-size="10" fill="var(--color-text-muted)">data is secondary</text><text x="50" y="155" font-size="10" fill="var(--color-accent-copper)">Error: fixed data, varied params</text><rect x="290" y="50" width="220" height="120" rx="8" stroke="var(--color-accent-copper)" stroke-width="1.4" fill="var(--color-bg)"/><text x="400" y="75" text-anchor="middle" font-size="12" font-weight="600" fill="var(--color-accent-copper)">Chinchilla (2022)</text><text x="310" y="98" font-size="10" fill="var(--color-text-muted)">IsoFLOP: fix C, vary N and D</text><text x="310" y="114" font-size="10" fill="var(--color-text-muted)">N_opt ~ D_opt ~ C^0.5</text><text x="310" y="130" font-size="10" fill="var(--color-text-muted)">~20 tokens per parameter</text><text x="310" y="155" font-size="10" fill="var(--color-accent-copper)">Chinchilla 70B > GPT-3 175B</text><rect x="550" y="50" width="220" height="120" rx="8" stroke="var(--color-accent-euv)" stroke-width="1.4" fill="var(--color-bg)"/><text x="660" y="75" text-anchor="middle" font-size="12" font-weight="600" fill="var(--color-accent-euv)">Reasoning Era (2025)</text><text x="570" y="98" font-size="10" fill="var(--color-text-muted)">3rd axis: test-time compute</text><text x="570" y="114" font-size="10" fill="var(--color-text-muted)">o1, DeepSeek-R1: CoT scales</text><text x="570" y="130" font-size="10" fill="var(--color-text-muted)">reasoning quality at inference</text><text x="570" y="155" font-size="10" fill="var(--color-accent-euv)">Limits: needs verifiable reward</text><text x="400" y="220" text-anchor="middle" font-size="12" fill="var(--color-text-muted)">IsoFLOP curve: U-shape in loss vs log(N) at fixed C → minimum = compute-optimal model size</text><text x="400" y="244" text-anchor="middle" font-size="12" fill="var(--color-text-muted)">Deployment-optimal: smaller model + more tokens → lower serving cost at matched quality</text><text x="400" y="268" text-anchor="middle" font-size="12" fill="var(--color-text-muted)">Llama 3 8B: 15T tokens (~1875 tokens/param) — far beyond Chinchilla-optimal, deployment-optimal</text><text x="400" y="310" text-anchor="middle" font-size="11" fill="var(--color-primary)">Scaling laws are planning tools, not prediction tools — run task-specific evals at each scale</text></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 9.1</span><span class="text">Three eras of scaling law thinking: Kaplan (parameters dominate), Chinchilla (equal N/D scaling), and the 2025 reasoning era (inference-time compute as the third axis). Each corrected a real limitation of the previous.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">Scaling laws are planning tools: Kaplan said parameters dominate, Chinchilla corrected to equal scaling of N and D, and the reasoning era added inference-time compute as a third axis that the original curves did not capture.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://arxiv.org/abs/2203.15556">Training Compute-Optimal Large Language Models (Chinchilla), Hoffmann et al., arXiv:2203.15556 (March 29, 2022)</a></p>
+  <p><strong>Build.</strong> Reproduce a small-scale IsoFLOP analysis: train 5 model sizes × 5 data sizes at matched compute C=1e18 FLOPs, fit the Chinchilla equation, plot the compute-optimal frontier. This is CS336 Assignment 3.</p>
+  <p><strong>Capstone ladder.</strong> Indirect but essential: if you ever defend a training budget for post-training GR00T N1.5 on your own humanoid data, the Chinchilla math is how you justify the parameter-to-token ratio. For DealLens, scaling law analysis determines whether to fine-tune a 7B or 13B model given your memo corpus size.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="09-scaling-laws">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What is the compute-optimal token-to-parameter ratio from Chinchilla, and what was GPT-3&#x27;s actual ratio?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Chinchilla-optimal: ~20 tokens per parameter (D/N ≈ 20). GPT-3 175B was trained on 300B tokens — roughly 1.7 tokens per parameter, ~12x undertrained relative to compute-optimal.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">What methodological error did Kaplan et al. make that caused them to undervalue training data?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Kaplan varied model size without holding training compute constant — their model-size scaling curves implicitly also scaled data somewhat but not proportionally. The IsoFLOP control (fixing C, varying N) was not performed. Chinchilla's IsoFLOP experiment revealed that the optimal N/D ratio is ~1:20, not ~1:1.7 as Kaplan's prescription implied.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">How would you use scaling law analysis to decide between fine-tuning SmolVLA-450M vs building a custom 2B VLA model for the JHU humanoid capstone?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Run IsoFLOP ablations at C=1e17-1e18 FLOPs on a held-out demonstration split: train SmolVLA-450M, 1B, and 2B variants on matched-compute subsets of your demonstration data. Fit the compute-optimal curve. If the optimal model size at your data budget falls below 450M, fine-tune SmolVLA. If it falls above 450M, train a larger model. Factor in inference latency — a 2B model may exceed your Orin AGX latency budget regardless of accuracy.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="09-scaling-laws-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="08-mixture-of-experts.html"><span class="ch-nav-link__label">← Chapter 08</span><span class="ch-nav-link__title">Mixture of Experts</span></a>
+      <a class="ch-nav-link" data-dir="next" href="10-long-context.html"><span class="ch-nav-link__label">Chapter 10 →</span><span class="ch-nav-link__title">Long context — beyond 128K</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

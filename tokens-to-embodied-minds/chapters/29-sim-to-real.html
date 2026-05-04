@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 29 · Sim-to-real and the Isaac stack — From Tokens to Embodied Minds</title>
+<meta name="description" content="Sim-to-real is the central practical problem of robot learning. Isaac Lab + Newton physics engine is the open NVIDIA-DeepMind-Disney stack. GR00T-Dreams generated 6,500 hours of synthetic data in 11 hours from a small real seed. This chapter is the simulation tier of the JHU humanoid capstone.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="29-sim-to-real" data-chapter-title="Sim-to-real and the Isaac stack">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="29-sim-to-real">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">domain randomization</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">system identification</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">sim-to-real gap</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">Isaac Lab</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">Newton physics</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">GR00T-Dreams</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">real-to-sim-to-real</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="29-sim-to-real" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — what is the core mechanism by which domain randomization enables sim-to-real transfer?</h2>
+  <p class="learn__hint">Think about what the policy is forced to learn vs what it can shortcut.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-29-sim-to-real" value="a"><span>The policy memorizes the real-world physics parameters during training and generalizes by interpolation</span></label><label class="predict__choice"><input type="radio" name="predict-29-sim-to-real" value="b"><span>Randomizing simulation parameters across a wide distribution forces the policy to learn behaviors that are robust to the specific parameter values — the real world is one sample from that distribution</span></label><label class="predict__choice"><input type="radio" name="predict-29-sim-to-real" value="c"><span>Domain randomization reduces the sim-to-real gap by making the simulation more photorealistic</span></label><label class="predict__choice"><input type="radio" name="predict-29-sim-to-real" value="d"><span>The policy learns a meta-policy that adapts to identified physics parameters at deployment</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">Domain randomization forces the policy to learn parameter-robust behaviors: if it is trained across friction in [0.3, 1.2], mass in [0.8x, 1.5x], and lighting across 50 textures, it cannot overfit to a single simulator configuration. The real world is just another sample from that distribution — typically within the randomization range if the range is well-designed. The policy never sees real-world physics during training; it just has no choice but to generalize.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 29 of 36</div>
+    <div class="ch-header__num">Chapter 29</div>
+    <h1 class="ch-header__title">Sim-to-real and the Isaac stack</h1>
+    <p class="ch-header__dek">Domain randomization, system ID, and Newton on Warp</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain domain randomization and describe the three parameter axes most commonly randomized for robot manipulation tasks</li><li>Describe the real-to-sim-to-real loop and explain how GR00T-Dreams closes it with synthetic data generation</li><li>Set up Isaac Lab on a GPU, run the Franka arm reach task with PPO, and add domain randomization across friction, mass, and lighting</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">70<em>×</em></div><div class="stat__label">simulation speedup Newton physics engine delivers vs previous NVIDIA sim stack (GTC March 18, 2025)</div></div><div class="stat"><div class="stat__num">6,500<em>hrs</em></div><div class="stat__label">of synthetic training data GR00T-Dreams generated in 11 hours from a real-seed dataset</div></div><div class="stat"><div class="stat__num">47.5<em>%</em></div><div class="stat__label">RoboCasa 30-demo success for GR00T N1.5 — up from 17.4% for N1 — powered by DreamGen synthetic data</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="29-sim-to-real">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. Without looking, define domain randomization and name three parameter axes commonly randomized for robot manipulation.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Set up Isaac Lab on a GPU (workstation or Brev cloud). Run the Franka arm reach task with PPO. Report training throughput in steps/sec.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">Add domain randomization to the Franka task: randomize friction (0.3-1.2), object mass (0.8-1.5x), and lighting (3 textures). Compare sim eval performance vs zero-shot real-robot performance before and after randomization.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Implement a real-to-sim-to-real loop for a custom task: collect 20 real demonstrations, fit simulation parameters via system ID, train in randomized sim, evaluate zero-shot transfer on real hardware. Report transfer gap vs pure-sim baseline.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#domain-randomization">Domain randomization — the core mechanism</a></li><li><a href="#system-id-real-to-sim">System identification and real-to-sim-to-real</a></li><li><a href="#newton-isaac-stack">Isaac Lab and Newton — the open stack</a></li><li><a href="#capstone">Capstone: the simulation tier</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">Sim-to-real transfer is not a solved problem. It is the central engineering challenge of every robot learning system in production. The question is not whether your policy trained in simulation will transfer to the real world — it is how large the performance gap will be and whether you can close it before your deadline. Domain randomization (Tobin et al., arXiv:1703.06907, March 20, 2017) is the primary tool: train the policy across a distribution of physics, lighting, and texture parameters so that the real world is just another sample from that distribution.
+
+NVIDIA's Isaac Sim, Isaac Lab, and the Newton physics engine (NVIDIA GTC, March 18, 2025) are now the open stack for this workflow. Newton on Warp delivers approximately 70x simulation speedup vs previous stacks. GR00T-Dreams demonstrates what this unlocks: 6,500 hours of synthetic humanoid training data generated in 11 hours from a small real-seed dataset — the direct driver of GR00T N1.5's improvement from 17.4% to 47.5% on the RoboCasa 30-demo benchmark.</p>
+<h2 id="domain-randomization">Domain randomization — the core mechanism</h2>
+<p>Domain randomization (Tobin et al., March 2017) addresses the sim-to-real gap by training across a distribution P(xi) of simulator parameters xi rather than a single fixed simulator. If the policy achieves high reward across the full distribution — friction coefficients from 0.3 to 1.2, object masses from 0.8x to 1.5x nominal, 50 different lighting textures and material reflectances — then the specific parameters of the real world, which are one sample from that distribution, should be within the policy's generalization capability. The key engineering question is how wide to make the distribution: too narrow and the real world falls outside; too wide and the task becomes unsolvable (a robot cannot grasp if friction can be arbitrarily low).</p>
+<p>Three parameter axes are most commonly randomized for robot manipulation: physics parameters (friction, damping, mass, moment of inertia), visual parameters (texture, lighting, camera extrinsics), and object pose (initial position/orientation distribution, object shape variation). Isaac Lab's configuration system exposes all of these through Python dataclasses — you specify a distribution for each parameter and the training loop samples from it at episode reset. The Franka arm reach task in Isaac Lab has domain randomization pre-configured as a reference implementation.</p>
+<h2 id="system-id-real-to-sim">System identification and real-to-sim-to-real</h2>
+<p>System identification (system ID) is the complementary approach: instead of randomizing broadly, measure your real robot's actual dynamics and set the simulator to match. Identify friction, damping, motor torque curves, sensor noise from real hardware experiments and fit simulator parameters to minimize the discrepancy between real and simulated trajectories. This narrows the sim-to-real gap at the cost of measurement effort. In practice, most production systems combine both: system ID to center the distribution, domain randomization to widen it appropriately.</p>
+<p>The real-to-sim-to-real loop — collect real data, build or calibrate the sim from it, train in sim, deploy back to real — is the pattern that GR00T-Dreams operationalizes at scale. The NVIDIA pipeline takes real demonstration videos, uses video-to-motion retargeting and scene reconstruction (a 3DGS step) to build a sim-ready task specification, generates millions of synthetic rollouts in Isaac Lab with the Newton engine, and uses those rollouts to post-train GR00T. The result: 6,500 hours of synthetic data generated in 11 hours, driving GR00T N1.5's RoboCasa success from 17.4% to 47.5%.</p>
+<h2 id="newton-isaac-stack">Isaac Lab and Newton — the open stack</h2>
+<p>Isaac Sim is the photorealistic simulation environment (built on NVIDIA Omniverse). Isaac Lab is the robot learning framework on top of it: task definitions, reward functions, domain randomization APIs, and PPO/SAC training loops. Newton (announced at NVIDIA GTC, March 18, 2025) is a new physics engine built in Warp (NVIDIA's GPU-optimized Python DSL) in partnership with DeepMind and Disney Research — replacing the older PhysX stack for robot ML workloads. Newton delivers approximately 70x simulation throughput improvement, making large-scale domain randomization and population-based training feasible on a single 8-GPU node.</p>
+<p>MuJoCo via MJX (JAX-based MuJoCo) is the alternative stack — faster to set up, excellent for research, widely used in academic robot learning. The choice between Isaac Lab (NVIDIA ecosystem, photorealistic, Newton physics) and MuJoCo (lighter, faster iteration, open-source) is primarily driven by whether you need photorealistic rendering and whether you are targeting NVIDIA hardware for deployment. For the JHU humanoid capstone, Isaac Lab is the target for sim training; MuJoCo is acceptable for algorithm development.</p>
+<h2 id="capstone">Capstone: the simulation tier</h2>
+<p>This is the simulation tier of the JHU humanoid capstone. Without it, you collect real robot data forever; with it, you can generate thousands of hours of synthetic demonstrations from a small real seed. The build for this chapter — Isaac Lab + PPO + domain randomization on the Franka arm — is the direct precursor to running GR00T N1.5 post-training on synthetic data from GR00T-Dreams. The capstone uses this pipeline to generate the synthetic manipulation data that supplements the 200-episode LeRobot SO-101 real dataset.</p>
+<div class="aside" data-tone="euv"><span class="aside__label">GR00T-Dreams is not magic</span><p>GR00T-Dreams generates synthetic data by retargeting real demonstrations to sim and augmenting — it requires real seed data. It multiplies real data, not replaces it. The 6,500 hours from 11 hours still starts from human demonstrations.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="Sim-to-real pipeline: domain randomization, Isaac Lab, Newton, GR00T-Dreams"><style>text{font-family:system-ui,sans-serif;font-size:12px;fill:var(--color-text)}.muted{fill:var(--color-text-muted);font-size:10px}.title{font-size:15px;font-weight:600;fill:var(--color-text)}.head{font-size:12px;font-weight:600}</style><text x="400" y="26" text-anchor="middle" class="title">Sim-to-Real Pipeline (Isaac Lab + Newton)</text><rect x="20" y="55" width="140" height="60" rx="5" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.4"/><text x="90" y="78" text-anchor="middle" class="head" fill="var(--color-text)">Real Robot</text><text x="90" y="94" text-anchor="middle" class="muted">20 demonstrations</text><text x="90" y="108" text-anchor="middle" class="muted">System ID</text><rect x="190" y="55" width="160" height="60" rx="5" fill="none" stroke="var(--color-accent-euv)" stroke-width="1.4"/><text x="270" y="75" text-anchor="middle" class="head" fill="var(--color-text)">Isaac Sim / Lab</text><text x="270" y="91" text-anchor="middle" class="muted">Newton physics (~70x)</text><text x="270" y="107" text-anchor="middle" class="muted">Domain randomization</text><rect x="380" y="55" width="160" height="60" rx="5" fill="none" stroke="var(--color-accent-euv)" stroke-width="1.4"/><text x="460" y="75" text-anchor="middle" class="head" fill="var(--color-text)">GR00T-Dreams</text><text x="460" y="91" text-anchor="middle" class="muted">6,500 hrs synthetic</text><text x="460" y="107" text-anchor="middle" class="muted">in 11 hours</text><rect x="570" y="55" width="200" height="60" rx="5" fill="none" stroke="var(--color-primary)" stroke-width="1.8"/><text x="670" y="75" text-anchor="middle" class="head" fill="var(--color-text)">GR00T N1.5 Policy</text><text x="670" y="91" text-anchor="middle" class="muted">17.4% → 47.5% RoboCasa</text><text x="670" y="107" text-anchor="middle" class="muted">(30-demo success)</text><line x1="160" y1="85" x2="188" y2="85" stroke="var(--color-accent-euv)" stroke-width="1.5" marker-end="url(#a3)"/><line x1="350" y1="85" x2="378" y2="85" stroke="var(--color-accent-euv)" stroke-width="1.5" marker-end="url(#a3)"/><line x1="540" y1="85" x2="568" y2="85" stroke="var(--color-primary)" stroke-width="1.5" marker-end="url(#a3)"/><rect x="190" y="180" width="350" height="55" rx="5" fill="none" stroke="var(--color-accent-copper)" stroke-width="1"/><text x="365" y="202" text-anchor="middle" class="muted">Domain Randomization parameters</text><text x="365" y="218" text-anchor="middle" class="muted">Friction [0.3, 1.2] · Mass [0.8x, 1.5x] · Lighting (50 textures)</text><text x="365" y="234" text-anchor="middle" class="muted">Real world = one sample from this distribution</text><line x1="270" y1="180" x2="270" y2="117" stroke="var(--color-accent-copper)" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#a3)"/><rect x="20" y="270" width="740" height="45" rx="5" fill="none" stroke="var(--color-text-muted)" stroke-width="1" stroke-dasharray="4,3"/><text x="400" y="291" text-anchor="middle" class="muted">JHU Capstone: Isaac Lab trains low-level manipulation controller → GR00T-Dreams augments 200-episode LeRobot dataset → GR00T N1.5 post-training</text><text x="400" y="307" text-anchor="middle" class="muted">Without sim-to-real: collect real data forever. With it: 6,500 sim hours from 11 hours of compute.</text><defs><marker id="a3" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><polygon points="0 0,7 3.5,0 7" fill="var(--color-text-muted)"/></marker></defs></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 29.1</span><span class="text">Sim-to-real pipeline using Isaac Lab and Newton. Real demonstrations seed GR00T-Dreams, which generates 6,500 hours of synthetic data in 11 hours. Domain randomization (friction, mass, lighting) forces policy robustness. GR00T N1.5 achieves 47.5% RoboCasa success vs 17.4% for N1 — the direct result of this pipeline.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">Domain randomization forces the policy to be robust to the real world by making it survive every simulated world; the Newton physics engine makes running enough simulated worlds feasible at 70x speedup.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://isaac-sim.github.io/IsaacLab/">Isaac Lab documentation (NVIDIA, current); Newton physics engine announcement, NVIDIA GTC, March 18, 2025</a></p>
+  <p><strong>Build.</strong> Set up Isaac Lab on a workstation or Brev cloud GPU (follow the Isaac Lab quickstart). Run the Franka arm reach task with PPO. Report training throughput in steps/sec. Add domain randomization: friction [0.3, 1.2], object mass [0.8x, 1.5x], two lighting variants. Train to convergence and compare success rate vs non-randomized baseline.</p>
+  <p><strong>Capstone ladder.</strong> The simulation tier of the JHU humanoid capstone. Without Isaac Lab + domain randomization, you collect real robot data forever; with it, GR00T-Dreams gives you 6,500 hours of synthetic data in 11 hours from a small real seed. This build directly precedes GR00T N1.5 post-training in Chapter 33.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="29-sim-to-real">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What three axes of simulation parameters are most commonly randomized for robot manipulation tasks?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">1. Physics parameters: friction coefficients, damping, mass, moment of inertia. 2. Visual parameters: texture, lighting, camera extrinsics. 3. Object configuration: initial pose distribution, object shape variation. Isaac Lab exposes all of these through Python dataclass configuration.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does training across a wide domain randomization distribution help sim-to-real transfer?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">If the policy achieves high reward across the full distribution of simulator parameters, then the real world — whose parameters are fixed but unknown — is likely within the policy's generalization capability. The policy cannot overfit to a single simulator configuration; it must learn behaviors that are robust to the parameter axes being randomized.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">You have 20 real demonstrations of a pick-and-place task. Describe the full real-to-sim-to-real loop you would run to maximize the policy&#x27;s real-world success with the Isaac Lab stack.</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">1. System ID: fit Isaac Lab friction, damping, and mass parameters to minimize trajectory discrepancy between sim and real demos. 2. Domain randomization: widen each parameter distribution around the ID'd values. 3. GR00T-Dreams-style augmentation: retarget real demos to sim, generate synthetic rollouts in Newton/Isaac Lab. 4. PPO training in Isaac Lab on synthetic + augmented data. 5. Zero-shot eval on real hardware. 6. Iterate: collect any failure cases as new real demonstrations, re-run loop.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="29-sim-to-real-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="28-rl-refresher.html"><span class="ch-nav-link__label">← Chapter 28</span><span class="ch-nav-link__title">Reinforcement learning, refreshed</span></a>
+      <a class="ch-nav-link" data-dir="next" href="30-diffusion-policies.html"><span class="ch-nav-link__label">Chapter 30 →</span><span class="ch-nav-link__title">Diffusion policies and action chunking</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

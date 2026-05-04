@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 03 · Backprop, autograd, and the chain rule on GPUs — From Tokens to Embodied Minds</title>
+<meta name="description" content="PyTorch&#x27;s autograd is a tape-based dynamic graph, not a static DAG. Most production training failures root-cause to autograd misuse, not model architecture.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="03-autograd" data-chapter-title="Backprop, autograd, and the chain rule on GPUs">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="03-autograd">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">forward tape construction</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">reverse-mode autodiff</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">VJP (vector-Jacobian product)</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">gradient checkpointing</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">custom backward functions</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">gradient clipping</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">NaN gradient debugging</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="03-autograd" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">What does PyTorch&#x27;s tensor.backward() actually compute — and why is it not the full Jacobian?</h2>
+  <p class="learn__hint">Think about what shape the gradient of a scalar loss with respect to a matrix parameter must be.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-03-autograd" value="a"><span>The full Jacobian matrix of all outputs with respect to all inputs</span></label><label class="predict__choice"><input type="radio" name="predict-03-autograd" value="b"><span>The vector-Jacobian product — gradient of scalar loss times the local Jacobian</span></label><label class="predict__choice"><input type="radio" name="predict-03-autograd" value="c"><span>The Jacobian-vector product using a random tangent vector</span></label><label class="predict__choice"><input type="radio" name="predict-03-autograd" value="d"><span>A finite-difference approximation of the gradient using epsilon perturbations</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">backward() computes the vector-Jacobian product (VJP): grad_input = grad_output @ J, where J is the local Jacobian of the op and grad_output is the upstream gradient (a vector since the loss is scalar). Computing the full Jacobian would cost O(output_dim * input_dim) — impractical for large layers. VJP costs O(input_dim), making it the only tractable choice for deep networks with millions of parameters.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 03 of 36</div>
+    <div class="ch-header__num">Chapter 03</div>
+    <h1 class="ch-header__title">Backprop, autograd, and the chain rule on GPUs</h1>
+    <p class="ch-header__dek">Tape-based dynamic graphs, not static DAGs</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain how PyTorch constructs a dynamic computation graph during the forward pass and traverses it in reverse during backward.</li><li>Derive why gradient checkpointing reduces peak memory from O(depth) to O(sqrt(depth)) at the cost of one extra forward pass.</li><li>Implement a custom fused op with a hand-coded backward pass using torch.autograd.Function and verify correctness with gradcheck.</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">O(1)</div><div class="stat__label">memory overhead for gradient checkpointing vs O(depth)</div></div><div class="stat"><div class="stat__num">2×</div><div class="stat__label">compute cost of gradient checkpointing — recompute forward during backward</div></div><div class="stat"><div class="stat__num">VJP</div><div class="stat__label">vector-Jacobian product — what backward() actually computes</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="03-autograd">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Explain in one paragraph the difference between a dynamic computation graph (PyTorch) and a static computation graph (TensorFlow 1.x, JAX jit).</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Implement gradient checkpointing on a 12-layer transformer using torch.utils.checkpoint and measure peak memory reduction.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A custom CUDA kernel returns NaN gradients on certain inputs but passes the forward pass. Outline the debugging procedure using torch.autograd.gradcheck and torch.autograd.anomaly_mode.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Compare forward-mode autodiff (JVP) vs reverse-mode autodiff (VJP) for a model where the number of inputs is much smaller than the number of outputs. When does forward mode win?</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#tape-mechanics">How the tape works</a></li><li><a href="#checkpointing">Gradient checkpointing — the memory-compute trade</a></li><li><a href="#debugging">Debugging the gradient graph</a></li><li><a href="#capstone-link">Autograd in the humanoid training loop</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">PyTorch's autograd is not a static computation graph that you compile and then execute. It is a tape: every tensor operation during the forward pass records itself onto the tape, and backward() unwinds the tape in reverse, applying the chain rule at each node. This distinction matters because it means the graph is rebuilt every forward pass — which enables dynamic control flow, variable-length sequences, and conditional computation, but also means that any Python-level mistake (detaching a tensor early, calling .numpy() inside a training loop, missing a .retain_grad()) silently corrupts the gradient computation without raising an error.
+
+Most production training failures — NaN losses at step 5000, gradient explosion on long sequences, silent precision loss that manifests as a plateau — root-cause to autograd misuse rather than model architecture. Understanding the tape is the prerequisite for debugging any of them.</p>
+<h2 id="tape-mechanics">How the tape works</h2>
+<p>Every PyTorch tensor that requires a gradient has a grad_fn attribute pointing to the operation that created it. During the forward pass, each operation appends itself to the global autograd graph: it records its inputs, its output, and a backward function that computes the VJP for that operation. When you call loss.backward(), PyTorch traverses this graph in topological reverse order, accumulating gradients into .grad attributes. The tape is discarded after backward() by default — call retain_graph=True only if you genuinely need multiple backward passes through the same graph.</p>
+<p>The key correctness rule: if you detach a tensor from the graph (tensor.detach(), tensor.data, or .numpy()), gradients will not flow through it. This is intentional for frozen layers (LoRA adapters, for instance, freeze the base model by detaching or setting requires_grad=False). It is a bug when you do it accidentally inside a loss computation. The symptom is a zero gradient for all parameters upstream of the detach — the loss still computes to a finite value, which is why the bug is silent.</p>
+<p>Custom backward functions via torch.autograd.Function are the correct way to implement fused ops — ops where you want the forward pass to use a memory-efficient implementation (e.g., FlashAttention tiles activation in SRAM rather than writing the full attention matrix to HBM) while the backward pass uses a separately optimized gradient computation. The backward() method receives the upstream gradient (grad_output) and must return a gradient for each input that requires grad.</p>
+<h2 id="checkpointing">Gradient checkpointing — the memory-compute trade</h2>
+<p>Without checkpointing, the peak memory during a backward pass is proportional to the number of transformer layers, because every intermediate activation from the forward pass must be kept alive until its gradient is computed. For a 70B-parameter model with 80 layers at batch size 4, this is gigabytes of intermediate activations that never leave GPU memory during training. Gradient checkpointing (Chen et al., arXiv:1604.06174, April 2016) breaks this by discarding activations after each forward pass and recomputing them during the backward pass. Peak memory drops from O(depth) to O(sqrt(depth)) with optimal segment placement, at the cost of one additional forward pass per backward — roughly 33% extra compute.</p>
+<p>The PyTorch implementation is torch.utils.checkpoint.checkpoint(function, *inputs). For the JHU humanoid training pipeline, this is the primary knob for fitting GR00T N1.5 fine-tuning into a single A100 80GB — without checkpointing, the DiT activation memory alone exceeds the GPU budget at reasonable batch sizes.</p>
+<p>Selective checkpointing — checkpointing only the attention layers (which dominate activation memory) while preserving FFN activations — recovers most of the memory benefit at lower compute overhead. This is the strategy used in most production training stacks including Megatron-LM and the CS336 training framework.</p>
+<h2 id="debugging">Debugging the gradient graph</h2>
+<p>torch.autograd.gradcheck(func, inputs) numerically verifies that the analytical gradient matches a finite-difference estimate. Run this on every custom backward you write before benchmarking it. The standard workflow: implement the forward pass, implement backward, call gradcheck with dtype=torch.float64 (finite differences need high precision), fix any discrepancies before moving to FP16/BF16. A gradient that passes gradcheck in FP64 but fails in BF16 indicates a numerical precision issue in the backward implementation, not a logical bug.</p>
+<p>torch.autograd.set_detect_anomaly(True) inserts a check after every backward operation that verifies no gradients are NaN or Inf. This adds ~10-20% overhead and should not be left on in production, but is invaluable for localizing the first op that produces a bad gradient. The error message includes the Python stack trace of the forward op that created the offending tensor.</p>
+<h2 id="capstone-link">Autograd in the humanoid training loop</h2>
+<p>For the JHU humanoid capstone, custom backward functions appear in three places: (1) the FlashAttention kernel in the VLM backbone, which recomputes the Q, K, V from stored inputs rather than storing the full attention matrix; (2) any learned reward shaping you add to the RL loop in Isaac Lab, where the reward must be differentiable if you use gradient-based policy optimization; (3) the FLARE action loss in GR00T N1.5 training, which is a flow-matching loss that requires differentiating through the denoising process.</p>
+<p>For DealLens, the autograd connection is less direct but still relevant: if you fine-tune a scoring head on top of a frozen LLM backbone, you must verify that requires_grad=False is correctly set on all base model parameters before the first optimizer step. A missed requires_grad on even one base layer parameter will cause that layer's gradient to accumulate, silently wasting memory and corrupting the optimizer state.</p>
+<div class="aside" data-tone="primary"><span class="aside__label">When to use torch.compile vs custom autograd</span><p>torch.compile (PyTorch 2.0+) fuses ops automatically via Triton and is the right first choice. Use custom torch.autograd.Function only when you need a numerically different backward pass — as in FlashAttention — not merely a faster one.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="PyTorch autograd tape: forward and backward pass" fill="none" xmlns="http://www.w3.org/2000/svg"><text x="400" y="26" text-anchor="middle" font-size="14" font-weight="600" fill="var(--color-text)">PyTorch Autograd — Tape Construction and Reversal</text><text x="60" y="70" font-size="12" font-weight="600" fill="var(--color-accent-euv)">FORWARD (tape records)</text><rect x="50" y="82" width="90" height="40" rx="5" stroke="var(--color-primary)" stroke-width="1.4" fill="var(--color-bg)"/><text x="95" y="107" text-anchor="middle" font-size="11" fill="var(--color-primary)">Input x</text><rect x="180" y="82" width="90" height="40" rx="5" stroke="var(--color-primary)" stroke-width="1.4" fill="var(--color-bg)"/><text x="225" y="107" text-anchor="middle" font-size="11" fill="var(--color-primary)">Linear</text><rect x="310" y="82" width="90" height="40" rx="5" stroke="var(--color-primary)" stroke-width="1.4" fill="var(--color-bg)"/><text x="355" y="107" text-anchor="middle" font-size="11" fill="var(--color-primary)">RMSNorm</text><rect x="440" y="82" width="90" height="40" rx="5" stroke="var(--color-primary)" stroke-width="1.4" fill="var(--color-bg)"/><text x="485" y="107" text-anchor="middle" font-size="11" fill="var(--color-primary)">Softmax</text><rect x="570" y="82" width="90" height="40" rx="5" stroke="var(--color-accent-copper)" stroke-width="1.4" fill="var(--color-bg)"/><text x="615" y="107" text-anchor="middle" font-size="11" fill="var(--color-accent-copper)">Loss</text><line x1="140" y1="102" x2="180" y2="102" stroke="var(--color-text-muted)" stroke-width="1.2"/><line x1="270" y1="102" x2="310" y2="102" stroke="var(--color-text-muted)" stroke-width="1.2"/><line x1="400" y1="102" x2="440" y2="102" stroke="var(--color-text-muted)" stroke-width="1.2"/><line x1="530" y1="102" x2="570" y2="102" stroke="var(--color-text-muted)" stroke-width="1.2"/><text x="60" y="190" font-size="12" font-weight="600" fill="var(--color-accent-euv)">BACKWARD (tape unwinds — VJPs)</text><rect x="570" y="202" width="90" height="40" rx="5" stroke="var(--color-accent-euv)" stroke-width="1.4" fill="var(--color-bg)"/><text x="615" y="227" text-anchor="middle" font-size="11" fill="var(--color-accent-euv)">dL/dLoss</text><rect x="440" y="202" width="90" height="40" rx="5" stroke="var(--color-accent-euv)" stroke-width="1.4" fill="var(--color-bg)"/><text x="485" y="227" text-anchor="middle" font-size="11" fill="var(--color-accent-euv)">dL/dSoftmax</text><rect x="310" y="202" width="90" height="40" rx="5" stroke="var(--color-accent-euv)" stroke-width="1.4" fill="var(--color-bg)"/><text x="355" y="227" text-anchor="middle" font-size="11" fill="var(--color-accent-euv)">dL/dNorm</text><rect x="180" y="202" width="90" height="40" rx="5" stroke="var(--color-accent-euv)" stroke-width="1.4" fill="var(--color-bg)"/><text x="225" y="227" text-anchor="middle" font-size="11" fill="var(--color-accent-euv)">dL/dW</text><line x1="570" y1="222" x2="530" y2="222" stroke="var(--color-accent-euv)" stroke-width="1.2"/><line x1="440" y1="222" x2="400" y2="222" stroke="var(--color-accent-euv)" stroke-width="1.2"/><line x1="310" y1="222" x2="270" y2="222" stroke="var(--color-accent-euv)" stroke-width="1.2"/><text x="400" y="300" text-anchor="middle" font-size="12" fill="var(--color-text-muted)">Gradient checkpointing: discard activations after forward · recompute during backward · O(sqrt(depth)) peak memory</text><text x="400" y="320" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">Custom ops: implement torch.autograd.Function · verify with gradcheck(dtype=float64) before BF16/FP16</text></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 3.1</span><span class="text">The PyTorch tape records ops during the forward pass; backward() unwinds it in reverse, applying VJPs to accumulate gradients. Gradient checkpointing reduces peak memory by discarding and recomputing activations.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">PyTorch autograd is a tape-based dynamic graph that records every operation during the forward pass and unwinds them in reverse — most training failures root-cause to misuse of this tape, not to model architecture.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://docs.pytorch.org/docs/stable/notes/autograd.html">PyTorch Autograd Mechanics (official documentation, current)</a></p>
+  <p><strong>Build.</strong> Reproduce Karpathy&#x27;s micrograd (~150 lines) from scratch, then extend with a custom fused gelu_dropout op with a hand-coded backward pass, and verify gradient correctness against torch.autograd.gradcheck.</p>
+  <p><strong>Capstone ladder.</strong> Required to debug any custom loss in the JHU humanoid pipeline — FLARE action loss, learned reward shaping in Isaac Lab, FlashAttention backward. For DealLens, critical when fine-tuning a scoring head on a frozen LLM backbone where a missed requires_grad silently corrupts training.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="03-autograd">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What does PyTorch&#x27;s backward() actually compute, and why does it not compute the full Jacobian?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">backward() computes the vector-Jacobian product (VJP): grad_input = grad_output @ J. Computing the full Jacobian would cost O(output_dim * input_dim). Since the loss is scalar, grad_output is a vector and the VJP costs O(input_dim) — the only tractable choice for large networks.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does gradient checkpointing reduce peak memory from O(depth) to O(sqrt(depth))?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">By discarding intermediate activations and recomputing them during backward. With optimal checkpoint placement at every sqrt(depth)-th layer, at most sqrt(depth) layers' activations are live at any time. The cost is one additional forward pass per backward — roughly 33% extra compute.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">In GR00T N1.5 fine-tuning on a single A100, what checkpointing strategy minimizes memory while preserving reasonable throughput?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Selective checkpointing on attention layers only (which dominate activation memory at long sequence lengths), with FFN activations preserved. This captures most of the memory benefit at lower recompute cost than full checkpointing. Set torch.utils.checkpoint.checkpoint_every_n_steps=2 as a starting point and tune based on memory profiler output.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="03-autograd-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="02-probability-entropy-kl.html"><span class="ch-nav-link__label">← Chapter 02</span><span class="ch-nav-link__title">Probability, entropy, KL</span></a>
+      <a class="ch-nav-link" data-dir="next" href="04-attention-from-scratch.html"><span class="ch-nav-link__label">Chapter 04 →</span><span class="ch-nav-link__title">Attention from scratch</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

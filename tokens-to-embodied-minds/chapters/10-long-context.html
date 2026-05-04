@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 10 · Long context — beyond 128K — From Tokens to Embodied Minds</title>
+<meta name="description" content="Every 1M-token model that ships still degrades at needle-in-a-haystack on real documents outside its training distribution. Long context without retrieval discipline is theatre.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="10-long-context" data-chapter-title="Long context — beyond 128K">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="10-long-context">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">RoPE base frequency</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">YaRN NTK-aware scaling</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">position interpolation</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">ring attention</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">KV-cache memory wall</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">needle-in-haystack eval</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">retrieval vs context</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="10-long-context" data-answer-key="c">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">A model trained with RoPE at base frequency 10000 and context length 4096 is extended to 32768 tokens via position interpolation. What is the primary failure mode?</h2>
+  <p class="learn__hint">Position interpolation changes the spacing between position indices — think about what this does to the attention pattern learned during training.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-10-long-context" value="a"><span>The model generates NaN outputs because rotary matrices become singular at long positions</span></label><label class="predict__choice"><input type="radio" name="predict-10-long-context" value="b"><span>The model performs well on retrieval at all positions because RoPE encodes relative position</span></label><label class="predict__choice"><input type="radio" name="predict-10-long-context" value="c"><span>The model degrades at long-range retrieval because interpolated positions compress the resolution of the learned attention patterns</span></label><label class="predict__choice"><input type="radio" name="predict-10-long-context" value="d"><span>The model loses all short-range attention because interpolation shifts position indices below their training range</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">Position interpolation (Chen et al., arXiv:2306.15595, June 2023) scales position indices by L_new/L_orig so they fit within the trained range. For a 4K→32K extension, each unit of relative distance becomes 8x smaller in the position space. The learned attention patterns — which were trained to pay attention to relationships at specific relative positions — now see those relationships at compressed positions. This degrades long-range retrieval because the model cannot distinguish position 8000 from 16000 as clearly. YaRN and NTK-aware scaling mitigate this by selectively adjusting high-frequency components.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 10 of 36</div>
+    <div class="ch-header__num">Chapter 10</div>
+    <h1 class="ch-header__title">Long context — beyond 128K</h1>
+    <p class="ch-header__dek">RoPE scaling, ring attention, and the memory wall</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Implement RoPE and YaRN NTK-aware scaling on a 1024-context model, extend it to 8192 tokens, and run a needle-in-a-haystack eval at 4K and 8K.</li><li>Explain why ring attention makes million-token training tractable and what its communication complexity is.</li><li>Distinguish context extension via RoPE scaling from native long-context training and describe when each should be used.</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">128K</div><div class="stat__label">context tokens — where most production models actually work reliably today</div></div><div class="stat"><div class="stat__num">2×</div><div class="stat__label">KV-cache memory doubles for every 2× context length increase</div></div><div class="stat"><div class="stat__num">NTK</div><div class="stat__label">the RoPE scaling method that enables context extension without full retraining</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="10-long-context">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Explain why naive position interpolation for context extension degrades long-range retrieval accuracy.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Implement YaRN on a 1024-context model and extend to 8192 tokens without any fine-tuning. Run needle-in-a-haystack at 4K and 8K and report where it breaks.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A deployed model shows strong retrieval within 32K tokens but fails on a needle-in-a-haystack eval at 50K. Propose an intervention that does not require full retraining.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Ring attention (Liu et al., 2023) enables million-token sequences by sharding the sequence across GPUs. Compute its communication complexity per step and compare it to context parallelism in Megatron-LM.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#rope-extension">RoPE extension — YaRN and NTK scaling</a></li><li><a href="#ring-attention">Ring attention — sharding the sequence</a></li><li><a href="#memory-wall">The KV-cache memory wall</a></li><li><a href="#retrieval-vs-context">Retrieval vs context — the right tool for each job</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">RoPE (Su et al., arXiv:2104.09864, April 2021) made long-context models possible by encoding position as a rotation in the Q and K space, allowing the dot product to depend only on relative position. YaRN (Peng et al., arXiv:2309.00071, November 2023) extended this with NTK-aware scaling — adjusting the rotation base frequency selectively for different attention head dimensions — to reach 128K tokens without full retraining. Ring attention (Liu et al., arXiv:2310.01889, October 2023) shards the sequence across GPUs to make million-token training tractable.
+
+The honest assessment: every model claiming 1M or more context tokens still degrades measurably on needle-in-a-haystack evals at 500K+ on real documents outside the training distribution. The capability exists; the reliability does not. Long context is not a substitute for retrieval discipline — it is a complement. For DealLens, this is the architectural decision that determines your serving cost: a 128K-context model that handles most VC memos natively costs 4× more in KV-cache than a 32K model paired with a strong retriever.</p>
+<h2 id="rope-extension">RoPE extension — YaRN and NTK scaling</h2>
+<p>Standard RoPE applies rotation matrices to Q and K with frequency base b=10000: position m is encoded by rotating by angle m/(b^(2i/d)) for each dimension pair i. Higher-frequency components (small i) encode fine-grained relative position; lower-frequency components (large i) encode coarse structure. Extending the context beyond training length causes the high-frequency components to see position values they were never trained on, degrading retrieval precision at long range.</p>
+<p>Position interpolation (Chen et al., arXiv:2306.15595, June 2023) rescales positions by L_train/L_new — compressing the position space so the model stays within its trained range. This works for mild extensions (2-4x) but degrades at 8x+ because the resolution loss for high-frequency components is too large. YaRN/NTK-aware scaling (Peng et al., arXiv:2309.00071, November 2023) selectively scales only the low-frequency RoPE dimensions while leaving high-frequency ones at or near their trained resolution, recovering precision at long distances.</p>
+<p>For DealLens, the practical implication: a Llama 3 70B model extended from 8K to 128K via YaRN will reliably retrieve content within the first 32K tokens but may degrade for content past 64K. For memos up to 50K tokens (a typical 10-page VC memo with appendices), 128K context is reliable. For 200K+ token due-diligence packages, hybrid retrieval (VectorDB for first-pass, then native context for final synthesis) is the more reliable architecture.</p>
+<h2 id="ring-attention">Ring attention — sharding the sequence</h2>
+<p>Ring attention (Liu et al., arXiv:2310.01889, October 2023) shards the input sequence across N GPUs, each holding a contiguous chunk. During attention computation, each GPU computes the local QK^T for its chunk's queries against all keys, communicating key and value shards in a ring pattern — each GPU sends its K, V to the next while simultaneously receiving from the previous. After N steps, each GPU has computed its full attention output against all sequence positions. The communication complexity is O(N * seq/N * d_model) = O(seq * d_model) per step — the same order as a single matmul, making ring attention communication-compute balanced at high GPU counts.</p>
+<p>The practical consequence: million-token training is now feasible with ring attention on 64-128 H100 GPUs. Google and Meta both use variants of sequence parallelism for their long-context training runs. For the JHU humanoid capstone, ring attention is not relevant to inference (the VLA runs on-robot, not on a cluster) — but it is relevant if you want to train a custom long-context VLM that processes multi-camera, multi-frame visual histories.</p>
+<h2 id="memory-wall">The KV-cache memory wall</h2>
+<p>KV-cache memory scales linearly with context length: bytes = 2 * num_layers * num_kv_heads * head_dim * seq_len * dtype_bytes. For Llama 3 70B at BF16 with GQA G=8: 2 * 80 * 8 * 128 * seq * 2 = 327,680 * seq bytes. At seq=128K, that is ~42 GB — more than half an A100 80GB. At seq=1M, it is 327 GB — exceeding a single DGX H100's HBM. This is the memory wall that makes serving 1M-token models expensive regardless of context quality.</p>
+<p>The mitigation strategies: (1) quantize the KV-cache to INT8 or FP8 — 2x memory reduction with negligible quality loss, (2) layer-wise KV-cache dropping (discard KVs from earlier layers after a threshold), (3) PagedAttention (vLLM) virtualizes the KV-cache into variable-size pages to reduce fragmentation, (4) speculative decoding reduces the number of decoding steps, reducing per-query KV-cache duration. For DealLens at 128K context, KV-cache INT8 quantization is the first intervention — it halves serving cost with essentially zero quality impact.</p>
+<h2 id="retrieval-vs-context">Retrieval vs context — the right tool for each job</h2>
+<p>Long context and retrieval solve different problems. Long context excels at tasks requiring reasoning over a complete document (e.g., reading a 100-page due-diligence package and synthesizing a memo) — tasks where the retriever's chunking would destroy the semantic continuity needed for the answer. Retrieval excels at tasks requiring lookup from a large corpus (e.g., finding the three most relevant precedent deals from 10K historical memos) — tasks where no single context window can hold the full corpus.</p>
+<p>The correct architecture for DealLens is hybrid: a vector retriever (BM25 + dense) for first-pass candidate selection across 10K+ memos, followed by native-context reading of the top 5-10 retrieved documents (32K tokens each) for synthesis. Running all 10K memos through a 128K-context model directly is 1000x more expensive and retrieves no additional quality from documents ranked below the top 10. Chapter 20 (Advanced RAG and evals) covers the retrieval side in depth.</p>
+<div class="aside" data-tone="euv"><span class="aside__label">Long context is not free recall</span><p>Models trained at 128K tokens do not uniformly retrieve information from the full context. The 'lost in the middle' phenomenon (Liu et al., 2023) shows that retrieval accuracy is highest at the beginning and end of the context window and lowest in the middle. Designing inputs to exploit this matters.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="RoPE scaling and KV-cache memory wall" fill="none" xmlns="http://www.w3.org/2000/svg"><text x="400" y="26" text-anchor="middle" font-size="14" font-weight="600" fill="var(--color-text)">Long Context — RoPE Extensions and the KV-Cache Memory Wall</text><rect x="30" y="50" width="340" height="130" rx="8" stroke="var(--color-primary)" stroke-width="1.4" fill="var(--color-bg)"/><text x="200" y="74" text-anchor="middle" font-size="12" font-weight="600" fill="var(--color-primary)">RoPE Extension Methods</text><text x="50" y="98" font-size="11" fill="var(--color-text-muted)">Base RoPE (Su et al. 2021): rotation angle = m / b^(2i/d)</text><text x="50" y="118" font-size="11" fill="var(--color-accent-euv)">Position Interp: scale m by L_train/L_new — compresses all dims</text><text x="50" y="138" font-size="11" fill="var(--color-accent-copper)">YaRN/NTK (Nov 2023): scale low-freq dims only, preserve high-freq</text><text x="50" y="158" font-size="11" fill="var(--color-primary)">Native long-context training: most reliable but expensive</text><rect x="390" y="50" width="380" height="130" rx="8" stroke="var(--color-accent-copper)" stroke-width="1.4" fill="var(--color-bg)"/><text x="580" y="74" text-anchor="middle" font-size="12" font-weight="600" fill="var(--color-accent-copper)">KV-Cache Memory (Llama-3-70B BF16 GQA G=8)</text><text x="410" y="98" font-size="11" fill="var(--color-text-muted)">4K context:   ~1.3 GB</text><text x="410" y="118" font-size="11" fill="var(--color-text-muted)">32K context:  ~10.5 GB</text><text x="410" y="138" font-size="11" fill="var(--color-accent-euv)">128K context: ~42 GB  (>50% of A100 80GB)</text><text x="410" y="158" font-size="11" fill="var(--color-accent-copper)">1M context:   ~327 GB (exceeds single DGX H100)</text><rect x="200" y="215" width="400" height="80" rx="8" stroke="var(--color-accent-euv)" stroke-width="1.4" stroke-dasharray="5 3" fill="var(--color-bg)"/><text x="400" y="240" text-anchor="middle" font-size="12" font-weight="600" fill="var(--color-accent-euv)">DealLens Architecture Decision</text><text x="400" y="260" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">10K+ memos: BM25 + dense retrieval → top 10 candidates</text><text x="400" y="278" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">128K native context for synthesis → 1000x cheaper than full-corpus context</text><text x="400" y="325" text-anchor="middle" font-size="11" fill="var(--color-primary)">Ring attention: sequence sharded across GPUs · O(seq·d_model) comm/step · enables 1M-token training</text></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 10.1</span><span class="text">RoPE extension methods (base, interpolation, YaRN) and the KV-cache memory wall for Llama 3 70B at increasing context lengths. The hybrid retrieval + native context architecture reduces DealLens serving cost by ~1000x over full-corpus long context.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">RoPE scaling and ring attention make long context technically possible, but the memory wall and retrieval degradation mean that hybrid retrieval plus native context is almost always more cost-effective than pure long context.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://arxiv.org/abs/2104.09864">RoFormer: Enhanced Transformer with Rotary Position Embedding, Su et al., arXiv:2104.09864 (April 2021)</a></p>
+  <p><strong>Build.</strong> Implement RoPE and YaRN NTK-aware scaling on a 1024-context model, extend to 8192 tokens without fine-tuning, and run needle-in-a-haystack at 4K and 8K. Document where retrieval accuracy degrades.</p>
+  <p><strong>Capstone ladder.</strong> Direct DealLens dependency — VC memos are 50K+ tokens, and the choice between 128K native context vs hybrid retrieval determines serving cost by 4-10x. For the JHU humanoid, relevant for multi-camera long-horizon task planning, not for per-step policy inference.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="10-long-context">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What does YaRN&#x27;s NTK-aware scaling do differently from naive position interpolation?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">YaRN selectively scales only the low-frequency RoPE dimensions (which encode coarse, long-range position) while leaving high-frequency dimensions at or near their trained resolution. Naive interpolation scales all dimensions equally, compressing high-frequency precision and degrading short-range retrieval accuracy.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does ring attention enable million-token training, and what is its communication pattern?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Ring attention shards the sequence across N GPUs, each holding a chunk. Keys and values circulate in a ring — each GPU sends to the next while receiving from the previous. After N communication steps, each GPU has attended to all sequence positions. Communication complexity is O(seq * d_model) per step — same order as a single attention matmul.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">For DealLens processing a 200-page due-diligence package (estimated 200K tokens), what architecture minimizes serving cost while maintaining synthesis quality?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Hybrid: first-pass BM25 + dense retrieval to identify the 10-20 most relevant sections (~50K tokens total), then native 128K-context reading of those sections for synthesis. Serving cost is ~4x lower than full 200K context, and quality is typically equivalent since the retriever correctly identifies the critical sections in >90% of queries.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="10-long-context-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="09-scaling-laws.html"><span class="ch-nav-link__label">← Chapter 09</span><span class="ch-nav-link__title">Scaling laws — Kaplan, Chinchilla, and after</span></a>
+      <a class="ch-nav-link" data-dir="next" href="11-quantization.html"><span class="ch-nav-link__label">Chapter 11 →</span><span class="ch-nav-link__title">Quantization, distillation, pruning</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

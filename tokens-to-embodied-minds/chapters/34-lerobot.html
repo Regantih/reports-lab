@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 34 · Hugging Face LeRobot and the open robotics stack — From Tokens to Embodied Minds</title>
+<meta name="description" content="LeRobot is the PyTorch of robotics: standardized datasets, a unified policy API (ACT, Diffusion Policy, SmolVLA, OpenVLA), and the SO-101 affordable arm at $110-150 BOM. The lerobot-record and lerobot-train CLIs are the production loop. This is the fastest path to real VLA data.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="34-lerobot" data-chapter-title="Hugging Face LeRobot and the open robotics stack">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="34-lerobot">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">SO-101 hardware</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">lerobot-record</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">lerobot-train</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">LeRobot dataset format</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">ACT policy</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">SmolVLA pretraining</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">HuggingFace Hub dataset</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="34-lerobot" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — SmolVLA&#x27;s community pretraining on LeRobot Hub datasets achieved 78.3% real-world success. What property of the LeRobot dataset format makes this possible?</h2>
+  <p class="learn__hint">Think about what makes it possible to aggregate datasets from hundreds of different contributors into a single pretraining corpus.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-34-lerobot" value="a"><span>All LeRobot datasets use the same robot hardware, so the observation and action spaces are identical</span></label><label class="predict__choice"><input type="radio" name="predict-34-lerobot" value="b"><span>LeRobot uses a standardized observation/action schema with parquet storage and HF Hub versioning, allowing datasets from different robots and contributors to be aggregated into a unified pretraining corpus</span></label><label class="predict__choice"><input type="radio" name="predict-34-lerobot" value="c"><span>LeRobot normalizes all actions to a canonical 7-DoF space before storage, enabling cross-embodiment training</span></label><label class="predict__choice"><input type="radio" name="predict-34-lerobot" value="d"><span>SmolVLA&#x27;s pretraining only uses datasets from the SO-101 arm, which are all in the same format by construction</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">LeRobot's standardized observation/action schema (camera observations in a fixed format, actions as joint positions or end-effector deltas, task metadata in a canonical schema) stored as versioned parquet files on HuggingFace Hub is what makes community-contributed datasets aggregatable. Any contributor who uploads a dataset in the LeRobot format contributes to the community pretraining pool that SmolVLA trained on. This is directly analogous to how HuggingFace Hub enabled community-contributed model weights and datasets for NLP.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 34 of 36</div>
+    <div class="ch-header__num">Chapter 34</div>
+    <h1 class="ch-header__title">Hugging Face LeRobot and the open robotics stack</h1>
+    <p class="ch-header__dek">The community-grade equivalent of Isaac Lab</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Describe the LeRobot dataset format and explain why standardized parquet-backed datasets on HF Hub enable community pretraining (as in SmolVLA)</li><li>Use lerobot-record and lerobot-train to record a 50-episode dataset and train ACT, Diffusion Policy, and SmolVLA on the same data</li><li>Compare task success rates of ACT vs Diffusion Policy vs SmolVLA on identical data and explain the performance ordering</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">$110–150</div><div class="stat__label">SO-101 arm BOM — fully open hardware spec, the lowest-cost path to real robot manipulation data</div></div><div class="stat"><div class="stat__num">lerobot-train</div><div class="stat__label">CLI command — unified training loop for ACT, Diffusion Policy, SmolVLA, OpenVLA on any LeRobot dataset</div></div><div class="stat"><div class="stat__num">HF Hub</div><div class="stat__label">every LeRobot dataset is versioned, queryable, parquet-backed — the data discipline that makes community pretraining possible</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="34-lerobot">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. Without looking, describe the LeRobot dataset format and name three policies available in the unified policy API.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Build or buy an SO-101 arm. Record a 50-episode 'sort blocks by color' dataset with lerobot-record. Verify the dataset uploads correctly to HF Hub.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">Train ACT, Diffusion Policy, and SmolVLA on the same 50-episode dataset using lerobot-train. Compare success rates on 10 evaluation episodes. Report training time and GPU memory for each.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Contribute your 50-episode dataset to HF Hub under your username. Verify it appears in the LeRobot dataset search. Post-train SmolVLA on the combined community + your dataset and measure the improvement from community pretraining.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#dataset-format">The LeRobot dataset format</a></li><li><a href="#policy-api">The unified policy API</a></li><li><a href="#data-discipline">Data discipline — the underrated part</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">LeRobot (Hugging Face) is to robotics what PyTorch is to deep learning: a standardized stack that makes it possible for one person to go from zero to a fine-tuned VLA policy on real hardware in a weekend. The components: standardized datasets on HuggingFace Hub (every dataset a versioned, queryable, parquet-backed object), a unified policy API (ACT, Diffusion Policy, π0, SmolVLA, and OpenVLA all interchangeable via the same CLI), and the SO-100/SO-101 arm (fully open hardware spec, $110-150 bill of materials, servo-driven, six degrees of freedom).
+
+The lerobot-record and lerobot-train commands are the production loop. This is the open-source counterweight to the closed industrial stacks (Isaac Lab for simulation, GR00T for the policy) — and the fastest path for one person to collect real manipulation data, train a VLA, and deploy it on hardware they built. For the JHU humanoid capstone, LeRobot is the data infrastructure regardless of which policy you use.</p>
+<h2 id="dataset-format">The LeRobot dataset format</h2>
+<p>A LeRobot dataset is a HuggingFace Hub repository containing: one parquet file per episode (observation frames, action sequences, task metadata), a dataset card with hardware and task description, and a standardized schema that specifies observation keys (observation.images.top, observation.images.wrist, observation.state) and action keys (action as joint positions or end-effector deltas). The schema is flexible enough to accommodate different hardware (SO-101, WidowX, Franka, custom arms) while enforcing enough structure that datasets from different sources can be used together.</p>
+<p>SmolVLA's community pretraining is the proof: Hugging Face aggregated hundreds of contributor datasets from HF Hub, all in the LeRobot format, into a single pretraining corpus. A researcher in Tokyo who uploads a 30-episode SO-101 plate-stacking dataset contributes to SmolVLA's pretrained capabilities globally. The versioning (every dataset is immutable once uploaded, with semantic versioning for updates) makes this reproducible — you can always trace which exact dataset version was used in any training run.</p>
+<h2 id="policy-api">The unified policy API</h2>
+<p>LeRobot's policy API makes ACT, Diffusion Policy, SmolVLA, and OpenVLA interchangeable: lerobot-train --policy smolvla vs lerobot-train --policy act vs lerobot-train --policy diffusion. The same dataset, the same evaluation loop, the same CLI. This is significant for the capstone: you can run a principled ablation over policies on identical data — 50 episodes, 10 evaluation trials — without writing any training code. The comparison that matters for the capstone decision is ACT (deterministic transformer, fast inference) vs Diffusion Policy (multimodal, slower inference) vs SmolVLA (VLM-conditioned, language-instructable). SmolVLA will typically win on tasks that require language instructions or generalization to new objects; ACT will often win on precision motor tasks with consistent demonstrations.</p>
+<p>The SO-100/SO-101 arm hardware: six servo-driven joints, open Fusion 360 CAD files, 3D-printable components, $110-150 bill of materials. The teleoperation controller (a leader arm or a SpaceMouse) connects via USB; lerobot-record handles the data collection, time-synchronization, and HF Hub upload. Building one takes 8-12 hours; buying a kit is available from several vendors in the LeRobot community.</p>
+<h2 id="data-discipline">Data discipline — the underrated part</h2>
+<p>The most important thing LeRobot teaches is data discipline. The temptation when recording manipulation demos is to collect 'enough' episodes without measuring quality. LeRobot's dataset card forces you to document: hardware, task description, success definition, failure modes, and per-episode success labels. The per-episode success labels are critical — training a policy on failed demonstrations (where the human recovered from a mistake) is a common source of policy confusion. The lerobot-record CLI includes a real-time visualization that lets you label each episode before uploading.</p>
+<p>For the JHU humanoid capstone, the LeRobot dataset of 200 SO-101 manipulation episodes is one of the public output artifacts. It should be uploaded to HF Hub under your username, documented with a detailed dataset card, and verified against the LeRobot schema validator before use in training. This dataset is both a training artifact and a public portfolio piece — the data quality discipline is visible to anyone who downloads and examines it.</p>
+<div class="aside" data-tone="plasma"><span class="aside__label">On SO-101 vs a humanoid platform</span><p>The SO-101 is a tabletop arm, not a humanoid. For the full JHU capstone (mobile humanoid), you will need to adapt the LeRobot data collection pipeline to your specific hardware. The dataset format and training CLI transfer directly; the hardware interface requires writing a custom LeRobot robot class.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="LeRobot stack: SO-101 hardware, lerobot-record, HF Hub dataset, lerobot-train, policy comparison"><style>text{font-family:system-ui,sans-serif;font-size:12px;fill:var(--color-text)}.muted{fill:var(--color-text-muted);font-size:10px}.title{font-size:15px;font-weight:600;fill:var(--color-text)}.head{font-size:12px;font-weight:600}</style><text x="400" y="26" text-anchor="middle" class="title">LeRobot Production Loop</text><rect x="20" y="55" width="130" height="70" rx="5" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.4"/><text x="85" y="78" text-anchor="middle" class="head" fill="var(--color-text)">SO-101 Arm</text><text x="85" y="95" text-anchor="middle" class="muted">$110–150 BOM</text><text x="85" y="112" text-anchor="middle" class="muted">Open hardware</text><rect x="180" y="55" width="160" height="70" rx="5" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.4"/><text x="260" y="78" text-anchor="middle" class="head" fill="var(--color-text)">lerobot-record</text><text x="260" y="95" text-anchor="middle" class="muted">Teleoperate + label</text><text x="260" y="112" text-anchor="middle" class="muted">50-200 episodes</text><rect x="370" y="55" width="160" height="70" rx="5" fill="none" stroke="var(--color-primary)" stroke-width="1.5"/><text x="450" y="75" text-anchor="middle" class="head" fill="var(--color-text)">HF Hub Dataset</text><text x="450" y="91" text-anchor="middle" class="muted">Parquet, versioned</text><text x="450" y="107" text-anchor="middle" class="muted">Standard schema</text><text x="450" y="120" text-anchor="middle" class="muted">Community aggregation</text><rect x="560" y="55" width="220" height="70" rx="5" fill="none" stroke="var(--color-primary)" stroke-width="1.8"/><text x="670" y="75" text-anchor="middle" class="head" fill="var(--color-text)">lerobot-train</text><text x="670" y="91" text-anchor="middle" class="muted">--policy act / diffusion / smolvla</text><text x="670" y="107" text-anchor="middle" class="muted">Same CLI, same eval loop</text><text x="670" y="120" text-anchor="middle" class="muted">Interchangeable policies</text><line x1="150" y1="90" x2="178" y2="90" stroke="var(--color-accent-copper)" stroke-width="1.5" marker-end="url(#a7)"/><line x1="340" y1="90" x2="368" y2="90" stroke="var(--color-accent-copper)" stroke-width="1.5" marker-end="url(#a7)"/><line x1="530" y1="90" x2="558" y2="90" stroke="var(--color-primary)" stroke-width="1.5" marker-end="url(#a7)"/><rect x="180" y="185" width="540" height="130" rx="5" fill="none" stroke="var(--color-accent-euv)" stroke-width="1"/><text x="450" y="207" text-anchor="middle" class="head" fill="var(--color-text)">Policy comparison on identical 50-episode data</text><text x="300" y="232" text-anchor="middle" class="muted">ACT</text><text x="300" y="250" text-anchor="middle" class="muted">Fast inference</text><text x="300" y="268" text-anchor="middle" class="muted">Precision tasks</text><text x="300" y="286" text-anchor="middle" class="muted">No language grounding</text><text x="450" y="232" text-anchor="middle" class="muted">Diffusion Policy</text><text x="450" y="250" text-anchor="middle" class="muted">Multimodal dist.</text><text x="450" y="268" text-anchor="middle" class="muted">Slower inference</text><text x="450" y="286" text-anchor="middle" class="muted">No language grounding</text><text x="615" y="232" text-anchor="middle" class="muted">SmolVLA</text><text x="615" y="250" text-anchor="middle" class="muted">Language-instructed</text><text x="615" y="268" text-anchor="middle" class="muted">78.3% pretrained</text><text x="615" y="286" text-anchor="middle" class="muted">Consumer GPU</text><defs><marker id="a7" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><polygon points="0 0,7 3.5,0 7" fill="var(--color-text-muted)"/></marker></defs></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 34.1</span><span class="text">The LeRobot production loop: SO-101 hardware → lerobot-record (teleoperate + label) → HF Hub (versioned parquet dataset) → lerobot-train (ACT, Diffusion Policy, or SmolVLA via --policy flag). All three policies train and evaluate on the same dataset with the same CLI. SmolVLA wins on language-instructed generalization; ACT wins on precision motor tasks.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">LeRobot is the PyTorch of robotics — standardized datasets, unified policy API, and $150 open hardware — and the data discipline it enforces is more valuable than any specific policy it ships.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://github.com/huggingface/lerobot">LeRobot documentation, Hugging Face (current); SmolVLA tutorial, huggingface.co/docs/lerobot/smolvla</a></p>
+  <p><strong>Build.</strong> Build or buy an SO-101 arm. Record a 50-episode &#x27;sort blocks by color&#x27; dataset with lerobot-record. Upload to HF Hub. Train ACT, Diffusion Policy, and SmolVLA on the same dataset using lerobot-train. Evaluate each on 10 test episodes. Report success rate, training time, and GPU memory for each policy. Upload the dataset to HF Hub under your username.</p>
+  <p><strong>Capstone ladder.</strong> This is the production data stack for the JHU humanoid. The LeRobot 200-episode SO-101 dataset is one of the public output artifacts of the capstone. Even if your final hardware is a full humanoid, the data discipline (schema, success labels, HF Hub upload) transfers. The unified policy API lets you ablate ACT vs Diffusion Policy vs SmolVLA on identical data without writing training code.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="34-lerobot">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What are the three standard observation keys in the LeRobot dataset schema?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">observation.images.top (top-view camera), observation.images.wrist (wrist-mounted camera), and observation.state (robot proprioceptive state: joint positions, velocities). Actions are stored as action (joint positions or end-effector deltas). The schema is flexible for additional keys but these three are standard for SO-100/SO-101.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does data standardization on HF Hub enable community pretraining for SmolVLA?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Because all datasets in the LeRobot format share a common schema, they can be loaded and batched together without format-specific preprocessing. Hugging Face can aggregate hundreds of contributor datasets from HF Hub into a single pretraining corpus — the same mechanism that enabled NLP community pretraining. Versioning ensures reproducibility: every training run can specify exact dataset versions.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">You train ACT, Diffusion Policy, and SmolVLA on the same 50-episode SO-101 dataset. SmolVLA has the lowest success rate after 5 epochs of training. What are the two most likely causes?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">1. Insufficient fine-tuning epochs: SmolVLA's pretrained weights are powerful but require more epochs to adapt to a specific task than ACT (which is trained from scratch on task-specific data). Try 10-20 epochs. 2. Task outside SmolVLA's pretraining distribution: if the task (object type, lighting, workspace) is very different from the community LeRobot datasets, SmolVLA's pretrained features may not transfer. Check whether a linear probe on SmolVLA's vision encoder features separates your task objects — if not, fine-tune the vision backbone as well.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="34-lerobot-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="33-groot.html"><span class="ch-nav-link__label">← Chapter 33</span><span class="ch-nav-link__title">NVIDIA GR00T N1 and N1.5 with Isaac Lab</span></a>
+      <a class="ch-nav-link" data-dir="next" href="35-embodied-safety.html"><span class="ch-nav-link__label">Chapter 35 →</span><span class="ch-nav-link__title">Safety and alignment for embodied AI</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

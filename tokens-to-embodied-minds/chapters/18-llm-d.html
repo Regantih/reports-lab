@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 18 · llm-d and disaggregated inference — From Tokens to Embodied Minds</title>
+<meta name="description" content="Prefill and decode have different hardware profiles. Running them on the same GPU wastes resources. llm-d separates them into distinct Kubernetes pods — and the throughput benefit is immediate.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="18-llm-d" data-chapter-title="llm-d and disaggregated inference">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="18-llm-d">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">prefill/decode disaggregation</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">KV-cache-aware routing</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">expert parallelism for MoE</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">Kubernetes-native serving</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">prefix cache routing</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">compute vs memory bound</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="18-llm-d" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — why would running prefill and decode on the same GPU pod be suboptimal, given their different resource profiles?</h2>
+  <p class="learn__hint">Prefill is compute-bound; decode is memory-bound. What happens when you mix them?</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-18-llm-d" value="a"><span>The GPU cannot switch between compute-bound and memory-bound modes dynamically, so it always runs at 50% efficiency</span></label><label class="predict__choice"><input type="radio" name="predict-18-llm-d" value="b"><span>Mixing compute-bound prefill and memory-bound decode on the same GPU means neither workload can be tuned for its bottleneck — over-provisioning compute for decode and under-utilizing it for prefill</span></label><label class="predict__choice"><input type="radio" name="predict-18-llm-d" value="c"><span>Prefill and decode require different CUDA driver versions that cannot coexist on the same GPU</span></label><label class="predict__choice"><input type="radio" name="predict-18-llm-d" value="d"><span>Decoding always preempts prefill due to the auto-regressive generation loop, causing head-of-line blocking</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">Prefill is compute-bound (large batch, all tokens processed in parallel, high arithmetic intensity) and benefits from maximum tensor core utilization. Decode is memory-bandwidth-bound (one token at a time, weights read once per step, low arithmetic intensity). Optimizing the GPU configuration for one necessarily under-serves the other. Disaggregation assigns compute-optimized pods to prefill and memory-optimized pods (or more pods) to decode, allowing each to be independently scaled and tuned.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 18 of 36</div>
+    <div class="ch-header__num">Chapter 18</div>
+    <h1 class="ch-header__title">llm-d and disaggregated inference</h1>
+    <p class="ch-header__dek">Prefill–decode separation goes mainstream</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain why prefill and decode have fundamentally different hardware resource profiles on the same GPU</li><li>Describe how llm-d routes requests across disaggregated prefill and decode pods with KV-cache-aware scheduling</li><li>Identify the production workload characteristics that most benefit from llm-d vs monolithic vLLM</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">~25%</div><div class="stat__label">immediate throughput lift on long-prompt workloads from prefill-decode disaggregation</div></div><div class="stat"><div class="stat__num">2025</div><div class="stat__label">when prefill/decode separation went from research prototype to production Kubernetes deployment</div></div><div class="stat"><div class="stat__num">3</div><div class="stat__label">first-class concepts in llm-d: prefill pods, decode pods, KV-cache-aware routing</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="18-llm-d">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. State the two hardware bottlenecks that motivate prefill/decode separation, and the throughput improvement typically achieved.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Deploy a minimal llm-d cluster on Kind or Minikube with one prefill pod and two decode pods. Route a synthetic agentic load (100 requests, 4K-token prompts). Measure throughput improvement vs monolithic vLLM.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">DealLens serves 10,000 deals per day with 6K-token prompts and 200-token responses. Design a llm-d cluster configuration: number of prefill pods, decode pods, KV routing strategy, and estimated cost vs monolithic vLLM.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Read the original disaggregated inference paper (Patel et al., arXiv:2401.09670) and the llm-d announcement (Red Hat, Nov 21, 2025). Identify what KV-cache-aware routing adds beyond simple round-robin and why it matters for prefix cache hit rate.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#prefill-decode-split">Why the split matters computationally</a></li><li><a href="#llm-d-architecture">llm-d architecture: prefill pods, decode pods, routing</a></li><li><a href="#deallens-application">llm-d for DealLens at scale</a></li><li><a href="#deployment">Deployment: Kubernetes-native from the start</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">The premise of monolithic LLM serving is a category error: prefill (processing the prompt, compute-bound, parallelizable across tokens) and decode (generating tokens one at a time, memory-bandwidth-bound, inherently sequential) share a GPU but have nothing in common computationally. Running them together means the GPU is simultaneously under-provisioned for compute during decode and under-utilized for bandwidth during prefill. Every major cloud provider's internal serving infrastructure disaggregated these phases by 2024. llm-d (Red Hat, with Google, IBM, and NVIDIA, announced November 21, 2025) is the first Kubernetes-native open-source implementation — prefill and decode as separate pod types, with a KV-cache-aware router that sends each request to the right tier.
+
+The immediate throughput lift is real: disaggregated inference typically delivers a 25% improvement on long-prompt workloads because prefill pods can sustain larger batch sizes (higher arithmetic intensity, better tensor core utilization) while decode pods can be over-provisioned for memory bandwidth rather than compute. For workloads like DealLens with 6K-token prompts and 200-token responses, the prefill phase dominates compute cost — a single prefill pod serving multiple decode pods is the right configuration.</p>
+<h2 id="prefill-decode-split">Why the split matters computationally</h2>
+<p>Prefill processes the full prompt in one (or a few) forward passes. At prompt length N, the prefill attention computation scales as O(N²) FLOPs — compute-bound above a few hundred tokens. The prefill pod benefits from large batch accumulation, full tensor core utilization at BF16, and FlashAttention-3's async pipelines on Hopper. The optimal GPU configuration for prefill is maximum compute with sufficient HBM for model weights.</p>
+<p>Decode generates one token per forward pass. Each step loads all model weights (at Llama 3.1 70B × BF16: 140 GB) and performs O(1) FLOPs per weight byte — arithmetic intensity near 2, deep below the H100 roofline ridge at 295 FLOPs/byte. The decode pod is bandwidth-limited. Adding more compute (higher batch size) helps until the memory wall is hit; beyond that, adding more decode pods (not faster GPUs) is the scaling path. The optimal GPU configuration for decode is maximum HBM bandwidth — or, for long-running decode sessions, multiple smaller GPUs with aggregated bandwidth.</p>
+<p>In a monolithic serving pod, the GPU scheduler alternates between running prefill batches (compute-bound, high tensor core utilization) and decode batches (memory-bound, low tensor core utilization). Neither workload ever sees the GPU in its optimal state for a sustained period. Continuous batching in vLLM mitigates this somewhat by interleaving decode steps with new prefill requests, but it does not solve the fundamental hardware mismatch.</p>
+<h2 id="llm-d-architecture">llm-d architecture: prefill pods, decode pods, routing</h2>
+<p>llm-d (llm-d.ai) is built on Kubernetes with three components: prefill pods (compute-optimized, handle the prefill phase), decode pods (bandwidth-optimized, handle auto-regressive generation), and a KV-cache-aware gateway router. When a request arrives: the router sends the full prompt to a prefill pod; the prefill pod processes the prompt and generates KV states; the KV states are transferred to a decode pod (via NVLink if on the same node, via RoCE or InfiniBand across nodes); the decode pod continues auto-regressive generation until the response is complete.</p>
+<p>KV-cache-aware routing is the key innovation beyond simple round-robin: the router tracks which decode pods hold which prefix KV states. For a request that begins with a system prompt already cached on decode pod 3, the router directs it to pod 3 — reusing the cached KV rather than re-transferring. This is disaggregated serving's analog of SGLang's RadixAttention: prefix reuse at the cluster level rather than the process level. The combination of disaggregation + prefix-aware routing is what produces the cumulative throughput gains above the 25% baseline.</p>
+<p>Expert parallelism for MoE (DeepSeek-V3, Qwen3-MoE) is a first-class concept in llm-d: prefill pods and decode pods can each be configured with different expert-to-GPU assignments, because the expert utilization pattern differs between the phases (prefill processes many tokens and activates experts evenly; decode at batch size 1 activates experts unevenly). This allows per-phase load balancing that monolithic serving cannot provide.</p>
+<h2 id="deallens-application">llm-d for DealLens at scale</h2>
+<p>DealLens at 10,000 deals per day with 6K-token prompts and 200-token responses: the prefill-to-decode token ratio is 30:1. In a monolithic serving pod, the GPU spends 30× more time on prefill than decode for each request, but the decode phase is the latency bottleneck (sequential, one token at a time). Disaggregation allows 1 prefill pod to serve 5–10 decode pods at this ratio — the prefill pod generates KV states quickly (compute-bound, fast) and hands them off, then immediately processes the next request's prompt. The decode pods generate 200-token responses in parallel across separate requests.</p>
+<p>Estimated cost comparison: monolithic vLLM with Llama 3.1 70B on 4 H100s processing 10K deals/day at ~8K tokens/deal = 80M tokens/day. At ~3,000 tokens/second/H100 in monolithic serving: ~26.7K seconds / 4 H100s = 6,666 seconds ≈ 1.85 GPU-hours. At $2/GPU-hour × 4 H100s = $7.40/day. llm-d with 25% throughput improvement: same compute in ~$5.55/day. Multiply this by analyst scale and the savings compound. The llm-d benefit is proportionally larger for workloads with longer prompts or requiring real-time response at high concurrency.</p>
+<h2 id="deployment">Deployment: Kubernetes-native from the start</h2>
+<p>llm-d is designed as a Kubernetes operator from day one — unlike vLLM or SGLang, which were originally single-process serving frameworks with Kubernetes deployment as an afterthought. The llm-d operator manages prefill and decode pod counts, autoscales them independently based on queue depth, and handles KV transfer between pods via a sidecar that manages the network buffer. This means prefill pod count can autoscale on CPU-measured queue length (prefill backlog) while decode pod count autoscales on time-in-decode (long decode sessions drive up decode pod demand).</p>
+<p>For a DealLens deployment on a small cloud Kubernetes cluster: 1 prefill pod (2× H100 SXM5) handles the 6K-token prompt encoding; 4 decode pods (1× H100 each) handle the 200-token response generation in parallel. The router distributes incoming deals across decode pods based on KV cache residency. The llm-d GitHub (github.com/llm-d/llm-d) includes Kind and Helm deployment templates. As of the November 2025 announcement, it is in beta — stable enough for load testing, production-ready by mid-2026.</p>
+<div class="aside" data-tone="euv"><span class="aside__label">The disaggregation paper</span><p>Patel et al. (arXiv:2401.09670, January 2024) documented the theoretical case for disaggregation. llm-d is the Kubernetes-native implementation that Red Hat, Google, IBM, and NVIDIA shipped 10 months later. Read the paper, then read the llm-d announcement — the gap between theory and production engineering is the chapter.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="llm-d disaggregated inference architecture diagram"><title>llm-d: Disaggregated Prefill/Decode Architecture</title><style>text{font-family:system-ui,sans-serif;font-size:11px;fill:var(--color-text)}.muted{fill:var(--color-text-muted)}.bold{font-weight:700}</style><text x="400" y="24" text-anchor="middle" font-size="14" font-weight="700" fill="var(--color-primary)">llm-d Disaggregated Inference Architecture</text><rect x="20" y="40" width="120" height="60" rx="4" fill="var(--color-accent-euv)" fill-opacity="0.12" stroke="var(--color-accent-euv)" stroke-width="1.5"/><text x="80" y="66" text-anchor="middle" font-weight="600" fill="var(--color-accent-euv)">Client</text><text x="80" y="84" text-anchor="middle" class="muted">10K deals/day</text><line x1="140" y1="70" x2="180" y2="70" stroke="var(--color-text-muted)" stroke-width="1.5" marker-end="url(#ar)"/><rect x="180" y="40" width="140" height="60" rx="4" fill="var(--color-accent-copper)" fill-opacity="0.12" stroke="var(--color-accent-copper)" stroke-width="1.5"/><text x="250" y="66" text-anchor="middle" font-weight="600" fill="var(--color-accent-copper)">KV-Aware Router</text><text x="250" y="84" text-anchor="middle" class="muted">prefix cache routing</text><line x1="320" y1="60" x2="380" y2="40" stroke="var(--color-accent-euv)" stroke-width="1.5" marker-end="url(#ar)"/><line x1="320" y1="80" x2="380" y2="200" stroke="var(--color-text-muted)" stroke-width="1.5" marker-end="url(#ar)"/><rect x="380" y="20" width="160" height="60" rx="4" fill="var(--color-primary)" fill-opacity="0.10" stroke="var(--color-primary)" stroke-width="2"/><text x="460" y="44" text-anchor="middle" font-weight="700" fill="var(--color-primary)">Prefill Pod</text><text x="460" y="60" text-anchor="middle" class="muted">2× H100 — compute</text><text x="460" y="76" text-anchor="middle" class="muted">processes 6K prompt tokens</text><line x1="540" y1="50" x2="600" y2="50" stroke="var(--color-accent-copper)" stroke-width="2" stroke-dasharray="5,3" marker-end="url(#ar)"/><text x="570" y="44" text-anchor="middle" font-size="9" fill="var(--color-accent-copper)">KV transfer</text><rect x="600" y="20" width="180" height="60" rx="4" fill="var(--color-accent-copper)" fill-opacity="0.12" stroke="var(--color-accent-copper)" stroke-width="1.5"/><text x="690" y="44" text-anchor="middle" font-weight="600" fill="var(--color-accent-copper)">Decode Pods (4×)</text><text x="690" y="60" text-anchor="middle" class="muted">1× H100 each — bandwidth</text><text x="690" y="76" text-anchor="middle" class="muted">200 tokens/response</text><rect x="380" y="180" width="160" height="60" rx="4" fill="none" stroke="var(--color-text-muted)" stroke-dasharray="4,3"/><text x="460" y="204" text-anchor="middle" class="muted">Prefill Pod 2</text><text x="460" y="220" text-anchor="middle" class="muted">(autoscale on queue)</text><rect x="600" y="180" width="180" height="60" rx="4" fill="none" stroke="var(--color-text-muted)" stroke-dasharray="4,3"/><text x="690" y="204" text-anchor="middle" class="muted">Additional Decode Pods</text><text x="690" y="220" text-anchor="middle" class="muted">(autoscale on session time)</text><rect x="20" y="270" width="760" height="75" rx="4" fill="none" stroke="var(--color-text-muted)" stroke-width="0.5"/><text x="400" y="295" text-anchor="middle" font-size="12" fill="var(--color-primary)">Monolithic vLLM: prefill + decode share GPU — neither optimized</text><text x="400" y="318" text-anchor="middle" fill="var(--color-accent-copper)">llm-d disaggregated: ~25% throughput lift · independent autoscaling · prefix-cache-aware routing</text><text x="400" y="336" text-anchor="middle" class="muted">DealLens at 10K deals/day: 1 prefill pod feeds 4-5 decode pods at 30:1 prompt/response token ratio</text><defs><marker id="ar" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--color-text-muted)"/></marker></defs></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 18.1</span><span class="text">llm-d architecture: a KV-cache-aware router sends prompts to compute-optimized prefill pods, which transfer KV states to bandwidth-optimized decode pods. At a 30:1 prompt/response token ratio (DealLens use case), one prefill pod feeds 4–5 decode pods. The router&#x27;s prefix cache awareness routes requests to decode pods that already hold the relevant KV state, eliminating redundant transfers.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">llm-d disaggregates prefill (compute-bound) and decode (memory-bound) into separate Kubernetes pods with KV-cache-aware routing — delivering a ~25% throughput improvement on long-prompt workloads and enabling independent scaling of each phase.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://developers.redhat.com/articles/2025/11/21/introduction-distributed-inference-llm-d">Introduction to distributed inference with llm-d, Red Hat Developer, November 21, 2025. llm-d project: llm-d.ai.</a></p>
+  <p><strong>Build.</strong> Deploy a minimal llm-d cluster on Kind or Minikube: one prefill pod (Llama 3.1 8B), two decode pods. Route 100 synthetic agentic requests with 4K-token prompts and 200-token responses through the cluster. Measure throughput and TTFT vs monolithic vLLM on the same hardware.</p>
+  <p><strong>Capstone ladder.</strong> Indirect for the JHU humanoid (edge deployment, not cluster). Direct for DealLens at analyst scale: llm-d&#x27;s 25% throughput gain and prefix-aware routing compound with SGLang&#x27;s RadixAttention advantage for repeated system prompts. At 10K+ deals/day, the combined savings justify the Kubernetes deployment overhead.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="18-llm-d">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What is the typical throughput improvement from prefill/decode disaggregation on long-prompt workloads, and who announced llm-d?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">~25% throughput improvement. llm-d was announced by Red Hat (with Google, IBM, and NVIDIA) on November 21, 2025 (developers.redhat.com/articles/2025/11/21/introduction-distributed-inference-llm-d).</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">What does KV-cache-aware routing add to disaggregated serving beyond simple round-robin request distribution?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The router tracks which decode pods hold which prefix KV states. Requests with cached prefixes are routed to the pod that already holds them, eliminating redundant KV transfer and enabling cluster-level prefix reuse analogous to SGLang's RadixAttention within a single process.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">For DealLens at 10K deals/day with 6K-token prompts and 200-token responses, what pod configuration does llm-d enable and what is the approximate cost benefit?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">1 prefill pod (2× H100) feeds 4–5 decode pods (1× H100 each) at the 30:1 prefill/decode token ratio. The 25% throughput improvement from disaggregation reduces serving cost proportionally — from ~$7.40/day to ~$5.55/day in a simple model, compounding at analyst scale.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="18-llm-d-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="17-vllm-trtllm-sglang.html"><span class="ch-nav-link__label">← Chapter 17</span><span class="ch-nav-link__title">vLLM, TensorRT-LLM, SGLang</span></a>
+      <a class="ch-nav-link" data-dir="next" href="19-kv-cache-spec-decoding.html"><span class="ch-nav-link__label">Chapter 19 →</span><span class="ch-nav-link__title">KV-cache, speculative decoding, Medusa</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

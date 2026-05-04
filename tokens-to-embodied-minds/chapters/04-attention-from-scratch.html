@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 04 · Attention from scratch — From Tokens to Embodied Minds</title>
+<meta name="description" content="Self-attention is a soft, content-addressable lookup. The four production variants exist because of KV-cache economics, not modelling power — and the math behind each choice is simpler than most tutorials admit.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="04-attention-from-scratch" data-chapter-title="Attention from scratch">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="04-attention-from-scratch">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">QKV projection</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">scaled dot-product</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">causal masking</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">grouped-query attention</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">sliding-window attention</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">KV-cache economics</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">multi-head subspaces</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="04-attention-from-scratch" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Why does attention use a 1/sqrt(d_k) scaling factor on the dot products before softmax?</h2>
+  <p class="learn__hint">Think about what happens to the variance of a dot product as the dimension d_k grows.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-04-attention-from-scratch" value="a"><span>To normalize the query and key vectors to unit length before computing similarity</span></label><label class="predict__choice"><input type="radio" name="predict-04-attention-from-scratch" value="b"><span>Because the dot product of two d_k-dimensional vectors has variance d_k, which pushes softmax into saturation</span></label><label class="predict__choice"><input type="radio" name="predict-04-attention-from-scratch" value="c"><span>To prevent the attention weights from summing to more than 1 across the sequence</span></label><label class="predict__choice"><input type="radio" name="predict-04-attention-from-scratch" value="d"><span>Because log(d_k) scaling was found empirically to outperform 1/sqrt(d_k) in ablations</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">If Q and K are random unit vectors in d_k dimensions, their dot product has mean 0 and variance d_k. For large d_k (e.g., 128), raw dot products can reach magnitudes of ~11 (sqrt(128)), pushing softmax into its near-zero-gradient saturation region where backprop stalls. Dividing by sqrt(d_k) restores variance to 1 and keeps softmax in its informative gradient region. This was explained in the original Vaswani et al. (arXiv:1706.03762, June 2017) footnote 4.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 04 of 36</div>
+    <div class="ch-header__num">Chapter 04</div>
+    <h1 class="ch-header__title">Attention from scratch</h1>
+    <p class="ch-header__dek">Q, K, V — and why scaled dot-product is the right shape</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Derive why scaled dot-product attention uses 1/sqrt(d_k) scaling by analyzing the variance of the dot product of two random unit vectors.</li><li>Implement causal multi-head attention, then GQA, then sliding-window in pure PyTorch — no nn.MultiheadAttention.</li><li>Explain why grouped-query attention reduces KV-cache memory by H/G and when the accuracy trade-off is worth it.</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">4</div><div class="stat__label">production attention variants — full, causal, sliding-window, GQA</div></div><div class="stat"><div class="stat__num">√d</div><div class="stat__label">scaling factor — prevents softmax saturation in high-dimensional heads</div></div><div class="stat"><div class="stat__num">4–8×</div><div class="stat__label">KV-cache memory reduction from grouped-query attention</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="04-attention-from-scratch">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">State the three roles of Q, K, and V in the attention mechanism using a non-technical analogy (e.g., library lookup).</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Implement multi-head causal self-attention from scratch in PyTorch with no nn.MultiheadAttention, verify it matches nn.MultiheadAttention output within FP32 tolerance.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">Implement GQA with G=4 groups and H=32 heads, benchmark KV-cache memory at batch=8 seq=8192 against full MHA, and quantify the accuracy trade-off on a toy language model.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Propose a modification to sliding-window attention that allows tokens to attend globally to a sparse set of anchor tokens, justify the computational complexity, and identify which existing architecture most closely implements this.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#qkv-mechanics">Q, K, V — the lookup mechanism</a></li><li><a href="#four-variants">The four production variants</a></li><li><a href="#kv-cache">KV-cache economics drive the design space</a></li><li><a href="#capstone-link">Attention in VLA models</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">Self-attention is a soft, content-addressable memory: each query token looks up all key tokens to get weighted access to their values. The mathematical form — softmax(QK^T / sqrt(d_k)) V — is the only one that satisfies scale-invariance, differentiability, and computational tractability simultaneously. The 1/sqrt(d_k) term is not an empirical hack; it follows from the variance of random dot products in high dimensions. The multi-head wrapper exists because one attention head can only attend to one subspace of the representation — stacking heads across orthogonal projections recovers the representational richness.
+
+The four production variants — full attention, causal attention, sliding-window (Mistral, Gemma), and grouped-query attention (Llama 3, Qwen 2.5) — are not modelling improvements. They are engineering choices driven by KV-cache memory economics and inference latency targets. Understanding why each exists requires understanding the KV-cache, not the math of attention.</p>
+<h2 id="qkv-mechanics">Q, K, V — the lookup mechanism</h2>
+<p>The QKV projection takes a token embedding x and produces three matrices: Q = xW_Q, K = xW_K, V = xW_V, each of shape (seq_len, d_model). The scaled dot-product attention is then: A = softmax(QK^T / sqrt(d_k)) V, where A has shape (seq_len, d_v). The interpretation: QK^T computes the compatibility of each query with each key (an unnormalized similarity matrix of shape seq×seq). Softmax normalizes across the key dimension to produce attention weights. V is the content retrieved — each output token is a weighted sum of all value vectors.</p>
+<p>Multi-head attention partitions the d_model dimension into h heads of dimension d_k = d_model / h each. Each head independently computes scaled dot-product attention on its slice of Q, K, and V, and the h outputs are concatenated and projected back to d_model. The motivation: different heads learn to attend to different kinds of relationships (syntactic, semantic, positional) simultaneously. In practice, heads do specialize — some heads consistently attend to syntactic dependencies, others to long-range co-references — but the degree of specialization varies by layer.</p>
+<p>For GR00T N1.5's DiT action model, cross-attention is the mechanism connecting the VLM's language-conditioned features to the DiT's diffusion process. The query comes from the noisy action tokens; the key and value come from the VLM's output embeddings. Understanding this cross-attention pathway is necessary to debug why certain visual-linguistic conditioning fails to propagate into the action output.</p>
+<h2 id="four-variants">The four production variants</h2>
+<p>Full attention computes the complete seq×seq score matrix — O(N^2) memory and compute. It is used for encoders (BERT-style) and for short-context decoders. Causal attention masks the upper triangle of the score matrix so each token attends only to itself and earlier tokens — the standard for autoregressive language models. The mask is applied before softmax by setting upper-triangle entries to -inf. Sliding-window attention (Mistral, Gemma, Falcon) restricts each token to attend to only the W nearest tokens in each direction — O(N*W) instead of O(N^2). For DealLens VC memo analysis, sliding-window is insufficient because cross-document dependencies span the full 50K+ token context.</p>
+<p>Grouped-query attention (Ainslie et al., arXiv:2305.13245, May 2023) is the most impactful recent variant for production serving. Instead of H independent K and V projections, GQA uses G groups (G << H) where each group shares one K and one V projection across H/G query heads. Llama 3 uses G=8 with H=32 (4 query heads per group). The KV-cache memory reduction is H/G = 4x, which at long context lengths is the difference between fitting on one GPU and needing KV offloading.</p>
+<p>Multi-query attention (MQA, Shazeer 2019) is the extreme case of GQA with G=1 — all query heads share a single K and V. MQA reduces KV-cache by H/1 but at measurable quality cost. The empirical finding from the GQA paper is that G=8 recovers almost all of MQA's memory efficiency while matching MHA quality — making G=8 GQA the dominant production choice for decoder-only models in 2024-2025.</p>
+<h2 id="kv-cache">KV-cache economics drive the design space</h2>
+<p>During autoregressive decoding, each new token needs to attend to all previous tokens. Recomputing K and V for all previous tokens at every decoding step would be O(N^2) per token. The KV-cache stores K and V for all past tokens, reducing decode cost to O(N) per token at the expense of O(N * d_model * num_layers * 2) persistent memory. For a Llama 3 70B model serving a 128K-token context, the KV-cache at FP16 is approximately 128K * 8192 * 80 * 2 * 2 bytes = ~170 GB — larger than the model itself.</p>
+<p>This memory pressure is why GQA exists, why PagedAttention (in vLLM) virtualizes KV-cache into pages, and why speculative decoding (Chapter 19) drafts multiple tokens at once rather than one. For DealLens, the KV-cache budget determines how many VC memos you can hold in context simultaneously during a multi-memo synthesis query.</p>
+<h2 id="capstone-link">Attention in VLA models</h2>
+<p>Every VLA model (OpenVLA, GR00T N1.5, SmolVLA, π0) uses attention as the core information-mixing mechanism. OpenVLA's Llama 2 backbone uses GQA; GR00T N1.5's Eagle 2.5 VLM uses GQA; the DiT action model uses full cross-attention over short action-token sequences. Understanding which variant is used and why matters when you debug inference latency: GQA decode is 4-8x faster than full MHA decode on long sequences because of KV-cache size.</p>
+<p>For the JHU humanoid, the practical implication is at inference time: SmolVLA at 450M parameters with GQA can run on a single consumer GPU; a hypothetical full-MHA model at the same parameter count would require 4x the KV-cache memory per decoding step. The 78.3% real-world task success reported for SmolVLA (Hugging Face, June 2025) is achieved partly because the architecture is designed for low-latency inference, not just accuracy.</p>
+<div class="aside" data-tone="primary"><span class="aside__label">Flash Attention is not a new attention variant</span><p>FlashAttention (Dao et al., 2022) and FlashAttention-2/3 are IO-aware implementations of standard scaled dot-product attention — same math, same output, but tiled computation that avoids materializing the N×N matrix in HBM. Chapter 14 covers this in depth.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="Scaled dot-product attention and GQA variants" fill="none" xmlns="http://www.w3.org/2000/svg"><text x="400" y="26" text-anchor="middle" font-size="14" font-weight="600" fill="var(--color-text)">Scaled Dot-Product Attention and Production Variants</text><rect x="30" y="50" width="60" height="32" rx="4" stroke="var(--color-primary)" stroke-width="1.4" fill="var(--color-bg)"/><text x="60" y="71" text-anchor="middle" font-size="11" fill="var(--color-primary)">Q = xW_Q</text><rect x="110" y="50" width="60" height="32" rx="4" stroke="var(--color-primary)" stroke-width="1.4" fill="var(--color-bg)"/><text x="140" y="71" text-anchor="middle" font-size="11" fill="var(--color-primary)">K = xW_K</text><rect x="190" y="50" width="60" height="32" rx="4" stroke="var(--color-primary)" stroke-width="1.4" fill="var(--color-bg)"/><text x="220" y="71" text-anchor="middle" font-size="11" fill="var(--color-primary)">V = xW_V</text><rect x="100" y="110" width="120" height="32" rx="4" stroke="var(--color-accent-copper)" stroke-width="1.4" fill="var(--color-bg)"/><text x="160" y="130" text-anchor="middle" font-size="11" fill="var(--color-accent-copper)">QK^T / sqrt(d_k)</text><rect x="100" y="160" width="120" height="32" rx="4" stroke="var(--color-accent-euv)" stroke-width="1.4" fill="var(--color-bg)"/><text x="160" y="180" text-anchor="middle" font-size="11" fill="var(--color-accent-euv)">softmax + mask</text><rect x="100" y="210" width="120" height="32" rx="4" stroke="var(--color-accent-quartz)" stroke-width="1.4" fill="var(--color-bg)"/><text x="160" y="230" text-anchor="middle" font-size="11" fill="var(--color-accent-quartz)">weighted sum V</text><line x1="60" y1="82" x2="130" y2="110" stroke="var(--color-text-muted)" stroke-width="1"/><line x1="140" y1="82" x2="160" y2="110" stroke="var(--color-text-muted)" stroke-width="1"/><line x1="220" y1="82" x2="190" y2="210" stroke="var(--color-text-muted)" stroke-width="1" stroke-dasharray="3 2"/><line x1="160" y1="142" x2="160" y2="160" stroke="var(--color-text-muted)" stroke-width="1"/><line x1="160" y1="192" x2="160" y2="210" stroke="var(--color-text-muted)" stroke-width="1"/><text x="400" y="60" font-size="12" font-weight="600" fill="var(--color-text)">Variants — driven by KV-cache economics</text><rect x="310" y="80" width="130" height="55" rx="5" stroke="var(--color-primary)" stroke-width="1.4" fill="var(--color-bg)"/><text x="375" y="100" text-anchor="middle" font-size="11" font-weight="600" fill="var(--color-primary)">Full MHA</text><text x="375" y="116" text-anchor="middle" font-size="10" fill="var(--color-text-muted)">H K,V heads</text><text x="375" y="128" text-anchor="middle" font-size="10" fill="var(--color-text-muted)">O(N^2) · max quality</text><rect x="460" y="80" width="130" height="55" rx="5" stroke="var(--color-accent-copper)" stroke-width="1.4" fill="var(--color-bg)"/><text x="525" y="100" text-anchor="middle" font-size="11" font-weight="600" fill="var(--color-accent-copper)">GQA (G=8)</text><text x="525" y="116" text-anchor="middle" font-size="10" fill="var(--color-text-muted)">H/G shared K,V</text><text x="525" y="128" text-anchor="middle" font-size="10" fill="var(--color-text-muted)">4x KV mem ↓ · ~same quality</text><rect x="610" y="80" width="130" height="55" rx="5" stroke="var(--color-accent-euv)" stroke-width="1.4" fill="var(--color-bg)"/><text x="675" y="100" text-anchor="middle" font-size="11" font-weight="600" fill="var(--color-accent-euv)">Sliding Window</text><text x="675" y="116" text-anchor="middle" font-size="10" fill="var(--color-text-muted)">attend W neighbors</text><text x="675" y="128" text-anchor="middle" font-size="10" fill="var(--color-text-muted)">O(N·W) · local only</text><text x="400" y="200" text-anchor="middle" font-size="12" fill="var(--color-text-muted)">KV-cache at FP16 for 128K context (Llama-3-70B): ~170 GB — larger than model weights</text><text x="400" y="220" text-anchor="middle" font-size="12" fill="var(--color-text-muted)">GQA G=8 reduces to ~42 GB · enables single-node serving of 128K context</text><text x="400" y="260" text-anchor="middle" font-size="11" fill="var(--color-accent-copper)">sqrt(d_k) scaling: dot product variance = d_k · dividing by sqrt(d_k) restores variance = 1 · prevents softmax saturation</text></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 4.1</span><span class="text">Scaled dot-product attention (left) and the three production variants (right) — Full MHA, GQA, and Sliding-Window — differ by KV-cache cost, not by the core attention math.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">Self-attention is a soft content-addressable lookup; the four production variants exist because of KV-cache economics, not modelling differences, and understanding which variant to use requires understanding the memory cost at serving time.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://arxiv.org/abs/1706.03762">Attention Is All You Need, Vaswani et al., arXiv:1706.03762 (June 2017)</a></p>
+  <p><strong>Build.</strong> Implement causal multi-head attention, then GQA, then sliding-window, all in pure PyTorch with no nn.MultiheadAttention. Benchmark KV-cache memory for each at batch=8, seq=8192.</p>
+  <p><strong>Capstone ladder.</strong> The cross-attention pathway in GR00T N1.5&#x27;s DiT is what connects VLM conditioning to action generation — you cannot debug VLA failures without understanding this mechanism. For DealLens, KV-cache economics determine how many memos can be held in context during multi-memo synthesis.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="04-attention-from-scratch">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">Why does scaled dot-product attention divide by sqrt(d_k)?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The dot product of two d_k-dimensional random unit vectors has variance d_k. For large d_k, raw scores push softmax into near-zero-gradient saturation. Dividing by sqrt(d_k) restores variance to 1 and keeps softmax in its informative gradient region.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">What is the memory reduction from grouped-query attention with G=8 groups and H=32 heads, and why is this the production standard?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">KV-cache memory reduces by H/G = 4x. GQA with G=8 recovers almost all of MQA's memory efficiency while matching full MHA quality (Ainslie et al., arXiv:2305.13245, May 2023), making it the Pareto-optimal choice for decoder-only models.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">For DealLens processing 50K-token VC memos, which attention variant is most appropriate and what is the approximate KV-cache memory at serving time?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Full causal attention with GQA (G=8). Sliding-window is insufficient because cross-document dependencies span the full context. For a Llama-3-70B-style model at FP16, 50K tokens with GQA G=8 requires approximately 50K * (8192/32*8) * 80 * 2 * 2 bytes ~= 5 GB KV-cache — manageable on a single A100 80GB.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="04-attention-from-scratch-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="03-autograd.html"><span class="ch-nav-link__label">← Chapter 03</span><span class="ch-nav-link__title">Backprop, autograd, and the chain rule on GPUs</span></a>
+      <a class="ch-nav-link" data-dir="next" href="05-transformer-block.html"><span class="ch-nav-link__label">Chapter 05 →</span><span class="ch-nav-link__title">The transformer block, end to end</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

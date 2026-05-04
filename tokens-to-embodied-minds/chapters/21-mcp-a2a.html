@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 21 · MCP and A2A — the agent protocols — From Tokens to Embodied Minds</title>
+<meta name="description" content="MCP is the USB-C of tool use. A2A is the protocol above it — how agents from different organizations discover and delegate to each other. Both are replacing bespoke OpenAPI wrappers.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="21-mcp-a2a" data-chapter-title="MCP and A2A — the agent protocols">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="21-mcp-a2a">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">MCP server</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">MCP client</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">tool / resource / prompt primitives</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">A2A agent card</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">A2A task delegation</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">JSON-RPC transport</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="21-mcp-a2a" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — what problem does MCP solve that a bespoke OpenAPI wrapper does not?</h2>
+  <p class="learn__hint">Think about what changes every time you add a new client or a new tool without a shared standard.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-21-mcp-a2a" value="a"><span>MCP provides authentication and authorization that OpenAPI lacks</span></label><label class="predict__choice"><input type="radio" name="predict-21-mcp-a2a" value="b"><span>MCP provides a shared interface standard so any MCP-compatible client can use any MCP server without custom integration code per client-server pair</span></label><label class="predict__choice"><input type="radio" name="predict-21-mcp-a2a" value="c"><span>MCP provides a higher-level semantic understanding of tools that OpenAPI function schemas cannot express</span></label><label class="predict__choice"><input type="radio" name="predict-21-mcp-a2a" value="d"><span>MCP runs faster than HTTP-based OpenAPI calls due to its binary protocol</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">MCP is a standardization play, not a capability play. Without it, every LLM client (Claude Desktop, Cursor, custom agent) needs custom code to call every tool provider. With MCP, any client that speaks JSON-RPC MCP can use any server that implements the spec — the same integration logic works across all tool providers. It is exactly the USB-C analogy: one protocol, many devices.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 21 of 36</div>
+    <div class="ch-header__num">Chapter 21</div>
+    <h1 class="ch-header__title">MCP and A2A — the agent protocols</h1>
+    <p class="ch-header__dek">The standards that let agents talk to tools and to each other</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Implement a three-tool MCP server exposing DealLens capabilities (search-memos, score-deal, draft-IC-memo) and verify it with the MCP Inspector</li><li>Explain the architectural difference between MCP (tool-use protocol) and A2A (agent-to-agent delegation protocol) and when each applies</li><li>Design the MCP server interface for a humanoid home assistant that exposes smart home controls, scheduling, and kitchen appliance APIs</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">Nov 2024</div><div class="stat__label">Anthropic published the Model Context Protocol specification — now supported by Claude, OpenAI Agents SDK, Cursor, and dozens of clients</div></div><div class="stat"><div class="stat__num">A2A</div><div class="stat__label">Google&#x27;s Agent-to-Agent protocol (April 2025) — how agents across organizations discover, authenticate, and delegate tasks</div></div><div class="stat"><div class="stat__num">JSON-RPC</div><div class="stat__label">the transport under MCP — lightweight, language-agnostic, already familiar from LSP and DAP</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="21-mcp-a2a">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. Explain in one sentence the difference between an MCP tool, an MCP resource, and an MCP prompt.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Expose three DealLens tools (search-memos, score-deal, draft-IC-memo) as a Python FastMCP server. Verify with MCP Inspector and connect a Claude Desktop client config.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">Design the agent card for a DealLens A2A server: what capabilities does it advertise, what authentication does it require, and what task schema does it accept from a portfolio-analytics agent at a different firm?</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Identify a security vulnerability in the MCP protocol's current trust model (late 2024 spec) and propose a mitigation. Compare with how A2A handles cross-organization authentication.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#mcp-architecture">MCP: tools, resources, and prompts</a></li><li><a href="#a2a-protocol">A2A: agent-to-agent delegation</a></li><li><a href="#mcp-for-humanoid">MCP for the humanoid home assistant</a></li><li><a href="#replacing-openapi">Why MCP wins over bespoke OpenAPI wrappers</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">For the past three years, every production agentic system has been a tangle of bespoke OpenAPI wrappers, custom authentication schemes, and brittle per-client integration code. Adding a new tool required updating every client. Adding a new client required implementing every tool's custom calling convention again. Anthropic's Model Context Protocol (MCP), published November 25, 2024, is the standardization event that ends that. MCP is a JSON-RPC protocol with three primitives — tools (functions the LLM can invoke), resources (data it can read), and prompts (templates it can request) — and a client-server architecture where any MCP-compatible client can speak to any MCP-compatible server without custom integration code. Claude, OpenAI's Agents SDK, Cursor, Windsurf, and the LangChain ecosystem already support it.
+
+Google's Agent-to-Agent (A2A) protocol (April 9, 2025) operates one layer above MCP: it specifies how agents from different organizations discover each other via agent cards, authenticate, and delegate multi-step tasks. Where MCP is about a single agent accessing tools, A2A is about agent-to-agent collaboration — a DealLens agent at your firm delegating a cap-table analysis sub-task to a specialized financial-data agent at another firm. Together, MCP and A2A form the protocol stack that replaces the current chaos.</p>
+<h2 id="mcp-architecture">MCP: tools, resources, and prompts</h2>
+<p>MCP uses JSON-RPC 2.0 over stdio or HTTP+SSE as the transport. The three primitives: a <code>tool</code> is a function the LLM may call (name, description, JSON Schema input, returned content); a <code>resource</code> is data the LLM can read without calling a function (a file, a database row, a live feed — identified by URI); a <code>prompt</code> is a server-defined template the client can request to inject standardized context. The server exposes these via a <code>tools/list</code> endpoint and handles <code>tools/call</code> requests. Servers are small — the canonical Python implementation (FastMCP, maintained by Anthropic) is ~200 lines for a three-tool server.</p>
+<p>The security model of MCP as of the November 2024 specification is trust-based: the client trusts the server, and the server trusts the client's tool calls. There is no built-in authorization framework specifying which tools a given user can call or with what parameters. This is a known gap. The 2025 additions add OAuth 2.1 authorization server support for remote MCP servers, which matters the moment your MCP server is exposed to the internet rather than running locally. For DealLens, the implication is explicit: your search-memos and score-deal tools must enforce authorization at the application layer, not the protocol layer, until the spec matures.</p>
+<p>The practical value of MCP for DealLens is immediate: expose three tools as an MCP server and your agent becomes compatible with Claude Desktop, any LangChain MCP client, any future OpenAI Agents SDK client, and any other MCP-compatible orchestrator — with no additional integration work per client. The alternative is maintaining a separate OpenAPI spec, authentication scheme, and SDK wrapper for each client. At the pace the MCP ecosystem is growing (hundreds of servers listed in the MCP registry by mid-2025), the standardization bet is clearly correct.</p>
+<h2 id="a2a-protocol">A2A: agent-to-agent delegation</h2>
+<p>A2A (Google, April 9, 2025) addresses a problem MCP does not: how does an agent at organization A discover and delegate to an agent at organization B, with proper authentication and task lifecycle management? The core concept is the agent card — a JSON document hosted at a well-known URL (typically /.well-known/agent.json) that declares the agent's capabilities, input/output schemas, authentication requirements, and pricing. An A2A client discovers agent cards, selects the right agent for a sub-task, authenticates via OAuth 2.0 or API key, and exchanges Task objects with defined lifecycle states (submitted, working, completed, failed).</p>
+<p>The DealLens use case: a portfolio-analytics orchestrator agent receives a mandate to screen 20 new deals. It discovers a DealLens agent card, delegates deal-scoring tasks to it via A2A, receives structured results, and aggregates. The DealLens agent discovers a financial-data agent card for cap-table verification and delegates to it. This multi-agent delegation pattern is what moves AI from single-agent demos to cross-organizational workflows — and A2A provides the standard so you do not invent your own.</p>
+<h2 id="mcp-for-humanoid">MCP for the humanoid home assistant</h2>
+<p>The JHU humanoid capstone needs to expose home-control APIs: smart home state (lights, thermostat, appliances), calendar access, recipe database, and shopping list management. These are precisely MCP tool and resource primitives. The LangGraph planning loop calls the frontier LLM with the list of available MCP tools; the LLM decides which to call; the MCP client executes the call against the home assistant MCP server; results come back as structured content. The same architecture that makes DealLens tool-extensible makes the humanoid planner tool-extensible.</p>
+<p>The critical constraint for the humanoid is that some MCP tools must be gated behind an interrupt: unlocking the front door, deleting a calendar event, placing a purchase order. MCP does not provide interrupt semantics natively — you implement those at the LangGraph orchestration layer (Chapter 22). The MCP server declares these tools normally; the orchestrator inspects the tool name against a hardcoded interrupt list before executing. This two-layer approach — protocol standardization at MCP, safety semantics at the orchestrator — is the correct separation of concerns.</p>
+<h2 id="replacing-openapi">Why MCP wins over bespoke OpenAPI wrappers</h2>
+<p>The network effect argument: as of mid-2025, every major LLM client speaks MCP. Building a bespoke OpenAPI integration means you maintain a custom translation layer for each client — Claude needs one format, OpenAI function calling needs another, LangChain needs a third. An MCP server is written once and consumed by all of them. The spec is stable enough for production (backwards-compatible versioning, clear deprecation policy), and the tooling (MCP Inspector for debugging, FastMCP for Python, TypeScript SDK) is mature enough to use without fighting the framework.</p>
+<p>The one scenario where you keep a raw OpenAPI spec: when you need to expose your API to non-agent HTTP clients — browsers, Zapier, standard REST consumers — that will never speak MCP. In that case, maintain both: an OpenAPI spec for HTTP REST clients, and an MCP server that wraps the same logic for agent clients. The FastMCP server and the FastAPI router can share the same underlying Python functions.</p>
+<div class="aside" data-tone="euv"><span class="aside__label">Tool poisoning via MCP</span><p>A malicious MCP server can return tool descriptions designed to manipulate the LLM's behavior — this is the tool-poisoning attack (Chapter 24). Vet every third-party MCP server before adding it to your agent's tool list. Your humanoid's MCP server should be first-party only.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="MCP client-server and A2A agent-to-agent protocol stack"><style>.dt{font-family:system-ui,sans-serif;font-size:13px;fill:var(--color-text)}.dm{font-family:system-ui,sans-serif;font-size:11px;fill:var(--color-text-muted)}.box{rx:6;ry:6}</style><text x="400" y="28" text-anchor="middle" class="dt" font-weight="600" fill="var(--color-primary)">MCP + A2A Protocol Stack</text><rect x="30" y="50" width="160" height="60" class="box" fill="none" stroke="var(--color-accent-euv)" stroke-width="1.5"/><text x="110" y="74" text-anchor="middle" class="dt" fill="var(--color-accent-euv)">LLM Client</text><text x="110" y="92" text-anchor="middle" class="dm">(Claude / OpenAI / LangChain)</text><rect x="30" y="170" width="160" height="60" class="box" fill="none" stroke="var(--color-primary)" stroke-width="1.5"/><text x="110" y="194" text-anchor="middle" class="dt" fill="var(--color-primary)">MCP Server</text><text x="110" y="212" text-anchor="middle" class="dm">tools · resources · prompts</text><line x1="110" y1="110" x2="110" y2="168" stroke="var(--color-accent-euv)" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr2)"/><text x="130" y="145" class="dm" fill="var(--color-accent-euv)">JSON-RPC</text><rect x="30" y="290" width="160" height="44" class="box" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.5"/><text x="110" y="308" text-anchor="middle" class="dt" fill="var(--color-accent-copper)">Tool Functions</text><text x="110" y="326" text-anchor="middle" class="dm">search-memos · score-deal</text><line x1="110" y1="230" x2="110" y2="288" stroke="var(--color-text-muted)" stroke-width="1.2" marker-end="url(#arr2)"/><rect x="440" y="50" width="160" height="60" class="box" fill="none" stroke="var(--color-accent-euv)" stroke-width="1.5"/><text x="520" y="74" text-anchor="middle" class="dt" fill="var(--color-accent-euv)">Orchestrator Agent</text><text x="520" y="92" text-anchor="middle" class="dm">(DealLens / Humanoid Planner)</text><rect x="610" y="170" width="160" height="60" class="box" fill="none" stroke="var(--color-primary)" stroke-width="1.5"/><text x="690" y="194" text-anchor="middle" class="dt" fill="var(--color-primary)">Remote Agent</text><text x="690" y="212" text-anchor="middle" class="dm">cap-table analyzer</text><line x1="600" y1="80" x2="612" y2="168" stroke="var(--color-accent-euv)" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arr2)"/><text x="625" y="130" class="dm" fill="var(--color-accent-euv)">A2A</text><rect x="440" y="170" width="160" height="60" class="box" fill="none" stroke="var(--color-accent-quartz)" stroke-width="1.5"/><text x="520" y="194" text-anchor="middle" class="dt" fill="var(--color-accent-quartz)">Agent Card</text><text x="520" y="212" text-anchor="middle" class="dm">/.well-known/agent.json</text><line x1="520" y1="110" x2="520" y2="168" stroke="var(--color-text-muted)" stroke-width="1.2" marker-end="url(#arr2)"/><defs><marker id="arr2" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--color-text-muted)"/></marker></defs></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 21.1</span><span class="text">Left: MCP client-server stack — JSON-RPC over stdio/HTTP connecting an LLM client to a tool-function server. Right: A2A layer — orchestrator discovers remote agents via agent cards and delegates tasks via the A2A protocol.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">MCP is the USB-C of tool use — write one server, every MCP client can call it; A2A is the layer above, enabling cross-organization agent delegation with a standard task lifecycle.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://modelcontextprotocol.io/specification">Model Context Protocol specification, Anthropic (November 25, 2024)</a></p>
+  <p><strong>Build.</strong> Expose three DealLens tools (search-memos, score-deal, draft-IC-memo) as a Python FastMCP server. Verify tool listing and invocation with MCP Inspector. Write a Claude Desktop client config that connects to the server. Then write a programmatic MCP client in Python that calls all three tools in sequence and logs the results. Bonus: add an A2A agent card for the DealLens server at /.well-known/agent.json.</p>
+  <p><strong>Capstone ladder.</strong> Direct for both projects. Your humanoid exposes home-control APIs over MCP for the LangGraph planner. DealLens exposes its diligence tools over MCP so any MCP-compatible orchestrator — including future tools you have not built yet — can call them without custom integration work.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="21-mcp-a2a">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What are the three primitives MCP exposes, and how do they differ?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Tool: a callable function the LLM can invoke with parameters (name, JSON Schema input, returned content). Resource: data the LLM can read by URI without a function call. Prompt: a server-defined template the client can request to inject standardized context into the conversation.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">What problem does A2A solve that MCP does not?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">MCP is about a single agent accessing tools. A2A is about agent-to-agent delegation across organizations: how agents discover each other via agent cards, authenticate, and exchange multi-step tasks with defined lifecycle states (submitted, working, completed, failed).</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">The JHU humanoid needs to call smart home APIs. Design the MCP interface: which capabilities are tools vs resources, and which must be gated behind an interrupt in the orchestrator?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Resources: smart home state reads (current lights, thermostat, appliance status), calendar reads, recipe queries — read-only, safe. Tools: set thermostat, toggle lights, place purchase order, delete calendar event. Interrupt-gated tools (must not execute without human confirmation): unlock front door, place purchase order, delete calendar event — implemented in the LangGraph orchestrator, not in the MCP server.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="21-mcp-a2a-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="20-advanced-rag-evals.html"><span class="ch-nav-link__label">← Chapter 20</span><span class="ch-nav-link__title">Advanced RAG and evals</span></a>
+      <a class="ch-nav-link" data-dir="next" href="22-langgraph-orchestration.html"><span class="ch-nav-link__label">Chapter 22 →</span><span class="ch-nav-link__title">LangGraph and orchestration that survives</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

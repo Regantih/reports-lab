@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 17 · vLLM, TensorRT-LLM, SGLang — From Tokens to Embodied Minds</title>
+<meta name="description" content="Three serving frameworks, three architectural bets. PagedAttention wins on generality, RadixAttention wins on agentic prefix reuse, TensorRT-LLM wins on raw NVIDIA throughput.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="17-vllm-trtllm-sglang" data-chapter-title="vLLM, TensorRT-LLM, SGLang">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="17-vllm-trtllm-sglang">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">PagedAttention</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">continuous batching</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">RadixAttention prefix tree</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">TensorRT graph capture</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">prefix caching</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">speculative decoding integration</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="17-vllm-trtllm-sglang" data-answer-key="c">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — for an agentic workload where 1,000 concurrent requests share the same 4,096-token system prompt, which serving framework provides the most benefit and why?</h2>
+  <p class="learn__hint">Think about which framework was specifically designed for prefix reuse.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-17-vllm-trtllm-sglang" value="a"><span>TensorRT-LLM, because its graph-captured CUDA kernels handle repeated computation most efficiently</span></label><label class="predict__choice"><input type="radio" name="predict-17-vllm-trtllm-sglang" value="b"><span>vLLM with PagedAttention, because paged memory handles high concurrency best</span></label><label class="predict__choice"><input type="radio" name="predict-17-vllm-trtllm-sglang" value="c"><span>SGLang with RadixAttention, because its prefix-sharing tree caches and reuses KV states for shared prefixes across requests</span></label><label class="predict__choice"><input type="radio" name="predict-17-vllm-trtllm-sglang" value="d"><span>All three are equivalent — KV cache reuse is a standard feature across serving frameworks</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">SGLang's RadixAttention maintains a shared prefix tree in GPU memory. For 1,000 requests sharing a 4,096-token system prompt, RadixAttention computes the KV states for that prefix once and reuses them across all requests. vLLM's PagedAttention does support prefix caching but its implementation was less aggressive in earlier versions. SGLang was specifically designed for agentic multi-call workflows where prefix sharing is the dominant workload pattern.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 17 of 36</div>
+    <div class="ch-header__num">Chapter 17</div>
+    <h1 class="ch-header__title">vLLM, TensorRT-LLM, SGLang</h1>
+    <p class="ch-header__dek">The three serving stacks and what each is best at</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain the PagedAttention memory model and why it reduces KV cache fragmentation compared to contiguous allocation</li><li>Describe RadixAttention&#x27;s prefix sharing tree and the specific workload class where it beats PagedAttention by 50%+</li><li>Select between vLLM, TensorRT-LLM, and SGLang for three concrete production scenarios with different requirements</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">PagedAttention</div><div class="stat__label">vLLM&#x27;s core innovation — paged virtual memory for KV cache, eliminating fragmentation</div></div><div class="stat"><div class="stat__num">RadixAttention</div><div class="stat__label">SGLang&#x27;s prefix-sharing tree — wins for agentic workloads with repeated system prompts</div></div><div class="stat"><div class="stat__num">~50%</div><div class="stat__label">of SGLang&#x27;s latency advantage over vLLM on agentic workloads comes from prefix cache hit rate</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="17-vllm-trtllm-sglang">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. State the core memory management strategy of each framework in one sentence each.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Serve Llama 3.1 8B with both vLLM and SGLang on the same GPU. Benchmark an agentic workload (1,000 requests sharing a 4,096-token system prompt) — measure TTFT, throughput, and GPU memory utilization.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">DealLens sends the same 6,000-token VC screening prompt to Llama 3.1 70B for every deal. Calculate the SGLang prefix cache hit rate and estimate the cost savings per 1,000 deals vs. uncached vLLM.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Read the SGLang paper (Zheng et al., arXiv:2312.07104) and the vLLM paper (arXiv:2309.06180). Identify the specific head-of-line blocking problem PagedAttention solves and what RadixAttention adds that PagedAttention's prefix cache does not.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#paged-attention">vLLM and PagedAttention</a></li><li><a href="#radix-attention">SGLang and RadixAttention</a></li><li><a href="#tensorrt-llm">TensorRT-LLM: maximum throughput on NVIDIA hardware</a></li><li><a href="#selection-guide">Framework selection guide</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">By 2026, the choice of inference serving framework is a cost and latency decision measured in dollars per million tokens and milliseconds of TTFT — not a philosophical one. Three frameworks dominate production: vLLM (Kwon et al., arXiv:2309.06180, September 12, 2023) with PagedAttention and continuous batching as the open-source default; TensorRT-LLM (NVIDIA) as the fastest-on-hardware option for Hopper/Blackwell with the steepest deployment cost; and SGLang (Zheng et al., arXiv:2312.07104, December 12, 2023) with RadixAttention as the purpose-built agentic serving stack. You need to know all three, deploy one, and be honest about trade-offs.
+
+The key differentiator is not throughput on a single request — all three are within 20% of each other there. The key differentiator is the workload class. For random single requests with no shared context, vLLM's mature ecosystem and broad model support wins. For workloads dominated by a shared long system prompt — DealLens calling the same VC screening system prompt 10,000 times per day — SGLang's RadixAttention prefix cache turns that repeated compute into a cache hit, reducing effective TTFT from 400ms to 30ms and inference cost by 10×. For maximum raw throughput on NVIDIA hardware with FP8, TensorRT-LLM wins — if you can tolerate its deployment complexity and NVIDIA dependency.</p>
+<h2 id="paged-attention">vLLM and PagedAttention</h2>
+<p>The core insight of vLLM (Kwon et al., arXiv:2309.06180): KV cache allocation is the largest source of GPU memory waste in LLM serving. Before PagedAttention, serving systems pre-allocated a contiguous KV cache block for each request equal to the maximum possible sequence length. At 4K tokens per request, 80% of that allocation was typically unused — wasted HBM. PagedAttention applies the OS virtual memory model: KV blocks are allocated in fixed-size pages (typically 16 tokens), requests build a page table, and non-contiguous physical blocks are joined through the page table. Fragmentation drops from 20–30% to 1–4%. Continuous batching — processing tokens from different requests in the same forward pass as they arrive, rather than waiting for a batch to fill — increases GPU utilization from 30–40% to 80–90%.</p>
+<p>vLLM's production advantages: the broadest model support (Llama, Mistral, Qwen, DeepSeek, Gemma, Phi, Falcon), quantization support (AWQ, GPTQ, FP8, INT8), speculative decoding integration, and a large open-source community with rapid updates. vLLM's disadvantage: it is not the fastest on any specific hardware, and its prefix caching was added post-hoc rather than designed in. At current state (2026), vLLM supports prefix caching via an explicit KV cache hash, but the implementation is less aggressive than SGLang's tree structure.</p>
+<h2 id="radix-attention">SGLang and RadixAttention</h2>
+<p>SGLang (Zheng et al., arXiv:2312.07104, December 2023) was designed for agentic multi-call workloads from the start. RadixAttention represents the KV cache as a radix tree: each node is a sequence of tokens, each edge is a prefix match, and any request that shares a prefix with an existing cached sequence hits the tree and reuses those KV states at near-zero cost. For a DealLens workload where every request begins with the same 6,000-token system prompt (company description, scoring rubric, few-shot examples), RadixAttention computes those KV states once, caches them as a tree root, and serves all subsequent requests by reading from cache and only computing the per-deal portion. The prefix hit rate approaches 100%, reducing effective computation per request to the unique portion only.</p>
+<p>SGLang also introduced the RadixAttention scheduling policy: when GPU memory is under pressure, it evicts tree leaves (less-shared prefixes) before roots (most-shared prefixes). This LRU-by-share-count policy maintains the cache entries that benefit the most requests. The result for DealLens: at 10,000 deals per day with a 6K-token shared prefix, the cost difference between SGLang prefix caching and uncached vLLM is roughly 10× in token compute — translating directly to cost. For the JHU humanoid's planning LLM, which calls the same environment-description system prompt across thousands of simulated episodes, the same principle applies.</p>
+<p>SGLang's trade-offs: narrower model support than vLLM, less mature quantization pipeline, and the radix tree adds memory management complexity. For a diverse model zoo, vLLM is safer. For a single-model production deployment with high prefix reuse, SGLang consistently wins on both latency and cost.</p>
+<h2 id="tensorrt-llm">TensorRT-LLM: maximum throughput on NVIDIA hardware</h2>
+<p>TensorRT-LLM (NVIDIA) is the closed-source, hardware-optimized inference stack built on TensorRT's graph capture and kernel fusion infrastructure. It supports FP8 natively on Hopper and Blackwell, with custom CUDA kernels for every attention variant, MoE routing, and quantized matmul. On H100 SXM5, TensorRT-LLM typically delivers 10–30% higher throughput than vLLM for the same model and batch configuration — because its fused kernels and hardware-specific optimizations are not available in the open-source ecosystem. The Triton Inference Server provides the deployment wrapper.</p>
+<p>The cost of TensorRT-LLM: vendor lock-in (NVIDIA only), complex compilation pipeline (model → ONNX → TensorRT engine, can take hours per model), limited community support relative to vLLM, and aggressive version churn. For a team with a stable model serving a specific hardware, it is the right choice. For a team that changes models frequently, iterates on serving code, or runs on non-NVIDIA hardware, it is a trap. For DealLens in production on a fixed NVIDIA deployment, TensorRT-LLM deserves a benchmark comparison against SGLang before committing.</p>
+<h2 id="selection-guide">Framework selection guide</h2>
+<p>Choose vLLM when: you need broad model support, your workload has diverse request prefixes (no prefix reuse), you are prototyping or frequently changing models, or you need speculative decoding with a draft model. Choose SGLang when: your workload has a dominant shared prefix (agentic multi-call, RAG with a fixed system prompt), you are serving a single model at scale, and cost per call is the primary optimization target. Choose TensorRT-LLM when: maximum throughput is required on a fixed NVIDIA hardware deployment, you have budget for the compilation overhead, and you have 3–6 months between model updates.</p>
+<p>For DealLens: SGLang is the correct choice for the deal-screening loop. The screening prompt is fixed per GP, so prefix hit rate will be near 100% for repeat calls. Estimate: 6K-token shared prefix × Llama 3.1 70B serving 10K deals/day at $2/GPU-hour — vLLM costs ~$X, SGLang costs ~0.1X. For the JHU humanoid's planning LLM: SGLang for simulation-time planning calls (repeated system prompt). vLLM or TensorRT-LLM for on-robot deployment where single-request latency dominates.</p>
+<div class="aside" data-tone="plasma"><span class="aside__label">Disaggregated serving and llm-d</span><p>All three frameworks assume prefill and decode run on the same GPU pod. llm-d (Chapter 18) separates them. In the llm-d world, the serving framework choice applies separately to prefill pods and decode pods — you could run SGLang on prefill pods (for prefix caching) and vLLM on decode pods (for broader hardware support) in the same cluster.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="vLLM PagedAttention vs SGLang RadixAttention comparison"><title>vLLM PagedAttention vs SGLang RadixAttention</title><style>text{font-family:system-ui,sans-serif;font-size:11px;fill:var(--color-text)}.muted{fill:var(--color-text-muted)}.bold{font-weight:700;font-size:13px}</style><text x="400" y="24" text-anchor="middle" class="bold" fill="var(--color-primary)">Serving Framework Core Mechanisms</text><rect x="20" y="40" width="360" height="300" rx="4" fill="none" stroke="var(--color-accent-euv)" stroke-width="1.5"/><text x="200" y="60" text-anchor="middle" fill="var(--color-accent-euv)" font-weight="600" font-size="12">vLLM — PagedAttention</text><rect x="35" y="70" width="50" height="30" rx="2" fill="var(--color-accent-euv)" fill-opacity="0.20" stroke="var(--color-accent-euv)"/><text x="60" y="89" text-anchor="middle" font-size="10">Page 0</text><rect x="95" y="70" width="50" height="30" rx="2" fill="var(--color-accent-euv)" fill-opacity="0.20" stroke="var(--color-accent-euv)"/><text x="120" y="89" text-anchor="middle" font-size="10">Page 1</text><rect x="155" y="70" width="50" height="30" rx="2" fill="var(--color-accent-euv)" fill-opacity="0.20" stroke="var(--color-accent-euv)"/><text x="180" y="89" text-anchor="middle" font-size="10">Page 2</text><rect x="215" y="70" width="50" height="30" rx="2" fill="none" stroke="var(--color-text-muted)" stroke-dasharray="3,2"/><text x="240" y="89" text-anchor="middle" font-size="10" class="muted">free</text><rect x="275" y="70" width="50" height="30" rx="2" fill="var(--color-accent-euv)" fill-opacity="0.20" stroke="var(--color-accent-euv)"/><text x="300" y="89" text-anchor="middle" font-size="10">Page 4</text><text x="200" y="125" text-anchor="middle" class="muted">Non-contiguous pages in HBM</text><text x="200" y="143" text-anchor="middle" class="muted">Page table maps virtual → physical</text><text x="200" y="165" text-anchor="middle" fill="var(--color-accent-euv)">Fragmentation: 1–4%</text><text x="200" y="183" text-anchor="middle">Continuous batching: multi-request</text><text x="200" y="201" text-anchor="middle">forward passes per step</text><text x="200" y="230" text-anchor="middle" class="muted">Prefix caching: content-hash based</text><text x="200" y="248" text-anchor="middle" class="muted">(added post-hoc, less aggressive)</text><text x="200" y="280" text-anchor="middle" fill="var(--color-accent-euv)" font-weight="600">Best for: diverse workloads,</text><text x="200" y="298" text-anchor="middle" fill="var(--color-accent-euv)" font-weight="600">broad model support</text><rect x="420" y="40" width="360" height="300" rx="4" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.5"/><text x="600" y="60" text-anchor="middle" fill="var(--color-accent-copper)" font-weight="600" font-size="12">SGLang — RadixAttention</text><circle cx="600" cy="100" r="12" fill="var(--color-accent-copper)" fill-opacity="0.25" stroke="var(--color-accent-copper)"/><text x="600" y="104" text-anchor="middle" font-size="9">root</text><line x1="580" y1="112" x2="520" y2="140" stroke="var(--color-accent-copper)"/><line x1="620" y1="112" x2="680" y2="140" stroke="var(--color-accent-copper)"/><rect x="490" y="140" width="60" height="24" rx="2" fill="var(--color-accent-copper)" fill-opacity="0.15" stroke="var(--color-accent-copper)"/><text x="520" y="156" text-anchor="middle" font-size="9">sys prompt A</text><rect x="650" y="140" width="60" height="24" rx="2" fill="var(--color-accent-copper)" fill-opacity="0.15" stroke="var(--color-accent-copper)"/><text x="680" y="156" text-anchor="middle" font-size="9">sys prompt B</text><line x1="520" y1="164" x2="490" y2="190" stroke="var(--color-accent-copper)"/><line x1="520" y1="164" x2="550" y2="190" stroke="var(--color-accent-copper)"/><rect x="465" y="190" width="50" height="20" rx="2" fill="var(--color-accent-copper)" fill-opacity="0.08" stroke="var(--color-accent-copper)"/><text x="490" y="204" text-anchor="middle" font-size="9">deal 1</text><rect x="525" y="190" width="50" height="20" rx="2" fill="var(--color-accent-copper)" fill-opacity="0.08" stroke="var(--color-accent-copper)"/><text x="550" y="204" text-anchor="middle" font-size="9">deal 2</text><text x="600" y="240" text-anchor="middle">Shared prefix KV: computed once,</text><text x="600" y="258" text-anchor="middle">reused across all child requests</text><text x="600" y="276" text-anchor="middle" fill="var(--color-accent-copper)">Cache hit → zero prefill cost</text><text x="600" y="298" text-anchor="middle" fill="var(--color-accent-copper)" font-weight="600">Best for: agentic, fixed system prompt,</text><text x="600" y="316" text-anchor="middle" fill="var(--color-accent-copper)" font-weight="600">high prefix reuse workloads</text></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 17.1</span><span class="text">Left: vLLM PagedAttention stores KV cache in non-contiguous pages joined by a page table — reducing fragmentation to 1–4%. Right: SGLang RadixAttention builds a prefix tree where shared system prompts are cached at tree roots and reused by all child requests — eliminating repeated prefill computation for high-reuse workloads like DealLens.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">vLLM wins on generality, SGLang wins on agentic prefix reuse (10× cost savings for workloads with shared long system prompts), and TensorRT-LLM wins on raw NVIDIA throughput — the selection criterion is your workload pattern, not framework pedigree.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://arxiv.org/abs/2309.06180">Efficient Memory Management for Large Language Model Serving with PagedAttention, Kwon et al., arXiv:2309.06180 (September 12, 2023). SGLang: Zheng et al., arXiv:2312.07104 (December 12, 2023).</a></p>
+  <p><strong>Build.</strong> Serve Llama 3.1 8B with vLLM and SGLang on the same GPU. Benchmark an agentic workload: 1,000 requests all sharing a 4,096-token system prompt with 512-token unique suffixes. Measure TTFT, throughput (tokens/sec), and GPU memory utilization for each.</p>
+  <p><strong>Capstone ladder.</strong> Direct DealLens dependency: SGLang with the VC screening system prompt cached will reduce per-deal inference cost by ~4–10× vs uncached vLLM. For the humanoid&#x27;s planning LLM in simulation, SGLang prefix caching amortizes the environment-description system prompt across thousands of GRPO rollout episodes.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="17-vllm-trtllm-sglang">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">How does PagedAttention reduce KV cache fragmentation, and what OS concept does it apply?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">PagedAttention applies OS virtual memory: KV states are stored in fixed-size non-contiguous pages joined via a page table, rather than pre-allocated contiguous blocks. Fragmentation drops from 20–30% (contiguous) to 1–4% (paged).</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does SGLang&#x27;s RadixAttention outperform vLLM&#x27;s prefix cache for agentic workloads, and what data structure makes it work?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">RadixAttention uses a radix tree where shared prefixes form tree roots; all requests sharing a prefix reuse the same cached KV states. The tree structure enables LRU eviction by share-count, prioritizing most-shared prefixes. vLLM's prefix cache uses content hashing which is less efficient for tree-structured prefix sharing patterns.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">DealLens sends a 6,000-token system prompt + 2,000-token deal memo to Llama 3.1 70B for 500 deals per day. Estimate the ratio of effective token computation with SGLang vs uncached serving.</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Each request is 8,000 tokens; 6,000 are shared prefix. With SGLang and near-100% cache hit rate, effective computation per request is ~2,000 tokens (the deal memo). Without prefix caching: 8,000 tokens. Ratio: 2,000/8,000 = 0.25 — 4× less computation. At 500 deals/day, this directly translates to ~4× lower inference cost on the prefill portion.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="17-vllm-trtllm-sglang-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="16-rlhf-dpo-grpo.html"><span class="ch-nav-link__label">← Chapter 16</span><span class="ch-nav-link__title">RLHF, DPO, GRPO, and reasoning RL</span></a>
+      <a class="ch-nav-link" data-dir="next" href="18-llm-d.html"><span class="ch-nav-link__label">Chapter 18 →</span><span class="ch-nav-link__title">llm-d and disaggregated inference</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

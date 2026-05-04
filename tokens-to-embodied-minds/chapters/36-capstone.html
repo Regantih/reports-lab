@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 36 · Capstone — a humanoid home assistant, end to end — From Tokens to Embodied Minds</title>
+<meta name="description" content="The JHU humanoid home-assistant capstone: DINOv2 + SAM 2 + 3DGS scene memory, LangGraph planner with MCP tools, SmolVLA or GR00T N1.5 policy, Isaac Lab simulation, a five-layer safety stack, and rerun.io observability. Not a demo — six months of work.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="36-capstone" data-chapter-title="Capstone — a humanoid home assistant, end to end">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="36-capstone">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">DINOv2 + SAM 2 + 3DGS perception</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">LangGraph planner</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">MCP home tools</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">SmolVLA policy</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">Isaac Lab simulation</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">safety filter stack</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">rerun.io observability</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="36-capstone" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — the capstone has six subsystems to integrate. What is the single most common failure mode in multi-subsystem robotics integration, beyond individual subsystem bugs?</h2>
+  <p class="learn__hint">Think about interface contracts and timing.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-36-capstone" value="a"><span>The policy neural network overfits to training data and fails to generalize to new objects</span></label><label class="predict__choice"><input type="radio" name="predict-36-capstone" value="b"><span>Interface mismatches between subsystems — wrong data formats, timing mismatches, and implicit assumptions at subsystem boundaries — cause integration failures that are harder to debug than any individual component bug</span></label><label class="predict__choice"><input type="radio" name="predict-36-capstone" value="c"><span>The simulation environment never accurately represents the real world, making all sim-trained policies fail on deployment</span></label><label class="predict__choice"><input type="radio" name="predict-36-capstone" value="d"><span>The LLM planner hallucinates tool calls that the physical robot cannot execute</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">Interface mismatches are the dominant failure mode in multi-subsystem robotics integration. The perception system outputs a 3D object map in one coordinate frame; the planner expects it in another. The policy outputs a target pose at 10Hz; the controller expects a joint-space command at 1kHz. The safety filter's workspace bounds use a different coordinate system than the policy's action space. None of these bugs are visible in individual subsystem tests — they only appear at integration. The solution is to define explicit interface contracts (data format, coordinate frame, frequency) at every subsystem boundary before any component is built.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 36 of 36</div>
+    <div class="ch-header__num">Chapter 36</div>
+    <h1 class="ch-header__title">Capstone — a humanoid home assistant, end to end</h1>
+    <p class="ch-header__dek">The full stack, from perception to π0.5 to PD controller</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Draw the full JHU humanoid perception-to-action stack from DINOv2/SAM 2/3DGS through LangGraph planner through SmolVLA/GR00T to PD controller</li><li>Identify the integration point between each subsystem (perception → planner, planner → policy, policy → controller, controller → safety filter) and the data format at each interface</li><li>Define a 50-task regression suite that constitutes honest capstone completion — not a cherry-picked demo</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">200</div><div class="stat__label">LeRobot SO-101 episodes minimum for a meaningful fine-tuned household manipulation policy</div></div><div class="stat"><div class="stat__num">6</div><div class="stat__label">subsystems to integrate: perception, planning, policy, simulation, safety, observability</div></div><div class="stat"><div class="stat__num">50</div><div class="stat__label">canonical test tasks in the regression suite — the only honest measure of capstone completion</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="36-capstone">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. Without looking, draw the full perception-to-action stack from camera to motor torque, naming the data format at each interface.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Stand up each subsystem independently and test with synthetic inputs. Verify that (a) DINOv2 + SAM 2 produces a labeled 3D map from a static scene, (b) the LangGraph planner generates a valid action plan from a text instruction, (c) SmolVLA produces an action chunk from a camera observation.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">Integrate all six subsystems end-to-end on the SO-101 or humanoid hardware. Execute 10 of the 50 canonical test tasks. Report success rate, failure mode distribution, and the interface that caused the most integration bugs.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Complete the 50-task regression suite. Publish: capstone repo (public GitHub), demo video, 200-episode LeRobot dataset on HF Hub, and a 5,000-word write-up on architecture decisions and failure modes. This is the JHU capstone deliverable.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#perception-stack">Perception: DINOv2 + SAM 2 + 3DGS</a></li><li><a href="#planning-stack">Planning: LangGraph + MCP home-control tools</a></li><li><a href="#policy-and-controller">Policy: SmolVLA or GR00T N1.5 → PD controller</a></li><li><a href="#simulation-observability">Simulation and observability</a></li><li><a href="#public-artifacts">Public output artifacts</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">This is not a demo. The JHU humanoid home-assistant capstone is six months of work and a body of evidence you ship publicly. The perception layer, the planner, the policy, the simulation tier, the safety stack, and the observability infrastructure are not six separate projects that happen to run on the same robot — they are six subsystems with explicit interfaces that must be designed, integrated, tested, and documented as a system.
+
+Pulling every chapter of Part III together: DINOv2 ViT-B/14 + SAM 2 + 3DGS for scene understanding (Ch 26, 27), LangGraph state machine with MCP home-control tools for planning (Ch 22, 21), SmolVLA-450M or GR00T N1.5 for manipulation policy (Ch 32, 33), Isaac Lab with Newton physics for simulation (Ch 29), a five-layer safety filter stack (Ch 35), and rerun.io for trajectory observability. The closest published reference architecture is 1X Technologies' NEO Gamma deployment of GR00T N1 (NVIDIA-1X partnership, March 18, 2025).</p>
+<h2 id="perception-stack">Perception: DINOv2 + SAM 2 + 3DGS</h2>
+<p>The perception layer has three components that operate in sequence. First: the 3D Gaussian Splatting scene map (Ch 27), built from a wrist camera and updated online as the robot moves. This gives the robot a 3D geometric understanding of the environment — where objects are in space. Second: DINOv2 ViT-B/14 (Ch 26), running on the live camera stream to compute visual embeddings for detected objects. These embeddings provide object identity (is this the mug I saw yesterday?) and attribute grounding (is this the red mug or the blue one?). Third: SAM 2 (Ch 27) for instance segmentation on camera frames — producing per-object masks that are projected back onto the 3DGS map to maintain labeled 3D object representations.</p>
+<p>The interface between perception and planning: a JSON object map, updated at 2-5Hz, containing for each detected object: 3D bounding box (in the robot's world frame), DINOv2 embedding (for identity matching), semantic label (mug, plate, fork, etc.), and current SAM 2 instance mask. The planner queries this map via MCP tool calls (get_object_position, find_object_by_type). The coordinate system is the robot's world frame — the perception system must handle the transform from camera frame to world frame given the robot's current pose.</p>
+<h2 id="planning-stack">Planning: LangGraph + MCP home-control tools</h2>
+<p>The planner is a LangGraph state machine (Ch 22) with an LLM (GPT-4o or Claude 3.5 Sonnet) at its core. The LLM receives the user's task instruction and the current object map, and generates a sequence of high-level action primitives: pick_up(mug), place_on(counter), open_drawer(). Each primitive is an MCP tool call (Ch 21) that the planner resolves to a specific policy invocation with concrete object coordinates from the perception map.</p>
+<p>The critical design decision: every irreversible physical action requires an explicit human-confirmation interrupt before execution (Ch 35). The LangGraph state machine has a confirmation state that blocks execution until the user confirms (voice, button, or app). The planner also has a 'safe abort' state that parks the robot arm and drops all pending actions — reachable from any state via the physical interrupt button. Langfuse traces (Ch 23) record all LLM calls with inputs, outputs, and latencies for offline analysis. For the capstone, this is the observability layer above the robot controller.</p>
+<h2 id="policy-and-controller">Policy: SmolVLA or GR00T N1.5 → PD controller</h2>
+<p>The policy receives from the planner: (1) the task primitive (e.g., 'pick_up'), (2) the target object's 3D position and DINOv2 embedding, and (3) the current camera observation. SmolVLA (Ch 32) or GR00T N1.5 (Ch 33) outputs an action chunk (K=8-16 future joint-position targets) at 5-30Hz. The trajectory interpolator converts this chunk to a per-joint target sequence. The IK solver (Ch 25) converts end-effector targets to joint angles. The PD/impedance controller (Ch 25) closes the torque loop at 1kHz. The five-layer safety filter (Ch 35) intercepts the controller output before it reaches the motors.</p>
+<p>The interface contract at each boundary: policy → controller: joint-position targets in radians, timestamped at 30Hz; controller → motor: torque commands in Nm, timestamped at 1kHz; safety filter → motor: same format as controller, but with commands zeroed if any limit is triggered. The data format mismatch at these interfaces is the most common integration failure — document and validate each interface explicitly before integration testing.</p>
+<h2 id="simulation-observability">Simulation and observability</h2>
+<p>The simulation tier (Ch 29) supports the capstone in two ways. During development: Isaac Lab with Newton physics is the environment for policy fine-tuning and regression testing — 47 of the 50 canonical test tasks can be evaluated in simulation before touching real hardware. During data augmentation: GR00T-Dreams generates synthetic training data from the 200-episode LeRobot dataset, extending the policy's coverage of household task variants.</p>
+<p>Observability: rerun.io for real-time trajectory replay and debugging (every joint position, end-effector pose, camera frame, and policy action is logged at the timestep level), Langfuse for planner LLM traces (every LLM call with prompt, response, latency, and token cost), and an offline regression suite of 50 canonical tasks with a defined pass/fail criterion for each. The 50-task regression suite — not a cherry-picked demo — is the honest measure of capstone completion. Tasks should span: tabletop manipulation (20 tasks), whole-body navigation + manipulation (15 tasks), multi-step sequences (10 tasks), and safety-filter validation (5 tasks).</p>
+<h2 id="public-artifacts">Public output artifacts</h2>
+<p>The capstone is not complete until these five artifacts exist publicly: (1) GitHub mono-repo (tokens-to-embodied-minds) with one runnable notebook per chapter and the full capstone code; (2) Capstone repo (jhu-humanoid-capstone) with architecture diagram, module-level README, and the 50-task regression suite results; (3) Demo video — 3-5 minutes showing the full stack on at least 5 diverse canonical tasks; (4) LeRobot dataset — 200 episodes uploaded to HF Hub under your username with a complete dataset card; (5) Technical write-up — 5,000 words covering architecture decisions, failure modes, and lessons learned, targeted at a GP audience reading about humanoid robotics diligence. The closest published reference for the architecture: 1X NEO Gamma deployment (NVIDIA-1X, March 18, 2025). The closest published reference for the write-up format: the GR00T N1.5 tech report (NVIDIA Research, June 11, 2025).</p>
+<div class="aside" data-tone="primary"><span class="aside__label">On timeline honesty</span><p>Six months at 12 hours/week is 288 hours. That is a realistic minimum for integration, iteration, and the 50-task regression suite. If you are starting from zero hardware: add 4-6 weeks for SO-101 build, calibration, and the first 50 recorded episodes. Budget accordingly.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="Full JHU humanoid capstone stack: perception to VLA to controller with all six subsystems"><style>text{font-family:system-ui,sans-serif;font-size:11px;fill:var(--color-text)}.muted{fill:var(--color-text-muted);font-size:9px}.title{font-size:15px;font-weight:600;fill:var(--color-text)}.head{font-size:11px;font-weight:600}</style><text x="400" y="24" text-anchor="middle" class="title">JHU Humanoid Capstone — Full Stack</text><rect x="10" y="40" width="115" height="70" rx="4" fill="none" stroke="var(--color-accent-euv)" stroke-width="1.4"/><text x="67" y="58" text-anchor="middle" class="head" fill="var(--color-text)">Perception</text><text x="67" y="73" text-anchor="middle" class="muted">3DGS scene map</text><text x="67" y="87" text-anchor="middle" class="muted">DINOv2 ViT-B/14</text><text x="67" y="101" text-anchor="middle" class="muted">SAM 2 segmentation</text><rect x="140" y="40" width="115" height="70" rx="4" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.4"/><text x="197" y="58" text-anchor="middle" class="head" fill="var(--color-text)">LangGraph Planner</text><text x="197" y="73" text-anchor="middle" class="muted">MCP tools (home)</text><text x="197" y="87" text-anchor="middle" class="muted">LLM (GPT-4o)</text><text x="197" y="101" text-anchor="middle" class="muted">Confirm gate</text><rect x="270" y="40" width="130" height="70" rx="4" fill="none" stroke="var(--color-accent-euv)" stroke-width="1.8"/><text x="335" y="58" text-anchor="middle" class="head" fill="var(--color-text)">Policy</text><text x="335" y="73" text-anchor="middle" class="muted">SmolVLA-450M</text><text x="335" y="87" text-anchor="middle" class="muted">or GR00T N1.5</text><text x="335" y="101" text-anchor="middle" class="muted">5-30 Hz, K=8-16</text><rect x="415" y="40" width="130" height="70" rx="4" fill="none" stroke="var(--color-primary)" stroke-width="1.4"/><text x="480" y="58" text-anchor="middle" class="head" fill="var(--color-text)">Controller</text><text x="480" y="73" text-anchor="middle" class="muted">IK solver (Jacobian)</text><text x="480" y="87" text-anchor="middle" class="muted">PD / Impedance</text><text x="480" y="101" text-anchor="middle" class="muted">1 kHz torque loop</text><rect x="560" y="40" width="115" height="70" rx="4" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.4"/><text x="617" y="58" text-anchor="middle" class="head" fill="var(--color-text)">Safety Filter</text><text x="617" y="73" text-anchor="middle" class="muted">5 layers (Ch 35)</text><text x="617" y="87" text-anchor="middle" class="muted">Torque / workspace</text><text x="617" y="101" text-anchor="middle" class="muted">Contact force ceiling</text><rect x="690" y="40" width="100" height="70" rx="4" fill="none" stroke="var(--color-primary)" stroke-width="1.4"/><text x="740" y="58" text-anchor="middle" class="head" fill="var(--color-text)">Motors</text><text x="740" y="73" text-anchor="middle" class="muted">Joint torques</text><text x="740" y="87" text-anchor="middle" class="muted">Servo feedback</text><text x="740" y="101" text-anchor="middle" class="muted">1 kHz</text><line x1="125" y1="75" x2="138" y2="75" stroke="var(--color-accent-euv)" stroke-width="1.5" marker-end="url(#a8)"/><line x1="255" y1="75" x2="268" y2="75" stroke="var(--color-accent-copper)" stroke-width="1.5" marker-end="url(#a8)"/><line x1="400" y1="75" x2="413" y2="75" stroke="var(--color-accent-euv)" stroke-width="1.5" marker-end="url(#a8)"/><line x1="545" y1="75" x2="558" y2="75" stroke="var(--color-primary)" stroke-width="1.5" marker-end="url(#a8)"/><line x1="675" y1="75" x2="688" y2="75" stroke="var(--color-accent-copper)" stroke-width="1.5" marker-end="url(#a8)"/><rect x="10" y="165" width="370" height="55" rx="4" fill="none" stroke="var(--color-accent-euv)" stroke-width="1"/><text x="195" y="183" text-anchor="middle" class="head" fill="var(--color-text)">Simulation (Isaac Lab + Newton)</text><text x="195" y="198" text-anchor="middle" class="muted">Policy fine-tuning + 47/50 regression tasks in sim</text><text x="195" y="212" text-anchor="middle" class="muted">GR00T-Dreams augments 200-ep real dataset</text><rect x="415" y="165" width="375" height="55" rx="4" fill="none" stroke="var(--color-primary)" stroke-width="1"/><text x="602" y="183" text-anchor="middle" class="head" fill="var(--color-text)">Observability</text><text x="602" y="198" text-anchor="middle" class="muted">rerun.io: trajectory replay (joints, EE pose, camera, actions)</text><text x="602" y="212" text-anchor="middle" class="muted">Langfuse: planner LLM traces · 50-task regression suite</text><rect x="10" y="275" width="780" height="60" rx="4" fill="none" stroke="var(--color-accent-copper)" stroke-width="1" stroke-dasharray="5,3"/><text x="400" y="297" text-anchor="middle" class="head" fill="var(--color-text)">Public Output Artifacts</text><text x="400" y="313" text-anchor="middle" class="muted">GitHub mono-repo · Capstone repo (50-task results) · Demo video · 200-ep LeRobot dataset (HF Hub) · 5,000-word write-up</text><text x="400" y="327" text-anchor="middle" class="muted">Timeline: 6 months × 12 hrs/week. Reference: 1X NEO Gamma + GR00T N1 (NVIDIA-1X, Mar 18, 2025)</text><defs><marker id="a8" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><polygon points="0 0,7 3.5,0 7" fill="var(--color-text-muted)"/></marker></defs></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 36.1</span><span class="text">Full JHU humanoid capstone stack. Six subsystems with explicit interfaces: Perception (DINOv2 + SAM 2 + 3DGS) → LangGraph Planner (MCP tools, LLM, confirmation gate) → Policy (SmolVLA or GR00T N1.5, 5-30Hz) → Controller (IK + PD/impedance, 1kHz) → Safety Filter (5 layers) → Motors. Simulation (Isaac Lab) and observability (rerun.io, Langfuse) support all layers. Five public artifacts constitute completion.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">The JHU humanoid capstone is six subsystems with explicit interfaces, a 50-task regression suite, and five public artifacts — the demo video is the last thing you build, not the first.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://research.nvidia.com/labs/gear/gr00t-n1_5/">All of the above, integrated. Closest published reference: 1X NEO Gamma deployment of GR00T N1, NVIDIA-1X, March 18, 2025</a></p>
+  <p><strong>Build.</strong> Ship the capstone. Public GitHub repo with architecture diagram and chapter notebooks. Public capstone repo (jhu-humanoid-capstone) with 50-task regression suite results. Demo video (3-5 minutes, 5+ canonical tasks). 200-episode LeRobot dataset on HF Hub with dataset card. 5,000-word technical write-up. Timeline: 6 months at 12 hours/week.</p>
+  <p><strong>Capstone ladder.</strong> This is the JHU capstone. The demo video is the last artifact you build, not the first. The 50-task regression suite is the completion criterion. The five public artifacts are the body of evidence that makes this a portfolio piece, not just a project.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="36-capstone">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What are the five public output artifacts of the JHU humanoid capstone?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">1. GitHub mono-repo (tokens-to-embodied-minds) with chapter notebooks and capstone code. 2. Capstone repo (jhu-humanoid-capstone) with architecture diagram and 50-task regression results. 3. Demo video (3-5 minutes, 5+ canonical tasks). 4. LeRobot 200-episode dataset on HF Hub with dataset card. 5. 5,000-word technical write-up (architecture decisions, failure modes, lessons learned).</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">What are the interface contracts at the policy → controller and controller → motor boundaries?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Policy → controller: joint-position targets in radians, timestamped at 30Hz (from SmolVLA/GR00T action chunk). Controller → motor: torque commands in Nm, timestamped at 1kHz (from PD/impedance controller). The safety filter intercepts between controller and motor — same format, commands zeroed if any limit triggers. Coordinate frame: world frame for end-effector, joint frame for joint angles. Mismatches at these boundaries are the most common integration failure.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">The capstone robot picks up the correct object 90% of the time but drops it 40% of the time during transport. Which subsystem do you investigate first?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The controller/policy interface and the impedance controller tuning. A 90% grasp rate suggests the perception (correct object identification) and policy (correct grasp approach) are working. The 40% drop rate during transport suggests: (1) the impedance controller contact compliance is too low (rigid grasp that loses contact over uneven surfaces), (2) the action chunk horizon (K) is too long for the transport motion (open-loop execution accumulates error), or (3) the torque limit is set too conservatively and fires during the grasp, triggering a safety stop. Check contact force logs during transport first.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="36-capstone-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="35-embodied-safety.html"><span class="ch-nav-link__label">← Chapter 35</span><span class="ch-nav-link__title">Safety and alignment for embodied AI</span></a>
+      <a class="ch-nav-link" data-dir="next" href="glossary.html"><span class="ch-nav-link__label">Reference →</span><span class="ch-nav-link__title">Glossary</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

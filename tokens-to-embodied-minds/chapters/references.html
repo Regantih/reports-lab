@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>References — From Tokens to Embodied Minds</title>
+<meta name="description" content="Full reference list — courses, foundational papers, systems papers, agent protocols, vision, robotics, books. Verified current as of May 2026.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body>
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link nav-link--active" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Reference</div>
+    <div class="ch-header__num">References</div>
+    <h1 class="ch-header__title">Source list</h1>
+    <p class="ch-header__dek">Every source cited in the 36 chapters — courses, papers, official docs. Verified current as of May 2026.</p>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this list</div><ul><li><a href="#courses">Courses</a></li><li><a href="#foundational">Foundational papers</a></li><li><a href="#systems">LLM systems</a></li><li><a href="#inference">Inference</a></li><li><a href="#agents">Agent protocols</a></li><li><a href="#vision">Vision &amp; 3D</a></li><li><a href="#robotics">Robotics &amp; VLAs</a></li><li><a href="#books">Books</a></li></ul></aside>
+    <article class="prose">
+<h2 id="courses">Courses</h2>
+<ul>
+<li>Stanford CS336 — <em>Language Modeling from Scratch</em>, Spring 2025, Percy Liang &amp; Tatsunori Hashimoto. <a href="https://cs336.stanford.edu/spring2025/">cs336.stanford.edu/spring2025</a>. Full lectures on YouTube (<a href="https://www.reddit.com/r/LocalLLaMA/comments/1lxgb9q/stanfords_cs336_2025_language_modeling_from/">Reddit announcement, July 11, 2025</a>).</li>
+<li>Stanford CS25 — <em>Transformers United V5</em>. <a href="https://web.stanford.edu/class/cs25/">web.stanford.edu/class/cs25</a>.</li>
+<li>Stanford CS231n — <em>Deep Learning for Computer Vision</em>, Spring 2024. <a href="http://cs231n.stanford.edu/">cs231n.stanford.edu</a>.</li>
+<li>Stanford ENGR319 — <em>Foundations of Generative AI</em>. <a href="https://online.stanford.edu/">online.stanford.edu</a>.</li>
+<li>CMU 11-868 — <em>Large Language Model Systems</em>, Spring 2025, Lei Li. <a href="https://llmsystem.github.io/llmsystem2025spring/">llmsystem.github.io/llmsystem2025spring</a>.</li>
+<li>Berkeley CS 285 — <em>Deep Reinforcement Learning</em>, Fall 2024, Sergey Levine. <a href="http://rail.eecs.berkeley.edu/deeprlcourse/">rail.eecs.berkeley.edu/deeprlcourse</a>.</li>
+<li>Berkeley CS 294-277 — <em>Robots that Learn</em>, Spring 2026, Jitendra Malik. Original announcement: <a href="https://x.com/JitendraMalikCV/status/1876072144020644198">Malik on X, Jan 6, 2025</a>.</li>
+<li>MIT 6.S191 — <em>Introduction to Deep Learning</em>, 2025. <a href="http://introtodeeplearning.com/">introtodeeplearning.com</a>.</li>
+<li>NVIDIA Deep Learning Institute — <em>Robotics Fundamentals</em> and <em>Generative AI Teaching Kit</em>. <a href="https://www.nvidia.com/en-us/training/">nvidia.com/training</a>.</li>
+<li>500 Global VC Unlocked: Silicon Valley (Aug 24 – Sept 4, 2026, Stanford campus, $25K). <a href="https://500.co/venture-education/vcu/stanford">500.co/vcu/stanford</a>.</li>
+<li>500 Global VC Unlocked: AI Edition. <a href="https://500.co/venture-education/vcu/ai">500.co/vcu/ai</a>.</li>
+</ul>
+<h2 id="foundational">Foundational papers</h2>
+<ul>
+<li>Vaswani et al., <em>Attention Is All You Need</em>, <a href="https://arxiv.org/abs/1706.03762">arXiv:1706.03762</a>, June 12, 2017.</li>
+<li>He et al., <em>Deep Residual Learning for Image Recognition</em>, <a href="https://arxiv.org/abs/1512.03385">arXiv:1512.03385</a>, Dec 10, 2015.</li>
+<li>Dosovitskiy et al., <em>An Image is Worth 16×16 Words (ViT)</em>, <a href="https://arxiv.org/abs/2010.11929">arXiv:2010.11929</a>, Oct 22, 2020.</li>
+<li>Su et al., <em>RoFormer: Enhanced Transformer with Rotary Position Embedding</em>, <a href="https://arxiv.org/abs/2104.09864">arXiv:2104.09864</a>, April 20, 2021.</li>
+<li>Schulman et al., <em>Proximal Policy Optimization Algorithms</em>, <a href="https://arxiv.org/abs/1707.06347">arXiv:1707.06347</a>, July 20, 2017.</li>
+<li>Haarnoja et al., <em>Soft Actor-Critic</em>, <a href="https://arxiv.org/abs/1801.01290">arXiv:1801.01290</a>, Jan 4, 2018.</li>
+<li>Hoffmann et al., <em>Training Compute-Optimal LLMs (Chinchilla)</em>, <a href="https://arxiv.org/abs/2203.15556">arXiv:2203.15556</a>, March 29, 2022.</li>
+</ul>
+<h2 id="systems">LLM systems &amp; alignment</h2>
+<ul>
+<li>Dao et al., <em>FlashAttention-2</em>, <a href="https://arxiv.org/abs/2307.08691">arXiv:2307.08691</a>, July 17, 2023.</li>
+<li>Kwon et al., <em>PagedAttention / vLLM</em>, <a href="https://arxiv.org/abs/2309.06180">arXiv:2309.06180</a>, Sept 12, 2023.</li>
+<li>Zheng et al., <em>SGLang</em>, <a href="https://arxiv.org/abs/2312.07104">arXiv:2312.07104</a>, Dec 12, 2023.</li>
+<li>Frantar et al., <em>GPTQ</em>, <a href="https://arxiv.org/abs/2210.17323">arXiv:2210.17323</a>, Oct 31, 2022.</li>
+<li>Leviathan et al., <em>Speculative Decoding</em>, <a href="https://arxiv.org/abs/2211.17192">arXiv:2211.17192</a>, Nov 30, 2022.</li>
+<li>Rafailov et al., <em>Direct Preference Optimization</em>, <a href="https://arxiv.org/abs/2305.18290">arXiv:2305.18290</a>, May 29, 2023.</li>
+<li>DeepSeek-AI, <em>DeepSeek-V3 Technical Report</em>, <a href="https://arxiv.org/abs/2412.19437">arXiv:2412.19437</a>, Dec 27, 2024.</li>
+<li>DeepSeek-AI, <em>DeepSeek-R1</em>, <a href="https://arxiv.org/abs/2501.12948">arXiv:2501.12948</a>, Jan 22, 2025.</li>
+<li>Meta AI, <em>The Llama 3 Herd</em>, <a href="https://arxiv.org/abs/2407.21783">arXiv:2407.21783</a>, July 31, 2024.</li>
+<li>Penedo et al., <em>The FineWeb Datasets</em>, <a href="https://arxiv.org/abs/2406.17557">arXiv:2406.17557</a>, June 25, 2024.</li>
+<li>Zhao et al., <em>PyTorch FSDP</em>, <a href="https://arxiv.org/abs/2304.11277">arXiv:2304.11277</a>, April 21, 2023.</li>
+<li>Liu et al., <em>Ring Attention</em>, <a href="https://arxiv.org/abs/2310.01889">arXiv:2310.01889</a>, Oct 3, 2023.</li>
+<li>Anthropic, <em>Introducing Contextual Retrieval</em>, <a href="https://www.anthropic.com/news/contextual-retrieval">Sept 19, 2024</a>.</li>
+<li>Microsoft Research, <em>GraphRAG</em>, <a href="https://arxiv.org/abs/2404.16130">arXiv:2404.16130</a>, April 24, 2024.</li>
+<li>Greshake et al., <em>Indirect Prompt Injection</em>, <a href="https://arxiv.org/abs/2302.12173">arXiv:2302.12173</a>, Feb 23, 2023.</li>
+<li>Amodei et al., <em>Concrete Problems in AI Safety</em>, <a href="https://arxiv.org/abs/1606.06565">arXiv:1606.06565</a>, June 21, 2016.</li>
+</ul>
+<h2 id="inference">Inference &amp; infrastructure</h2>
+<ul>
+<li>Red Hat Developer, <em>Introduction to distributed inference with llm-d</em>, <a href="https://developers.redhat.com/articles/2025/11/21/introduction-distributed-inference-llm-d">Nov 21, 2025</a>.</li>
+<li>Red Hat Developer, <em>llm-d: Kubernetes-native distributed inferencing</em>, <a href="https://developers.redhat.com/articles/2025/05/20/llm-d-kubernetes-native-distributed-inferencing">May 20, 2025</a>.</li>
+<li>llm-d project. <a href="https://llm-d.ai/">llm-d.ai</a>.</li>
+<li>vLLM documentation. <a href="https://docs.vllm.ai/">docs.vllm.ai</a>.</li>
+<li>Triton documentation. <a href="https://triton-lang.org/main/index.html">triton-lang.org</a>.</li>
+<li>PyTorch Autograd Mechanics. <a href="https://docs.pytorch.org/docs/stable/notes/autograd.html">docs.pytorch.org</a>.</li>
+<li>NVIDIA H100 Architecture Whitepaper, <a href="https://resources.nvidia.com/en-us-tensor-core">March 22, 2022</a>.</li>
+<li>NVIDIA Blackwell Architecture Brief, <a href="https://resources.nvidia.com/en-us-blackwell-architecture">March 18, 2024</a>.</li>
+</ul>
+<h2 id="agents">Agent protocols &amp; orchestration</h2>
+<ul>
+<li>Anthropic, <em>Model Context Protocol specification</em>, <a href="https://modelcontextprotocol.io/">modelcontextprotocol.io</a>.</li>
+<li>Google, <em>Agent2Agent (A2A) Protocol</em>, <a href="https://google.github.io/A2A/">google.github.io/A2A</a>, April 9, 2025.</li>
+<li>LangGraph documentation. <a href="https://langchain-ai.github.io/langgraph/">langchain-ai.github.io/langgraph</a>.</li>
+<li>OWASP Top 10 for LLM Applications. <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/">owasp.org/llm-top-10</a>.</li>
+</ul>
+<h2 id="vision">Vision &amp; 3D</h2>
+<ul>
+<li>Radford et al., <em>CLIP</em>, <a href="https://arxiv.org/abs/2103.00020">arXiv:2103.00020</a>, Feb 26, 2021.</li>
+<li>Zhai et al., <em>SigLIP</em>, <a href="https://arxiv.org/abs/2303.15343">arXiv:2303.15343</a>, March 27, 2023.</li>
+<li>Oquab et al., <em>DINOv2</em>, <a href="https://arxiv.org/abs/2304.07193">arXiv:2304.07193</a>, April 14, 2023.</li>
+<li>Mildenhall et al., <em>NeRF</em>, <a href="https://arxiv.org/abs/2003.08934">arXiv:2003.08934</a>, March 19, 2020.</li>
+<li>Kerbl et al., <em>3D Gaussian Splatting</em>, <a href="https://arxiv.org/abs/2308.04079">arXiv:2308.04079</a>, Aug 8, 2023.</li>
+<li>Meta AI, <em>SAM 2</em>, <a href="https://arxiv.org/abs/2408.00714">arXiv:2408.00714</a>, Aug 1, 2024.</li>
+</ul>
+<h2 id="robotics">Robotics &amp; VLAs</h2>
+<ul>
+<li>Lynch &amp; Park, <em>Modern Robotics: Mechanics, Planning, and Control</em>, Cambridge University Press, 2017. <a href="http://hades.mech.northwestern.edu/index.php/Modern_Robotics">hades.mech.northwestern.edu</a>.</li>
+<li>Tobin et al., <em>Domain Randomization</em>, <a href="https://arxiv.org/abs/1703.06907">arXiv:1703.06907</a>, March 20, 2017.</li>
+<li>Chi et al., <em>Diffusion Policy</em>, <a href="https://arxiv.org/abs/2303.04137">arXiv:2303.04137</a>, March 7, 2023.</li>
+<li>Brohan et al., <em>RT-2</em>, <a href="https://robotics-transformer2.github.io/">robotics-transformer2.github.io</a>, 2023.</li>
+<li>Kim et al., <em>OpenVLA</em>, <a href="https://arxiv.org/abs/2406.09246">arXiv:2406.09246</a>, June 13, 2024. Project: <a href="https://openvla.github.io/">openvla.github.io</a>.</li>
+<li>Physical Intelligence, <em>π0</em>, <a href="https://huggingface.co/blog/pi0">HF blog, Feb 4, 2025</a>.</li>
+<li>Physical Intelligence, <em>π0.5: a VLA with Open-World Generalization</em>, <a href="https://arxiv.org/abs/2504.16054">arXiv:2504.16054</a>, April 22, 2025.</li>
+<li>Hugging Face, <em>SmolVLA</em>, <a href="https://huggingface.co/blog/smolvla">HF blog, June 3, 2025</a>. Model: <a href="https://huggingface.co/lerobot/smolvla_base">lerobot/smolvla_base</a>.</li>
+<li>NVIDIA Research, <em>GR00T N1</em>, <a href="https://investor.nvidia.com/news/press-release-details/2025/NVIDIA-Announces-Isaac-GR00T-N1--the-Worlds-First-Open-Humanoid-Robot-Foundation-Model--and-Simulation-Frameworks-to-Speed-Robot-Development/default.aspx">March 18, 2025</a>.</li>
+<li>NVIDIA Research, <em>GR00T N1.5</em>, <a href="https://research.nvidia.com/labs/gear/gr00t-n1_5/">research.nvidia.com/labs/gear/gr00t-n1_5</a>, June 11, 2025.</li>
+<li>NVIDIA Isaac Lab. <a href="https://isaac-sim.github.io/IsaacLab/">isaac-sim.github.io/IsaacLab</a>.</li>
+<li>NVIDIA Isaac GR00T GitHub. <a href="https://github.com/NVIDIA/Isaac-GR00T">github.com/NVIDIA/Isaac-GR00T</a>.</li>
+<li>Hugging Face LeRobot. <a href="https://github.com/huggingface/lerobot">github.com/huggingface/lerobot</a>.</li>
+<li>MuJoCo documentation. <a href="https://mujoco.readthedocs.io/">mujoco.readthedocs.io</a>.</li>
+<li>Qi et al., <em>Visual Adversarial Examples Jailbreak Aligned LLMs</em>, <a href="https://arxiv.org/abs/2306.13213">arXiv:2306.13213</a>, June 22, 2023.</li>
+</ul>
+<h2 id="books">Books</h2>
+<ul>
+<li>Goodfellow, Bengio &amp; Courville, <em>Deep Learning</em>, MIT Press, 2016. <a href="https://www.deeplearningbook.org/">deeplearningbook.org</a>.</li>
+<li>Sutton &amp; Barto, <em>Reinforcement Learning: An Introduction</em>, 2nd ed., MIT Press, 2018. <a href="http://incompleteideas.net/book/the-book.html">incompleteideas.net/book</a>.</li>
+<li>Cover &amp; Thomas, <em>Elements of Information Theory</em>, 2nd ed., Wiley, 2006.</li>
+</ul>
+    </article>
+  </div>
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="glossary.html"><span class="ch-nav-link__label">← Glossary</span><span class="ch-nav-link__title">Reference</span></a>
+      <a class="ch-nav-link" data-dir="next" href="me.html"><span class="ch-nav-link__label">My study →</span><span class="ch-nav-link__title">Dashboard</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

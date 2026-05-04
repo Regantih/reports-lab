@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 12 · How to read a frontier paper in 30 minutes — From Tokens to Embodied Minds</title>
+<meta name="description" content="A mechanical six-step procedure turns arXiv triage from passive reading into active evidence extraction. Build a paper-graph, not a paper-pile.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="12-paper-reading" data-chapter-title="How to read a frontier paper in 30 minutes">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="12-paper-reading">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">abstract: claim and number</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">Figure 1: the story</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">main results table</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">ablations table</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">limitations section</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">three reference papers</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">paper-graph in Obsidian</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="12-paper-reading" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">In the 30-minute paper reading protocol, why should you read the ablations table before the methods section?</h2>
+  <p class="learn__hint">Think about what ablations tell you that the methods section glosses over.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-12-paper-reading" value="a"><span>Ablations are shorter and easier to read than the methods section</span></label><label class="predict__choice"><input type="radio" name="predict-12-paper-reading" value="b"><span>Ablations reveal what the authors had to do to make their method work — the decisions that were not obvious in the methods narrative</span></label><label class="predict__choice"><input type="radio" name="predict-12-paper-reading" value="c"><span>Ablations contain the final benchmark numbers which are the most important information</span></label><label class="predict__choice"><input type="radio" name="predict-12-paper-reading" value="d"><span>The methods section is usually wrong; ablations are the primary empirical contribution</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">The methods section tells you what the authors did. The ablations table tells you what they tried that didn't work as well — the design choices that required evidence, not just judgment. If a model has a component that ablates +0.5 on the main benchmark, that component was not obvious to add — it was the empirical finding. Reading ablations before methods lets you approach the methods section knowing which choices were load-bearing and which were defaults.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 12 of 36</div>
+    <div class="ch-header__num">Chapter 12</div>
+    <h1 class="ch-header__title">How to read a frontier paper in 30 minutes</h1>
+    <p class="ch-header__dek">A protocol for reading at frontier speed</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Apply the six-step protocol to a new paper and produce a 1-page structured diff within 30 minutes.</li><li>Build a personal paper-graph that links papers by dependency (which technique does this paper build on?) rather than chronological order.</li><li>Identify the three categories of things that a paper&#x27;s limitations section systematically hides and how to find them.</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">6</div><div class="stat__label">steps in the 30-minute frontier paper protocol</div></div><div class="stat"><div class="stat__num">3</div><div class="stat__label">cited prior works that usually reveal what you should have read first</div></div><div class="stat"><div class="stat__num">1<em>page</em></div><div class="stat__label">diff document — the only output that proves you understood what changed</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="12-paper-reading">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Apply the six-step protocol to one paper (your choice) and write a 200-word structured summary with claim, number, one ablation, and one limitation.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Read GR00T N1 and GR00T N1.5 using the protocol in 60 minutes total. Write a 1-page diff that names exactly what changed between N1 and N1.5 and why.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">Build a paper-graph in Obsidian linking the 12 papers from Part I by dependency (which technique does each build on?). Identify the three papers that are prerequisites for the most other papers.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Using the protocol, assess one arXiv preprint from the past 7 days in your core area. Write a 1-paragraph verdict: what they claim, what the ablations actually support, and what would need to be true for the result to generalize.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#six-steps">The six-step protocol</a></li><li><a href="#paper-graph">Paper-graph, not paper-pile</a></li><li><a href="#hidden-info">What limitations sections systematically hide</a></li><li><a href="#capstone-link">This is a compounding skill</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">Most papers in the frontier AI field are written to maximize perceived novelty, not to minimize your reading time. The methods section tells you what the authors did after they already knew the answer. The limitations section is curated to be non-disqualifying. The benchmark tables are designed to look as strong as possible within the constraints of honest reporting. A good reading protocol treats the paper as evidence to be interrogated, not a narrative to be absorbed.
+
+The 30-minute protocol is mechanical: abstract, Figure 1, main results table, ablations, limitations, three prior works. This order is deliberate. You read the claim before the evidence, the evidence before the method, the method before the motivation. You stop when you have what you need for a decision — whether to implement, cite, or ignore the paper. The output is a 1-page structured diff, not a summary. A diff says what changed relative to what you already knew. For DealLens, this protocol is also a feature: automated paper-triage is exactly the kind of analyst loop your tool replaces at a VC firm.</p>
+<h2 id="six-steps">The six-step protocol</h2>
+<p>Step 1 — Abstract: extract (a) the claim in one sentence, (b) the single most important number (benchmark improvement, parameter count, speedup), and (c) the comparison baseline. If the abstract does not contain a concrete number, the paper is likely making a conceptual rather than empirical contribution — adjust your expectations. Step 2 — Figure 1: this is the picture the authors want you to remember. It is either an architecture diagram, a results curve, or a qualitative example. It tells you the paper's genre. Step 3 — Main results table: find the primary benchmark, identify the baseline, check whether the comparison is fair (same compute? same data? same model size?). The footnotes matter.</p>
+<p>Step 4 — Ablations table: this is the most informative table in the paper. Each ablation row removes or changes one component and shows the effect on the primary metric. The rows with the largest delta are the load-bearing innovations — the things the method required to work. The rows with tiny deltas are the defaults. The methods section will tell you about both equally; the ablations table tells you which is which. Step 5 — Limitations and appendix: read what the authors chose to disclose about failure modes. Then read the appendix for dataset details, hyperparameter choices, and any results that did not make the main table. Step 6 — Three reference papers: find the three most-cited prior works in the paper's own reference list (or the papers the abstract directly names as the baseline). These are the papers you should have read first. Read them next.</p>
+<p>The output is always the same: a 1-page structured document with sections for Claim, Numbers, Load-bearing innovations (from ablations), Limitations (disclosed + inferred), and three prerequisite papers. This is the diff. It takes 30 minutes the first time and 15 minutes after you have internalized the protocol.</p>
+<h2 id="paper-graph">Paper-graph, not paper-pile</h2>
+<p>A paper-pile is a folder of PDFs sorted by date. A paper-graph is a directed graph where edges represent dependencies: 'this paper builds on that technique.' The three most useful edge types: (1) method dependency — GR00T N1.5 uses FLARE loss, which builds on behavior cloning, which builds on cross-entropy, (2) dataset dependency — OpenVLA uses Open X-Embodiment, which is built from 22 prior robot datasets, (3) result dependency — SmolVLA reports a 78.3% success rate that is directly comparable to OpenVLA's baseline because they use the same eval protocol.</p>
+<p>Obsidian or Logseq with a graph view is the standard tool. The practical workflow: each paper gets a note with the 1-page diff format. Each note links to its three prerequisite papers. After 20-30 papers, the graph reveals which nodes have the most incoming edges — these are the foundational papers in your area. For robotics, the convergent nodes are typically Attention Is All You Need, the original diffusion policy paper, and the first VLA paper (RT-2). For DealLens, the convergent nodes are typically whatever RAG paper, reranker paper, and eval framework the team uses as baselines.</p>
+<p>The agentic version of this protocol — running it automatically against arXiv feeds — is a literal product feature for DealLens. A deal screening agent that reads VC-relevant AI papers weekly, extracts the claim, number, and three prior works, and links them to a graph of prior art would replace a junior analyst's literature review function. The same 30-minute protocol, automated.</p>
+<h2 id="hidden-info">What limitations sections systematically hide</h2>
+<p>Three categories of information that are consistently under-disclosed in limitations sections: (1) compute cost — papers almost never report full training compute including failed runs, ablation sweeps, and hyperparameter searches; the reported results represent the best of many runs. (2) data quality — the quality and curation of the training data is almost never fully described; filtered, curated, or supplemented data is presented as a simple dataset name. (3) evaluation coverage — papers choose benchmarks where they perform well; the failure benchmarks are usually in the appendix under a heading like 'additional results.'</p>
+<p>The inferred limitations are often more informative than the disclosed ones. A paper that ablates five model sizes but reports results only for the largest — the others are in the appendix — is telling you the smaller models did not work as expected. A paper that compares against a 2-year-old baseline is telling you it could not beat more recent baselines. A paper where the ablation for 'without component X' is not reported is telling you that component X failed ablation and was removed from the final model — or that removing it made the main result stronger.</p>
+<p>For the JHU humanoid capstone, this critical reading skill directly determines which papers to implement vs. which to cite-and-move-on. GR00T N1.5 (NVIDIA, June 2025) reports RoboCasa 30-demo success from 17.4% (N1) to 47.5% (N1.5) — a 30-point improvement. The critical questions: what is the evaluation protocol exactly, is 30 demos the right comparison point, and do the reported environments reflect your home-assistant setting? The 1-page diff reveals these questions; passive reading does not.</p>
+<h2 id="capstone-link">This is a compounding skill</h2>
+<p>Reading one paper per week using the protocol adds 52 structured diffs to the paper-graph per year. After one year, the graph is dense enough that any new paper's location in the graph — which prior works it depends on, which open problems it addresses — is visible within the first two steps of the protocol. The time cost per paper decreases from 30 minutes to 15 minutes. After two years, you can triage an arXiv listing in 5 minutes and know whether the paper is in your graph's gap or is redundant with something you already know.</p>
+<p>For DealLens, the meta-skill translates directly: the same structured extraction (claim, number, comparison, limitations) applied to VC deal memos produces a standardized due-diligence summary that is directly comparable across deals. The 1-page diff format is the equivalent of a deal memo template. The three prerequisite papers are the equivalent of 'three comparable precedent transactions.' The protocol is domain-agnostic — it is a framework for structured evidence extraction.</p>
+<div class="aside" data-tone="copper"><span class="aside__label">Read papers in dependency order, not chronological</span><p>Reading a 2025 paper before its 2022 prerequisite is the most common inefficiency in literature review. The paper-graph makes dependency order explicit. If you have not read GPTQ (2022), reading AWQ (2023) is 50% redundant. Read in the direction the arrows point.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="Six-step paper reading protocol and paper-graph" fill="none" xmlns="http://www.w3.org/2000/svg"><text x="400" y="26" text-anchor="middle" font-size="14" font-weight="600" fill="var(--color-text)">30-Minute Paper Protocol and the Paper-Graph</text><rect x="20" y="50" width="360" height="240" rx="8" stroke="var(--color-primary)" stroke-width="1.4" fill="var(--color-bg)"/><text x="200" y="74" text-anchor="middle" font-size="13" font-weight="600" fill="var(--color-primary)">Six-Step Protocol</text><text x="40" y="98" font-size="11" fill="var(--color-accent-euv)">1. Abstract: claim + number + baseline  (2 min)</text><text x="40" y="118" font-size="11" fill="var(--color-accent-copper)">2. Figure 1: paper genre + main picture  (1 min)</text><text x="40" y="138" font-size="11" fill="var(--color-primary)">3. Results table: numbers + fairness check  (5 min)</text><text x="40" y="158" font-size="11" fill="var(--color-accent-euv)">4. Ablations: load-bearing innovations  (10 min)</text><text x="40" y="178" font-size="11" fill="var(--color-text-muted)">5. Limitations + appendix: hidden failures  (5 min)</text><text x="40" y="198" font-size="11" fill="var(--color-accent-quartz)">6. Three prior works: what to read next  (7 min)</text><text x="40" y="228" font-size="10" fill="var(--color-text-muted)">Output: 1-page diff (claim / numbers / load-bearing /</text><text x="40" y="244" font-size="10" fill="var(--color-text-muted)">limitations / 3 prereqs) — not a summary</text><rect x="430" y="50" width="340" height="240" rx="8" stroke="var(--color-accent-copper)" stroke-width="1.4" fill="var(--color-bg)"/><text x="600" y="74" text-anchor="middle" font-size="13" font-weight="600" fill="var(--color-accent-copper)">Paper-Graph (Obsidian)</text><circle cx="510" cy="130" r="18" stroke="var(--color-primary)" stroke-width="1.2" fill="var(--color-bg)"/><text x="510" y="134" text-anchor="middle" font-size="9" fill="var(--color-primary)">Attn (2017)</text><circle cx="600" cy="110" r="18" stroke="var(--color-accent-euv)" stroke-width="1.2" fill="var(--color-bg)"/><text x="600" y="114" text-anchor="middle" font-size="9" fill="var(--color-accent-euv)">RoPE (2021)</text><circle cx="690" cy="130" r="18" stroke="var(--color-accent-quartz)" stroke-width="1.2" fill="var(--color-bg)"/><text x="690" y="134" text-anchor="middle" font-size="9" fill="var(--color-accent-quartz)">YaRN (2023)</text><circle cx="600" cy="190" r="18" stroke="var(--color-accent-copper)" stroke-width="1.2" fill="var(--color-bg)"/><text x="600" y="194" text-anchor="middle" font-size="9" fill="var(--color-accent-copper)">GR00T N1.5</text><line x1="528" y1="120" x2="582" y2="115" stroke="var(--color-text-muted)" stroke-width="1"/><line x1="618" y1="115" x2="672" y2="125" stroke="var(--color-text-muted)" stroke-width="1"/><line x1="600" y1="128" x2="600" y2="172" stroke="var(--color-text-muted)" stroke-width="1"/><line x1="510" y1="148" x2="582" y2="178" stroke="var(--color-text-muted)" stroke-width="1"/><text x="600" y="248" text-anchor="middle" font-size="10" fill="var(--color-text-muted)">Nodes = papers · Edges = dependencies</text><text x="600" y="264" font-size="10" text-anchor="middle" fill="var(--color-text-muted)">High in-degree = foundational paper</text><text x="400" y="320" text-anchor="middle" font-size="11" fill="var(--color-primary)">Read in dependency order, not chronological · Build a graph, not a pile · 1-page diff per paper</text></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 12.1</span><span class="text">The six-step protocol extracts structured evidence in 30 minutes. The paper-graph (right) links papers by dependency — read along the edge direction, high-in-degree nodes are the papers worth reading deeply.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">A mechanical six-step protocol — abstract, Figure 1, results table, ablations, limitations, three prior works — turns arXiv triage into structured evidence extraction; the output is always a 1-page diff, not a summary.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://www.youtube.com/watch?v=733m6qBH-jI">Andrew Ng&#x27;s How to Read a Research Paper, Stanford CS230 (2018 lecture)</a></p>
+  <p><strong>Build.</strong> Read GR00T N1 (March 2025) and GR00T N1.5 (June 2025) using the six-step protocol in 60 minutes total. Write a 1-page diff naming exactly what changed and why. Post to your reports-lab.</p>
+  <p><strong>Capstone ladder.</strong> The meta-skill that compounds for the rest of the path. For DealLens, automated paper-triage using this protocol — applied to VC-relevant arXiv papers — is a product feature that replaces junior analyst literature review. For the JHU capstone, this is how you keep pace with the GR00T and SmolVLA release cadence.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="12-paper-reading">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What are the six steps in the frontier paper reading protocol, in order?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">(1) Abstract: extract claim, number, baseline. (2) Figure 1: identify paper genre and main picture. (3) Main results table: verify comparison fairness. (4) Ablations table: find load-bearing innovations. (5) Limitations + appendix: extract disclosed and inferred limitations. (6) Three prior works: identify what you should have read first.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why should ablations be read before the methods section?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The methods section presents all design choices equally. The ablations table reveals which choices mattered — the rows with large delta are the load-bearing innovations, the small-delta rows are defaults. Reading ablations first lets you approach the methods section knowing which parts to focus on.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">Apply the protocol to GR00T N1.5 (NVIDIA, June 2025): what is the claim, the key number, the load-bearing innovation, and the most important inferred limitation?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Claim: GR00T N1.5 improves on N1 via frozen VLM backbone, simplified adapter, FLARE loss, and DreamGen synthetic data. Key number: RoboCasa 30-demo success 17.4% (N1) → 47.5% (N1.5). Load-bearing innovation: FLARE loss (ablation shows largest delta) + DreamGen synthetic data. Inferred limitation: RoboCasa evaluation may not reflect fully unstructured home environments — the 30-demo setting is favorable; zero-shot generalization to novel homes is not demonstrated at the same success rate.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="12-paper-reading-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="11-quantization.html"><span class="ch-nav-link__label">← Chapter 11</span><span class="ch-nav-link__title">Quantization, distillation, pruning</span></a>
+      <a class="ch-nav-link" data-dir="next" href="13-h100-b200.html"><span class="ch-nav-link__label">Chapter 13 →</span><span class="ch-nav-link__title">Inside an H100/B200</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

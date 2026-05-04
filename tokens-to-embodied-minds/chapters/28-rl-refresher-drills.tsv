@@ -1,0 +1,10 @@
+Define an MDP as a tuple.	(S, A, P, R, gamma): state space, action space, transition dynamics P(s'|s,a), reward R(s,a,s'), discount factor gamma.
+What does PPO's clip do?	It clips the policy probability ratio r_t = pi_new/pi_old to [1-epsilon, 1+epsilon] before multiplying by the advantage, preventing large destabilizing policy updates.
+What is the key difference between on-policy and off-policy RL?	On-policy (PPO): collect data under current policy, update, discard data. Off-policy (SAC): store data in a replay buffer, reuse from many past policies — far more sample-efficient.
+What does entropy regularization in SAC encourage?	Exploration and resistance to premature convergence: the objective maximizes expected return plus alpha * H(pi), keeping the policy from collapsing to a deterministic action.
+For humanoid locomotion in Isaac Lab, PPO or SAC?	PPO. Simulator provides unlimited throughput; stability across 32+ parallel environments matters more than sample efficiency. PPO's clipped objective prevents destabilizing bipedal controller updates.
+For real-robot manipulation fine-tuning, PPO or SAC?	SAC. Real-robot data is expensive; SAC's off-policy replay buffer gives 10-100x better sample efficiency.
+What are the three non-algorithmic contributions common in 2025 robot RL papers?	1. Dense reward shaping (proximity + contact + success decomposition). 2. Curriculum design (easy-to-hard task progression). 3. Real-to-sim bootstrapping (calibrated sim from real data).
+What is the primary course reference for deep RL?	Berkeley CS 285: Deep Reinforcement Learning, Sergey Levine, Fall 2024.
+What does the advantage function A_t estimate?	How much better action a_t is than the average action under the current policy in state s_t: A_t = Q(s_t, a_t) - V(s_t).
+Why does the JHU humanoid capstone use RL in two places?	1. Sim-to-real in Isaac Lab: PPO trains the low-level locomotion/manipulation controller across randomized physics. 2. Policy post-training: SAC or GRPO fine-tunes SmolVLA/GR00T after behavioral cloning if BC alone is insufficient.

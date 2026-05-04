@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 26 · Computer vision foundations — CS231n, redux — From Tokens to Embodied Minds</title>
+<meta name="description" content="ResNet and ViT are inside almost every robotics perception stack. CLIP, SigLIP, and DINOv2 are the vision encoders inside RT-2, OpenVLA, GR00T, and π0. This chapter is not a survey — it is the exact subset you need for embodied AI.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="26-cs231n-redux" data-chapter-title="Computer vision foundations — CS231n, redux">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="26-cs231n-redux">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">ResNet skip connections</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">ViT patch embedding</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">CLIP contrastive pretraining</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">SigLIP sigmoid loss</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">DINOv2 self-supervised ViT</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">linear probe vs finetune</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="26-cs231n-redux" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — OpenVLA uses a fused vision encoder. Which two models does it fuse, and why both?</h2>
+  <p class="learn__hint">Think about what CLIP-family models are good at vs what self-supervised ViT models are good at.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-26-cs231n-redux" value="a"><span>ResNet-50 + CLIP ViT-L/14 — convolutional features complement attention-based features</span></label><label class="predict__choice"><input type="radio" name="predict-26-cs231n-redux" value="b"><span>DINOv2 ViT-B/14 + SigLIP ViT-So400M — DINOv2 for dense spatial features, SigLIP for language-aligned semantic features</span></label><label class="predict__choice"><input type="radio" name="predict-26-cs231n-redux" value="c"><span>DINOv2 ViT-L/14 + CLIP ViT-L/14 — both provide language-aligned features for instruction following</span></label><label class="predict__choice"><input type="radio" name="predict-26-cs231n-redux" value="d"><span>SigLIP ViT-So400M alone — it subsumes both spatial and language-aligned features</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">OpenVLA fuses DINOv2 ViT-B/14 and SigLIP ViT-So400M. DINOv2 (self-supervised, no language) provides dense, spatially precise features for object localization and manipulation. SigLIP (contrastive, language-aligned) provides semantic grounding for instruction following. Neither alone is sufficient — you need both spatial precision and language alignment for a VLA.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 26 of 36</div>
+    <div class="ch-header__num">Chapter 26</div>
+    <h1 class="ch-header__title">Computer vision foundations — CS231n, redux</h1>
+    <p class="ch-header__dek">ResNet, ViT, CLIP, SigLIP, DINOv2</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain why ResNet&#x27;s skip connections solved the vanishing-gradient problem for deep networks, and contrast with ViT&#x27;s patch-embedding approach</li><li>Describe how CLIP, SigLIP, and DINOv2 differ in pretraining objective and what that difference implies for downstream robotics use</li><li>Run a linear-probe and full-finetune comparison on DINOv2 ViT-B/14 on a 5-class household-object dataset and interpret the gap</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">ViT-B/14</div><div class="stat__label">DINOv2 variant used as the perception backbone in OpenVLA and the JHU humanoid</div></div><div class="stat"><div class="stat__num">16.5<em>%</em></div><div class="stat__label">absolute task-success improvement of OpenVLA (7B) over RT-2-X (55B) — DINOv2+SigLIP fused</div></div><div class="stat"><div class="stat__num">2021</div><div class="stat__label">CLIP release year — still the contrastive vision-language pretraining baseline everything else measures against</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="26-cs231n-redux">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. Without looking, state the pretraining objective for CLIP vs DINOv2 and one concrete implication for robotics each.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Fine-tune DINOv2 ViT-B/14 on a custom 5-class household-object dataset. Compare linear probe vs full finetune accuracy and report the gap.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">Integrate DINOv2 ViT-B/14 into a MuJoCo scene and extract per-patch features for object grounding. Visualize attention maps with DINO self-attention rollout.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Reproduce the OpenVLA encoder fusion: concatenate DINOv2 and SigLIP features before the LLM backbone. Measure zero-shot task success vs single-encoder baseline on 10 manipulation tasks.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#resnet-vit">ResNet and ViT: two architectures that survived</a></li><li><a href="#clip-siglip-dino">CLIP, SigLIP, DINOv2 — three pretraining philosophies</a></li><li><a href="#fusion-strategy">Why OpenVLA fuses both</a></li><li><a href="#capstone">Capstone wiring</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">ResNet (He et al., arXiv:1512.03385, Dec 10, 2015) and ViT (Dosovitskiy et al., arXiv:2010.11929, Oct 22, 2020) are still inside almost every robotics perception stack. The year is 2026 and this is not nostalgia — it is architecture path dependence. The vision encoders inside RT-2, OpenVLA, GR00T N1.5, and π0 all trace back to one of these two families. What changed is the pretraining: CLIP (Radford et al., arXiv:2103.00020, Feb 26, 2021), SigLIP (Zhai et al., arXiv:2303.15343, March 27, 2023), and DINOv2 (Oquab et al., arXiv:2304.07193, April 14, 2023) turned the architecture into a foundation model.
+
+This chapter is not a survey of computer vision. It is the exact subset of Stanford CS231n that matters for embodied AI in 2026: skip connections and patch embeddings, contrastive and self-supervised pretraining, and the specific fusion choices that make OpenVLA beat RT-2-X 55B by 16.5 percentage points with a 7× smaller model.</p>
+<h2 id="resnet-vit">ResNet and ViT: two architectures that survived</h2>
+<p>ResNet (He et al., Dec 2015) solved the vanishing-gradient problem with a single idea: skip connections that add the input of a block directly to its output. This lets gradients flow unobstructed through hundreds of layers and allows very deep networks to be trained stably. The residual formulation F(x) + x means the network only needs to learn the residual F(x) rather than the full mapping — a simpler optimization problem. ResNets became the backbone of choice for convolutional feature extraction and remain embedded in many robotics pipelines via pretrained weights from ImageNet.</p>
+<p>ViT (Dosovitskiy et al., Oct 2020) replaced convolutions entirely with a transformer applied to a sequence of fixed-size image patches. An image is split into NxN patches, each linearly projected to a token embedding, and processed by a standard transformer encoder. The key insight: attention heads learn long-range spatial dependencies that convolutions can only approximate through many stacked layers. ViT-B uses 16x16 patches; ViT-B/14 (used by DINOv2) uses 14x14 patches for finer spatial resolution. At scale and with the right pretraining, ViT dominates ResNet on every benchmark that matters for robotics.</p>
+<h2 id="clip-siglip-dino">CLIP, SigLIP, DINOv2 — three pretraining philosophies</h2>
+<p>CLIP (Radford et al., Feb 2021) trains a vision encoder and text encoder jointly with contrastive loss on 400M image-text pairs. The result: a vision model whose feature space is aligned with language, enabling zero-shot classification and language-conditioned retrieval. The limitation: the contrastive objective optimizes for global image-text alignment, not for dense spatial features. CLIP features are excellent for semantic grounding ("find the mug") but weak for fine-grained localization ("find the handle of the mug").</p>
+<p>SigLIP (Zhai et al., March 2023) replaces the softmax contrastive loss with a sigmoid loss applied to individual image-text pairs — eliminating the normalization across the batch that makes large-batch CLIP training expensive. SigLIP-So400M (400M-parameter ViT trained on SigLIP loss) achieves better image-language alignment than CLIP ViT-L at lower training cost. It is the language-aligned encoder in OpenVLA and π0. DINOv2 (Oquab et al., April 2023) takes the opposite approach: no language, pure self-supervised learning on curated image data (142M images, LVD-142M). The pretraining objective distills knowledge from a teacher ViT into a student ViT using masked image modeling and self-distillation. The result is a dense, spatially precise feature extractor with no language alignment — ideal for object localization and depth estimation, weak for instruction following.</p>
+<h2 id="fusion-strategy">Why OpenVLA fuses both</h2>
+<p>OpenVLA (Kim et al., arXiv:2406.09246, June 13, 2024) concatenates DINOv2 ViT-B/14 features and SigLIP ViT-So400M features before passing them to the Llama 2 backbone. The intuition is direct: DINOv2 provides dense spatial precision (object boundaries, depth cues, patch-level geometry) while SigLIP provides language alignment (the phrase "grasp the red cup" maps onto the correct region). Using both gives 16.5 percentage points absolute task-success improvement over the closed RT-2-X (55B parameters, proprietary) with only 7B parameters. GR00T N1.5 (NVIDIA Research, June 11, 2025) uses Eagle 2.5 as its frozen VLM backbone — a different architecture, same principle: a strong language-aligned vision encoder is non-negotiable.</p>
+<p>Stanford CS231n (Spring 2024) is still the cleanest pedagogical treatment of the material up through CLIP. For DINOv2 and SigLIP, go directly to the papers — both are short and well-written. The build for this chapter (fine-tune DINOv2 ViT-B/14 on a 5-class household-object dataset, compare linear probe vs full finetune) will make the feature quality concrete.</p>
+<h2 id="capstone">Capstone wiring</h2>
+<p>DINOv2 ViT-B/14 is the perception backbone for object grounding in the JHU humanoid capstone. It feeds the SmolVLA or GR00T N1.5 policy as the visual token stream. The linear-probe gap you measure in the build (typically 10–15 percentage points) is the concrete justification for why full fine-tuning on your household-object dataset is worth the GPU hours. Every 1% of object recognition accuracy you recover here is 1% fewer task failures at the policy level.</p>
+<div class="aside" data-tone="copper"><span class="aside__label">On CLIP for robotics</span><p>CLIP's global contrastive objective means it struggles with fine-grained spatial queries like 'the hinge of the cabinet.' For manipulation, DINOv2's dense features matter more than CLIP's language alignment — which is why the fusion in OpenVLA is not redundant.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="Vision encoder family tree: ResNet, ViT, CLIP, SigLIP, DINOv2 and their roles in robotics VLAs"><style>text{font-family:system-ui,sans-serif;font-size:12px;fill:var(--color-text)}.muted{fill:var(--color-text-muted);font-size:10px}.title{font-size:15px;font-weight:600;fill:var(--color-text)}.head{font-size:12px;font-weight:600;fill:var(--color-text)}</style><text x="400" y="26" text-anchor="middle" class="title">Vision Encoder Landscape for Embodied AI</text><rect x="30" y="50" width="110" height="50" rx="5" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.4"/><text x="85" y="71" text-anchor="middle" class="head">ResNet</text><text x="85" y="87" text-anchor="middle" class="muted">He et al. Dec 2015</text><text x="85" y="100" text-anchor="middle" class="muted">Skip connections</text><rect x="160" y="50" width="110" height="50" rx="5" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.4"/><text x="215" y="71" text-anchor="middle" class="head">ViT</text><text x="215" y="87" text-anchor="middle" class="muted">Dosovitskiy Oct 2020</text><text x="215" y="100" text-anchor="middle" class="muted">Patch embeddings</text><rect x="30" y="160" width="140" height="60" rx="5" fill="none" stroke="var(--color-primary)" stroke-width="1.4"/><text x="100" y="181" text-anchor="middle" class="head">CLIP</text><text x="100" y="197" text-anchor="middle" class="muted">Radford Feb 2021</text><text x="100" y="210" text-anchor="middle" class="muted">Contrastive, language-aligned</text><rect x="195" y="160" width="140" height="60" rx="5" fill="none" stroke="var(--color-accent-euv)" stroke-width="1.4"/><text x="265" y="181" text-anchor="middle" class="head">SigLIP</text><text x="265" y="197" text-anchor="middle" class="muted">Zhai Mar 2023</text><text x="265" y="210" text-anchor="middle" class="muted">Sigmoid loss, cheaper CLIP</text><rect x="360" y="160" width="140" height="60" rx="5" fill="none" stroke="var(--color-accent-euv)" stroke-width="1.4"/><text x="430" y="181" text-anchor="middle" class="head">DINOv2</text><text x="430" y="197" text-anchor="middle" class="muted">Oquab Apr 2023</text><text x="430" y="210" text-anchor="middle" class="muted">Self-supervised, dense spatial</text><line x1="215" y1="100" x2="100" y2="158" stroke="var(--color-text-muted)" stroke-width="1" stroke-dasharray="3,2"/><line x1="215" y1="100" x2="265" y2="158" stroke="var(--color-text-muted)" stroke-width="1" stroke-dasharray="3,2"/><line x1="215" y1="100" x2="430" y2="158" stroke="var(--color-text-muted)" stroke-width="1" stroke-dasharray="3,2"/><rect x="530" y="130" width="220" height="100" rx="5" fill="none" stroke="var(--color-primary)" stroke-width="1.8"/><text x="640" y="153" text-anchor="middle" class="head">OpenVLA (7B)</text><text x="640" y="170" text-anchor="middle" class="muted">DINOv2 ViT-B/14 (spatial)</text><text x="640" y="185" text-anchor="middle" class="muted">+ SigLIP So400M (language)</text><text x="640" y="200" text-anchor="middle" class="muted">+ Llama 2 backbone</text><text x="640" y="218" text-anchor="middle" class="muted">+16.5% vs RT-2-X 55B</text><line x1="335" y1="190" x2="528" y2="190" stroke="var(--color-accent-euv)" stroke-width="1.5" marker-end="url(#arr2)"/><line x1="265" y1="220" x2="530" y2="205" stroke="var(--color-primary)" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arr2)"/><text x="400" y="310" text-anchor="middle" class="muted">Spatial precision (DINOv2) + Language alignment (SigLIP) = VLA fusion strategy</text><defs><marker id="arr2" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><polygon points="0 0,7 3.5,0 7" fill="var(--color-text-muted)"/></marker></defs></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 26.1</span><span class="text">Vision encoder landscape for embodied AI. ViT (Dosovitskiy et al., Oct 2020) is the architectural root. CLIP, SigLIP, and DINOv2 are three pretraining philosophies built on ViT. OpenVLA fuses DINOv2 (dense spatial) and SigLIP (language-aligned) before a Llama 2 backbone — yielding +16.5% task success over RT-2-X at 7× fewer parameters.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">DINOv2 gives you spatial precision, SigLIP gives you language alignment, and OpenVLA's 16.5-point improvement over RT-2-X 55B is the empirical proof that you need both.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="http://cs231n.stanford.edu/">Stanford CS231n: Deep Learning for Computer Vision, Spring 2024</a></p>
+  <p><strong>Build.</strong> Fine-tune DINOv2 ViT-B/14 (via timm or HuggingFace) on a custom 5-class household-object dataset (mug, plate, fork, sponge, towel — 100 images per class, phone camera). Run linear probe (freeze encoder, train linear head) and full fine-tune. Report accuracy gap and visualize DINO self-attention maps on held-out images.</p>
+  <p><strong>Capstone ladder.</strong> DINOv2 ViT-B/14 is the perception backbone for object grounding in the JHU humanoid. It feeds visual tokens to SmolVLA or GR00T N1.5. The fine-tuning experiment gives you concrete evidence for how much domain adaptation the encoder needs on your specific household objects.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="26-cs231n-redux">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What pretraining objective does DINOv2 use, and how does it differ from CLIP?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">DINOv2 uses self-supervised learning (masked image modeling + self-distillation from a teacher ViT) on 142M curated images with no language. CLIP uses contrastive loss on 400M image-text pairs to align vision and language feature spaces. DINOv2 produces dense, spatially precise features; CLIP produces globally language-aligned features.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does OpenVLA fuse DINOv2 and SigLIP rather than using one or the other?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">DINOv2 provides dense spatial precision (object boundaries, patch-level geometry) critical for manipulation. SigLIP provides language alignment (mapping instructions to visual regions) critical for instruction following. Neither alone provides both; the fusion gives OpenVLA 16.5% absolute improvement over RT-2-X 55B at 7x lower parameter count.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">If you are building the JHU humanoid perception stack on a single consumer GPU, which vision encoder do you start with and what fine-tuning strategy?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Start with DINOv2 ViT-B/14 — it is the smallest DINOv2 variant with strong dense features and fits in 12GB VRAM for fine-tuning. Run a linear probe first to measure zero-shot quality on your household-object classes; if the gap to full fine-tune is more than 10 percentage points, run full fine-tune with LoRA to reduce memory. This feeds directly into SmolVLA's visual token stream.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="26-cs231n-redux-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="25-classical-robotics.html"><span class="ch-nav-link__label">← Chapter 25</span><span class="ch-nav-link__title">Classical robotics in one chapter</span></a>
+      <a class="ch-nav-link" data-dir="next" href="27-3d-perception.html"><span class="ch-nav-link__label">Chapter 27 →</span><span class="ch-nav-link__title">3D perception — NeRF, Gaussian Splatting, SAM 2</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

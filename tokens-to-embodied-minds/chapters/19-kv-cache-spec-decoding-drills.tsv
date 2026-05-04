@@ -1,0 +1,10 @@
+State the KV-cache memory formula for a transformer.	2 × num_layers × num_kv_heads × head_dim × seq_len × bytes_per_element.
+Why does GQA (grouped-query attention) reduce KV-cache size?	GQA uses fewer KV heads than Q heads (e.g., 8 KV heads vs 64 Q heads in Llama 3.1 70B), reducing the KV-cache size proportionally.
+What is the speculative decoding acceptance criterion?	Accept draft token x_i with probability min(1, p_target(x_i) / p_draft(x_i)); if rejected, resample from the corrected distribution (p_target - p_draft) / Z.
+What speedup does speculative decoding provide for acceptance_rate=0.8, K=4 drafts, draft cost = 10% of target?	(4 × 0.8) / (1 + 0.1) ≈ 2.9× decode speedup.
+What is Medusa and how does it differ from a separate draft model?	Medusa adds K speculative prediction heads directly to the target model — no separate model. Each head predicts offset 1..K from the current position. Lower acceptance rate than a full draft model but zero additional model management.
+What does EAGLE use that Medusa does not?	EAGLE conditions its shallow draft on the target model's internal hidden states — giving the draft access to the target's features, enabling higher acceptance rates than Medusa.
+What happens to speculative decoding acceptance rate in out-of-domain settings?	It drops significantly — from 0.75–0.85 (in-domain) to 0.55–0.70 (out-of-domain). Domain-fine-tuning the draft model recovers the speedup.
+What is prefix caching and why is it the highest-ROI optimization for DealLens?	Prefix caching stores KV states for repeated prompt prefixes (the screening system prompt) and reuses them without recomputation. At 75% shared prefix, it eliminates 75% of prefill compute per deal.
+What is the KV-cache size for Llama 3.1 8B (32 layers, 8 GQA heads, head_dim=128) at seq=4096 in BF16?	2 × 32 × 8 × 128 × 4096 × 2 = 536 MB per request.
+How does INT8 KV-cache quantization affect memory and quality?	Halves KV memory at typically 0.1–0.5 perplexity point degradation. Practical for edge deployments where memory is constrained.

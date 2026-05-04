@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 30 · Diffusion policies and action chunking — From Tokens to Embodied Minds</title>
+<meta name="description" content="Diffusion policies represent the action distribution as a denoising diffusion model conditioned on observations — capturing multimodal action distributions that Gaussian policies smear. Action chunking makes inference frequency feasible. π0 and π0.5 use flow matching on the same idea.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="30-diffusion-policies" data-chapter-title="Diffusion policies and action chunking">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="30-diffusion-policies">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">DDPM forward/reverse process</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">score function</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">action chunking</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">multimodal action distribution</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">flow matching</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">observation conditioning</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">Push-T benchmark</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="30-diffusion-policies" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — why does a Gaussian action head fail on the task of &#x27;pick up a bottle from a cluttered table where it can be grasped from left or right&#x27;?</h2>
+  <p class="learn__hint">Think about what happens when a unimodal distribution tries to represent two equally valid modes.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-30-diffusion-policies" value="a"><span>Gaussian policies are too slow to run at the required control frequency for manipulation</span></label><label class="predict__choice"><input type="radio" name="predict-30-diffusion-policies" value="b"><span>A Gaussian policy averages the two valid grasp modes, predicting a grasping motion between them that grasps neither — the mean of a bimodal distribution is outside either mode</span></label><label class="predict__choice"><input type="radio" name="predict-30-diffusion-policies" value="c"><span>Gaussian policies cannot represent continuous action spaces, only discrete ones</span></label><label class="predict__choice"><input type="radio" name="predict-30-diffusion-policies" value="d"><span>Behavioral cloning with a Gaussian head overfits to training demonstrations but generalizes well to new objects</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">A Gaussian action head outputs the mean and variance of a unimodal Gaussian over the action space. For a bimodal task (grasp left OR grasp right), the maximum-likelihood Gaussian mean falls between the two modes — a grasping motion at the average location that fails both grasps. Diffusion policies represent the full action distribution as a learned denoising process, capturing both modes correctly. This is the core motivation.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 30 of 36</div>
+    <div class="ch-header__num">Chapter 30</div>
+    <h1 class="ch-header__title">Diffusion policies and action chunking</h1>
+    <p class="ch-header__dek">Why diffusion beat behavioral cloning for manipulation</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain why Gaussian behavioral cloning fails on multimodal action distributions and how diffusion policies address this failure mode</li><li>Describe the DDPM forward (noising) and reverse (denoising) process and how it is conditioned on robot observations for policy learning</li><li>Contrast DDPM-based diffusion policies with flow matching (π0/π0.5) on training stability and inference speed</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">K</div><div class="stat__label">future actions predicted at once (action chunking) — executed open-loop for K steps before re-querying the policy</div></div><div class="stat"><div class="stat__num">DDPM</div><div class="stat__label">denoising diffusion probabilistic model — the generative backbone that replaced Gaussian action heads</div></div><div class="stat"><div class="stat__num">flow</div><div class="stat__label">matching — the continuous-time diffusion variant used by π0, π0.5, and SmolVLA&#x27;s action expert</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="30-diffusion-policies">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. Without looking, explain why a Gaussian action head fails on multimodal manipulation tasks in two sentences.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Train a diffusion policy on the Push-T benchmark (diffusion-policy.cs.columbia.edu). Compare success rate vs a BC-MSE baseline. Report T iterations of denoising used at inference.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">Train a diffusion policy on a LeRobot SO-100 dataset of 50 pick-and-place episodes. Implement action chunking (K=8). Compare task success vs K=1 baseline.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Replace the DDPM action head with a flow-matching head (using torchdiffeq or minFM). Compare inference steps required, training convergence, and task success rate on the same dataset.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#why-diffusion">The multimodal failure and the diffusion fix</a></li><li><a href="#action-chunking">Action chunking — making inference feasible</a></li><li><a href="#flow-matching">Flow matching — the π0 variant</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">Behavioral cloning with a Gaussian action head is the obvious baseline for robot learning from demonstrations: regress from observations to actions using MSE loss. It fails precisely on the tasks that matter: manipulation problems where multiple action sequences are equally valid (grasp left or grasp right, stack blue then red or red then blue). The Gaussian mean falls between the modes and the robot grasps nothing.
+
+Diffusion policies (Chi et al., arXiv:2303.04137, March 7, 2023) solve this by representing the action distribution as a learned denoising diffusion model conditioned on the observation. The reverse process starts from Gaussian noise and iteratively denoises to a valid action — sampling from the full, multimodal distribution rather than collapsing it to a mean. Action chunking — predicting K future actions at once and executing them open-loop — makes the inference frequency feasible despite the multi-step denoising. π0 and π0.5 (Physical Intelligence) use flow matching, a continuous-time variant of the same idea, which trains faster and runs in fewer inference steps.</p>
+<h2 id="why-diffusion">The multimodal failure and the diffusion fix</h2>
+<p>The behavioral cloning failure on multimodal tasks is not a data problem or a network-capacity problem — it is a distributional mismatch. Standard BC with MSE loss trains the network to minimize the squared error between predicted and demonstrated actions, which is equivalent to fitting a Gaussian distribution to the action space. When the demonstration data contains two equally valid action modes (e.g., from 50 demonstrations, 25 grasp left and 25 grasp right), the Gaussian mean is between the modes. At inference time, the policy predicts this average action, which executes neither grasp.</p>
+<p>Diffusion policies (Chi et al., March 7, 2023) replace the Gaussian head with a denoising diffusion probabilistic model (DDPM). The forward process gradually adds Gaussian noise to a demonstration action a_0 across T steps: a_T is nearly pure noise. The reverse process trains a noise-prediction network epsilon_theta(a_t, t, o) to predict the noise added at step t, conditioned on the current observation o. At inference, you sample a_T ~ N(0,I) and iteratively denoise with the trained network to recover a valid action a_0. Because the reverse process is a learned sampler over the full action distribution, it correctly captures both modes — sampling from each with probability proportional to their demonstration frequency.</p>
+<h2 id="action-chunking">Action chunking — making inference feasible</h2>
+<p>Diffusion inference requires T denoising steps (typically 10-100 for DDPM, 1-10 for DDIM or flow matching). At 10 steps on a modern GPU, this takes ~50ms per inference — at 20Hz, borderline feasible for manipulation, but with no slack. Action chunking addresses this: instead of predicting a single action, predict a chunk of K future actions (K=8 to 16 typically) and execute them open-loop before re-querying the policy. This reduces the required policy inference rate by a factor of K, from 20Hz to 1.25-2.5Hz — well within the latency budget even for DDPM.</p>
+<p>The trade-off is open-loop execution: the policy commits to K future actions without feedback. For smooth, predictable tasks (place object in bin), this is fine. For contact-rich, reactive tasks (opening a stuck drawer), it can accumulate error. ACT (Action Chunking with Transformers, Zhao et al., 2023) uses a similar approach with a deterministic transformer policy. π0 and π0.5 use flow matching — a continuous-time ODE-based variant of diffusion — that requires only 10-25 inference steps vs 50-100 for DDPM, making action chunking less critical while still capturing multimodal distributions.</p>
+<h2 id="flow-matching">Flow matching — the π0 variant</h2>
+<p>Flow matching (Lipman et al., 2022; Liu et al., 2022) defines a probability path from noise distribution to data distribution via an ordinary differential equation (ODE) rather than a stochastic process. The model learns to predict the velocity field v_theta(x, t) that transports Gaussian noise toward valid actions. Benefits over DDPM: simpler training objective (conditional flow matching loss), faster inference (10-25 ODE steps vs 50-100 DDPM steps), and better mode coverage in practice. π0 (Physical Intelligence, Feb 4, 2025) uses flow matching as the action expert on top of a VLM backbone. π0.5 (arXiv:2504.16054, April 22, 2025) continues with flow matching. SmolVLA (HuggingFace, June 3, 2025) uses a flow-matching action expert adapted for the 450M parameter budget.</p>
+<p>For the JHU capstone, SmolVLA's action expert is a flow-matching diffusion policy — so understanding this chapter is prerequisite to understanding SmolVLA's failure modes. When SmolVLA fails on a task, the question to ask is: is the failure in the VLM backbone (wrong instruction interpretation), the flow-matching action expert (wrong action distribution), or the controller beneath it (execution failure)? Diffusion policy fluency is what lets you diagnose the middle layer.</p>
+<div class="aside" data-tone="euv"><span class="aside__label">DDPM vs flow matching in 2025</span><p>DDPM is the pedagogically cleaner starting point — the forward/reverse process is easy to visualize. For production VLA work, prefer flow matching: fewer inference steps (10-25 vs 50-100), simpler loss, better mode coverage. SmolVLA, π0, and π0.5 all use flow matching.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="Diffusion policy: forward noising process and reverse denoising conditioned on observation"><style>text{font-family:system-ui,sans-serif;font-size:12px;fill:var(--color-text)}.muted{fill:var(--color-text-muted);font-size:10px}.title{font-size:15px;font-weight:600;fill:var(--color-text)}.head{font-size:12px;font-weight:600}</style><text x="400" y="26" text-anchor="middle" class="title">Diffusion Policy: Forward (Noising) and Reverse (Denoising) Process</text><rect x="20" y="60" width="90" height="50" rx="5" fill="none" stroke="var(--color-primary)" stroke-width="1.8"/><text x="65" y="82" text-anchor="middle" class="head" fill="var(--color-text)">a_0</text><text x="65" y="100" text-anchor="middle" class="muted">Demo action</text><rect x="145" y="60" width="90" height="50" rx="5" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.4"/><text x="190" y="82" text-anchor="middle" class="head" fill="var(--color-text)">a_t/4</text><text x="190" y="100" text-anchor="middle" class="muted">+ noise</text><rect x="270" y="60" width="90" height="50" rx="5" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.4"/><text x="315" y="82" text-anchor="middle" class="head" fill="var(--color-text)">a_t/2</text><text x="315" y="100" text-anchor="middle" class="muted">+ more noise</text><rect x="395" y="60" width="90" height="50" rx="5" fill="none" stroke="var(--color-accent-euv)" stroke-width="1.4"/><text x="440" y="82" text-anchor="middle" class="head" fill="var(--color-text)">a_T</text><text x="440" y="100" text-anchor="middle" class="muted">Pure noise</text><line x1="110" y1="85" x2="143" y2="85" stroke="var(--color-accent-copper)" stroke-width="1.5" marker-end="url(#a4)"/><line x1="235" y1="85" x2="268" y2="85" stroke="var(--color-accent-copper)" stroke-width="1.5" marker-end="url(#a4)"/><line x1="360" y1="85" x2="393" y2="85" stroke="var(--color-accent-euv)" stroke-width="1.5" marker-end="url(#a4)"/><text x="250" y="145" text-anchor="middle" class="muted">Forward process (training): add noise q(a_t | a_{t-1})</text><rect x="20" y="200" width="90" height="50" rx="5" fill="none" stroke="var(--color-primary)" stroke-width="1.8"/><text x="65" y="222" text-anchor="middle" class="head" fill="var(--color-text)">a_0</text><text x="65" y="240" text-anchor="middle" class="muted">Sampled action</text><rect x="145" y="200" width="90" height="50" rx="5" fill="none" stroke="var(--color-accent-euv)" stroke-width="1.4"/><text x="190" y="222" text-anchor="middle" class="head" fill="var(--color-text)">a_1</text><text x="190" y="240" text-anchor="middle" class="muted">Denoise step</text><rect x="270" y="200" width="90" height="50" rx="5" fill="none" stroke="var(--color-accent-euv)" stroke-width="1.4"/><text x="315" y="222" text-anchor="middle" class="head" fill="var(--color-text)">a_t/2</text><text x="315" y="240" text-anchor="middle" class="muted">Mid-denoise</text><rect x="395" y="200" width="90" height="50" rx="5" fill="none" stroke="var(--color-primary)" stroke-width="1.4"/><text x="440" y="222" text-anchor="middle" class="head" fill="var(--color-text)">a_T ~ N(0,I)</text><text x="440" y="240" text-anchor="middle" class="muted">Start: sample noise</text><line x1="393" y1="225" x2="362" y2="225" stroke="var(--color-primary)" stroke-width="1.5" marker-end="url(#a4r)"/><line x1="268" y1="225" x2="237" y2="225" stroke="var(--color-primary)" stroke-width="1.5" marker-end="url(#a4r)"/><line x1="143" y1="225" x2="112" y2="225" stroke="var(--color-primary)" stroke-width="1.5" marker-end="url(#a4r)"/><text x="250" y="285" text-anchor="middle" class="muted">Reverse process (inference): denoise conditioned on observation o</text><rect x="560" y="60" width="210" height="185" rx="5" fill="none" stroke="var(--color-accent-euv)" stroke-width="1.4"/><text x="665" y="82" text-anchor="middle" class="head" fill="var(--color-text)">Noise Prediction Network</text><text x="665" y="100" text-anchor="middle" class="muted">epsilon_theta(a_t, t, o)</text><text x="665" y="125" text-anchor="middle" class="muted">Observation o:</text><text x="665" y="141" text-anchor="middle" class="muted">RGB camera + proprioception</text><text x="665" y="165" text-anchor="middle" class="muted">Flow matching (π0, SmolVLA):</text><text x="665" y="181" text-anchor="middle" class="muted">v_theta(x, t, o) — ODE velocity</text><text x="665" y="200" text-anchor="middle" class="muted">10-25 steps vs 50-100 (DDPM)</text><text x="665" y="232" text-anchor="middle" class="muted">Action chunk K=8 → execute open-loop</text><defs><marker id="a4" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><polygon points="0 0,7 3.5,0 7" fill="var(--color-text-muted)"/></marker><marker id="a4r" markerWidth="7" markerHeight="7" refX="1" refY="3.5" orient="auto"><polygon points="7 0,0 3.5,7 7" fill="var(--color-text-muted)"/></marker></defs></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 30.1</span><span class="text">Diffusion policy: forward (noising) and reverse (denoising) processes. Training adds noise to demonstration actions; inference denoises from Gaussian noise to a valid action, conditioned on robot observation. Action chunking (K=8) reduces the required inference rate. Flow matching (π0, SmolVLA) replaces DDPM with an ODE velocity field, requiring 10-25 steps vs 50-100.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">Diffusion policies beat Gaussian behavioral cloning on multimodal tasks because they sample from the full action distribution rather than collapsing it to a mean; action chunking makes multi-step denoising inference feasible at real-time control rates.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://arxiv.org/abs/2303.04137">Diffusion Policy: Visuomotor Policy Learning via Action Diffusion, Chi et al., arXiv:2303.04137, March 7, 2023</a></p>
+  <p><strong>Build.</strong> Train a diffusion policy on the Push-T benchmark (diffusion-policy.cs.columbia.edu, ~200 episodes). Compare success rate vs BC-MSE baseline. Report number of denoising steps at inference (try T=10, 50, 100). Then train on a LeRobot SO-100 pick-and-place dataset (50 episodes), implement action chunking with K=8, and compare vs K=1 baseline.</p>
+  <p><strong>Capstone ladder.</strong> Diffusion policy primitives sit inside SmolVLA&#x27;s flow-matching action expert and π0.5&#x27;s action head. You cannot diagnose a VLA failure at the action-generation layer without understanding whether the failure is in the flow-matching denoising, action chunking, or controller execution. This chapter is the prerequisite for Chapter 32 (π0/SmolVLA) and Chapter 36 (capstone debugging).</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="30-diffusion-policies">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">Describe the DDPM reverse process for a diffusion policy and what it is conditioned on.</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Start from a_T sampled from N(0, I). Iteratively apply the noise-prediction network epsilon_theta(a_t, t, o) to predict the noise at step t, conditioned on robot observation o. Use the DDPM update rule to compute a_{t-1} from a_t and the predicted noise. After T steps, a_0 is a valid action sampled from the learned action distribution for observation o.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does action chunking reduce the effective inference frequency requirement for diffusion policies?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Diffusion inference requires T denoising steps (~50ms at 10 steps on GPU). Predicting K future actions at once and executing them open-loop reduces the required policy query rate from 1/50ms = 20Hz to 1/(K*50ms). For K=8, the policy runs at 2.5Hz — well within latency budget even for DDPM, with 8x fewer GPU calls.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">SmolVLA fails on a pick-and-place task in your humanoid capstone. How do you determine whether the failure is in the flow-matching action expert vs the VLM backbone?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Log the VLM's text output (intermediate plan) and the raw action chunk output (flow-matching sample) separately. If the VLM output is semantically correct but the robot motion is wrong, the failure is in the action expert (flow-matching denoising, action chunking misalignment, or controller execution). If the VLM output is semantically wrong (wrong object, wrong target), the failure is in the backbone — likely insufficient instruction grounding or ambiguous visual observation.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="30-diffusion-policies-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="29-sim-to-real.html"><span class="ch-nav-link__label">← Chapter 29</span><span class="ch-nav-link__title">Sim-to-real and the Isaac stack</span></a>
+      <a class="ch-nav-link" data-dir="next" href="31-rt2-openvla.html"><span class="ch-nav-link__label">Chapter 31 →</span><span class="ch-nav-link__title">Vision-Language-Action models — RT-2 and OpenVLA</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

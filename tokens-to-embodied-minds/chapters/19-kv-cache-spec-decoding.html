@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 19 · KV-cache, speculative decoding, Medusa — From Tokens to Embodied Minds</title>
+<meta name="description" content="KV-cache makes serving possible. Prefix caching makes it cheap. Speculative decoding makes it fast. These three techniques stack independently and compound.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="19-kv-cache-spec-decoding" data-chapter-title="KV-cache, speculative decoding, Medusa">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="19-kv-cache-spec-decoding">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">KV-cache memory formula</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">prefix caching</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">speculative decoding acceptance rate</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">Medusa heads</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">EAGLE tree drafting</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">decode-phase latency budget</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="19-kv-cache-spec-decoding" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — why does speculative decoding always produce the same output distribution as the target model, even though a weaker draft model proposes the tokens?</h2>
+  <p class="learn__hint">The target model does not blindly accept draft tokens — it applies a specific statistical correction.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-19-kv-cache-spec-decoding" value="a"><span>The draft model is fine-tuned on the target model&#x27;s outputs, so their distributions are identical</span></label><label class="predict__choice"><input type="radio" name="predict-19-kv-cache-spec-decoding" value="b"><span>Speculative decoding uses rejection sampling — it accepts draft tokens with probability min(1, p_target/p_draft) and resamples from a corrected distribution on rejection</span></label><label class="predict__choice"><input type="radio" name="predict-19-kv-cache-spec-decoding" value="c"><span>The target model verifies each draft token&#x27;s embedding against its own token embedding table and accepts only matches</span></label><label class="predict__choice"><input type="radio" name="predict-19-kv-cache-spec-decoding" value="d"><span>Speculative decoding is an approximation — it changes the output distribution slightly but within acceptable divergence bounds</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">Speculative decoding (Leviathan et al., arXiv:2211.17192) uses rejection sampling: for each draft token at position i, the target model computes its probability p_target(x_i). If p_target >= p_draft, accept. If p_target < p_draft, accept with probability p_target/p_draft; otherwise resample from the corrected distribution (p_target - p_draft) / Z. This ensures the final output distribution is identical to pure autoregressive sampling from the target model — exact, not approximate.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 19 of 36</div>
+    <div class="ch-header__num">Chapter 19</div>
+    <h1 class="ch-header__title">KV-cache, speculative decoding, Medusa</h1>
+    <p class="ch-header__dek">Latency tricks that actually work</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Compute the KV-cache memory size for Llama 3.1 70B at batch=32, seq=8192, and explain why PagedAttention is necessary</li><li>Explain the acceptance criterion in speculative decoding and derive why a higher draft acceptance rate always speeds up decode</li><li>Compare Medusa, EAGLE, and draft-model speculative decoding on the axes of latency reduction, implementation cost, and distribution shift risk</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">2–3×</div><div class="stat__label">decode speedup from speculative decoding with a well-matched draft model</div></div><div class="stat"><div class="stat__num">~0<em><em>ms</em></em></div><div class="stat__label">effective prefill cost for cached prefixes — prefix caching is the biggest ROI optimization</div></div><div class="stat"><div class="stat__num">Medusa</div><div class="stat__label">eliminates the separate draft model with multi-head speculative prediction on the target model itself</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="19-kv-cache-spec-decoding">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. State the KV-cache memory formula and compute it for Llama 3.1 8B at batch=16, seq=4096.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Enable speculative decoding in vLLM with Llama 3.2 1B as draft and Llama 3.1 8B as target. Benchmark 500 prompts. Measure: decode tokens/second, acceptance rate, and latency distribution.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">For DealLens serving Llama 3.1 70B with a Llama 3.2 3B draft, estimate the acceptance rate based on domain similarity and predict the expected TTFT and throughput improvement.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Read EAGLE-2 (Li et al., arXiv:2406.16858). Identify what the dynamic draft-tree construction adds over EAGLE-1's static tree, and what training data requirement it introduces.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#kv-cache-memory">KV-cache: the memory cost formula</a></li><li><a href="#speculative-decoding">Speculative decoding: the draft-then-verify pattern</a></li><li><a href="#medusa-eagle">Medusa and EAGLE: eliminating the draft model</a></li><li><a href="#latency-budget">Putting it together: the latency budget for agentic systems</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">Three latency tricks dominate production LLM serving optimization in 2026, and they are independent enough to stack: KV-cache (without which serving is not possible), prefix caching (the biggest ROI optimization for any workload with repeated context), and speculative decoding (the 2–3× decode speedup that closes the gap between auto-regressive generation and human reading speed). Each deserves precise understanding, because each has failure modes that practitioners consistently misattribute to model quality.
+
+KV-cache is the single largest memory cost in serving and the constraint that drives every other architectural decision in this chapter. Speculative decoding is the family of techniques — draft model, Medusa, EAGLE — that exploits the observation that a weaker model can propose tokens cheaply, and the target model can verify a batch of them in one forward pass, yielding a 2–3× speedup with exact output distribution. The unifying theme is latency arithmetic: every millisecond matters in an agentic system where calls are sequential and deadlines are tight.</p>
+<h2 id="kv-cache-memory">KV-cache: the memory cost formula</h2>
+<p>KV-cache stores the key and value projections for every layer and every token in the context. Memory formula: 2 (K and V) × num_layers × num_heads × head_dim × seq_len × bytes_per_element. For Llama 3.1 70B (80 layers, GQA with 8 KV heads, head_dim=128, BF16): 2 × 80 × 8 × 128 × seq_len × 2 bytes = 327,680 × seq_len bytes. At seq=8192: 2.68 GB per request. At batch=32 and seq=8192: 85.9 GB — more than a single H100 80GB GPU's full HBM. This is why PagedAttention is not optional at production batch sizes, and why quantizing the KV-cache (INT8 or FP8) reduces serving memory pressure proportionally.</p>
+<p>Prefix caching eliminates KV recomputation for the shared portion of requests. For DealLens, the 6,000-token screening system prompt accounts for 2.68 GB × (6000/8192) ≈ 1.96 GB of KV state per request at Llama 3.1 70B. Without prefix caching, this is recomputed for every deal. With prefix caching (SGLang RadixAttention or vLLM's prefix cache), this KV state is computed once and reused — reducing effective prefill compute by 75% for a 6K-system-prompt + 2K-deal-memo workload. Prefix caching hits are essentially free; the bottleneck shifts entirely to generating the 200-token response.</p>
+<p>KV-cache quantization is a practical optimization: INT8 KV-cache (storing keys and values at 8-bit precision instead of BF16) halves the KV memory at a typical 0.1–0.5 perplexity point degradation. For the JHU humanoid's planning LLM running on a memory-constrained edge device, INT8 KV-cache may be the difference between fitting the required context window and not.</p>
+<h2 id="speculative-decoding">Speculative decoding: the draft-then-verify pattern</h2>
+<p>Speculative decoding (Leviathan et al., arXiv:2211.17192, November 30, 2022) exploits the fact that verifying K tokens in one target model forward pass is only marginally more expensive than verifying 1 token. The algorithm: (1) a cheap draft model proposes K tokens autoregressively; (2) the target model verifies all K tokens in one forward pass, computing p_target for each; (3) each token is accepted or rejected via the rejection sampling rule; (4) the first rejected token is resampled from the corrected distribution. Expected tokens accepted per step: K × acceptance_rate. The speedup over pure autoregressive decode is K × acceptance_rate / (1 + draft_cost_fraction). For acceptance_rate=0.8 and K=4 with a draft model 10× cheaper than the target: (4 × 0.8) / (1 + 0.1) = 2.9×.</p>
+<p>Acceptance rate depends on domain match between draft and target. For Llama 3.2 1B (draft) vs Llama 3.1 8B (target) on general text: acceptance rate ~0.75–0.85, yielding ~2–2.5× speedup. For a more specialized target domain (financial analysis, code), acceptance rate drops to 0.55–0.70 unless the draft model was also trained on similar data. A domain-fine-tuned draft model is a significant engineering investment but recovers the full speedup. For DealLens using a VC-memo-fine-tuned 3B draft with a 70B target: expected acceptance rate 0.70–0.80, expected speedup ~2–2.5×.</p>
+<h2 id="medusa-eagle">Medusa and EAGLE: eliminating the draft model</h2>
+<p>Medusa (Cai et al., arXiv:2401.10774, January 19, 2024) adds K speculative prediction heads to the target model itself — each head predicts the token at offset 1, 2, ..., K from the current position, trained with the same objective as the original LM head but on shifted targets. At inference, the K Medusa heads generate K candidate continuations in one forward pass; the standard speculative decoding rejection sampling selects which prefix to accept. No separate draft model is needed. The accuracy of Medusa heads is lower than a strong draft model (acceptance rate ~0.6–0.7 vs ~0.8 for a capable draft), but the implementation cost is minimal — add K linear layers to the existing model and fine-tune for a few steps.</p>
+<p>EAGLE (Li et al., arXiv:2401.15077, January 26, 2024) and EAGLE-2 (arXiv:2406.16858) take a middle path: a shallow draft model (1–2 layers) that conditions on the target model's internal hidden states rather than generating autoregressively from scratch. This gives the draft model access to the target model's feature representations, enabling higher acceptance rates (~0.85+) than Medusa while being much lighter than a full draft model. EAGLE-2 adds dynamic tree construction — the draft tree branches are selected based on predicted acceptance probabilities per branch, rather than a fixed tree structure.</p>
+<p>Choice guide: draft model (Medusa < EAGLE < separate draft) trades accuracy for implementation simplicity. Separate draft model wins on acceptance rate but requires maintaining a second model version and matching tokenizers. For DealLens at scale, a vLLM-integrated Llama 3.2 1B draft with Llama 3.1 8B target is the fastest path to 2× speedup. Medusa heads on the 8B model are the cheapest path to 1.5× speedup with no second model.</p>
+<h2 id="latency-budget">Putting it together: the latency budget for agentic systems</h2>
+<p>An agentic system's response latency is the sum of: (1) prefill latency (dominates for long prompts), (2) decode latency (dominates for long responses or fast-response requirements), (3) tool execution latency, and (4) network round-trip time. For DealLens: 6K-token prompt + 200-token response. With prefix caching, prefill latency ≈ 0 (cache hit). Decode latency at 1× (no spec decoding) at ~500 tokens/sec on one H100 serving Llama 3.1 70B: 400 ms. With 2.5× speculative decoding: 160 ms. Adding LangGraph orchestration overhead (~50 ms) and tool calls (~100 ms each): total turn latency ~350 ms — acceptable for batch processing, borderline for interactive use.</p>
+<p>For the JHU humanoid's planning LLM running on a Jetson AGX Orin: the planning call happens every few seconds (not every 20ms control step — that is the policy's job). A 6K-token plan-generation call at 80 tokens/sec on Orin takes ~2.5 seconds — acceptable for high-level task planning. Speculative decoding on Orin requires a draft model that fits alongside the planning LLM; at typical Orin memory constraints this requires heavy quantization of both models, which degrades acceptance rate. Prefix caching of the robot's home-environment description is the higher-ROI optimization.</p>
+<div class="aside" data-tone="copper"><span class="aside__label">KV quantization on Orin</span><p>INT8 KV-cache on Jetson AGX Orin halves the context memory requirement, allowing a Llama 3.2 3B planning LLM to hold 8K-token contexts in the 64 GB unified memory alongside the SmolVLA policy weights. FP8 KV-cache is not yet supported on Orin's Ampere GPU.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="KV-cache and speculative decoding timing diagram"><title>KV-Cache Prefix Caching vs Speculative Decoding Timing</title><style>text{font-family:system-ui,sans-serif;font-size:11px;fill:var(--color-text)}.muted{fill:var(--color-text-muted)}.bold{font-weight:700;font-size:13px}</style><text x="400" y="24" text-anchor="middle" class="bold" fill="var(--color-primary)">Latency Decomposition: Prefix Cache + Speculative Decoding</text><text x="20" y="58" font-size="12" font-weight="600">Without caching or spec decoding</text><rect x="20" y="66" width="420" height="30" rx="2" fill="var(--color-accent-euv)" fill-opacity="0.25" stroke="var(--color-accent-euv)"/><text x="230" y="86" text-anchor="middle">Prefill 6K tokens — ~500ms</text><rect x="440" y="66" width="120" height="30" rx="2" fill="var(--color-accent-copper)" fill-opacity="0.25" stroke="var(--color-accent-copper)"/><text x="500" y="86" text-anchor="middle">Decode — 400ms</text><text x="575" y="86" class="muted">~900ms total</text><text x="20" y="130" font-size="12" font-weight="600">With prefix caching (cache hit)</text><rect x="20" y="138" width="8" height="30" rx="2" fill="var(--color-accent-euv)" fill-opacity="0.25" stroke="var(--color-accent-euv)"/><text x="34" y="158" font-size="10" class="muted">≈0</text><rect x="36" y="138" width="120" height="30" rx="2" fill="var(--color-accent-copper)" fill-opacity="0.25" stroke="var(--color-accent-copper)"/><text x="96" y="158" text-anchor="middle">Decode 200tok — 400ms</text><text x="165" y="158" class="muted">~400ms total</text><text x="20" y="204" font-size="12" font-weight="600">With prefix caching + speculative decoding (2.5×)</text><rect x="20" y="212" width="8" height="30" rx="2" fill="var(--color-accent-euv)" fill-opacity="0.25" stroke="var(--color-accent-euv)"/><text x="34" y="232" font-size="10" class="muted">≈0</text><rect x="36" y="212" width="48" height="30" rx="2" fill="var(--color-accent-copper)" fill-opacity="0.25" stroke="var(--color-accent-copper)"/><text x="60" y="232" text-anchor="middle" font-size="10">Decode</text><text x="60" y="246" text-anchor="middle" font-size="10">160ms</text><text x="92" y="228" class="muted">~160ms total</text><rect x="20" y="280" width="760" height="65" rx="4" fill="none" stroke="var(--color-text-muted)" stroke-width="0.5"/><text x="400" y="300" text-anchor="middle" font-weight="600" fill="var(--color-primary)">Speculative Decoding: Draft → Verify</text><text x="100" y="325" text-anchor="middle" class="muted">Draft model</text><text x="100" y="340" text-anchor="middle" class="muted">proposes K tokens</text><line x1="160" y1="332" x2="220" y2="332" stroke="var(--color-text-muted)" marker-end="url(#ar)"/><text x="290" y="325" text-anchor="middle">Target model</text><text x="290" y="340" text-anchor="middle">verifies K in 1 fwd pass</text><line x1="360" y1="332" x2="420" y2="332" stroke="var(--color-text-muted)" marker-end="url(#ar)"/><text x="500" y="325" text-anchor="middle">Rejection sampling</text><text x="500" y="340" text-anchor="middle">p_accept = min(1, p_t/p_d)</text><line x1="560" y1="332" x2="620" y2="332" stroke="var(--color-text-muted)" marker-end="url(#ar)"/><text x="690" y="325" text-anchor="middle" fill="var(--color-accent-copper)">Exact target distribution</text><text x="690" y="340" text-anchor="middle" fill="var(--color-accent-copper)">preserved</text><defs><marker id="ar" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--color-text-muted)"/></marker></defs></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 19.1</span><span class="text">Top three rows: latency decomposition for a 6K-token-prompt + 200-token-response DealLens request. Without caching: 900ms. With prefix caching: 400ms (prefill eliminated). With caching + speculative decoding (2.5×): 160ms. Bottom: the speculative decoding loop — draft proposes K tokens, target verifies in one forward pass, rejection sampling preserves the exact target output distribution.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">KV-cache memory scales linearly with batch × seq × layers; prefix caching eliminates most of it for repeated system prompts; speculative decoding delivers 2–3× decode speedup via rejection sampling — three independent optimizations that stack directly on top of each other.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://arxiv.org/abs/2211.17192">Fast Inference from Transformers via Speculative Decoding, Leviathan et al., arXiv:2211.17192 (November 30, 2022). Medusa: Cai et al., arXiv:2401.10774 (January 2024).</a></p>
+  <p><strong>Build.</strong> Enable speculative decoding in vLLM with Llama 3.2 1B draft and Llama 3.1 8B target. Benchmark 500 prompts (mix of short and long responses). Measure: acceptance rate, decode throughput (tokens/sec), and end-to-end latency. Compare against baseline vLLM without spec decoding.</p>
+  <p><strong>Capstone ladder.</strong> Direct DealLens speedup: prefix caching + 2.5× speculative decoding reduces per-deal latency from ~1000 ms to ~310 ms. For the JHU humanoid, the System 1 / System 2 architecture in GR00T N1 is speculative decoding&#x27;s cousin — a fast reflexive policy + a slow deliberative planner, same idea at the system level.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="19-kv-cache-spec-decoding">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What is the KV-cache memory formula, and what is the size per request for Llama 3.1 70B at seq=8192 in BF16?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">2 × num_layers × num_kv_heads × head_dim × seq_len × bytes_per_element. For Llama 3.1 70B (80 layers, 8 GQA heads, head_dim=128, BF16=2 bytes): 2 × 80 × 8 × 128 × 8192 × 2 ≈ 2.68 GB per request.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does speculative decoding with rejection sampling produce the exact same output distribution as pure autoregressive sampling from the target model?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The rejection sampling rule accepts draft token x_i with probability min(1, p_target/p_draft) and resamples from (p_target - p_draft)/Z on rejection. This correction ensures the marginal distribution of each accepted token matches p_target exactly — the draft model's distribution is corrected away at each step.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">For DealLens with Llama 3.1 70B and a 2.5× speculative decoding speedup, what is the approximate per-deal end-to-end latency if prefix caching handles the 6K-token system prompt?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Prefill: ~0 ms (cache hit). Decode 200 tokens at 500 tok/s × 2.5× speedup = 1250 tok/s → 160 ms. Plus orchestration (~50 ms) and one tool call (~100 ms) → ~310 ms per deal. At 10K deals/day this is well within batch-processing budgets; for interactive use, parallelizing tool calls reduces it further.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="19-kv-cache-spec-decoding-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="18-llm-d.html"><span class="ch-nav-link__label">← Chapter 18</span><span class="ch-nav-link__title">llm-d and disaggregated inference</span></a>
+      <a class="ch-nav-link" data-dir="next" href="20-advanced-rag-evals.html"><span class="ch-nav-link__label">Chapter 20 →</span><span class="ch-nav-link__title">Advanced RAG and evals</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

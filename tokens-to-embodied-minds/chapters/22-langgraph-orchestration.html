@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 22 · LangGraph and orchestration that survives — From Tokens to Embodied Minds</title>
+<meta name="description" content="Most agent frameworks are wrappers around a loop. LangGraph is a typed state machine with checkpointing, time-travel debugging, and explicit interrupt semantics. That is the difference between a demo and a production system.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="22-langgraph-orchestration" data-chapter-title="LangGraph and orchestration that survives">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="22-langgraph-orchestration">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">graph state (TypedDict)</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">node (pure function)</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">edge (conditional routing)</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">checkpointing</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">human-in-the-loop interrupt</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">time-travel debugging</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="22-langgraph-orchestration" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — what is the most common production failure mode for agentic systems built on chain-of-LLM-calls without explicit state?</h2>
+  <p class="learn__hint">Think about partial failures, retries, and what happens when one step in a 10-step chain fails at step 8.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-22-langgraph-orchestration" value="a"><span>The LLM generates incorrect tool arguments, causing the tool to return errors</span></label><label class="predict__choice"><input type="radio" name="predict-22-langgraph-orchestration" value="b"><span>The system has no recovery semantics — a failure at step 8 restarts from step 1, redoing all prior work and potentially duplicating external side effects</span></label><label class="predict__choice"><input type="radio" name="predict-22-langgraph-orchestration" value="c"><span>The context window fills up with prior tool outputs, causing the LLM to forget the original goal</span></label><label class="predict__choice"><input type="radio" name="predict-22-langgraph-orchestration" value="d"><span>Concurrent LLM calls race and produce conflicting state updates</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">Without explicit checkpointing, a failure at step 8 of a 10-step chain means restarting from step 1. This redoes all prior work (wasting compute and cost) and, worse, re-executes any external side effects — sending duplicate emails, creating duplicate CRM entries, double-charging API calls. Explicit state + checkpoint storage is the only architectural answer: on restart, load the last checkpoint and resume from step 8.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 22 of 36</div>
+    <div class="ch-header__num">Chapter 22</div>
+    <h1 class="ch-header__title">LangGraph and orchestration that survives</h1>
+    <p class="ch-header__dek">Graph state, checkpointing, and human-in-the-loop</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Implement a DealLens screening flow as a LangGraph state machine with typed state, conditional edges, and interrupt points before any external write action</li><li>Explain the difference between LangGraph&#x27;s interrupt-before and interrupt-after patterns and when each applies in a production agentic system</li><li>Compare LangGraph, CrewAI, and hand-written asyncio state machines on the three dimensions that matter for production: debuggability, checkpointing, and recovery semantics</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">Typed state</div><div class="stat__label">LangGraph&#x27;s TypedDict graph state — every node reads from and writes to an explicit, versioned state object</div></div><div class="stat"><div class="stat__num">Checkpoint</div><div class="stat__label">built-in Postgres/SQLite-backed checkpointing — enables human-in-the-loop, time travel, and recovery from partial failures</div></div><div class="stat"><div class="stat__num">interrupt()</div><div class="stat__label">the primitive that separates irreversible agent actions from reversible ones — no production agent should skip it</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="22-langgraph-orchestration">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. Draw the LangGraph state machine for DealLens screening: nodes, edges, and interrupt points. No code — just the graph.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Implement the DealLens screening flow in LangGraph with typed state (TypedDict), three nodes (retrieve, score, draft-memo), one conditional edge (score < threshold → reject), and an interrupt before draft-memo sends an email.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A production DealLens run failed at the draft-memo node. The retrieve and score nodes had already executed and written to the CRM. Using LangGraph time-travel, show how you replay from the score node output without re-running retrieve or duplicating the CRM writes.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Identify the state management pattern LangGraph uses (reducer functions on shared state) and explain when it breaks — specifically, under concurrent node execution with conflicting state writes. Propose a fix.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#graph-state">Graph state and node design</a></li><li><a href="#checkpointing-interrupt">Checkpointing and human-in-the-loop</a></li><li><a href="#framework-comparison">LangGraph vs CrewAI vs hand-written asyncio</a></li><li><a href="#humanoid-planner">The humanoid task planner as a state machine</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">The chain abstraction — chain of LLM calls, each passing its output to the next — breaks at production for a predictable reason: it has no state and no recovery semantics. A failure at step 8 of a 10-step chain forces a restart from step 1, re-executing every prior step including any external side effects — duplicate emails sent, duplicate CRM entries created, duplicate API calls billed. The implicit assumption of a chain is that all steps are idempotent and cheap to retry. Production steps are neither.
+
+LangGraph (LangChain, 2024) replaces the chain with an explicit directed graph over a typed state object. Nodes are pure Python functions that read from and write to a shared <code>TypedDict</code> state. Edges are conditional — the output of a node determines which node runs next. The checkpointer (Postgres-backed, SQLite-backed, or Redis-backed) persists the state after each node completes, enabling resume-from-checkpoint on failure, human-in-the-loop interrupt-and-resume, and time-travel debugging (replay from any prior checkpoint). For DealLens — a multi-step diligence flow that writes to external systems — this is not an optional architecture upgrade. It is the minimum viable production pattern.</p>
+<h2 id="graph-state">Graph state and node design</h2>
+<p>LangGraph state is a <code>TypedDict</code> annotated with reducer functions. Each key in the state dict has a type and an optional annotation (<code>Annotated[list, operator.add]</code>) that specifies how concurrent node writes to the same key are merged. Nodes are Python functions with signature <code>(state: State) -> dict</code> — they receive the full current state and return a partial update dict. The graph runner merges the partial update into the state using the declared reducers. This explicit state model means you can inspect the full state at any checkpoint, serialize it to JSON, and reason about exactly what each node saw and produced.</p>
+<p>Node design principle: each node should do exactly one logical thing and produce a deterministic output for a given input state. A retrieve node retrieves — it does not score. A score node scores — it does not draft. A draft-memo node drafts — it does not send. Sending (the irreversible external write) is a separate node, always preceded by an interrupt. This separation is not over-engineering; it is the architecture that makes time-travel replay safe (you can re-run the draft node without re-sending), and it is what makes each node independently testable with mock state.</p>
+<h2 id="checkpointing-interrupt">Checkpointing and human-in-the-loop</h2>
+<p>LangGraph's checkpointer persists the full state after every node completion. On failure or restart, <code>graph.invoke(None, config={"configurable": {"thread_id": "run-123"}})</code> loads the last checkpoint and resumes from the next unexecuted node. For DealLens, this means a failure during deal scoring does not re-run the expensive retrieval node — it resumes from the last persisted state. The Postgres checkpointer is the production choice: it is durable, queryable, and supports concurrent runs. SQLite is adequate for single-user local use.</p>
+<p>The <code>interrupt()</code> primitive (LangGraph >= 0.2) pauses execution at a node boundary and surfaces the current state to a human reviewer via the LangGraph API or the LangGraph Studio UI. The human can approve, reject, or modify the state before execution resumes. For DealLens, interrupt-before-send-email is the pattern: the draft-memo node completes and persists its draft to state; execution pauses; the analyst reviews and edits the draft in the UI; the analyst approves; execution resumes and the send-email node fires. This is not a UX nicety — it is the audit trail that makes the system compliant with investment process requirements.</p>
+<p>Time-travel debugging: call <code>graph.get_state_history(config)</code> to retrieve all checkpointed states for a run. Call <code>graph.update_state(config, {"override_key": "value"}, as_node="score")</code> to inject a corrected state at a prior checkpoint and re-run from that point. This is the debugger for production agentic systems — the equivalent of a step-through debugger for deterministic code.</p>
+<h2 id="framework-comparison">LangGraph vs CrewAI vs hand-written asyncio</h2>
+<p>The three options: LangGraph (explicit typed state, checkpointing, interrupt semantics, production-grade); CrewAI (agent-role abstraction, task delegation, zero checkpointing, good for prototypes with < 5 sequential steps); hand-written <code>asyncio</code> state machine (maximum control, zero magic, requires implementing checkpointing yourself, justified when LangGraph's abstractions add more friction than value). For DealLens — multi-step, external writes, requires audit trail, requires human review — LangGraph is the correct choice. For a quick 3-step retrieval pipeline without external writes, CrewAI is adequate. For a system with unusual parallelism patterns or a team that finds LangGraph's graph API confusing, hand-written asyncio with a Redis state store is a legitimate option.</p>
+<p>The common mistake: choosing LangGraph because it is popular, then fighting its state model and adding complexity by working around it. If your flow is a DAG with no cycles, no human-in-the-loop, and no external writes, a LangChain chain or a simple async function is sufficient. LangGraph's value is specifically in its loop support (nodes can route back to prior nodes), its interrupt semantics, and its checkpoint persistence. Use those features or use something simpler.</p>
+<h2 id="humanoid-planner">The humanoid task planner as a state machine</h2>
+<p>The JHU humanoid's high-level planner is structurally identical to DealLens's screening flow: a state machine where nodes execute perception, planning, tool-calling, and action steps, with interrupt points before any irreversible physical action. The state contains the current task goal, the scene understanding, the sequence of planned actions, and the action execution history. Each node reads the state, performs its function (query the LLM, call an MCP tool, issue a robot command), and writes its output back. On a safety violation (joint limit breach, unexpected contact force), the safety-filter node writes an interrupt flag and execution pauses for human review.</p>
+<p>The key difference from DealLens: the humanoid planner runs in a real-time loop at ~1–5 Hz for task planning (not the 50 Hz inner control loop, which is handled by GR00T's DiT or SmolVLA directly). LangGraph's asyncio backend supports this loop execution pattern — the graph can contain a cycle from the action node back to the perception node, enabling continuous replanning. The checkpoint frequency must be tuned: checkpointing after every 1-second planning step adds 10–50ms of state-serialization overhead, which is acceptable; checkpointing after every 20ms control step is not.</p>
+<div class="aside" data-tone="plasma"><span class="aside__label">No tool use should be irreversible without an interrupt</span><p>This is not a LangGraph feature — it is an architectural law for production agentic systems. If your agent can send an email, post to Slack, or write to a database without a human-confirmable interrupt point, you will eventually send the wrong thing to the wrong person at the wrong time.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="LangGraph state machine for DealLens deal screening"><style>.dt{font-family:system-ui,sans-serif;font-size:13px;fill:var(--color-text)}.dm{font-family:system-ui,sans-serif;font-size:11px;fill:var(--color-text-muted)}.box{rx:8;ry:8}</style><text x="400" y="28" text-anchor="middle" class="dt" font-weight="600" fill="var(--color-primary)">DealLens LangGraph State Machine</text><rect x="20" y="50" width="120" height="44" class="box" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.5"/><text x="80" y="68" text-anchor="middle" class="dt" fill="var(--color-accent-copper)">START</text><text x="80" y="86" text-anchor="middle" class="dm">deal_id → state</text><rect x="200" y="50" width="120" height="44" class="box" fill="none" stroke="var(--color-primary)" stroke-width="1.5"/><text x="260" y="68" text-anchor="middle" class="dt" fill="var(--color-primary)">retrieve</text><text x="260" y="86" text-anchor="middle" class="dm">→ retrieved_chunks</text><rect x="380" y="50" width="120" height="44" class="box" fill="none" stroke="var(--color-primary)" stroke-width="1.5"/><text x="440" y="68" text-anchor="middle" class="dt" fill="var(--color-primary)">score</text><text x="440" y="86" text-anchor="middle" class="dm">→ score</text><rect x="560" y="50" width="120" height="44" class="box" fill="none" stroke="var(--color-primary)" stroke-width="1.5"/><text x="620" y="68" text-anchor="middle" class="dt" fill="var(--color-primary)">draft-memo</text><text x="620" y="86" text-anchor="middle" class="dm">→ memo_draft</text><rect x="560" y="160" width="120" height="44" class="box" fill="none" stroke="var(--color-accent-euv)" stroke-width="2"/><text x="620" y="178" text-anchor="middle" class="dt" fill="var(--color-accent-euv)">interrupt()</text><text x="620" y="196" text-anchor="middle" class="dm">human review</text><rect x="560" y="270" width="120" height="44" class="box" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.5"/><text x="620" y="288" text-anchor="middle" class="dt" fill="var(--color-accent-copper)">send-email</text><text x="620" y="306" text-anchor="middle" class="dm">irreversible action</text><rect x="380" y="160" width="120" height="44" class="box" fill="none" stroke="var(--color-accent-quartz)" stroke-width="1.5"/><text x="440" y="178" text-anchor="middle" class="dt" fill="var(--color-accent-quartz)">reject</text><text x="440" y="196" text-anchor="middle" class="dm">score &lt; threshold</text><line x1="140" y1="72" x2="198" y2="72" stroke="var(--color-text-muted)" stroke-width="1.2" marker-end="url(#arr3)"/><line x1="320" y1="72" x2="378" y2="72" stroke="var(--color-text-muted)" stroke-width="1.2" marker-end="url(#arr3)"/><line x1="500" y1="72" x2="558" y2="72" stroke="var(--color-text-muted)" stroke-width="1.2" marker-end="url(#arr3)"/><line x1="620" y1="94" x2="620" y2="158" stroke="var(--color-text-muted)" stroke-width="1.2" marker-end="url(#arr3)"/><line x1="620" y1="204" x2="620" y2="268" stroke="var(--color-accent-euv)" stroke-width="1.5" marker-end="url(#arr3)"/><line x1="440" y1="94" x2="440" y2="158" stroke="var(--color-accent-quartz)" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr3)"/><text x="455" y="130" class="dm" fill="var(--color-accent-quartz)">score &lt; θ</text><defs><marker id="arr3" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--color-text-muted)"/></marker></defs></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 22.1</span><span class="text">DealLens deal-screening state machine: retrieve → score → conditional edge (reject if score below threshold, draft-memo otherwise) → interrupt() for human review → send-email. Each node writes to typed state; checkpointer persists after each node.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">LangGraph replaces the chain with a typed state machine — explicit state, checkpointed after every node, with interrupt semantics before irreversible actions — and that is the difference between a demo and a production agent.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://langchain-ai.github.io/langgraph/">LangGraph documentation, LangChain (current)</a></p>
+  <p><strong>Build.</strong> Rebuild DealLens&#x27;s deal-screening flow as a LangGraph state machine with typed state (TypedDict), three nodes (retrieve, score, draft-memo), one conditional edge (score &lt; threshold → reject), Postgres checkpointing, and an interrupt-before-send-email node. Run a failure scenario at the draft-memo node and demonstrate checkpoint-based recovery without duplicating the retrieve step. Use time-travel to replay from a corrected score.</p>
+  <p><strong>Capstone ladder.</strong> Direct for both. The DealLens screening flow is a production LangGraph state machine. The JHU humanoid task planner is the same architecture with a perception-action loop and physical-action interrupt points. Same framework, same pattern, different domain.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="22-langgraph-orchestration">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What does LangGraph&#x27;s checkpointer do and what are the production storage options?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The checkpointer persists the full typed state after every node completes. On failure or restart, the graph loads the last checkpoint and resumes from the next unexecuted node. Production storage options: Postgres (durable, queryable, supports concurrent runs), SQLite (single-user local), Redis (low-latency, less durable).</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why is the chain abstraction (linear sequence of LLM calls) insufficient for production agentic systems that write to external services?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Chains have no recovery semantics: a failure at step 8 restarts from step 1, re-executing all prior steps including external writes. This produces duplicate side effects (emails, CRM entries, API charges). Explicit state + checkpoint storage is required: on restart, load the last checkpoint and resume from the failure point without re-executing successful steps.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">Design the LangGraph state machine for DealLens: what are the nodes, edges, interrupt points, and what state fields does the TypedDict contain?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">State: TypedDict with fields (deal_id, retrieved_chunks, score, memo_draft, send_approved, sent). Nodes: retrieve (reads deal_id, writes retrieved_chunks), score (reads retrieved_chunks, writes score), draft-memo (reads score + retrieved_chunks, writes memo_draft), interrupt-review (pause for human), send-email (reads memo_draft + send_approved, writes sent). Edges: retrieve → score; score → draft-memo if score >= threshold, else → reject-node; draft-memo → interrupt-review; interrupt-review → send-email if approved, else → revise-loop.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="22-langgraph-orchestration-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="21-mcp-a2a.html"><span class="ch-nav-link__label">← Chapter 21</span><span class="ch-nav-link__title">MCP and A2A — the agent protocols</span></a>
+      <a class="ch-nav-link" data-dir="next" href="23-observability.html"><span class="ch-nav-link__label">Chapter 23 →</span><span class="ch-nav-link__title">Observability — traces, evals, regression</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

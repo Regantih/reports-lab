@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 14 · FlashAttention and Triton — From Tokens to Embodied Minds</title>
+<meta name="description" content="Naive attention materializes an N×N matrix in HBM. FlashAttention-2 never does — and that difference is the reason your long-context model fits in memory at all.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="14-flashattention-triton" data-chapter-title="FlashAttention and Triton">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="14-flashattention-triton">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">tiled SRAM computation</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">online softmax (safe)</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">HBM traffic reduction</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">Triton DSL</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">warp-level MMA</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">causal masking</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="14-flashattention-triton" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — why does naive attention cause an O(N²) memory problem, and which memory level is responsible?</h2>
+  <p class="learn__hint">Think about where the N×N matrix lives during computation.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-14-flashattention-triton" value="a"><span>It requires O(N²) FLOPs, which saturates compute before bandwidth</span></label><label class="predict__choice"><input type="radio" name="predict-14-flashattention-triton" value="b"><span>It materializes the full N×N attention score matrix in HBM, causing O(N²) memory traffic</span></label><label class="predict__choice"><input type="radio" name="predict-14-flashattention-triton" value="c"><span>It requires O(N²) shared memory per SM, which overflows L1</span></label><label class="predict__choice"><input type="radio" name="predict-14-flashattention-triton" value="d"><span>It triggers O(N²) NVLink transfers for multi-GPU attention</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">Naive attention writes the full N×N softmax matrix to HBM between the QK and AV matmuls. At N=32K tokens this is a 32K×32K FP16 matrix: 2 GB — and it is written and read per attention layer. FlashAttention fuses the QK matmul, softmax, and AV matmul into one kernel that tiles entirely within SRAM (228 KB L1 per SM), never materializing the N×N matrix in HBM.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 14 of 36</div>
+    <div class="ch-header__num">Chapter 14</div>
+    <h1 class="ch-header__title">FlashAttention and Triton</h1>
+    <p class="ch-header__dek">Tiling, online softmax, and writing GPU kernels in Python</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Derive the online softmax recurrence that makes FlashAttention numerically safe and O(N) in HBM traffic</li><li>Explain how Triton maps Python @triton.jit functions to warp-level GPU instructions without writing CUDA</li><li>Profile FlashAttention-3 vs FlashAttention-2 on H100 and explain which Hopper async features account for the gap</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">O(N)</div><div class="stat__label">HBM memory traffic in FlashAttention-2 vs O(N²) naive</div></div><div class="stat"><div class="stat__num">2–4×</div><div class="stat__label">wall-clock speedup of FlashAttention-2 over PyTorch SDPA at seq=16K</div></div><div class="stat"><div class="stat__num">200<em><em>lines</em></em></div><div class="stat__label">Triton code to implement FlashAttention-2 forward — CS336 Assignment 2</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="14-flashattention-triton">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. State the two key invariants that online softmax maintains to allow safe tile-by-tile computation.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Implement FlashAttention-2 forward in Triton (~200 lines), verify numerical correctness against torch.nn.functional.scaled_dot_product_attention, benchmark at seq=1K/4K/16K.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">Given a GR00T N1.5 DiT running cross-attention between a 512-token vision sequence and a 256-token language sequence at 50 Hz, calculate whether FlashAttention-3 FP8 on H100 saves enough to meet the 20ms budget on Orin.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">FlashAttention-3 introduces warp-specialization and async SM-to-SM pipelining on Hopper. Read the paper (Shah et al., arXiv:2407.08608, July 11, 2024) and state what it does that FlashAttention-2 cannot on Ampere hardware.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#online-softmax">Online softmax: the mathematical core</a></li><li><a href="#triton-kernel">Triton: GPU kernels in Python</a></li><li><a href="#fa2-fa3-comparison">FlashAttention-2 vs FlashAttention-3 on Hopper</a></li><li><a href="#capstone-kernels">What custom kernels unlock for your projects</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">Naive scaled dot-product attention has two nested matrix multiplications separated by a softmax — nothing algorithmically wrong with that. The problem is operational: at sequence length N, the intermediate attention score matrix is N×N floats. At N=32K tokens and BF16, that is 2 GB per attention layer per forward pass — written to HBM, then read back, every layer, every step. FlashAttention (Dao et al., May 27, 2022, arXiv:2205.14135) eliminated that write entirely. FlashAttention-2 (July 17, 2023, arXiv:2307.08691) fixed the work partitioning to use warp-level parallelism correctly. FlashAttention-3 (Shah et al., July 11, 2024, arXiv:2407.08608) added Hopper-specific async warp specialization and FP8 support. The progression is a masterclass in GPU microarchitecture applied to one algorithm.
+
+Triton — Phil Tillet's Python-embedded DSL for GPU kernels — is why you can implement FlashAttention-2 in ~200 lines of Python instead of 2,000 lines of CUDA. The @triton.jit decorator JIT-compiles a tile-parallel kernel that maps directly to warp-level MMA instructions on the target GPU. Raw CUDA is now reserved for the bottom 5% of performance-critical paths where Triton's abstractions leak. For everything else — custom attention variants, fused layernorm + MLP, speculative decode tree expansion — Triton is the right tool. CS336 Assignment 2 is explicitly a Triton implementation of FlashAttention-2 and is the most educational 200 lines you will write in this entire study path.</p>
+<h2 id="online-softmax">Online softmax: the mathematical core</h2>
+<p>Standard softmax over a row of logits requires two passes: first find the maximum (for numerical stability), then compute exp and normalize. You cannot do this in one pass unless you track a running maximum and running sum simultaneously. The online softmax recurrence (Milakov and Gimelshein, 2018) maintains two scalars per row: m (running max) and l (running sum of exp(x - m)). When a new tile of K columns arrives, the old l is rescaled by exp(m_old - m_new) before adding the new partial sum. This rescaling is exact — no approximation — and it allows the full softmax to be computed tile-by-tile without ever materializing all N keys at once.</p>
+<p>FlashAttention makes this recurrence the outer loop of the attention computation. For each query tile Q_i, iterate over K tiles: load K_j and V_j from HBM into SRAM, compute the dot products Q_i K_j^T, update m and l with the online recurrence, accumulate the partial output O_i += softmax_tile × V_j (rescaling the old O_i as m updates). When all K tiles are consumed, write O_i back to HBM once. Total HBM reads: O(N) for Q, K, V. Total HBM writes: O(N) for O. The N×N intermediate matrix is never written. At seq=32K this saves roughly 4 GB of HBM traffic per attention layer.</p>
+<p>Causal masking is free in this framework: when processing query tile i against key tile j where j > i (all keys are future tokens), set all scores to -inf before the softmax update. The online recurrence handles -inf entries correctly because exp(-inf) = 0. No separate masking kernel, no memory for the mask matrix.</p>
+<h2 id="triton-kernel">Triton: GPU kernels in Python</h2>
+<p>Triton abstracts GPU programming at the tile level. A @triton.jit function receives program IDs (analogous to block IDs in CUDA) and operates on tiles via tl.load, tl.store, tl.dot, tl.exp, tl.sum. The compiler lowers these to the optimal sequence of warp-level MMA instructions, shared memory allocations, and memory access patterns for the target GPU. The key constraint: tl.dot requires compile-time-known tile sizes, which is why FlashAttention Triton kernels take BLOCK_M and BLOCK_N as compile-time constexprs. The tile sizes must be chosen to fit Q_tile + K_tile + V_tile + O_tile within 228 KB of L1.</p>
+<p>A practical Triton FlashAttention-2 forward kernel is ~200 lines: load Q tile, loop over K/V tiles accumulating the online softmax and output, write the output and logsumexp. The backward pass is harder — recomputation of attention scores from the saved logsumexp is the key trick that avoids storing the N×N matrix for the backward pass as well. CS336 Assignment 2 requires the forward pass; the backward pass is optional but recommended for anyone who will write custom attention variants for a VLA fine-tuning loop.</p>
+<p>Triton limitations worth knowing: no dynamic shapes within a kernel (must recompile for each new shape), no support for warp-to-warp asynchronous pipelines (that is raw CUDA / PTX territory, which FlashAttention-3 exploits). For the ~95% of custom kernel use cases — fused activation functions, custom normalization, attention variants — Triton is sufficient and orders of magnitude faster to develop than CUDA.</p>
+<h2 id="fa2-fa3-comparison">FlashAttention-2 vs FlashAttention-3 on Hopper</h2>
+<p>FlashAttention-2 (Dao, arXiv:2307.08691, July 2023) improved over FA1 primarily by fixing work partitioning: FA1 assigned all queries in a row to one warp, serializing queries over keys. FA2 parallelizes queries across warps and introduces the correct tiling strategy for causal attention (fewer tiles to compute, no wasted softmax work). FA2 reaches roughly 50–73% of H100 BF16 tensor core throughput at long sequences, compared to FA1's 25–35%.</p>
+<p>FlashAttention-3 (Shah et al., arXiv:2407.08608, July 2024) exploits three Hopper-specific features: (1) the Tensor Memory Accelerator (TMA) for asynchronous HBM-to-SRAM transfers, decoupled from computation; (2) warp-group specialization where producer warps handle TMA asynchronously while consumer warps run tensor core MMA — this is the pipelining that squeezes out the last 20–30% of throughput; (3) FP8 support for the GEMMs, which doubles tensor core throughput when precision allows. FA3 reaches ~75% of H100 BF16 FLOP throughput, and higher for FP8. The catch: FA3 requires Hopper (H100) or later — it will not run on Ampere (A100).</p>
+<h2 id="capstone-kernels">What custom kernels unlock for your projects</h2>
+<p>For GR00T N1.5 running cross-attention between vision tokens (512) and language tokens (256) at 50 Hz on Jetson AGX Orin, the attention kernel is the most time-sensitive operation in the DiT. Orin does not support FA3 (Ampere-class GPU), but FA2 via Triton is available. The difference between PyTorch naive attention and FA2 at seq=768 is roughly 2.5× wall-clock — from ~6 ms to ~2.5 ms per attention layer — which can be the margin between meeting and missing the 20 ms control budget.</p>
+<p>For DealLens processing VC memos with 32K-token context, FA2 is the difference between fitting the full memo in one call and chunking it. At seq=32K, naive attention requires ~4 GB of HBM for the attention matrix across a 40-layer Llama 3.1 70B — that is the entire memory budget of the model. FA2 reduces that to negligible. Prefix caching (covered in Chapter 19) sits on top of FA2 and further amortizes the prefill cost across requests sharing a common system prompt.</p>
+<div class="aside" data-tone="plasma"><span class="aside__label">SDPA in PyTorch 2.x</span><p>torch.nn.functional.scaled_dot_product_attention dispatches to FlashAttention-2 automatically on Ampere+ GPUs with CUDA >= 11.6. You get FA2 for free in most training loops. The Triton build is still worth doing — it teaches you what SDPA does, and custom attention variants (e.g., sliding window, cross-attention with custom masking) require writing your own kernel.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="FlashAttention tiled softmax computation diagram"><title>FlashAttention-2: Tiled Online Softmax</title><style>text{font-family:system-ui,sans-serif;font-size:12px;fill:var(--color-text)}.muted{fill:var(--color-text-muted)}.label{fill:var(--color-accent-copper);font-weight:600}</style><text x="400" y="28" text-anchor="middle" font-size="14" font-weight="700" fill="var(--color-primary)">FlashAttention-2: Tiled Computation in SRAM</text><rect x="30" y="50" width="180" height="280" rx="4" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.5"/><text x="120" y="44" text-anchor="middle" font-size="11" class="label">HBM</text><rect x="45" y="65" width="150" height="50" rx="2" fill="var(--color-accent-copper)" fill-opacity="0.15" stroke="var(--color-accent-copper)"/><text x="120" y="95" text-anchor="middle">Q (N × d)</text><rect x="45" y="125" width="150" height="50" rx="2" fill="var(--color-accent-euv)" fill-opacity="0.12" stroke="var(--color-accent-euv)"/><text x="120" y="155" text-anchor="middle">K (N × d)</text><rect x="45" y="185" width="150" height="50" rx="2" fill="var(--color-accent-quartz)" fill-opacity="0.12" stroke="var(--color-accent-quartz)"/><text x="120" y="215" text-anchor="middle">V (N × d)</text><rect x="45" y="255" width="150" height="50" rx="2" fill="var(--color-primary)" fill-opacity="0.10" stroke="var(--color-primary)"/><text x="120" y="285" text-anchor="middle">O (N × d) ← write once</text><rect x="310" y="50" width="200" height="280" rx="4" fill="none" stroke="var(--color-accent-euv)" stroke-width="2"/><text x="410" y="44" text-anchor="middle" font-size="11" fill="var(--color-accent-euv)" font-weight="600">SRAM (228 KB / SM)</text><rect x="325" y="65" width="170" height="40" rx="2" fill="var(--color-accent-copper)" fill-opacity="0.20" stroke="var(--color-accent-copper)"/><text x="410" y="90" text-anchor="middle" font-size="11">Q tile (BLOCK_M × d)</text><rect x="325" y="115" width="170" height="40" rx="2" fill="var(--color-accent-euv)" fill-opacity="0.18" stroke="var(--color-accent-euv)"/><text x="410" y="140" text-anchor="middle" font-size="11">K tile (BLOCK_N × d)</text><rect x="325" y="165" width="170" height="40" rx="2" fill="var(--color-accent-quartz)" fill-opacity="0.18" stroke="var(--color-accent-quartz)"/><text x="410" y="190" text-anchor="middle" font-size="11">V tile (BLOCK_N × d)</text><rect x="325" y="215" width="170" height="40" rx="2" fill="none" stroke="var(--color-text-muted)" stroke-dasharray="4,3"/><text x="410" y="237" text-anchor="middle" font-size="11" class="muted">Online softmax state:</text><text x="410" y="252" text-anchor="middle" font-size="11" class="muted">m (running max), l (running Σ)</text><rect x="325" y="265" width="170" height="40" rx="2" fill="var(--color-primary)" fill-opacity="0.10" stroke="var(--color-primary)"/><text x="410" y="290" text-anchor="middle" font-size="11">O tile (accumulated)</text><line x1="195" y1="90" x2="325" y2="90" stroke="var(--color-accent-copper)" stroke-width="1.5" marker-end="url(#a)"/><line x1="195" y1="150" x2="325" y2="140" stroke="var(--color-accent-euv)" stroke-width="1.5" marker-end="url(#a)"/><line x1="195" y1="210" x2="325" y2="180" stroke="var(--color-accent-quartz)" stroke-width="1.5" marker-end="url(#a)"/><line x1="510" y1="280" x2="560" y2="280" stroke="var(--color-text-muted)" stroke-width="1.5" marker-end="url(#a)"/><text x="580" y="220" font-size="12" class="muted">No N×N matrix</text><text x="580" y="238" font-size="12" class="muted">written to HBM</text><text x="580" y="256" font-size="12" fill="var(--color-accent-copper)">HBM traffic: O(N)</text><text x="580" y="274" font-size="12" class="muted">vs naive O(N²)</text><text x="410" y="345" text-anchor="middle" font-size="11" class="muted">Loop: iterate K/V tiles, update m, l, O — write O to HBM once per Q tile</text><defs><marker id="a" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--color-text-muted)"/></marker></defs></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 14.1</span><span class="text">FlashAttention-2 tiles Q, K, V into SRAM (228 KB/SM), runs online softmax tile-by-tile maintaining only m and l scalars, and writes O back to HBM once per query tile. The N×N attention matrix is never materialized — reducing HBM traffic from O(N²) to O(N).</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">FlashAttention-2 eliminates the N×N HBM write by computing tiled online softmax entirely in SRAM, cutting long-context memory traffic from O(N²) to O(N) — and Triton lets you implement it in 200 lines of Python.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://arxiv.org/abs/2307.08691">FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning, Tri Dao, arXiv:2307.08691 (July 17, 2023). Triton documentation (triton-lang.org).</a></p>
+  <p><strong>Build.</strong> Implement FlashAttention-2 forward pass in Triton (~200 lines), verify numerical equivalence against torch.nn.functional.scaled_dot_product_attention, benchmark at seq=1K/4K/16K/32K on H100. CS336 Assignment 2.</p>
+  <p><strong>Capstone ladder.</strong> GR00T N1.5&#x27;s DiT runs cross-attention at 50 Hz — FA2 in Triton on Orin reduces attention latency by ~2.5× vs naive PyTorch, potentially saving 3–4 ms per step. For DealLens, FA2 is what makes 32K-token VC memo processing fit on a single GPU.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="14-flashattention-triton">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What are the two scalars maintained per row in the online softmax recurrence, and what does each track?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">m tracks the running maximum of the logits seen so far (used for numerical stability). l tracks the running sum of exp(logit - m) for all logits seen. Both are updated whenever a new tile of keys is processed.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does FlashAttention-3 require Hopper hardware specifically, and what two Hopper features does it exploit?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">FA3 requires the Tensor Memory Accelerator (TMA) for async HBM-to-SRAM transfers and the warp-group specialization model where producer warps handle TMA asynchronously while consumer warps run MMA — both are Hopper-only architectural features unavailable on Ampere.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">For DealLens processing 32K-token VC memos with Llama 3.1 70B (40 layers), what HBM saved by FA2 vs naive attention, and why does this matter?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Naive attention writes an N×N FP16 matrix per layer: 32K×32K×2 bytes × 40 layers ≈ 80 GB — more than the model itself. FA2 reduces this to O(N) traffic per layer, making 32K-token inference feasible on a single H100 80 GB.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="14-flashattention-triton-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="13-h100-b200.html"><span class="ch-nav-link__label">← Chapter 13</span><span class="ch-nav-link__title">Inside an H100/B200</span></a>
+      <a class="ch-nav-link" data-dir="next" href="15-distributed-training.html"><span class="ch-nav-link__label">Chapter 15 →</span><span class="ch-nav-link__title">Distributed training</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

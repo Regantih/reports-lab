@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 11 · Quantization, distillation, pruning — From Tokens to Embodied Minds</title>
+<meta name="description" content="INT4 weights with FP16 activations is the inference sweet spot. FP8 training is the 2024-2025 Hopper/Blackwell standard. Structured pruning works; unstructured pruning does not on real hardware.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="11-quantization" data-chapter-title="Quantization, distillation, pruning">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="11-quantization">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">post-training quantization (PTQ)</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">quantization-aware training (QAT)</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">GPTQ second-order quantization</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">AWQ activation-aware weighting</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">FP8 training E4M3/E5M2</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">knowledge distillation</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">structured vs unstructured pruning</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="11-quantization" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Why is 4-bit weight quantization with 16-bit activations the practical inference sweet spot rather than 4-bit weights with 4-bit activations (W4A4)?</h2>
+  <p class="learn__hint">Think about where the precision loss matters most in a matmul operation.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-11-quantization" value="a"><span>4-bit activations are not supported by any current GPU hardware instruction set</span></label><label class="predict__choice"><input type="radio" name="predict-11-quantization" value="b"><span>Activation outliers in transformer hidden states cause catastrophic quantization error in 4-bit, which 16-bit avoids</span></label><label class="predict__choice"><input type="radio" name="predict-11-quantization" value="c"><span>16-bit activations are required by the softmax operation and cannot be changed without retraining</span></label><label class="predict__choice"><input type="radio" name="predict-11-quantization" value="d"><span>W4A16 has better memory bandwidth utilization because activations are already in the FP16 register file</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">Transformer activations contain systematic outliers — a small fraction of dimensions with values 5-10× larger than typical (observed by Dettmers et al. in LLM.int8(), arXiv:2208.07339, August 2022). 4-bit quantization of activations maps these outliers and ordinary values into the same narrow range, causing catastrophic error for the outliers. W4A16 avoids this: weights are quantized to 4-bit (which work fine since weight distributions are much smoother), while activations remain in FP16/BF16 where outliers are represented accurately. W4A8 with per-channel activation quantization (SmoothQuant, AWQ) can work but requires explicit outlier handling.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 11 of 36</div>
+    <div class="ch-header__num">Chapter 11</div>
+    <h1 class="ch-header__title">Quantization, distillation, pruning</h1>
+    <p class="ch-header__dek">The three knobs that ship a frontier model on a phone</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Quantize a Llama 3.2 3B to INT4 with GPTQ, benchmark perplexity loss on WikiText-103, and measure inference speedup on a single A100.</li><li>Explain why 4-bit weights with 16-bit activations is the practical inference sweet spot and not 4-bit weights with 4-bit activations.</li><li>Describe why structured pruning (whole heads, layers) works on GPU while unstructured (individual weight) pruning does not.</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">4<em>-bit</em></div><div class="stat__label">weight quantization — the practical inference sweet spot (GPTQ, AWQ)</div></div><div class="stat"><div class="stat__num">40<em>%</em></div><div class="stat__label">latency reduction from INT8 quantization of GR00T N1.5 on Jetson AGX Orin</div></div><div class="stat"><div class="stat__num">FP8</div><div class="stat__label">production training format on H100/B200 — DeepSeek-V3 trained end-to-end in FP8</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="11-quantization">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Name the three compression techniques and the primary trade-off each imposes (quantization, distillation, pruning).</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Quantize a Llama 3.2 3B to INT4 using GPTQ via the AutoGPTQ library. Compare perplexity on WikiText-103 between FP16 baseline, INT8, and INT4.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">SmolVLA runs at 30% below latency target on Jetson AGX Orin. Propose a quantization and pruning strategy that recovers the budget without retraining the full model.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">FP8 training (E4M3 forward, E5M2 backward) is now the H100 standard. Explain what per-channel vs per-tensor scaling addresses and derive the maximum representable gradient in E5M2.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#quantization">Quantization — the three knobs</a></li><li><a href="#distillation">Distillation — matching the teacher&#x27;s distribution</a></li><li><a href="#pruning">Pruning — what actually works on GPU</a></li><li><a href="#capstone-link">Compression for edge deployment</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">The three compression techniques — quantization, distillation, and pruning — exist because frontier models are too large to run on the hardware where most inference happens: phones, edge devices, Jetson AGX Orin in a humanoid robot. Quantization reduces the bit-width of weights and/or activations. Distillation trains a smaller student to match a larger teacher's output distribution. Pruning removes parameters. Each technique has a different failure mode, a different hardware dependency, and a different set of conditions under which it is worth the engineering cost.
+
+For the JHU humanoid capstone, all three are directly relevant. GR00T N1.5 at full BF16 precision exceeds the Jetson AGX Orin memory budget. INT8 activation quantization on the attention layers alone recovers ~40% latency with negligible quality loss. SmolVLA-450M was designed explicitly for consumer-GPU deployment — it is the result of the same design logic applied at the model architecture level rather than post-hoc. For DealLens, quantization determines the cost per inference at serving scale.</p>
+<h2 id="quantization">Quantization — the three knobs</h2>
+<p>Post-training quantization (PTQ) is the standard first approach: quantize a trained model without retraining. GPTQ (Frantar et al., arXiv:2210.17323, October 2022) uses second-order Hessian information to minimize the quantization error per layer, producing INT4 models with perplexity loss of ~0.5-1.0 on WikiText-103 compared to FP16. AWQ (Lin et al., arXiv:2306.00978, June 2023) uses activation-aware weight quantization — identifying and protecting the weights that matter most for large-magnitude activations. Both achieve INT4 on weights with FP16 activations (W4A16), which is the practical serving sweet spot.</p>
+<p>The reason W4A16 beats W4A4: transformer hidden states contain systematic outlier dimensions (LLM.int8(), Dettmers et al., arXiv:2208.07339, August 2022). A small fraction of channels consistently carry values 5-10× larger than others. 4-bit quantization maps all values into a narrow range, causing catastrophic relative error for outliers. Keeping activations in FP16 avoids this entirely. SmoothQuant (Xiao et al., arXiv:2211.10438, November 2022) mathematically smooths the activation outliers by migrating their magnitude into the weights before quantization, enabling W8A8 without per-channel scaling overhead.</p>
+<p>FP8 training (E4M3 for forward pass, E5M2 for backward) is the 2024-2025 H100/B200 standard. DeepSeek-V3 trained its full 671B model end-to-end in FP8 (arXiv:2412.19437). The key requirement: per-channel or per-group scaling for activation outliers — per-tensor scaling is insufficient. FP8 training delivers ~2x training throughput over BF16 on H100 tensor cores.</p>
+<h2 id="distillation">Distillation — matching the teacher&#x27;s distribution</h2>
+<p>Knowledge distillation (Hinton et al., arXiv:1503.02531, March 2015) trains a smaller student to minimize KL(p_teacher || p_student) rather than just cross-entropy on hard labels. The intuition: the teacher's soft predictions encode information about the structure of the problem — 'this token is almost as likely as that token' — that hard labels discard. At temperature T=2-4, soft targets spread probability mass to the top-k tokens and give the student richer gradient signal.</p>
+<p>Every 'Llama 3.2 3B' or 'Qwen 2.5 1.5B' released in 2024-2025 is a distilled model. The base pretraining creates a capable student at the target size; fine-tuning adds instruction following; the small size is justified by distillation from a larger model on the fine-tuning data. For DealLens, distillation from GPT-4o on a labeled memo dataset produces a domain-adapted scorer that is cheap to run at inference and more reliable than the generic base model on deal-specific terminology.</p>
+<h2 id="pruning">Pruning — what actually works on GPU</h2>
+<p>Unstructured pruning — zeroing out individual weights below a magnitude threshold — produces sparse weight matrices that are theoretically smaller but practically offer no speedup on GPUs. GPU tensor cores execute dense matmuls; sparse matmul support (via NVIDIA's Ampere 2:4 structured sparsity) requires exactly 2 non-zero weights per 4 consecutive elements. Arbitrary unstructured sparsity provides no hardware benefit without custom sparse kernels.</p>
+<p>Structured pruning removes entire components: whole attention heads, entire FFN neurons, or entire transformer layers. Removing the 10% lowest-magnitude attention heads from a 32-head model at each layer degrades perplexity by ~0.3 and reduces KV-cache size by 10%. Removing entire transformer layers (the 4-5 layers with lowest block importance) from a 32-layer model can cut inference by 15% with 1-2 perplexity point loss — acceptable for applications where latency matters more than marginal accuracy.</p>
+<h2 id="capstone-link">Compression for edge deployment</h2>
+<p>For the JHU humanoid, the Jetson AGX Orin has 64 GB unified memory and delivers ~275 TOPS at INT8. SmolVLA-450M at FP16 occupies ~900 MB of weights plus KV-cache and activations — well within budget. GR00T N1.5's full model (the VLM backbone plus DiT) is far larger. The practical deployment path: run the DiT action model at INT8 for ~40% latency recovery on Orin, run the VLM backbone at BF16 (or INT8 with SmoothQuant), and use structured head pruning to remove the 10% lowest-importance attention heads from the VLM at a 0.3 perplexity cost.</p>
+<p>For DealLens at serving scale (say 10K queries/day), the cost comparison: Llama 3 70B at BF16 on an A100 costs approximately $0.015/query. Quantized to INT4 (W4A16 via GPTQ) on the same hardware: $0.005/query. Distilled to a 7B model: $0.002/query. The three compression techniques are not academic — they determine whether DealLens is economically viable at scale without a frontier API dependency.</p>
+<div class="aside" data-tone="plasma"><span class="aside__label">QAT vs PTQ — when to pay the training cost</span><p>Quantization-aware training (QAT) trains with fake quantization nodes in the forward pass, allowing the model to adapt to quantization error. It costs full-training compute but recovers 0.5-1.0 perplexity points over PTQ at 4-bit. Pay for QAT only if your deployment precision is known before training — otherwise PTQ with GPTQ is the correct first approach.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="Quantization, distillation, and pruning techniques" fill="none" xmlns="http://www.w3.org/2000/svg"><text x="400" y="26" text-anchor="middle" font-size="14" font-weight="600" fill="var(--color-text)">Three Compression Knobs — Quantization, Distillation, Pruning</text><rect x="20" y="50" width="240" height="180" rx="8" stroke="var(--color-primary)" stroke-width="1.5" fill="var(--color-bg)"/><text x="140" y="75" text-anchor="middle" font-size="13" font-weight="600" fill="var(--color-primary)">Quantization</text><text x="40" y="98" font-size="10" fill="var(--color-text-muted)">W4A16 (GPTQ/AWQ): inference sweet spot</text><text x="40" y="115" font-size="10" fill="var(--color-text-muted)">FP8 E4M3/E5M2: training on H100/B200</text><text x="40" y="132" font-size="10" fill="var(--color-text-muted)">W8A8 (SmoothQuant): smooth outliers first</text><text x="40" y="155" font-size="10" fill="var(--color-accent-copper)">PTQ: no retraining · GPTQ/AWQ</text><text x="40" y="172" font-size="10" fill="var(--color-accent-euv)">QAT: pay training cost, gain 0.5-1 PPL</text><text x="40" y="198" font-size="10" fill="var(--color-accent-quartz)">W4A4 fails: activation outliers</text><rect x="280" y="50" width="240" height="180" rx="8" stroke="var(--color-accent-euv)" stroke-width="1.5" fill="var(--color-bg)"/><text x="400" y="75" text-anchor="middle" font-size="13" font-weight="600" fill="var(--color-accent-euv)">Distillation</text><text x="300" y="98" font-size="10" fill="var(--color-text-muted)">Student minimizes KL(p_teacher||p_student)</text><text x="300" y="115" font-size="10" fill="var(--color-text-muted)">Temperature T=2-4: spread soft targets</text><text x="300" y="132" font-size="10" fill="var(--color-text-muted)">Forward KL: mean-seeking, all modes</text><text x="300" y="155" font-size="10" fill="var(--color-accent-copper)">Every 'Llama 3.2 3B' is distilled</text><text x="300" y="172" font-size="10" fill="var(--color-accent-euv)">Costs full fine-tuning compute</text><text x="300" y="198" font-size="10" fill="var(--color-accent-quartz)">DealLens: GPT-4o teacher → domain scorer</text><rect x="540" y="50" width="240" height="180" rx="8" stroke="var(--color-accent-quartz)" stroke-width="1.5" fill="var(--color-bg)"/><text x="660" y="75" text-anchor="middle" font-size="13" font-weight="600" fill="var(--color-accent-quartz)">Pruning</text><text x="560" y="98" font-size="10" fill="var(--color-text-muted)">Structured: whole heads, layers → GPU speedup</text><text x="560" y="115" font-size="10" fill="var(--color-text-muted)">Unstructured: individual weights → no speedup</text><text x="560" y="132" font-size="10" fill="var(--color-text-muted)">Ampere 2:4 sparsity: structured, 2x throughput</text><text x="560" y="155" font-size="10" fill="var(--color-accent-copper)">Head pruning: 10% heads → 0.3 PPL, 10% KV</text><text x="560" y="172" font-size="10" fill="var(--color-accent-euv)">Layer removal: 10-15% latency, 1-2 PPL</text><text x="560" y="198" font-size="10" fill="var(--color-accent-quartz)">Orin: INT8 attn → 40% latency reduction</text><text x="400" y="270" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">SmolVLA-450M: distillation + architecture optimization at design time → 78.3% task success on consumer GPU</text><text x="400" y="290" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">DealLens: W4A16 INT4 serving → 3-7x cost reduction vs full-precision frontier model</text></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 11.1</span><span class="text">The three compression techniques and their hardware dependencies: quantization (W4A16 is the GPU sweet spot, FP8 for H100 training), distillation (every small model is a distilled model), and pruning (structured removal works, unstructured does not on tensor cores).</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">Quantization (W4A16 for inference, FP8 for training), distillation (match teacher's soft targets), and structured pruning (whole heads and layers) are the three techniques that make frontier models deployable — unstructured pruning and W4A4 quantization are the two that sound good but do not work on real GPU hardware.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://arxiv.org/abs/2210.17323">GPTQ: Accurate Post-Training Quantization for Generative Pre-trained Transformers, Frantar et al., arXiv:2210.17323 (October 31, 2022)</a></p>
+  <p><strong>Build.</strong> Quantize a Llama 3.2 3B to INT4 using AutoGPTQ, benchmark perplexity loss on WikiText-103 against FP16 baseline and INT8, and measure inference speedup on a single A100.</p>
+  <p><strong>Capstone ladder.</strong> Direct — GR00T N1.5 exceeds Jetson AGX Orin memory budget without quantization. INT8 quantization recovers ~40% latency. SmolVLA-450M was designed for consumer-GPU deployment — it is the result of distillation and architecture optimization applied at design time. For DealLens, quantization reduces serving cost 3-7x versus full-precision frontier models.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="11-quantization">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What is GPTQ and why does it produce better quantized models than naive round-to-nearest at INT4?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">GPTQ (Frantar et al., arXiv:2210.17323, October 2022) uses second-order Hessian information (an approximation of the Hessian inverse) to minimize per-layer quantization error. It quantizes weights sequentially and adjusts remaining weights to compensate for each quantized weight's error, reducing INT4 perplexity loss from ~3-5 points (naive) to ~0.5-1.0 points.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does unstructured weight pruning not provide inference speedup on modern GPUs?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">GPU tensor cores execute dense matmuls. Sparse matrix-vector products require custom sparse kernels or the specific 2:4 structured sparsity format (Ampere). Arbitrary unstructured sparsity, even at 50% non-zeros, provides no throughput benefit on standard tensor core operations.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">Propose a quantization strategy for deploying SmolVLA-450M on Jetson AGX Orin within a 15ms per-step latency budget.</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">INT8 weight quantization (SmoothQuant or AWQ) on all linear layers: ~40% latency reduction, ~0.5% task success degradation. If still over budget: structured pruning of the 10% lowest-magnitude attention heads across all layers: additional ~10% latency reduction, ~1% success degradation. Total: ~50% latency reduction at ~1.5% quality cost — likely sufficient to hit 15ms on Orin's 275 TOPS INT8 compute.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="11-quantization-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="10-long-context.html"><span class="ch-nav-link__label">← Chapter 10</span><span class="ch-nav-link__title">Long context — beyond 128K</span></a>
+      <a class="ch-nav-link" data-dir="next" href="12-paper-reading.html"><span class="ch-nav-link__label">Chapter 12 →</span><span class="ch-nav-link__title">How to read a frontier paper in 30 minutes</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

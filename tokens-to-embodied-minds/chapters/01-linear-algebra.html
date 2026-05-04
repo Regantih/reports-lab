@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 01 · Linear algebra you actually use — From Tokens to Embodied Minds</title>
+<meta name="description" content="The five operations that consume every forward pass are not interesting for their math — they are interesting because their numerical behavior at BF16/FP8 is what bites in practice.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="01-linear-algebra" data-chapter-title="Linear algebra you actually use">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="01-linear-algebra">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">dense matmul</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">softmax</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">layer/RMS norm</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">residual add</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">einsum / multi-head attention</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">BF16 + FP32 accumulate</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="01-linear-algebra" data-answer-key="c">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Which numerical pattern most often causes silent precision loss in modern transformer training — not a NaN, but quietly degraded model quality?</h2>
+  <p class="learn__hint">Pick the one that fails not by exploding but by silently squashing gradients.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-01-linear-algebra" value="a"><span>Forgetting layer normalization in the residual stream</span></label><label class="predict__choice"><input type="radio" name="predict-01-linear-algebra" value="b"><span>Using BF16 storage with FP32 accumulate in matmul</span></label><label class="predict__choice"><input type="radio" name="predict-01-linear-algebra" value="c"><span>Using full FP16 (storage and accumulate) for matmul</span></label><label class="predict__choice"><input type="radio" name="predict-01-linear-algebra" value="d"><span>Using FP8 with per-tensor scaling on H100</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">Full FP16 — storage and accumulate — is the silent killer. Activations and accumulators saturate FP16's tiny dynamic range (max ~65504), gradients underflow to zero, and the loss curve flattens without ever throwing a NaN. The fix is BF16 storage plus FP32 accumulate: BF16 borrows FP32's exponent range so activations do not saturate, and FP32 accumulators preserve precision across the long reduction axis. Every modern training stack defaults to this.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 01 of 36</div>
+    <div class="ch-header__num">Chapter 01</div>
+    <h1 class="ch-header__title">Linear algebra you actually use</h1>
+    <p class="ch-header__dek">The five operations every forward pass spends its time on</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Decompose multi-head attention into the einsum patterns that actually run on the GPU, labeling every dimension.</li><li>Explain why BF16 matmul with FP32 accumulate is the only numerical formulation that survives large-scale training.</li><li>Diagnose a softmax overflow from a NaN loss and prescribe the correct subtract-max numerical fix.</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">5</div><div class="stat__label">operations that consume every forward pass</div></div><div class="stat"><div class="stat__num">BF16<em>+</em>FP32</div><div class="stat__label">the only numerical recipe that survives at scale</div></div><div class="stat"><div class="stat__num">100<em>µs</em></div><div class="stat__label">saved on attention is 100µs more for the controller</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="01-linear-algebra">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. Without looking, name the five operations a transformer forward pass spends most of its time on.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">On a whiteboard, write multi-head attention as a single einsum and label every dimension (b, h, q, k, d) without checking notes.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">A colleague's BF16 training run plateaus at 2.1 perplexity. In 90 seconds, list the three numerical bugs you would check first.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Pick one open question — FP8 mixed precision, MX-FP4 inference, or stochastic rounding. State what is unsettled and defend a position.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#five-ops">The five operations</a></li><li><a href="#numerics">Numerics is the bug, not the algorithm</a></li><li><a href="#einsum">Einsum is the language of attention</a></li><li><a href="#capstone-link">Why this maps directly to your two projects</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">The five operations that decide every transformer forward pass — dense matmul, softmax, layer or RMS norm, residual add, and the einsum patterns that express multi-head attention — are not interesting because of their math. They are interesting because their numerical behavior at FP16, BF16, and FP8 is what bites in practice. Softmax overflows. Accumulators lose precision. BF16 matmul with FP32 accumulate is the only reason large-scale training works at all, and if you do not know why, you are one rogue kernel away from a training run that silently degrades for three days before anyone notices.
+
+For the JHU humanoid capstone, this is not academic. Perception-to-action latency has a hard budget — every 100 microseconds you waste in the attention kernel is 100 microseconds the PD controller cannot use to track a smoother trajectory. For DealLens, the same matmul kernel sits below your retriever; understanding its precision trade-offs tells you why embedding quality degrades at certain dtypes.</p>
+<h2 id="five-ops">The five operations</h2>
+<p>Dense matmul dominates wall-clock time in every transformer layer — the QKV projection, the attention output projection, and both FFN weight multiplications are all GEMM calls. At sequence length 512 on an H100, matmul accounts for roughly 60-70% of forward-pass FLOPs. Softmax is local over the sequence dimension and fast, but it is also where overflow enters: the raw dot products before scaling can reach magnitudes that push IEEE float into NaN territory. Layer norm and RMS norm are normalization steps over the hidden dimension — cheap in FLOPs but critical for training stability because they reset the scale of activations at every sublayer boundary. Residual add costs almost nothing but is architecturally load-bearing: without it, gradients vanish.</p>
+<p>The einsum patterns behind multi-head attention tie all four together. A single forward pass of causal self-attention is: Q = x W_Q, K = x W_K, V = x W_V (three matmuls), scores = Q K^T / sqrt(d_k) (one batched matmul), weights = softmax(scores + mask) (one softmax), output = weights V (one matmul), out_proj = output W_O (one matmul). That is seven distinct GEMM or GEMM-adjacent operations per attention sublayer, all of which operate on tensors in BF16 on modern training stacks. Writing this as a single einsum — <code>torch.einsum('bhqd,bhkd->bhqk', Q, K)</code> for the score step — is not just style; it forces you to track every dimension and spot shape errors before they become runtime bugs.</p>
+<p>Grouped-query attention (GQA), used in Llama 3, Qwen 2.5, and Mistral, reduces the K and V heads to a smaller group count, cutting KV-cache memory by 4-8x with minimal accuracy loss. This is not a theoretical curiosity — for DealLens running long-context VC memo analysis, GQA is the reason you can fit a 128K-context model on a single A100.</p>
+<h2 id="numerics">Numerics is the bug, not the algorithm</h2>
+<p>Softmax overflow is a recurring bug rather than a one-time fix because every new attention kernel — Triton, raw CUDA, KV-cache code paths — reintroduces the risk. PyTorch's built-in <code>F.softmax</code> subtracts the row maximum before exponentiation. Custom kernels routinely omit this. The symptom is NaN loss at step one or step N, depending on when activations first grow large enough to overflow. The fix is mechanical: subtract the per-row max before exponentiation, which does not change the output distribution but keeps intermediate values finite.</p>
+<p>BF16 stores the same exponent bits as FP32 (8 bits, range up to ~3.4e38) but only 7 mantissa bits instead of 23. That exponent range is what matters for activations: they do not overflow at the values LLMs routinely see. FP16, by contrast, has a 5-bit exponent and saturates at ~65504 — a value large embedding layers and attention scores regularly exceed. FP32 accumulators then clean up the mantissa precision loss across the reduction axis. The combination is not a heuristic; it is the result of empirical observation across GPT-3, PaLM, and every major training run since 2021.</p>
+<p>FP8 (E4M3 for forward, E5M2 for backward) is now production-default on Hopper and Blackwell. DeepSeek-V3 trained its 671B-parameter model in FP8 end-to-end (DeepSeek-AI, arXiv:2412.19437, December 2024). The caveats: per-tensor scaling is insufficient for activation outliers; per-channel or per-group scaling is required. FP8 also has no standard hardware support on older GPUs — do not attempt it on anything pre-Hopper.</p>
+<h2 id="einsum">Einsum is the language of attention</h2>
+<p>Writing multi-head attention as a sequence of raw matmuls obscures the structure. Writing it as a set of einsums makes every dimension explicit and makes bugs obvious. The full forward pass collapses to: scores = einsum('bhqd,bhkd->bhqk', Q, K) * scale, weights = softmax(scores), out = einsum('bhqk,bhkd->bhqd', weights, V). The dimension labels are b (batch), h (head), q (query position), k (key position), d (head dimension). Any shape mismatch in a production kernel shows up immediately in the einsum notation before it becomes a CUDA illegal memory access.</p>
+<p>The practical benchmark every engineer should run at least once: implement scaled dot-product attention three ways — naive PyTorch loops, <code>torch.einsum</code>, and a Triton kernel — and measure throughput at sequence lengths 512, 4K, and 16K. The gap between the naive version and the Triton kernel at 16K sequences is typically 3-5x on an H100, and every microsecond in that gap is budgeted either to the policy inference or the controller in an embodied system.</p>
+<h2 id="capstone-link">Why this maps directly to your two projects</h2>
+<p>For the JHU humanoid capstone: GR00T N1.5 runs a DiT action model at roughly 50Hz. The VLM backbone (Eagle 2.5) runs slower — its attention kernel determines the System 2 latency floor. Every microsecond you recover through numerical precision choices and kernel selection feeds directly into the control loop budget. INT8 activation quantization on the attention layers alone can recover 15-20% of latency on Jetson AGX Orin without measurable accuracy loss.</p>
+<p>For DealLens: your retriever embeds passages using a transformer encoder. The embedding quality at BF16 versus FP16 is not zero — outlier dimensions in the hidden state are more stable in BF16, and the similarity scores your reranker sees downstream are more consistent. The difference is small per query but compounds across a 10K-memo corpus sweep.</p>
+<div class="aside" data-tone="copper"><span class="aside__label">FP8 on Hopper and Blackwell</span><p>FP8 E4M3 for forward pass and E5M2 for backward is the 2024-2025 production default on H100 and B200. The precision loss is real — you need per-channel or per-group scaling for activation outliers — but DeepSeek-V3's 671B FP8 training run (December 2024) proved that end-to-end FP8 is viable at frontier scale.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="Five operations of a transformer forward pass" fill="none" xmlns="http://www.w3.org/2000/svg"><text x="400" y="28" text-anchor="middle" font-size="14" font-weight="600" fill="var(--color-text)">Five Operations of the Transformer Forward Pass</text><rect x="40" y="60" width="120" height="52" rx="6" stroke="var(--color-primary)" stroke-width="1.5" fill="var(--color-bg)"/><text x="100" y="83" text-anchor="middle" font-size="13" font-weight="600" fill="var(--color-primary)">Dense Matmul</text><text x="100" y="101" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">GEMM · BF16+FP32</text><rect x="200" y="60" width="120" height="52" rx="6" stroke="var(--color-accent-copper)" stroke-width="1.5" fill="var(--color-bg)"/><text x="260" y="83" text-anchor="middle" font-size="13" font-weight="600" fill="var(--color-accent-copper)">Softmax</text><text x="260" y="101" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">subtract-max · stable</text><rect x="360" y="60" width="120" height="52" rx="6" stroke="var(--color-accent-euv)" stroke-width="1.5" fill="var(--color-bg)"/><text x="420" y="83" text-anchor="middle" font-size="13" font-weight="600" fill="var(--color-accent-euv)">RMSNorm</text><text x="420" y="101" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">per hidden dim</text><rect x="520" y="60" width="120" height="52" rx="6" stroke="var(--color-accent-quartz)" stroke-width="1.5" fill="var(--color-bg)"/><text x="580" y="83" text-anchor="middle" font-size="13" font-weight="600" fill="var(--color-accent-quartz)">Residual Add</text><text x="580" y="101" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">gradient highway</text><rect x="680" y="60" width="100" height="52" rx="6" stroke="var(--color-primary)" stroke-width="1.5" fill="var(--color-bg)"/><text x="730" y="83" text-anchor="middle" font-size="13" font-weight="600" fill="var(--color-primary)">Einsum</text><text x="730" y="101" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">MHA patterns</text><line x1="160" y1="86" x2="200" y2="86" stroke="var(--color-text-muted)" stroke-width="1" marker-end="url(#arr)"/><line x1="320" y1="86" x2="360" y2="86" stroke="var(--color-text-muted)" stroke-width="1"/><line x1="480" y1="86" x2="520" y2="86" stroke="var(--color-text-muted)" stroke-width="1"/><line x1="640" y1="86" x2="680" y2="86" stroke="var(--color-text-muted)" stroke-width="1"/><rect x="120" y="180" width="560" height="80" rx="8" stroke="var(--color-accent-copper)" stroke-width="1.5" stroke-dasharray="6 3" fill="var(--color-bg)"/><text x="400" y="208" text-anchor="middle" font-size="13" font-weight="600" fill="var(--color-accent-copper)">Numerical Recipe: BF16 storage + FP32 accumulate</text><text x="400" y="228" text-anchor="middle" font-size="12" fill="var(--color-text-muted)">BF16 exponent range prevents overflow · FP32 accumulator preserves precision across reduction</text><text x="400" y="246" text-anchor="middle" font-size="12" fill="var(--color-text-muted)">Pure FP16 saturates at ~65504 · silently underflows gradients without NaN</text><text x="400" y="310" text-anchor="middle" font-size="12" fill="var(--color-text-muted)">FP8 E4M3 (forward) + E5M2 (backward) — Hopper/Blackwell production default · requires per-channel scaling</text></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 1.1</span><span class="text">The five operations of a transformer forward pass, with the BF16+FP32 numerical recipe that makes large-scale training stable.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">The five operations that run a transformer are not interesting for their math; they are interesting because BF16 matmul with FP32 accumulate is the only numerical recipe that survives at scale.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://cs336.stanford.edu/spring2025/">Stanford CS336 Lecture 02 — PyTorch, resource accounting (Percy Liang, April 3, 2025)</a></p>
+  <p><strong>Build.</strong> 200-line Python notebook that implements scaled dot-product attention three ways — naive PyTorch, torch.einsum, and a Triton kernel — and benchmarks all three at sequence lengths 512, 4K, and 16K on an H100.</p>
+  <p><strong>Capstone ladder.</strong> Direct input to the perception-to-action latency budget for the JHU humanoid (every 100µs saved on attention is 100µs more for the controller). For DealLens, this is the layer below your retriever — embedding stability at BF16 vs FP16 affects reranker consistency across large memo sweeps.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="01-linear-algebra">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What is the standard numerical format for modern large-scale transformer training, and what makes it work?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">BF16 storage with FP32 accumulate. BF16 borrows FP32's 8-bit exponent range so activations do not overflow; FP32 accumulators preserve precision across the long reduction axis. Pure FP16 saturates at ~65504 and silently underflows gradients.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does softmax overflow keep reappearing in new attention kernels even though the fix is well-known?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Because every custom kernel — Triton, CUDA, KV-cache code paths — reintroduces the risk. PyTorch's built-in F.softmax subtracts the row maximum, but custom kernels routinely omit this step. The bug is not conceptually hard; it is just easy to forget.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">How does saving 100µs on the attention kernel translate to concrete value in the JHU humanoid capstone?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The humanoid control loop has a hard latency budget per step. Perception, the VLA policy, and the low-level PD controller all share it. Every 100µs recovered from attention inference is 100µs the controller can use to track a smoother trajectory — compounding across hundreds of steps into measurably better motion quality.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="01-linear-algebra-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="../index.html"><span class="ch-nav-link__label">← Cover</span><span class="ch-nav-link__title">Begin the journey</span></a>
+      <a class="ch-nav-link" data-dir="next" href="02-probability-entropy-kl.html"><span class="ch-nav-link__label">Chapter 02 →</span><span class="ch-nav-link__title">Probability, entropy, KL</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

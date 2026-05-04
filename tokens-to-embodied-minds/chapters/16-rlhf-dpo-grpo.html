@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 16 · RLHF, DPO, GRPO, and reasoning RL — From Tokens to Embodied Minds</title>
+<meta name="description" content="RLHF put RL in the loop. DPO removed the reward model. GRPO brought RL back — with verifiable rewards. Three rounds of the same argument, each sharper.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="16-rlhf-dpo-grpo" data-chapter-title="RLHF, DPO, GRPO, and reasoning RL">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="16-rlhf-dpo-grpo">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">PPO + KL constraint</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">reward model</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">DPO implicit reward</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">GRPO group baseline</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">verifiable rewards</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">process reward models</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="16-rlhf-dpo-grpo" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — what mathematical object does DPO implicitly define, even though it trains no explicit reward model?</h2>
+  <p class="learn__hint">The RLHF objective has a closed-form solution when the reward model is expressed in terms of the policy.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-16-rlhf-dpo-grpo" value="a"><span>A value function that estimates long-term return from each state</span></label><label class="predict__choice"><input type="radio" name="predict-16-rlhf-dpo-grpo" value="b"><span>An implicit reward function defined as a log ratio of the trained policy to the reference policy</span></label><label class="predict__choice"><input type="radio" name="predict-16-rlhf-dpo-grpo" value="c"><span>A critic network trained jointly with the policy via soft actor-critic</span></label><label class="predict__choice"><input type="radio" name="predict-16-rlhf-dpo-grpo" value="d"><span>A contrastive embedding space where preferred responses are pushed apart from rejected ones</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">DPO (Rafailov et al., arXiv:2305.18290, 2023) solves the RLHF KL-constrained RL problem in closed form: the optimal policy's log-ratio to the reference policy is proportional to the optimal reward. This means the trained DPO policy implicitly encodes a reward function r(x,y) = beta * log(pi_theta(y|x) / pi_ref(y|x)) + log Z(x). You can extract this implicit reward and use it as a reranker — often more accurate than an explicitly trained reward model.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 16 of 36</div>
+    <div class="ch-header__num">Chapter 16</div>
+    <h1 class="ch-header__title">RLHF, DPO, GRPO, and reasoning RL</h1>
+    <p class="ch-header__dek">The post-training stack, 2024–2026</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Derive the DPO loss from the RLHF objective and show that it implicitly defines a reward model</li><li>Explain how GRPO replaces the PPO value baseline with group statistics and why this matters for reasoning tasks</li><li>Describe when to choose DPO vs GRPO vs RLHF with a PPO reward model for a specific alignment problem</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">DPO</div><div class="stat__label">closed-form preference optimization — no reward model, no PPO rollouts</div></div><div class="stat"><div class="stat__num">GRPO</div><div class="stat__label">group-relative PPO with verifiable rewards — the DeepSeek-R1 recipe</div></div><div class="stat"><div class="stat__num">2025</div><div class="stat__label">when process reward models (PRMs) became the frontier for reasoning alignment</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="16-rlhf-dpo-grpo">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. State the difference between outcome reward and process reward, and why it matters for math reasoning.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Implement DPO loss in ~80 lines on top of HF Transformers. Fine-tune a 1B model on UltraFeedback. Evaluate on MT-Bench before and after.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">For DealLens, you want to align the deal-scoring model to match a specific GP's historical investment decisions. Design the preference dataset collection and the choice between DPO and GRPO, citing the key difference in reward signal availability.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Read the DeepSeek-R1-Zero paper (arXiv:2501.12948) and the process reward model literature (Lightman et al., arXiv:2305.20050). State what GRPO still cannot do that a PRM enables, and what data requirements make PRMs impractical for small teams.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#rlhf-ppo">RLHF with PPO: the original recipe</a></li><li><a href="#dpo">DPO: removing the reward model entirely</a></li><li><a href="#grpo-reasoning">GRPO and the return of RL for reasoning</a></li><li><a href="#capstone-alignment">Alignment for DealLens and the humanoid</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">The post-training stack has been through three complete reversals since 2022. RLHF (Christiano et al., 2017; operationalized by InstructGPT, Ouyang et al., arXiv:2203.02155, March 2022) trained a reward model on human preference pairs and optimized the policy with PPO under a KL constraint to prevent the policy from drifting too far from the base model. It worked, but it required two separate models (policy + reward), human annotation pipelines, and PPO rollouts — expensive and unstable. DPO (Rafailov et al., arXiv:2305.18290, May 2023) showed that the entire RLHF objective has a closed-form solution that trains directly on preference pairs with no reward model and no RL. For most preference-tuning tasks, DPO is what you actually want. Then GRPO (DeepSeek-R1-Zero, arXiv:2501.12948, January 2025) brought RL back — not for preference tuning, but for tasks with verifiable correctness signals (math, code, structured reasoning). The field is now running both tracks in parallel.
+
+The meta-lesson: the right algorithm depends entirely on the reward signal you have. If you have human preference pairs and no ground truth, DPO. If you have a correctness oracle (unit tests, math verifier, structured output validator), GRPO or PPO with a rule-based reward. If you have step-by-step correctness labels, a process reward model (PRM) is the frontier. For DealLens, your reward signal is a GP's historical pass/invest decisions — that is structured enough for DPO. For the JHU humanoid, your reward signal is task completion in simulation — that is verifiable enough for GRPO.</p>
+<h2 id="rlhf-ppo">RLHF with PPO: the original recipe</h2>
+<p>The RLHF objective is: maximize E[r(x,y)] - beta * KL(pi_theta || pi_ref), where r is a trained reward model and the KL term prevents the policy from deviating so far from the reference model that it collapses into reward hacking. PPO (Schulman et al., arXiv:1707.06347, 2017) optimizes this with clipped surrogate objectives and a value baseline. The reward model is trained separately on human preference pairs (y_w preferred over y_l given prompt x) using a Bradley-Terry or logistic model. InstructGPT (Ouyang et al., March 2022) was the first scaled application — 175B GPT-3 finetuned with 40 labelers, producing ChatGPT's lineage.</p>
+<p>PPO stability in the LLM context is notoriously fragile: reward hacking (the policy learns to game the reward model rather than improve), KL instability, and the need for careful learning-rate scheduling across the policy, value, and reward networks. For most teams without Google-scale annotation budgets and ML infrastructure, PPO-based RLHF is a trap. The reward model is almost always the bottleneck — it is usually a smaller, less capable model that becomes the ceiling on alignment quality.</p>
+<h2 id="dpo">DPO: removing the reward model entirely</h2>
+<p>DPO (Rafailov et al., arXiv:2305.18290, May 29, 2023) derived the closed-form solution to the KL-constrained RLHF problem: the optimal policy satisfies pi*(y|x) ∝ pi_ref(y|x) * exp(r*(x,y) / beta). Substituting and rearranging, the reward is r*(x,y) = beta * log(pi*(y|x)/pi_ref(y|x)) + log Z(x). Plugging into the Bradley-Terry preference model and differentiating gives the DPO loss: -log sigma(beta * (log pi_theta(y_w|x)/pi_ref(y_w|x) - log pi_theta(y_l|x)/pi_ref(y_l|x))). Train on preference pairs with this loss. No reward model. No rollouts. Just supervised learning on the policy.</p>
+<p>DPO is implemented in ~80 lines: for each (prompt, chosen, rejected) triplet, compute log probs from both the current policy and a frozen reference model (often a copy of the policy before fine-tuning), compute the log-ratio difference, and apply the DPO loss. HuggingFace TRL has a DPOTrainer that handles this. The implicit reward is extractable post-training and often outperforms explicitly trained reward models on the same data — because the policy itself is a better model than a separate reward head.</p>
+<p>DPO's failure mode: it requires the preference pairs to be on-distribution with the policy. If your rejected responses are clearly wrong, the gradient signal is weak — the model already assigns them low probability. DPO on hard-negative pairs (responses that are plausible but subtly wrong) is more informative. Identity DPO (iPO), ORPO, and SimPO are later variants that fix specific instabilities in the original DPO formulation — each paper is a 20-minute read.</p>
+<h2 id="grpo-reasoning">GRPO and the return of RL for reasoning</h2>
+<p>GRPO (Group Relative Policy Optimization, DeepSeek-R1-Zero, arXiv:2501.12948, January 22, 2025) differs from standard PPO in the baseline: instead of a learned value function, GRPO samples a group of G outputs for each prompt, evaluates each with a reward function, and uses the group-mean reward as the baseline. The advantage for output i is (r_i - mean(r_group)) / std(r_group). This eliminates the value network entirely — no separate critic, no value loss, simpler training infrastructure. The key requirement: the reward must be computable for every sampled output, which means you need a verifiable correctness oracle.</p>
+<p>DeepSeek-R1-Zero applied GRPO to math (correctness verified by symbolic checker), code (unit test execution), and structured output (format validation). The result was spontaneous chain-of-thought — the model learned to produce extended internal reasoning without any reasoning supervision, purely from outcome rewards. This is the experimental result that made the paper landmark: zero-shot CoT from RL alone, on a base model. DeepSeek-R1 (the full model) added a supervised fine-tuning warmup on human-labeled reasoning chains before GRPO, which stabilized training and produced the clean Chain-of-Thought format.</p>
+<p>Process reward models (PRMs) extend the verifiable reward idea to step-level feedback: instead of a single reward at the end, each reasoning step gets a correctness score. Lightman et al. (arXiv:2305.20050, May 2023) showed PRMs significantly outperform outcome reward models for math. The cost: you need step-level labels, which require human annotation or a much stronger model to auto-label. For 2026 frontier systems, PRMs are the state of the art for reasoning alignment — but out of reach for most teams without the annotation infrastructure.</p>
+<h2 id="capstone-alignment">Alignment for DealLens and the humanoid</h2>
+<p>For DealLens, the alignment problem is: given a GP's historical investment decisions (pass/invest labels on 200–500 deals), produce a scoring model that matches that GP's judgment. This is a preference problem with a verifiable signal — you know ground truth. DPO on (deal_memo, invest_response, pass_response) pairs is the right tool. The tricky part is constructing the pairs: you need both a good reasoning chain for pass and for invest on each deal, which requires either LLM-generated reasoning or human annotation. RLAIF (Bai et al., 2022) — using a stronger LLM as the preference labeler — is a pragmatic middle ground.</p>
+<p>For the JHU humanoid, the alignment problem is different: you want the robot to prefer safe, smooth trajectories over jerky or collision-prone ones. GRPO in simulation is the right tool here — the reward is verifiable (did the task succeed? did any joint limit exceed threshold? was any object knocked over?). Each GRPO rollout is a simulated episode; the group baseline averages over 8–16 rollouts per prompt (task instruction + scene). The output is a policy that has been RL-finetuned on verifiable physical task success, on top of the base VLA weights.</p>
+<div class="aside" data-tone="plasma"><span class="aside__label">RLAIF</span><p>Reinforcement Learning from AI Feedback (Bai et al., 2022) replaces human preference labelers with a stronger LLM judge. Quality is 80–90% of human-labeled RLHF at 1% of the cost. For DealLens with limited GP annotation time, RLAIF is the practical path.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="RLHF vs DPO vs GRPO comparison diagram"><title>Post-Training Stack: RLHF → DPO → GRPO</title><style>text{font-family:system-ui,sans-serif;font-size:11px;fill:var(--color-text)}.muted{fill:var(--color-text-muted)}.h{font-size:13px;font-weight:700}</style><text x="400" y="24" text-anchor="middle" class="h" fill="var(--color-primary)">Post-Training Algorithm Comparison: RLHF → DPO → GRPO</text><rect x="20" y="40" width="230" height="300" rx="4" fill="none" stroke="var(--color-accent-euv)" stroke-width="1.5"/><text x="135" y="60" text-anchor="middle" fill="var(--color-accent-euv)" font-weight="600">RLHF (PPO)</text><rect x="35" y="70" width="200" height="30" rx="2" fill="var(--color-accent-euv)" fill-opacity="0.12" stroke="var(--color-accent-euv)"/><text x="135" y="90" text-anchor="middle">Human preference pairs</text><line x1="135" y1="100" x2="135" y2="115" stroke="var(--color-text-muted)"/><rect x="35" y="115" width="200" height="30" rx="2" fill="var(--color-accent-euv)" fill-opacity="0.12" stroke="var(--color-accent-euv)"/><text x="135" y="135" text-anchor="middle">Train reward model</text><line x1="135" y1="145" x2="135" y2="160" stroke="var(--color-text-muted)"/><rect x="35" y="160" width="200" height="30" rx="2" fill="var(--color-accent-euv)" fill-opacity="0.12" stroke="var(--color-accent-euv)"/><text x="135" y="180" text-anchor="middle">PPO rollouts + KL penalty</text><line x1="135" y1="190" x2="135" y2="205" stroke="var(--color-text-muted)"/><rect x="35" y="205" width="200" height="30" rx="2" fill="var(--color-accent-euv)" fill-opacity="0.12" stroke="var(--color-accent-euv)"/><text x="135" y="225" text-anchor="middle">Aligned policy</text><text x="135" y="260" text-anchor="middle" class="muted" font-size="10">Costly: 2 models, annotation</text><text x="135" y="278" text-anchor="middle" class="muted" font-size="10">PPO instability risk</text><rect x="285" y="40" width="230" height="300" rx="4" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.5"/><text x="400" y="60" text-anchor="middle" fill="var(--color-accent-copper)" font-weight="600">DPO</text><rect x="300" y="70" width="200" height="30" rx="2" fill="var(--color-accent-copper)" fill-opacity="0.12" stroke="var(--color-accent-copper)"/><text x="400" y="90" text-anchor="middle">Human preference pairs</text><line x1="400" y1="100" x2="400" y2="115" stroke="var(--color-text-muted)"/><rect x="300" y="115" width="200" height="30" rx="2" fill="var(--color-accent-copper)" fill-opacity="0.12" stroke="var(--color-accent-copper)"/><text x="400" y="135" text-anchor="middle">Closed-form loss (log-ratio)</text><line x1="400" y1="145" x2="400" y2="160" stroke="var(--color-text-muted)"/><rect x="300" y="160" width="200" height="30" rx="2" fill="var(--color-accent-copper)" fill-opacity="0.12" stroke="var(--color-accent-copper)"/><text x="400" y="180" text-anchor="middle">Aligned policy</text><text x="400" y="215" text-anchor="middle" class="muted" font-size="10">No reward model, no rollouts</text><text x="400" y="233" text-anchor="middle" class="muted" font-size="10">Implicit reward extractable</text><text x="400" y="260" text-anchor="middle" fill="var(--color-accent-copper)" font-size="10" font-weight="600">Best for: preference tuning</text><text x="400" y="278" text-anchor="middle" fill="var(--color-accent-copper)" font-size="10" font-weight="600">with no correctness oracle</text><rect x="550" y="40" width="230" height="300" rx="4" fill="none" stroke="var(--color-primary)" stroke-width="1.5"/><text x="665" y="60" text-anchor="middle" fill="var(--color-primary)" font-weight="600">GRPO (DeepSeek-R1)</text><rect x="565" y="70" width="200" height="30" rx="2" fill="var(--color-primary)" fill-opacity="0.10" stroke="var(--color-primary)"/><text x="665" y="90" text-anchor="middle">Verifiable reward oracle</text><line x1="665" y1="100" x2="665" y2="115" stroke="var(--color-text-muted)"/><rect x="565" y="115" width="200" height="30" rx="2" fill="var(--color-primary)" fill-opacity="0.10" stroke="var(--color-primary)"/><text x="665" y="135" text-anchor="middle">Sample G outputs per prompt</text><line x1="665" y1="145" x2="665" y2="160" stroke="var(--color-text-muted)"/><rect x="565" y="160" width="200" height="30" rx="2" fill="var(--color-primary)" fill-opacity="0.10" stroke="var(--color-primary)"/><text x="665" y="180" text-anchor="middle">Group-relative advantage</text><line x1="665" y1="190" x2="665" y2="205" stroke="var(--color-text-muted)"/><rect x="565" y="205" width="200" height="30" rx="2" fill="var(--color-primary)" fill-opacity="0.10" stroke="var(--color-primary)"/><text x="665" y="225" text-anchor="middle">Aligned + reasoning policy</text><text x="665" y="260" text-anchor="middle" fill="var(--color-primary)" font-size="10" font-weight="600">Best for: math, code, sim tasks</text><text x="665" y="278" text-anchor="middle" fill="var(--color-primary)" font-size="10" font-weight="600">with ground-truth correctness</text></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 16.1</span><span class="text">Three post-training algorithms for three reward signal regimes. RLHF (left) requires a separately trained reward model and PPO rollouts — highest quality, highest cost. DPO (center) trains directly on preference pairs with a closed-form loss — no RL. GRPO (right) samples groups of outputs and uses verifiable correctness as the reward — the recipe for reasoning-capable models like DeepSeek-R1.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">RLHF needs a reward model and PPO; DPO removes both by solving the KL-constrained objective in closed form; GRPO brings RL back for tasks where correctness is verifiable — the three algorithms occupy three distinct regimes of reward availability.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://arxiv.org/abs/2501.12948">DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning, arXiv:2501.12948 (January 22, 2025). DPO: arXiv:2305.18290 (May 29, 2023).</a></p>
+  <p><strong>Build.</strong> Implement DPO from scratch in ~80 lines on top of HuggingFace Transformers. Fine-tune a 1B-parameter model on UltraFeedback. Evaluate on MT-Bench (before and after). Extract the implicit reward and compare against a separately trained reward model on 100 test pairs.</p>
+  <p><strong>Capstone ladder.</strong> DPO is how you align DealLens&#x27;s scoring rubric to a specific GP&#x27;s historical preferences from past investments. GRPO with verifiable simulation rewards is how you train the JHU humanoid&#x27;s policy to prefer safe task completions without human feedback.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="16-rlhf-dpo-grpo">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What is the DPO loss function, and what does each term represent?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Loss = -log sigma(beta * (log pi_theta(y_w|x)/pi_ref(y_w|x) - log pi_theta(y_l|x)/pi_ref(y_l|x))). The inner difference is the log-ratio of chosen vs rejected responses under the current policy relative to the reference policy, scaled by beta (the KL constraint strength).</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">How does GRPO replace the PPO value baseline, and what does this require from the reward function?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">GRPO samples G outputs per prompt and uses the group-mean reward as the advantage baseline, eliminating the learned value network. This requires the reward to be computable for every sampled output — a verifiable oracle (math checker, unit tests, format validator) rather than a learned reward model.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">For aligning DealLens&#x27;s scoring model to a specific GP&#x27;s historical decisions, which algorithm is most appropriate and what is the key data requirement?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">DPO. You have pass/invest labels (preference signal) but no step-level reasoning. You need (prompt, chosen_reasoning, rejected_reasoning) pairs — generated either by an LLM conditioned on the deal outcome or by human annotation. GRPO requires a verifiable oracle, which is harder to define for VC judgment.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="16-rlhf-dpo-grpo-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="15-distributed-training.html"><span class="ch-nav-link__label">← Chapter 15</span><span class="ch-nav-link__title">Distributed training</span></a>
+      <a class="ch-nav-link" data-dir="next" href="17-vllm-trtllm-sglang.html"><span class="ch-nav-link__label">Chapter 17 →</span><span class="ch-nav-link__title">vLLM, TensorRT-LLM, SGLang</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

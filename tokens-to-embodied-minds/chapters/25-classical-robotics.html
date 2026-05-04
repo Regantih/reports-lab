@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 25 · Classical robotics in one chapter — From Tokens to Embodied Minds</title>
+<meta name="description" content="Every learned policy on a real robot is still riding on PD controllers and trajectory trackers. This chapter gives you the classical substrate you need to debug anything in the humanoid stack.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="25-classical-robotics" data-chapter-title="Classical robotics in one chapter">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="25-classical-robotics">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">DH transform</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">forward kinematics</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">Jacobian</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">inverse kinematics</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">PD control</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">impedance control</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">MPC</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="25-classical-robotics" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — when a VLA policy outputs a target end-effector pose, which component converts that pose to motor torques?</h2>
+  <p class="learn__hint">Think about what is running at 1 kHz vs what is running at 5 Hz.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-25-classical-robotics" value="a"><span>The VLA directly outputs per-joint torques at policy inference frequency</span></label><label class="predict__choice"><input type="radio" name="predict-25-classical-robotics" value="b"><span>A trajectory interpolator maps the pose to a joint-space waypoint, then an IK solver and PD controller close the loop at 1 kHz</span></label><label class="predict__choice"><input type="radio" name="predict-25-classical-robotics" value="c"><span>A neural inverse kinematics network trained end-to-end replaces classical control entirely</span></label><label class="predict__choice"><input type="radio" name="predict-25-classical-robotics" value="d"><span>MPC recomputes the trajectory at every VLA step; no inner controller is needed</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">VLA policies run at 5–30 Hz, far too slow to stabilize a physical arm. A trajectory interpolator converts the coarse pose target to a sequence of joint-space waypoints; an IK solver maps each waypoint to joint angles; a PD or impedance controller closes the torque loop at 1 kHz. The VLA sets the destination — the classical stack drives.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 25 of 36</div>
+    <div class="ch-header__num">Chapter 25</div>
+    <h1 class="ch-header__title">Classical robotics in one chapter</h1>
+    <p class="ch-header__dek">Forward/inverse kinematics, Jacobians, PD, MPC</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Multiply a chain of DH transforms by hand and read off the end-effector pose for a 2-DOF planar arm</li><li>Explain why IK is non-unique for a 6-DOF arm and describe two numerical solvers (Jacobian transpose, Levenberg-Marquardt)</li><li>Describe the role PD and impedance controllers play beneath a VLA policy in the JHU humanoid stack</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">6</div><div class="stat__label">DOF is the minimum arm complexity where IK becomes non-unique</div></div><div class="stat"><div class="stat__num">1<em>kHz</em></div><div class="stat__label">is the inner-loop rate a PD controller must sustain — the VLA runs far slower</div></div><div class="stat"><div class="stat__num">DH</div><div class="stat__label">transform matrices chain joint angles into end-effector pose — the FK backbone</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="25-classical-robotics">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. Without looking, state what the Jacobian maps and why it is the linchpin of velocity control.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Implement a 2-DOF planar FK chain using DH transforms in NumPy. Add a Jacobian-transpose IK loop that reaches a target (x, y) from any start configuration.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">Drive a 6-DOF arm in MuJoCo from joint-space to a target pose using Jacobian-transpose IK. Add an impedance controller and demonstrate compliant contact with a surface.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Replace the PD controller beneath a SmolVLA policy with an impedance controller tuned to the SO-101 hardware. Measure contact force vs compliance and compare task success rate.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#kinematics">Forward and inverse kinematics</a></li><li><a href="#jacobian-control">The Jacobian and velocity control</a></li><li><a href="#mpc-dynamics">Dynamics and MPC</a></li><li><a href="#capstone">Why the capstone cannot skip this</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">When a SmolVLA or GR00T policy fails to pick up a cup, most people blame the neural network. The real culprit is usually 15 lines deeper: a misconfigured PD gain, an IK solver that hit a singularity, or a workspace bound that fired silently. Every learned policy in the humanoid stack — from RT-2 to GR00T N1.5 — runs on top of classical kinematics and classical controllers. You cannot skip this chapter and meaningfully debug the capstone.
+
+The substrate is small: forward kinematics (multiply DH transforms, read off end-effector pose), inverse kinematics (invert that map, numerically, accepting non-uniqueness), the Jacobian (velocity-level linkage between joint space and task space), dynamics (mass matrix, Coriolis, gravity, Lagrangian or Newton-Euler), PD and impedance control, and Model Predictive Control for whole-body motions. Lynch and Park's Modern Robotics (Cambridge University Press, 2017) covers all of this with free lectures and full text online — it is the cleanest single reference.</p>
+<h2 id="kinematics">Forward and inverse kinematics</h2>
+<p>Forward kinematics (FK) is multiplication: given a vector of joint angles q, multiply the Denavit-Hartenberg (DH) homogeneous transform matrices for each joint in sequence and read off the end-effector pose as a 4x4 SE(3) matrix. For a 6-DOF arm this is six matrix multiplications — fast, deterministic, always unique. The DH convention parameterizes each joint by four numbers (link length, link twist, link offset, joint angle); the product chain is the FK map.</p>
+<p>Inverse kinematics (IK) inverts that map: given a target end-effector pose, find the joint angles. For a 6-DOF arm the solution is generically non-unique (multiple elbow-up/elbow-down configurations reach the same pose) and may not exist (targets outside the workspace). The two standard numerical solvers are Jacobian-transpose (gradient-descent flavor, cheap, can oscillate near singularities) and Levenberg-Marquardt (damped least-squares, more robust near singularities, used in most production IK libraries). Analytic solutions exist for specific wrist configurations (e.g., spherical wrists) and are always preferred when available.</p>
+<h2 id="jacobian-control">The Jacobian and velocity control</h2>
+<p>The Jacobian J(q) maps joint velocities to end-effector velocities: dx/dt = J(q) * dq/dt. It is the linchpin of velocity control — if you want the end-effector to move at 0.1 m/s in the x direction, invert J(q) (or use the pseudoinverse) to get the required joint velocities. Singularities occur when J loses rank — the arm is in a configuration where one or more task-space directions become uncontrollable. Detection (via the smallest singular value of J) and damping (via damped pseudoinverse) are standard engineering practice.</p>
+<p>PD control is the inner loop: tau = Kp * (q_desired - q_actual) + Kd * (dq_desired - dq_actual). Impedance control extends this to model the arm as a mass-spring-damper in task space: it allows compliant contact with surfaces, which is mandatory for any manipulation task involving contact forces. A robot that opens a drawer with a pure position controller will break either the drawer or its own joints — impedance control is what makes physical interaction safe.</p>
+<h2 id="mpc-dynamics">Dynamics and MPC</h2>
+<p>Robot dynamics add inertia, Coriolis, and gravity to the control picture: tau = M(q) * ddq + C(q, dq) * dq + g(q), where M is the mass matrix, C is the Coriolis/centrifugal matrix, and g is the gravity vector. The mass matrix couples joints — moving one joint imparts forces on all others. Ignoring dynamics is fine at low speeds; at the joint velocities humanoids require for fluid motion, it is a source of oscillation and instability.</p>
+<p>Model Predictive Control (MPC) wraps a dynamics model in an optimization loop: at each timestep, solve a short-horizon trajectory optimization problem, execute the first action, re-plan. Whole-body MPC is computationally expensive — humanoid teams typically run it at 50–200 Hz with a simplified linear dynamics model (centroidal MPC) for balance, and a separate joint-level impedance controller for manipulation. ROS 2 is the middleware substrate that connects all of these components.</p>
+<h2 id="capstone">Why the capstone cannot skip this</h2>
+<p>The JHU humanoid capstone runs SmolVLA or GR00T N1.5 at the policy layer. Those policies output target joint positions or end-effector poses at 5–30 Hz. Below that, a trajectory interpolator, an IK solver, and a 1 kHz PD/impedance controller execute the motion. When the policy fails — wrong object grasp, dropped item, collision — the diagnostic chain starts here: was the target pose reachable? Did the IK solver converge? Did the impedance controller saturate? Without this chapter, every failure looks like a neural network bug.</p>
+<p>Berkeley CS 294-277 Robots That Learn (Jitendra Malik, Spring 2026) builds on this substrate from the first lecture. Lynch and Park's Modern Robotics is the prerequisite text. Complete the build exercise — drive a 6-DOF arm in MuJoCo from joint-space to a target pose using Jacobian-transpose IK, add impedance control — before touching a VLA.</p>
+<div class="aside" data-tone="copper"><span class="aside__label">On skipping this chapter</span><p>Every researcher who skipped classical robotics eventually re-learned it via a hardware debugging session at 2am. The Jacobian singularity that stalls an IK solver is not a neural network failure — but you will not know that without this.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="Classical robotics stack: DH transforms, Jacobian, IK solver, PD controller"><style>text{font-family:system-ui,sans-serif;font-size:13px;fill:var(--color-text)}.muted{fill:var(--color-text-muted);font-size:11px}.title{font-size:15px;font-weight:600;fill:var(--color-text)}</style><text x="400" y="28" text-anchor="middle" class="title">Classical Robotics Control Stack</text><rect x="60" y="60" width="140" height="54" rx="6" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.5"/><text x="130" y="84" text-anchor="middle">Joint angles q</text><text x="130" y="101" text-anchor="middle" class="muted">DH transforms</text><rect x="270" y="60" width="140" height="54" rx="6" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.5"/><text x="340" y="84" text-anchor="middle">Forward Kinematics</text><text x="340" y="101" text-anchor="middle" class="muted">T_0n = T_01·T_12···T_n</text><rect x="480" y="60" width="140" height="54" rx="6" fill="none" stroke="var(--color-primary)" stroke-width="1.5"/><text x="550" y="84" text-anchor="middle">End-Effector Pose</text><text x="550" y="101" text-anchor="middle" class="muted">SE(3) matrix</text><line x1="200" y1="87" x2="268" y2="87" stroke="var(--color-accent-copper)" stroke-width="1.5" marker-end="url(#arr)"/><line x1="410" y1="87" x2="478" y2="87" stroke="var(--color-accent-copper)" stroke-width="1.5" marker-end="url(#arr)"/><rect x="270" y="180" width="140" height="54" rx="6" fill="none" stroke="var(--color-accent-euv)" stroke-width="1.5"/><text x="340" y="204" text-anchor="middle">IK Solver</text><text x="340" y="221" text-anchor="middle" class="muted">Jacobian-transpose / LM</text><rect x="60" y="180" width="140" height="54" rx="6" fill="none" stroke="var(--color-accent-quartz)" stroke-width="1.5"/><text x="130" y="204" text-anchor="middle">PD / Impedance</text><text x="130" y="221" text-anchor="middle" class="muted">1 kHz torque loop</text><rect x="480" y="180" width="140" height="54" rx="6" fill="none" stroke="var(--color-accent-euv)" stroke-width="1.5"/><text x="550" y="204" text-anchor="middle">Jacobian J(q)</text><text x="550" y="221" text-anchor="middle" class="muted">dx/dt = J·dq/dt</text><line x1="550" y1="115" x2="550" y2="178" stroke="var(--color-accent-euv)" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr)"/><line x1="480" y1="207" x2="412" y2="207" stroke="var(--color-accent-euv)" stroke-width="1.5" marker-end="url(#arr)"/><line x1="270" y1="207" x2="202" y2="207" stroke="var(--color-accent-quartz)" stroke-width="1.5" marker-end="url(#arr)"/><text x="340" y="290" text-anchor="middle" class="muted">VLA policy (5–30 Hz) → target pose → IK → q_desired → PD → tau (1 kHz)</text><rect x="200" y="300" width="280" height="36" rx="6" fill="none" stroke="var(--color-primary)" stroke-width="1" stroke-dasharray="5,3"/><text x="340" y="322" text-anchor="middle">VLA Policy (SmolVLA / GR00T)</text><line x1="340" y1="300" x2="340" y2="236" stroke="var(--color-primary)" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr)"/><defs><marker id="arr" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><polygon points="0 0,7 3.5,0 7" fill="var(--color-text-muted)"/></marker></defs></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 25.1</span><span class="text">The classical robotics control stack. FK converts joint angles to end-effector pose via chained DH transforms. IK inverts that map numerically (Jacobian-transpose or Levenberg-Marquardt). A PD/impedance controller closes the torque loop at 1 kHz. A VLA policy sits above — issuing target poses at 5–30 Hz.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">Every learned policy on a real robot rides on PD controllers and IK solvers — without the classical substrate, you cannot debug the capstone, only replace parts randomly.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="http://hades.mech.northwestern.edu/index.php/Modern_Robotics">Modern Robotics: Mechanics, Planning, and Control, Kevin Lynch and Frank Park, Cambridge University Press, 2017</a></p>
+  <p><strong>Build.</strong> Drive a 6-DOF arm in MuJoCo or PyBullet from joint-space to a target pose using a Jacobian-transpose IK solver (NumPy, ~100 lines). Add an impedance controller and demonstrate compliant contact with a tabletop surface. Log joint torques and end-effector error for five different target poses including one near a singularity.</p>
+  <p><strong>Capstone ladder.</strong> Required prerequisite for the JHU humanoid. SmolVLA and GR00T N1.5 both output target poses at 5-30 Hz; a 1 kHz IK+PD loop executes them. Without this chapter you cannot diagnose whether a failure is a policy bug or a controller bug.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="25-classical-robotics">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What four parameters define each joint in the Denavit-Hartenberg convention?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Link length (a), link twist (alpha), link offset (d), and joint angle (theta). Multiplying the resulting 4x4 homogeneous transform matrices in sequence gives the FK map.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why is IK non-unique for a 6-DOF arm and how do numerical solvers handle it?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">A 6-DOF arm has infinitely many joint-angle configurations that reach the same end-effector pose (elbow-up/down, wrist-flip, etc.). Numerical solvers like Jacobian-transpose or Levenberg-Marquardt find a local minimum from a given initial configuration — which solution they converge to depends on the starting point. Analytic solutions for spherical-wrist arms give all solutions explicitly.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">When a SmolVLA policy outputs a target pose and the robot fails to reach it, what is the first classical-control component to check?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Check whether the target pose is within the workspace (FK reachability). If reachable, check IK solver convergence and singularity proximity (smallest singular value of J). If the solver converged, check PD gain tuning and whether the impedance controller saturated on contact.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="25-classical-robotics-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="24-red-teaming.html"><span class="ch-nav-link__label">← Chapter 24</span><span class="ch-nav-link__title">Red-teaming, jailbreaks, prompt injection</span></a>
+      <a class="ch-nav-link" data-dir="next" href="26-cs231n-redux.html"><span class="ch-nav-link__label">Chapter 26 →</span><span class="ch-nav-link__title">Computer vision foundations — CS231n, redux</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

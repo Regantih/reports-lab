@@ -1,0 +1,10 @@
+How does NeRF render a pixel?	March a ray through the scene, query an MLP for density and color at hundreds of points along the ray, integrate via volume rendering.
+What is the key representational difference between NeRF and 3DGS?	NeRF: implicit neural function (MLP). 3DGS: millions of explicit 3D Gaussian primitives with position, covariance, opacity, and spherical harmonic color.
+Why is 3DGS faster to render than NeRF?	3DGS uses tile-based GPU rasterization (splatting) rather than millions of MLP queries per frame. It achieves real-time frame rates; NeRF cannot.
+What practical advantages does 3DGS have over NeRF for robotics?	Real-time rendering, explicit 3D representation (inspectable and editable), online map updates by adding new Gaussians, direct 3D bounding volume computation.
+What does SAM 2 add over the original SAM?	A memory module (cross-attention over past frame features) that enables video-consistent object tracking across frames without re-prompting.
+How do you assign object identity to 3DGS Gaussian primitives?	Render per-Gaussian ID maps at the same camera poses as SAM 2 segmentation renders. Project per-pixel segment IDs back onto the ID map to label each primitive with its object identity.
+What is gsplat?	An open-source 3DGS library from the nerfstudio project. The fastest Python/CUDA implementation for training and rendering 3DGS scenes.
+How many images are needed to train a 3DGS scene of a kitchen?	Approximately 100 images from varied viewpoints (e.g., phone camera walk-around) is sufficient for a small-room indoor scene.
+What is the role of spherical harmonics in a 3DGS primitive?	Spherical harmonics encode view-dependent color — how the primitive's apparent color changes as the camera moves around it, modeling effects like specular highlights.
+What is the primary source paper for 3D Gaussian Splatting?	3D Gaussian Splatting for Real-Time Radiance Field Rendering, Kerbl et al., arXiv:2308.04079, Aug 8, 2023.

@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 23 · Observability — traces, evals, regression — From Tokens to Embodied Minds</title>
+<meta name="description" content="You cannot ship what you cannot measure. Trace-level inspection, labeled eval sets, and a regression gate on every prompt change are the difference between shipping confidently and deploying by prayer.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="23-observability" data-chapter-title="Observability — traces, evals, regression">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="23-observability">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">trace (span tree)</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">LLM-as-judge eval</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">online eval</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">offline eval suite</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">regression gate</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">distribution shift detection</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="23-observability" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — what is the most expensive sentence in AI engineering?</h2>
+  <p class="learn__hint">It is a phrase most engineering teams say in the first week of a project.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-23-observability" value="a"><span>We will use GPT-4o for everything</span></label><label class="predict__choice"><input type="radio" name="predict-23-observability" value="b"><span>We will add evals later</span></label><label class="predict__choice"><input type="radio" name="predict-23-observability" value="c"><span>We do not need a vector database</span></label><label class="predict__choice"><input type="radio" name="predict-23-observability" value="d"><span>We will use LangChain for this</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">'We will add evals later' is the most expensive sentence because eval sets must be built from real production traces — and production traces only exist once the system is live. By the time 'later' arrives, you have no baseline, no labeled data, and no way to know if a prompt change made things better or worse. The cost of adding evals after-the-fact is always higher than building the instrumentation before launch.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 23 of 36</div>
+    <div class="ch-header__num">Chapter 23</div>
+    <h1 class="ch-header__title">Observability — traces, evals, regression</h1>
+    <p class="ch-header__dek">LangSmith, Phoenix, and the discipline of LLM ops</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Instrument a LangGraph DealLens run with Langfuse and export a trace that shows every LLM call, tool call, latency, and token cost</li><li>Build a labeled eval set from 100 production DealLens traces and implement a RAGAS-based regression test that runs on every commit</li><li>Explain the difference between online evals (production traffic sampling) and offline evals (regression suite) and how they complement each other</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">100%</div><div class="stat__label">of production LLM failures are detectable earlier — if you have traces and labeled evals</div></div><div class="stat"><div class="stat__num">5%</div><div class="stat__label">of production traffic sampled weekly by LLM-as-judge catches distribution shift before it becomes a user complaint</div></div><div class="stat"><div class="stat__num">2%</div><div class="stat__label">regression drop threshold — gate your deployment pipeline to reject any change that degrades any eval metric by more than this</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="23-observability">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. Name the four things a trace should capture for every LLM call in a production agentic system.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Instrument DealLens with Langfuse. Run 20 deals through the screening flow. Export the traces and label 10 of them as correct or incorrect based on the score and memo quality. Build a one-query RAGAS regression test from those labels.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">The DealLens deal-scoring prompt was changed to improve conciseness. Using the labeled eval set and regression gate, determine whether the change improved, degraded, or was neutral on context faithfulness and answer relevancy. Block or approve the deploy.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Design an online eval system for DealLens that samples 5% of production scoring runs weekly, routes them to an LLM judge calibrated on your labeled set, and alerts when any metric drifts more than 10% from the 4-week rolling baseline.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#trace-logging">Trace-level logging: what to capture</a></li><li><a href="#offline-eval-suite">Offline eval suite and regression gate</a></li><li><a href="#online-eval">Online eval: catching distribution shift in production</a></li><li><a href="#humanoid-analog">The robotics analog: trajectory logging and replay</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">Production LLM systems degrade silently. A prompt change that improves output style also shifts the distribution of retrieved context. A model version upgrade that reduces hallucination also changes the token distribution in ways that break downstream parsers. A retrieval pipeline update that improves recall also changes the exact chunks that reach the LLM, causing previously correct answers to become incorrect. None of these failures produce exceptions. They produce bad outputs that users silently stop trusting — until the system is abandoned.
+
+Observability is the discipline that catches these failures before users do. It has three layers: (1) trace-level logging — every LLM call, tool call, latency, and token cost captured as a span tree; (2) offline eval suite — a labeled dataset of inputs and expected outputs, run against every prompt or model change in CI; (3) online eval — LLM-as-judge running on a random sample of production traffic, detecting distribution shift between deploys. The tools — LangSmith, Langfuse, Arize Phoenix, Weights and Biases Weave — differ in their UI and pricing, not in their function. The discipline is the same across all of them.</p>
+<h2 id="trace-logging">Trace-level logging: what to capture</h2>
+<p>A trace is a span tree rooted at the top-level request. Each span represents one unit of work: one LLM call, one tool invocation, one retrieval, one reranking. Each span captures: inputs (the exact prompt or query), outputs (the exact response or result), latency (wall-clock milliseconds), and cost (tokens in + tokens out at the current model's per-token pricing). The trace tree is the only artifact that tells you exactly what the LLM received and exactly what it returned — it is the ground truth for every downstream eval and every debugging session.</p>
+<p>Langfuse (open-source, self-hostable) and LangSmith (LangChain's hosted service) both support automatic LangGraph integration via a one-line tracer setup. Every LangGraph node automatically becomes a span. Every LLM call within a node is a child span. The latency breakdown shows you whether your bottleneck is retrieval, the LLM, or the reranker. The cost breakdown shows you which node is responsible for 80% of your per-run API spend. For DealLens, this tells you whether the expensive node is the draft-memo LLM call (likely) or the retrieval cross-encoder (less likely but worth measuring).</p>
+<p>Arize Phoenix and W&B Weave are the alternatives. Phoenix has strong eval integration and supports both LLM tracing and traditional ML model monitoring in the same UI — relevant if DealLens eventually trains custom scoring heads. Weave is tightly integrated with W&B Experiments, which is valuable if you are also running fine-tuning runs and want all evaluation metrics in one dashboard. For most teams starting out, Langfuse is the practical choice: open-source, self-hostable, and has the most complete LangGraph integration.</p>
+<h2 id="offline-eval-suite">Offline eval suite and regression gate</h2>
+<p>The offline eval suite is a fixed dataset of (input, expected_output) pairs, run against the system after every change, with a pass/fail gate that blocks deployment on regression. Building the dataset: export 200–500 production traces, label a subset by hand (correct / incorrect / partial, with a note explaining why), and store them in a versioned file (JSON or CSV). The labeling must be done by domain experts — for DealLens, by the analysts who actually use the scoring output. Synthetic labels from the same LLM you are evaluating are a self-referential trap.</p>
+<p>The regression gate: run RAGAS (or your custom LLM-as-judge) on the full labeled eval set in CI after every commit that touches a prompt, retrieval configuration, or model version. Set a threshold — 2% drop in any metric blocks the deploy. This prevents the common failure mode of 'we changed the prompt to improve conciseness and somehow broke deal scoring on biotech memos.' Without the regression gate, that failure would reach production. With it, it is a CI failure caught in 5 minutes.</p>
+<p>LLM-as-judge calibration: do not trust an LLM judge that has not been calibrated against human labels. Measure the judge's agreement rate with human labels on 50 examples before using it for evals. A judge with 70% agreement with humans is useful; a judge with 50% agreement is a coin flip. The judge's system prompt, model choice, and output format all affect agreement rate — treat calibration as an engineering problem, not a prompting problem.</p>
+<h2 id="online-eval">Online eval: catching distribution shift in production</h2>
+<p>The offline eval suite catches regressions on a fixed dataset. It cannot catch distribution shift — when the distribution of real user queries drifts away from your labeled eval set, the offline suite stays green while production quality degrades. Online eval closes this gap: sample 5% of production traffic, run LLM-as-judge on the sampled traces, track the judge scores over time. Alert when any metric drifts more than 10% from the 4-week rolling baseline.</p>
+<p>For DealLens, the signal to watch is faithfulness drift: if the judge's faithfulness score drops over two consecutive weeks, your RAG pipeline is retrieving less relevant context — likely because the deal memo distribution has shifted (new sectors, new deal structures) and your eval labels no longer represent the current traffic. The alert triggers a re-labeling sprint and a retrieval pipeline review. This feedback loop — online eval detects drift, offline labels are refreshed, regression gate is updated — is the production LLM ops discipline. It is tedious and it is the actual work.</p>
+<h2 id="humanoid-analog">The robotics analog: trajectory logging and replay</h2>
+<p>The JHU humanoid capstone requires the same observability discipline, with different tools. ROS 2 bags capture every sensor reading, every actuator command, and every policy output — the robotics equivalent of LLM traces. Rerun.io provides a visual trajectory replay interface — the robotics equivalent of LangSmith's trace viewer. The offline eval is a fixed set of task scenarios run in Isaac Lab simulation after every policy update — the robotics regression gate. The online eval is periodic replay of recorded real-robot trajectories against a success classifier.</p>
+<p>The structural lesson is the same across both domains: you need (1) comprehensive logging of every action and its context, (2) a fixed evaluation benchmark that does not change between experiments, and (3) automated regression gates that block deployment of worse policies. The only difference is that a bad LLM prompt costs a failed deal evaluation; a bad robot policy costs a broken object or a safety incident.</p>
+<div class="aside" data-tone="copper"><span class="aside__label">The eval set must be built from production, not from imagination</span><p>Synthetic eval sets generated by the same LLM you are evaluating produce self-referential metrics — the model grades its own homework. Label production traces by hand with domain experts. There is no shortcut.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="LLM observability stack: traces, offline eval suite, online eval, regression gate"><style>.dt{font-family:system-ui,sans-serif;font-size:13px;fill:var(--color-text)}.dm{font-family:system-ui,sans-serif;font-size:11px;fill:var(--color-text-muted)}.box{rx:6;ry:6}</style><text x="400" y="28" text-anchor="middle" class="dt" font-weight="600" fill="var(--color-primary)">LLM Observability Stack</text><rect x="20" y="50" width="180" height="60" class="box" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.5"/><text x="110" y="74" text-anchor="middle" class="dt" fill="var(--color-accent-copper)">Production Traffic</text><text x="110" y="92" text-anchor="middle" class="dm">DealLens screening runs</text><rect x="260" y="50" width="180" height="60" class="box" fill="none" stroke="var(--color-primary)" stroke-width="1.5"/><text x="350" y="74" text-anchor="middle" class="dt" fill="var(--color-primary)">Trace Logging</text><text x="350" y="92" text-anchor="middle" class="dm">Langfuse / LangSmith</text><line x1="200" y1="80" x2="258" y2="80" stroke="var(--color-text-muted)" stroke-width="1.2" marker-end="url(#arr4)"/><rect x="260" y="170" width="180" height="60" class="box" fill="none" stroke="var(--color-accent-euv)" stroke-width="1.5"/><text x="350" y="194" text-anchor="middle" class="dt" fill="var(--color-accent-euv)">Online Eval</text><text x="350" y="212" text-anchor="middle" class="dm">LLM-judge on 5% sample</text><line x1="350" y1="110" x2="350" y2="168" stroke="var(--color-text-muted)" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr4)"/><rect x="500" y="50" width="180" height="60" class="box" fill="none" stroke="var(--color-primary)" stroke-width="1.5"/><text x="590" y="68" text-anchor="middle" class="dt" fill="var(--color-primary)">Labeled Eval Set</text><text x="590" y="86" text-anchor="middle" class="dm">200–500 human-labeled traces</text><rect x="500" y="170" width="180" height="60" class="box" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.5"/><text x="590" y="188" text-anchor="middle" class="dt" fill="var(--color-accent-copper)">Regression Gate</text><text x="590" y="206" text-anchor="middle" class="dm">CI: block if metric drops &gt;2%</text><text x="590" y="222" text-anchor="middle" class="dm">RAGAS: precision·recall·faith</text><line x1="590" y1="110" x2="590" y2="168" stroke="var(--color-accent-copper)" stroke-width="1.5" marker-end="url(#arr4)"/><line x1="440" y1="80" x2="498" y2="80" stroke="var(--color-text-muted)" stroke-width="1.2" marker-end="url(#arr4)"/><rect x="260" y="290" width="420" height="44" class="box" fill="none" stroke="var(--color-accent-quartz)" stroke-width="1.5"/><text x="470" y="308" text-anchor="middle" class="dt" fill="var(--color-accent-quartz)">Distribution Shift Alert</text><text x="470" y="326" text-anchor="middle" class="dm">online metric &gt;10% drift → re-labeling sprint + retrieval review</text><line x1="350" y1="230" x2="390" y2="288" stroke="var(--color-accent-euv)" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr4)"/><line x1="590" y1="230" x2="550" y2="288" stroke="var(--color-accent-copper)" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arr4)"/><defs><marker id="arr4" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="var(--color-text-muted)"/></marker></defs></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 23.1</span><span class="text">LLM observability stack: production traffic feeds trace logging (Langfuse/LangSmith) and a labeled eval set. The regression gate runs RAGAS on every CI commit. Online eval samples 5% of production traffic for distribution-shift detection, alerting on 10% drift.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">LLM observability is trace logging plus a labeled offline eval suite plus online distribution-shift monitoring — all three are required, and the eval set must be built from real production traces, not synthetic data.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://eugeneyan.com/writing/evals/">Evaluating LLM Applications, Eugene Yan (May 11, 2024)</a></p>
+  <p><strong>Build.</strong> Instrument DealLens with Langfuse. Run 100 deals through the screening flow and capture full traces. Export traces and hand-label 100 as correct/incorrect with domain annotations. Build a RAGAS regression test script that runs the labeled eval set and reports context precision, context recall, and faithfulness. Wire this into a pre-commit hook or GitHub Action that blocks merges on regression exceeding 2%.</p>
+  <p><strong>Capstone ladder.</strong> Direct DealLens — tracing + labeled evals + regression gates are the production engineering layer that makes DealLens a deployable product rather than a demo. For the JHU humanoid, the analog is ROS 2 bags + Rerun.io for trajectory replay + Isaac Lab simulation regression tests on every policy update.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="23-observability">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What four things should every trace span capture for an LLM call?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Inputs (exact prompt), outputs (exact response), latency (wall-clock milliseconds), and cost (tokens in + tokens out at current model pricing).</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why is an offline eval suite insufficient on its own, and what does online eval add?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">The offline suite catches regressions on a fixed dataset but cannot detect distribution shift — when real user queries drift away from the labeled set, the offline suite stays green while production quality degrades. Online eval (LLM-as-judge on sampled production traffic) detects this drift by monitoring judge scores over time.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">DealLens switched from GPT-4o to Claude 3.5 Sonnet for deal scoring. How would you use the offline eval suite and regression gate to validate the switch before deploying to production analysts?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Run the regression gate: execute the full labeled eval set (200 production traces with human labels) against both the old (GPT-4o) and new (Claude 3.5 Sonnet) configurations. Compare RAGAS faithfulness, context precision, and answer relevancy scores. If no metric drops more than 2% from the GPT-4o baseline, approve the deploy. If any metric drops, investigate the failing examples to determine if the drop is systematic (wrong model for the domain) or random (fixable with prompt tuning). Block the deploy until any systematic drop is resolved.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="23-observability-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="22-langgraph-orchestration.html"><span class="ch-nav-link__label">← Chapter 22</span><span class="ch-nav-link__title">LangGraph and orchestration that survives</span></a>
+      <a class="ch-nav-link" data-dir="next" href="24-red-teaming.html"><span class="ch-nav-link__label">Chapter 24 →</span><span class="ch-nav-link__title">Red-teaming, jailbreaks, prompt injection</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

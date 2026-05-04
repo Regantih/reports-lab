@@ -1,0 +1,10 @@
+Why is prefill compute-bound and decode memory-bound?	Prefill processes N tokens in parallel (high FLOPs per weight byte). Decode generates one token at a time — arithmetic intensity ~2 FLOPs/byte, far below the H100 ridge point.
+What are the three core components of llm-d?	Prefill pods (compute-optimized), decode pods (bandwidth-optimized), and a KV-cache-aware gateway router.
+Who announced llm-d and when?	Red Hat (with Google, IBM, NVIDIA), November 21, 2025.
+What is the typical throughput improvement from disaggregated inference on long-prompt workloads?	Approximately 25%.
+How does KV-cache-aware routing differ from round-robin routing?	It routes requests to decode pods that already hold the request's prefix KV states, enabling cache reuse and eliminating redundant KV transfer.
+Why does llm-d handle MoE expert parallelism differently for prefill vs decode?	Prefill activates experts evenly across many tokens; decode at batch size 1 activates experts unevenly. Per-phase EP configuration allows load balancing that monolithic serving cannot provide.
+What infrastructure model does llm-d use for deployment?	Kubernetes-native — a Kubernetes operator that manages prefill and decode pod counts, autoscales each independently, and handles KV transfer via pod sidecars.
+For a 30:1 prefill/decode token ratio, roughly how many decode pods can one prefill pod feed?	5–10 decode pods, depending on response length and KV transfer speed.
+What is the KV transfer mechanism between prefill and decode pods in llm-d?	A sidecar network buffer manages KV state transfer via NVLink (within node) or RoCE/InfiniBand (cross-node).
+What scaling metric triggers prefill pod autoscaling vs decode pod autoscaling in llm-d?	Prefill scales on queue depth (CPU-measured prefill backlog). Decode scales on time-in-decode (long session duration indicates decode pod saturation).

@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 31 · Vision-Language-Action models — RT-2 and OpenVLA — From Tokens to Embodied Minds</title>
+<meta name="description" content="RT-2 proved that co-finetuning a VLM on robot trajectories yields emergent semantic generalization. OpenVLA reproduced and beat it at 7B parameters open-source. This chapter covers the VLA architecture that all subsequent models — π0, SmolVLA, GR00T — build on.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="31-rt2-openvla" data-chapter-title="Vision-Language-Action models — RT-2 and OpenVLA">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="31-rt2-openvla">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">VLM backbone</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">action tokenization</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">co-finetuning</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">Open X-Embodiment</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">DINOv2 + SigLIP fusion</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">emergent generalization</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">OpenVLA-OFT</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="31-rt2-openvla" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — how does RT-2 represent robot actions so that a language model can learn them?</h2>
+  <p class="learn__hint">Think about what format language models already know how to generate.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-31-rt2-openvla" value="a"><span>Actions are represented as continuous floating-point vectors appended to the VLM&#x27;s hidden state</span></label><label class="predict__choice"><input type="radio" name="predict-31-rt2-openvla" value="b"><span>Actions are discretized into bins and represented as text tokens, co-trained with the VLM&#x27;s language modeling objective</span></label><label class="predict__choice"><input type="radio" name="predict-31-rt2-openvla" value="c"><span>Actions are generated by a separate MLP head attached to the VLM&#x27;s final layer</span></label><label class="predict__choice"><input type="radio" name="predict-31-rt2-openvla" value="d"><span>Actions are represented as image tokens showing the target robot configuration</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">RT-2 represents each action dimension (7 DoF: x, y, z, roll, pitch, yaw, gripper) as a discretized integer in [0, 255], encoded as a text token string. This lets the model generate actions using the exact same next-token prediction machinery the VLM already uses for language — no new output head required. The VLM simply learns that 'action_3' means a specific robot motion. The cost is discretization error; the benefit is that the model's web-pretrained reasoning is immediately applicable to robot tasks.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 31 of 36</div>
+    <div class="ch-header__num">Chapter 31</div>
+    <h1 class="ch-header__title">Vision-Language-Action models — RT-2 and OpenVLA</h1>
+    <p class="ch-header__dek">The architectures that turn VLMs into policies</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain RT-2&#x27;s core architectural decision — representing robot actions as text tokens and co-finetuning a VLM — and why this yields emergent semantic generalization</li><li>Describe OpenVLA&#x27;s architecture (Llama 2 + DINOv2 + SigLIP) and explain why it outperforms RT-2-X 55B at 7B parameters</li><li>Set up OpenVLA inference on a simulated or real robot arm and fine-tune on 30 demonstrations of a custom task</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">55B→7B</div><div class="stat__label">RT-2-X to OpenVLA: 7x fewer parameters, +16.5% absolute task success across 29 tasks</div></div><div class="stat"><div class="stat__num">970K</div><div class="stat__label">demonstrations from Open X-Embodiment dataset used to train OpenVLA — the largest open robot dataset</div></div><div class="stat"><div class="stat__num">2×</div><div class="stat__label">generalization improvement of RT-2 over RT-1 on semantic reasoning tasks — emergent from VLM co-finetuning</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="31-rt2-openvla">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. Without looking, state RT-2's action representation scheme and one advantage and one disadvantage vs a continuous action head.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Run OpenVLA inference on a LeRobot SO-100 setup or in MuJoCo with a Franka arm. Report zero-shot success rate on 5 tasks. Time the per-step inference latency.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">Fine-tune OpenVLA on 30 of your own demonstrations using LoRA. Compare zero-shot vs fine-tuned success rate on your custom task.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Reproduce OpenVLA-OFT (optimized fine-tuning): parallel decoding, action chunking, continuous action representation. Measure latency reduction and task success vs base OpenVLA.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#rt2-architecture">RT-2 — the VLM-as-policy architecture</a></li><li><a href="#openvla-design">OpenVLA — open-source VLA at 7B</a></li><li><a href="#training-data">Open X-Embodiment and why training data matters</a></li><li><a href="#capstone">Capstone position</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">RT-2 (Google DeepMind, July 28, 2023) answered a question that seemed obvious only in retrospect: if VLMs already know that 'coffee cup' is graspable, 'fragile' means handle gently, and 'leftmost' is a spatial instruction, why not just teach them robot actions in the same token stream? RT-2 co-finetunes PaLI-X (55B) or PaLM-E (12B) on robot trajectories from the RT-1 dataset alongside web VQA data, representing each action dimension as a text token. The result: approximately 2x generalization improvement on semantic reasoning tasks — emergent capabilities like 'pick up the object that could help with headache' that no robot-only model had shown.
+
+OpenVLA (Kim et al., arXiv:2406.09246, June 13, 2024) reproduced and extended RT-2 in open source: 7B parameters (Llama 2 backbone + DINOv2 ViT-B/14 + SigLIP ViT-So400M), trained on 970K demonstrations from the Open X-Embodiment dataset, beating closed RT-2-X (55B) by 16.5 percentage points absolute task success across 29 tasks. It is the first reproducible, open-weights VLA and the baseline everything since has measured against.</p>
+<h2 id="rt2-architecture">RT-2 — the VLM-as-policy architecture</h2>
+<p>RT-2's core architectural decision is action tokenization: each of the 7 action dimensions (end-effector x, y, z, roll, pitch, yaw, gripper) is discretized into 256 bins and encoded as a single text token. A 7-DoF action becomes a sequence of 7 tokens appended to the VLM's output. The model is then co-finetuned on robot trajectory data (input: image + text instruction, output: action token sequence) alongside the original VLM pre-training data (web image-text pairs). This multi-task training preserves the VLM's semantic knowledge while teaching it robot actions — the same weights handle 'describe this image' and 'grasp this object,' which is what enables the emergent generalization.</p>
+<p>The price is discretization error: 256 bins for end-effector position in a workspace of ~50cm gives ~2mm resolution. For coarse manipulation (pick-and-place) this is acceptable; for precision assembly (inserting a USB connector) it is not. RT-2-X (the scaled version, 55B parameters, trained on the Open X-Embodiment dataset) achieves broad generalization but at inference latency measured in seconds — too slow for reactive control.</p>
+<h2 id="openvla-design">OpenVLA — open-source VLA at 7B</h2>
+<p>OpenVLA (Kim et al., June 13, 2024) retains RT-2's action tokenization scheme but improves three components. First, the vision encoder: instead of PaLI-X's single encoder, OpenVLA fuses DINOv2 ViT-B/14 (dense spatial features) and SigLIP ViT-So400M (language-aligned features), concatenating their outputs before the LLM backbone. Second, the LLM: Llama 2 7B, fully open weights. Third, the training data: 970K demonstrations from the Open X-Embodiment dataset — more diverse and larger than RT-1. The result is a model that beats RT-2-X 55B by 16.5 percentage points on 29 tasks across 7 robot platforms, despite being 7x smaller and fully reproducible.</p>
+<p>OpenVLA-OFT (Optimized Fine-Tuning, Kim et al., 2024 follow-up) addresses the original model's inference latency with parallel decoding (all 7 action tokens decoded simultaneously rather than sequentially), action chunking, and continuous action representation (replacing discrete bins with a Gaussian action head). These changes reduce inference latency from ~2 seconds to under 200ms, making OpenVLA-OFT deployable on real robots at 5Hz.</p>
+<h2 id="training-data">Open X-Embodiment and why training data matters</h2>
+<p>The Open X-Embodiment dataset (RT-X team, 2023) aggregated demonstrations from 22 robot types across 21 research institutions — 970K episodes, diverse objects, tasks, and embodiments. OpenVLA's training on this dataset is what gives it cross-embodiment generalization: a policy that has seen grasping on a WidowX, a Franka, and a UR5 learns that 'grasp' is a semantic primitive independent of the specific arm. This is the same insight that scaled language model pretraining: generalization comes from data diversity, not data volume alone.</p>
+<p>For fine-tuning OpenVLA on your own tasks, the standard recipe is LoRA on the LLM backbone (typically rank 16-32) while keeping the vision encoders frozen. Berkeley CS 294-277 Robots That Learn (Jitendra Malik, Spring 2026) uses OpenVLA as a central case study. The openvla.github.io project page has fine-tuning scripts targeting the SO-100/SO-101 hardware.</p>
+<h2 id="capstone">Capstone position</h2>
+<p>OpenVLA is the strongest open baseline for the JHU humanoid before choosing between it, GR00T N1.5, and SmolVLA. The decision matrix: OpenVLA at 7B requires a 24GB+ GPU for fine-tuning; SmolVLA at 450M runs on a consumer 12GB GPU; GR00T N1.5 is the highest capability but the heaviest. Run OpenVLA fine-tuning first on 30 demonstrations — the zero-shot vs fine-tuned gap will tell you whether the task is within the pretrained distribution or requires more data.</p>
+<div class="aside" data-tone="euv"><span class="aside__label">On emergent VLA capabilities</span><p>RT-2's '2x generalization' is real but narrow: it generalizes to new objects within the semantic space of its VLM pretraining. It does not generalize to new physical environments, new task structures, or contact-rich manipulation that was not in the demonstration data. π0.5 is the current frontier on that harder generalization.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="RT-2 and OpenVLA architecture comparison: action tokenization, vision encoder fusion, backbone"><style>text{font-family:system-ui,sans-serif;font-size:12px;fill:var(--color-text)}.muted{fill:var(--color-text-muted);font-size:10px}.title{font-size:15px;font-weight:600;fill:var(--color-text)}.head{font-size:12px;font-weight:600}</style><text x="400" y="26" text-anchor="middle" class="title">RT-2 vs OpenVLA Architecture</text><rect x="20" y="50" width="360" height="240" rx="6" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.4"/><text x="200" y="74" text-anchor="middle" class="head" fill="var(--color-text)">RT-2 (Google DeepMind, Jul 2023)</text><rect x="40" y="88" width="150" height="40" rx="4" fill="none" stroke="var(--color-accent-copper)" stroke-width="1"/><text x="115" y="113" text-anchor="middle" class="muted">PaLI-X / PaLM-E VLM</text><rect x="210" y="88" width="150" height="40" rx="4" fill="none" stroke="var(--color-accent-copper)" stroke-width="1"/><text x="285" y="106" text-anchor="middle" class="muted">Single vision encoder</text><text x="285" y="122" text-anchor="middle" class="muted">(ViT internal)</text><text x="200" y="155" text-anchor="middle" class="muted">Action tokenization: 7 dims × 256 bins → 7 text tokens</text><text x="200" y="172" text-anchor="middle" class="muted">Co-finetuned: robot demos + web VQA data</text><text x="200" y="192" text-anchor="middle" class="muted">55B parameters (RT-2-X)</text><text x="200" y="210" text-anchor="middle" class="muted">~2s inference latency</text><text x="200" y="230" text-anchor="middle" class="muted">Closed weights</text><text x="200" y="252" text-anchor="middle" class="muted">+2x semantic generalization vs RT-1</text><rect x="420" y="50" width="360" height="240" rx="6" fill="none" stroke="var(--color-primary)" stroke-width="1.8"/><text x="600" y="74" text-anchor="middle" class="head" fill="var(--color-text)">OpenVLA (Kim et al., Jun 2024)</text><rect x="440" y="88" width="150" height="40" rx="4" fill="none" stroke="var(--color-accent-euv)" stroke-width="1"/><text x="515" y="106" text-anchor="middle" class="muted">DINOv2 ViT-B/14</text><text x="515" y="122" text-anchor="middle" class="muted">(dense spatial)</text><rect x="610" y="88" width="150" height="40" rx="4" fill="none" stroke="var(--color-accent-euv)" stroke-width="1"/><text x="685" y="106" text-anchor="middle" class="muted">SigLIP So400M</text><text x="685" y="122" text-anchor="middle" class="muted">(language-aligned)</text><line x1="515" y1="128" x2="600" y2="148" stroke="var(--color-accent-euv)" stroke-width="1" stroke-dasharray="3,2"/><line x1="685" y1="128" x2="600" y2="148" stroke="var(--color-accent-euv)" stroke-width="1" stroke-dasharray="3,2"/><text x="600" y="155" text-anchor="middle" class="muted">Fused → Llama 2 7B backbone</text><text x="600" y="175" text-anchor="middle" class="muted">Same action tokenization as RT-2</text><text x="600" y="192" text-anchor="middle" class="muted">970K demos (Open X-Embodiment)</text><text x="600" y="210" text-anchor="middle" class="muted">7B parameters — open weights</text><text x="600" y="230" text-anchor="middle" class="muted">LoRA fine-tuning on 30 demos</text><text x="600" y="252" text-anchor="middle" class="muted">+16.5% vs RT-2-X 55B (29 tasks)</text><text x="400" y="320" text-anchor="middle" class="muted">Winner: OpenVLA — 7x fewer parameters, +16.5 points, open weights, reproducible</text></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 31.1</span><span class="text">RT-2 (Google DeepMind, July 2023) vs OpenVLA (Kim et al., June 2024). Both use action tokenization (7 dims × 256 bins → text tokens). OpenVLA&#x27;s dual vision encoder (DINOv2 + SigLIP) and open Llama 2 7B backbone beat RT-2-X 55B by 16.5 points on 29 tasks at 7x lower parameter count.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">RT-2 proved VLMs can be robot policies via action tokenization; OpenVLA proved the same at 7B open-source, beating RT-2-X 55B by 16.5 points — the fusion of DINOv2 and SigLIP is why.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://arxiv.org/abs/2406.09246">OpenVLA: An Open-Source Vision-Language-Action Model, Kim et al., arXiv:2406.09246, June 13, 2024</a></p>
+  <p><strong>Build.</strong> Run OpenVLA inference (lerobot/openvla or openvla.github.io) on a MuJoCo Franka arm or LeRobot SO-100. Report zero-shot success rate on 5 tasks and per-step inference latency. Then fine-tune on 30 demonstrations using LoRA (rank 16), train 5 epochs, report fine-tuned vs zero-shot success rate delta.</p>
+  <p><strong>Capstone ladder.</strong> OpenVLA is the strongest open baseline for the JHU humanoid before deciding between it, GR00T N1.5, and SmolVLA. The fine-tuning experiment on 30 demos gives you empirical evidence for whether the task is within the pretrained distribution — the most important signal for choosing between the three VLA options.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="31-rt2-openvla">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">How does RT-2 represent a 7-DoF robot action as text tokens?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Each of the 7 action dimensions (x, y, z, roll, pitch, yaw, gripper) is discretized into 256 bins and encoded as a single text token. A complete action becomes a sequence of 7 tokens appended to the VLM output, generated with the same next-token prediction machinery used for language.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does co-finetuning on both robot data and web VQA data enable emergent generalization in RT-2?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Multi-task training preserves the VLM's pretrained semantic knowledge (object affordances, spatial reasoning, physical common sense) while teaching it to associate that knowledge with robot actions. A model that has only seen robot data must learn 'headache pill is graspable' from scratch; RT-2's co-training makes this semantic knowledge immediately available for robot reasoning without additional examples.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">You want to fine-tune OpenVLA on 30 demonstrations of a household task on a 24GB GPU. What is the recommended procedure and expected outcome?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Apply LoRA (rank 16-32) to the Llama 2 backbone, keeping DINOv2 and SigLIP encoders frozen. Train for 5-10 epochs on the 30-demo dataset. Expected: 20-40 percentage point improvement in task success vs zero-shot baseline for tasks within the pretrained embodiment distribution. For tasks requiring novel contact patterns (not in Open X-Embodiment), consider augmenting with 50-100 additional demonstrations or switching to SmolVLA with its smaller parameter count.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="31-rt2-openvla-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="30-diffusion-policies.html"><span class="ch-nav-link__label">← Chapter 30</span><span class="ch-nav-link__title">Diffusion policies and action chunking</span></a>
+      <a class="ch-nav-link" data-dir="next" href="32-pi0-smolvla.html"><span class="ch-nav-link__label">Chapter 32 →</span><span class="ch-nav-link__title">π0, π0.5, and SmolVLA</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

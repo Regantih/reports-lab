@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 08 · Mixture of Experts — From Tokens to Embodied Minds</title>
+<meta name="description" content="MoE gives you 671B parameters with 37B activated per token. The hard part is not the router — it is load balancing across 256 experts without auxiliary losses that destabilize training.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="08-mixture-of-experts" data-chapter-title="Mixture of Experts">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="08-mixture-of-experts">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">sparse FFN replacement</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">top-k routing</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">load balancing</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">expert parallelism</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">auxiliary loss</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">bias-correction trick</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">MoE vs dense trade-offs</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="08-mixture-of-experts" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">In a top-k Mixture of Experts layer with N experts and k selected per token, what is the primary training failure mode and how does the field currently prevent it?</h2>
+  <p class="learn__hint">Think about what happens if the router consistently prefers a small subset of experts.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-08-mixture-of-experts" value="a"><span>The router&#x27;s softmax saturates, causing NaN gradients in the gating weights</span></label><label class="predict__choice"><input type="radio" name="predict-08-mixture-of-experts" value="b"><span>Expert collapse — a few experts receive most tokens while the rest are starved and undertrained</span></label><label class="predict__choice"><input type="radio" name="predict-08-mixture-of-experts" value="c"><span>The top-k selection is not differentiable, preventing gradient flow through the router</span></label><label class="predict__choice"><input type="radio" name="predict-08-mixture-of-experts" value="d"><span>Expert outputs have different scales, causing residual stream instability</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">Expert collapse is the canonical MoE failure: the router develops a preference for a subset of experts, those experts receive more gradient signal and improve, reinforcing the preference. The result is a few overloaded experts and many undertrained ones — parameter waste without quality benefit. Classic fixes include auxiliary load-balancing loss (penalizing expert utilization imbalance), expert-choice routing (experts choose tokens rather than tokens choosing experts), and DeepSeek-V3's bias-correction trick (adjust router bias terms at each training step based on expert utilization statistics, no auxiliary loss required).</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 08 of 36</div>
+    <div class="ch-header__num">Chapter 08</div>
+    <h1 class="ch-header__title">Mixture of Experts</h1>
+    <p class="ch-header__dek">Sparse compute, dense parameters</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Implement a top-2 MoE layer with 8 experts and verify expert utilization is balanced across a toy training run.</li><li>Explain DeepSeek-V3&#x27;s auxiliary-loss-free load balancing mechanism and why it is preferable to auxiliary loss during training.</li><li>Describe expert parallelism as a sharding strategy and explain when it dominates tensor parallelism for MoE models.</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">671B</div><div class="stat__label">DeepSeek-V3 total parameters — only 37B activated per token</div></div><div class="stat"><div class="stat__num">256</div><div class="stat__label">experts in DeepSeek-V3 — routing selects top-8 per token</div></div><div class="stat"><div class="stat__num">0</div><div class="stat__label">auxiliary losses in DeepSeek&#x27;s bias-correction balancing trick</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="08-mixture-of-experts">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Explain in two sentences why MoE achieves high parameter count at low FLOPs per token.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Implement a top-2 MoE layer with 8 experts in ~150 lines of PyTorch, train on Tiny Shakespeare, and log per-expert token counts per step to verify balanced routing.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">Given a deployed MoE model where inference latency on batch size 1 is 3x worse than a dense model of equal active parameter count, diagnose the likely cause and propose a fix.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Compare DeepSeek-V3's auxiliary-loss-free balancing (arXiv:2412.19437) against Google's expert-choice routing (Zhou et al., arXiv:2202.09368). Which produces better load balance under high batch-size variance, and why?</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#moe-mechanics">MoE layer mechanics</a></li><li><a href="#load-balancing">Load balancing — the hard problem</a></li><li><a href="#expert-parallelism">Expert parallelism and llm-d</a></li><li><a href="#capstone-link">MoE in the VLA landscape</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">Mixture of Experts replaces the dense FFN in each transformer block with N expert FFNs and a router that activates only k of them per token. The promise: parameter count without proportional FLOPs. DeepSeek-V3 has 671B parameters but activates only 37B per token — it is technically 37B-parameter inference on 671B-parameter modeling capacity. Qwen3-MoE, Mixtral 8x7B, and GPT-4 (reportedly) follow the same pattern. The field converged on MoE not because it is theoretically elegant but because the empirical results on perplexity per FLOP are consistently better than dense alternatives at matched compute.
+
+The hard part is not the router. The router is a learned linear layer followed by a softmax over N experts and a top-k selection. The hard part is load balancing: without intervention, the router collapses to preferring a small subset of experts, wasting the rest's parameters and capacity. DeepSeek-V3 (December 2024) solved this with an auxiliary-loss-free bias-correction trick that adjusts router biases based on running expert utilization statistics — a cleaner solution than adding auxiliary losses that fight the main training objective.</p>
+<h2 id="moe-mechanics">MoE layer mechanics</h2>
+<p>An MoE layer replaces the single dense FFN with N expert FFNs (typically identical architecture, different weights) and a router. For each token x, the router computes scores s = softmax(x W_router) over N experts, selects the top-k indices, and computes the output as a weighted sum of the selected experts: output = sum_{i in top-k} s_i * Expert_i(x). The weights s_i are the router probabilities renormalized over the top-k. Token routing is per-position — different positions in the same sequence can activate different expert subsets.</p>
+<p>The FLOP count per token is approximately k/N times that of a dense model with the same total parameter count. For DeepSeek-V3: k=8 of N=256 shared experts plus 1 of 1 fine-grained experts per token, activated parameters ~37B out of 671B total. The memory cost at inference is the full 671B (all expert weights must be accessible), which is the key trade-off: MoE reduces compute but not memory.</p>
+<p>Expert capacity is the maximum number of tokens each expert can process per batch. Without a capacity constraint, a popular expert could be assigned O(batch_size) tokens while rare experts get zero — infeasible for parallel computation. Setting capacity_factor=1.25 (expert capacity = 1.25 * batch_size/N) allows mild imbalance while preventing extreme overload.</p>
+<h2 id="load-balancing">Load balancing — the hard problem</h2>
+<p>Expert collapse is the primary MoE training failure. The router, being a learned function, develops preferences — certain experts receive more gradient signal because they are activated more often, improving faster, reinforcing the router's preference. Without intervention, training converges to a model where a few experts handle most tokens and the rest are undertrained. The auxiliary load-balancing loss (Switch Transformer, Fedus et al., arXiv:2101.03961, January 2021) penalizes imbalance: L_aux = alpha * sum_i f_i * P_i, where f_i is the fraction of tokens routed to expert i and P_i is the mean router probability for expert i. Setting alpha=0.01 typically prevents collapse.</p>
+<p>The problem with auxiliary loss is that it is an additional objective that can conflict with the main language modeling loss — particularly during fine-tuning on specialized data where natural token-to-expert affinity is domain-specific. DeepSeek-V3 (arXiv:2412.19437, December 2024) instead uses a bias-correction approach: track a running average of expert token counts across recent batches, and add a small bias to the router logits for underutilized experts and subtract from overutilized ones. No auxiliary loss required. The bias corrections are updated every ~1000 steps based on utilization statistics.</p>
+<h2 id="expert-parallelism">Expert parallelism and llm-d</h2>
+<p>Expert parallelism (EP) shards expert weights across GPUs — each GPU holds a subset of experts and handles only the tokens routed to those experts. This is the natural distribution strategy for MoE: expert weights are independent, so there is no inter-GPU communication during FFN computation. The all-to-all communication between routing and expert computation is the bottleneck — tokens must be dispatched to the correct GPU, processed, and results gathered back. At 256 experts across 32 GPUs, each step involves two all-to-all collective operations.</p>
+<p>llm-d (Red Hat / IBM, introduced November 2025) treats expert parallelism as a first-class concept in distributed inference, allowing disaggregated prefill and decode pods to each have different expert-shard assignments optimized for their respective compute patterns. For MoE models in production, this reduces inter-pod communication overhead by localizing expert computation to the pod where the tokens are processed.</p>
+<p>For VLA training with MoE-based VLMs: if you post-train the Eagle 2.5 backbone in GR00T N1.5 on humanoid demonstration data, expert parallelism determines how you distribute the fine-tuning across multiple GPUs. At the typical fine-tuning scale (30-200 demonstrations, 4-8 GPUs), data parallelism is sufficient — but knowing EP exists prepares you for scaling to larger demonstration datasets.</p>
+<h2 id="capstone-link">MoE in the VLA landscape</h2>
+<p>GR00T N1.5's VLM backbone (Eagle 2.5) is currently dense, but the trend in frontier VLMs is toward MoE: Qwen2.5-VL uses a dense visual encoder with an MoE text backbone. If you are evaluating whether to fine-tune GR00T N1.5 or build a custom VLA for the JHU humanoid capstone, understanding MoE capacity matters for projecting the memory footprint of alternative models.</p>
+<p>For DealLens, MoE is directly relevant to model selection: Qwen3-MoE-30B-A3B (30B total, 3B active) is a viable scoring backbone that matches dense 7B models in inference cost while having 4× the modeling capacity for rare deal term patterns. The key operational consideration is memory: MoE models require all expert weights in memory even when only k are active per token.</p>
+<div class="aside" data-tone="euv"><span class="aside__label">MoE memory vs compute trade-off</span><p>MoE reduces training and inference FLOPs but not memory. DeepSeek-V3 at 671B parameters requires loading all expert weights — roughly 320 GB at BF16 — regardless of how few are activated per token. Plan accordingly for serving infrastructure.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="MoE router and expert parallelism" fill="none" xmlns="http://www.w3.org/2000/svg"><text x="400" y="26" text-anchor="middle" font-size="14" font-weight="600" fill="var(--color-text)">Mixture of Experts — Router, Top-k Selection, Expert Parallelism</text><rect x="340" y="50" width="120" height="40" rx="6" stroke="var(--color-primary)" stroke-width="1.5" fill="var(--color-bg)"/><text x="400" y="75" text-anchor="middle" font-size="12" fill="var(--color-primary)">Router (linear + softmax)</text><rect x="50" y="140" width="80" height="40" rx="5" stroke="var(--color-accent-copper)" stroke-width="1.4" fill="var(--color-bg)"/><text x="90" y="165" text-anchor="middle" font-size="11" fill="var(--color-accent-copper)">Expert 1</text><rect x="150" y="140" width="80" height="40" rx="5" stroke="var(--color-accent-euv)" stroke-width="1.4" fill="var(--color-bg)"/><text x="190" y="165" text-anchor="middle" font-size="11" fill="var(--color-accent-euv)">Expert 2 ✓</text><rect x="250" y="140" width="80" height="40" rx="5" stroke="var(--color-text-muted)" stroke-width="1" fill="var(--color-bg)"/><text x="290" y="165" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">Expert 3</text><rect x="350" y="140" width="80" height="40" rx="5" stroke="var(--color-accent-euv)" stroke-width="1.4" fill="var(--color-bg)"/><text x="390" y="165" text-anchor="middle" font-size="11" fill="var(--color-accent-euv)">Expert 4 ✓</text><rect x="450" y="140" width="80" height="40" rx="5" stroke="var(--color-text-muted)" stroke-width="1" fill="var(--color-bg)"/><text x="490" y="165" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">Expert 5</text><rect x="550" y="140" width="80" height="40" rx="5" stroke="var(--color-text-muted)" stroke-width="1" fill="var(--color-bg)"/><text x="590" y="165" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">Expert 6</text><rect x="650" y="140" width="80" height="40" rx="5" stroke="var(--color-text-muted)" stroke-width="1" fill="var(--color-bg)"/><text x="690" y="165" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">Expert 7</text><line x1="400" y1="90" x2="190" y2="140" stroke="var(--color-accent-euv)" stroke-width="1.4"/><line x1="400" y1="90" x2="390" y2="140" stroke="var(--color-accent-euv)" stroke-width="1.4"/><line x1="400" y1="90" x2="90" y2="140" stroke="var(--color-text-muted)" stroke-width="1" stroke-dasharray="3 2"/><line x1="400" y1="90" x2="290" y2="140" stroke="var(--color-text-muted)" stroke-width="1" stroke-dasharray="3 2"/><line x1="400" y1="90" x2="490" y2="140" stroke="var(--color-text-muted)" stroke-width="1" stroke-dasharray="3 2"/><line x1="400" y1="90" x2="590" y2="140" stroke="var(--color-text-muted)" stroke-width="1" stroke-dasharray="3 2"/><line x1="400" y1="90" x2="690" y2="140" stroke="var(--color-text-muted)" stroke-width="1" stroke-dasharray="3 2"/><rect x="240" y="240" width="320" height="80" rx="6" stroke="var(--color-accent-copper)" stroke-width="1.4" stroke-dasharray="5 3" fill="var(--color-bg)"/><text x="400" y="265" text-anchor="middle" font-size="12" font-weight="600" fill="var(--color-accent-copper)">Load Balancing</text><text x="400" y="283" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">Auxiliary loss: L_aux = α·Σ f_i·P_i (conflicts with main loss)</text><text x="400" y="301" text-anchor="middle" font-size="11" fill="var(--color-primary)">DeepSeek-V3: bias correction on router logits — no auxiliary loss</text><text x="400" y="340" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">DeepSeek-V3: 671B total · 37B activated/token · 256 experts · top-8 routing</text></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 8.1</span><span class="text">MoE router activates top-k experts per token (solid lines); unselected experts are skipped (dashed). DeepSeek-V3&#x27;s bias-correction load balancing adjusts router logits without auxiliary loss — cleaner than earlier approaches.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">MoE achieves frontier parameter count at a fraction of the activated FLOPs per token — the hard part is load balancing across experts, which DeepSeek-V3 solved without auxiliary losses using a bias-correction trick.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://arxiv.org/abs/2412.19437">DeepSeek-V3 Technical Report, DeepSeek-AI, arXiv:2412.19437 (December 27, 2024)</a></p>
+  <p><strong>Build.</strong> Implement a top-2 MoE layer with 8 experts in ~150 lines of PyTorch, train on Tiny Shakespeare, and log per-expert token counts per step to verify balanced routing without auxiliary loss.</p>
+  <p><strong>Capstone ladder.</strong> GR00T N1.5&#x27;s VLM (Eagle 2.5) is currently dense; frontier VLMs are trending toward MoE. For DealLens, Qwen3-MoE-30B-A3B offers 4x parameter capacity over a 7B dense model at similar inference FLOPs — relevant for rare deal term pattern coverage.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="08-mixture-of-experts">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">How does DeepSeek-V3&#x27;s auxiliary-loss-free load balancing work?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">DeepSeek-V3 tracks running average expert token counts and adjusts router logit biases: small positive bias for underutilized experts, negative for overutilized. No auxiliary loss term is added to the training objective. Bias values are updated every ~1000 steps based on recent utilization statistics (arXiv:2412.19437, December 2024).</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does MoE reduce FLOPs but not memory, and what is the operational consequence?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Only k of N experts are activated per token, reducing compute to k/N of a dense FFN. But all N expert weight matrices must be loaded into GPU memory since any token could route to any expert. A 671B MoE model requires ~320 GB of BF16 weights regardless of inference batch size.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">For DealLens, what is the argument for using a Qwen3-MoE model instead of a dense 7B model as the scoring backbone?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Qwen3-MoE-30B-A3B (30B total, 3B activated) has 4× the modeling capacity of a dense 7B model at similar inference FLOPs. For VC deal scoring, rare deal term patterns (niche sector jargon, non-standard term sheet clauses) benefit from higher parameter capacity. The trade-off is higher memory overhead — factor this into the serving infrastructure budget.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="08-mixture-of-experts-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="07-pretraining-at-scale.html"><span class="ch-nav-link__label">← Chapter 07</span><span class="ch-nav-link__title">Pretraining at scale</span></a>
+      <a class="ch-nav-link" data-dir="next" href="09-scaling-laws.html"><span class="ch-nav-link__label">Chapter 09 →</span><span class="ch-nav-link__title">Scaling laws — Kaplan, Chinchilla, and after</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

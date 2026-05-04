@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 33 · NVIDIA GR00T N1 and N1.5 with Isaac Lab — From Tokens to Embodied Minds</title>
+<meta name="description" content="GR00T N1 introduced the open humanoid foundation model with a System 1 / System 2 dual architecture. N1.5 (June 2025) raised RoboCasa success from 17.4% to 47.5% with a simplified adapter, FLARE loss, and DreamGen synthetic data. This is the high-capability candidate for the JHU humanoid.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="33-groot" data-chapter-title="NVIDIA GR00T N1 and N1.5 with Isaac Lab">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="33-groot">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">System 1 DiT</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">System 2 VLM</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">Eagle 2.5 encoder</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">FLARE loss</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">DreamGen synthetic data</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">Isaac Lab post-training</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">dual-system architecture</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="33-groot" data-answer-key="c">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — GR00T uses a &#x27;System 1 / System 2&#x27; architecture. Which component runs at 50Hz and which runs at a slower deliberative rate?</h2>
+  <p class="learn__hint">Think about the dual-process theory of cognition: fast/reflexive vs slow/deliberative.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-33-groot" value="a"><span>System 1 (VLM): runs at 50Hz generating action tokens; System 2 (DiT): slower, refines the VLM output</span></label><label class="predict__choice"><input type="radio" name="predict-33-groot" value="b"><span>System 2 (VLM): runs at 50Hz with full language reasoning; System 1 (DiT): slower asynchronous executor</span></label><label class="predict__choice"><input type="radio" name="predict-33-groot" value="c"><span>System 2 (VLM): slower deliberative planner; System 1 (DiT): 50Hz fast reflexive action executor</span></label><label class="predict__choice"><input type="radio" name="predict-33-groot" value="d"><span>Both run at 50Hz — the naming is purely metaphorical, not an architectural split</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">GR00T's System 2 is the VLM (Frozen Eagle 2.5 in N1.5) — slow, deliberative, processes high-level language instructions and generates task context. System 1 is the DiT (Diffusion Transformer) action model — fast, executes motor commands at 50Hz using the context from System 2. This matches Kahneman's dual-process theory: the VLM thinks slowly about what to do, the DiT executes reflexively how to do it. The architectural split is real and performance-critical — the DiT cannot afford VLM inference latency at 50Hz.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 33 of 36</div>
+    <div class="ch-header__num">Chapter 33</div>
+    <h1 class="ch-header__title">NVIDIA GR00T N1 and N1.5 with Isaac Lab</h1>
+    <p class="ch-header__dek">The dual-system humanoid foundation model</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Explain GR00T&#x27;s dual-system architecture — System 2 (VLM) plans, System 1 (DiT) executes at 50Hz — and why this separation matters for humanoid robotics</li><li>Describe the three improvements in N1.5 over N1 (frozen Eagle 2.5, simplified MLP adapter, FLARE loss) and their effect on task success</li><li>Run GR00T N1.5 inference in Isaac Lab and post-train on 30 demos of a custom task</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">47.5<em>%</em></div><div class="stat__label">GR00T N1.5 RoboCasa 30-demo success — up from 17.4% for N1 (NVIDIA Research, Jun 11, 2025)</div></div><div class="stat"><div class="stat__num">89.6</div><div class="stat__label">RefCOCOg IoU for N1.5 — surpassing Qwen2.5-VL-3B (85.2) with better grounding from Eagle 2.5</div></div><div class="stat"><div class="stat__num">50<em>Hz</em></div><div class="stat__label">System 1 (DiT action model) execution rate — System 2 VLM plans; System 1 executes at reflex speed</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="33-groot">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. Without looking, state the three improvements N1.5 made over N1 and the resulting performance change on RoboCasa.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Clone the NVIDIA/Isaac-GR00T repository. Run GR00T N1.5 inference on the Sim GR-1 benchmark in Isaac Lab. Report success rate on the default task set.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">Post-train GR00T N1.5 on 30 demos of a custom task (pick apple, place on plate) in Isaac Lab. Compare post-trained vs pretrained success rate.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Replace DreamGen synthetic data with your own real-to-sim pipeline: record 20 real demos, fit Isaac Lab simulation parameters via system ID, generate 500 synthetic rollouts, post-train. Compare synthetic-augmented vs real-only post-training.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#dual-system">System 1 / System 2 — the dual-system architecture</a></li><li><a href="#n1-to-n15">N1 to N1.5 — three improvements</a></li><li><a href="#full-stack">The full GR00T stack</a></li><li><a href="#capstone">GR00T vs SmolVLA for the JHU capstone</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">GR00T N1 (NVIDIA GTC, March 18, 2025) introduced the first open foundation model for generalist humanoid robots. The central architectural insight: separate slow deliberative planning from fast reflexive execution. System 2 — a VLM — processes language instructions and generates task context at a slow deliberative rate. System 1 — a Diffusion Transformer (DiT) — executes motor commands at 50Hz using that context. The VLM thinks; the DiT acts.
+
+GR00T N1.5 (NVIDIA Research, June 11, 2025) improved all three components that connect System 1 and System 2: frozen Eagle 2.5 as the VLM (better vision-language grounding), a simplified MLP adapter with layer normalization (replacing the original cross-attention adapter), and FLARE loss (a trajectory-aware training objective). RoboCasa 30-demo success jumped from 17.4% to 47.5%. RefCOCOg IoU improved from below Qwen2.5-VL-3B to 89.6 (above Qwen's 85.2). The full stack — Isaac Sim → Isaac Lab → GR00T-Dreams synthetic data → on-robot deployment — is now open and documented.</p>
+<h2 id="dual-system">System 1 / System 2 — the dual-system architecture</h2>
+<p>GR00T's System 2 is a Vision-Language Model (Eagle 2.5 in N1.5, frozen) that processes multi-view camera observations and natural language instructions. At each planning timestep, System 2 generates a context embedding that conditions System 1's action generation. The VLM runs at a low frequency (1-5Hz) — it is the deliberative, computationally expensive component that interprets the task. System 1 is a Diffusion Transformer (DiT) that takes System 2's context embedding and the current proprioceptive state and denoises an action chunk at 50Hz. The DiT is the reflexive, real-time component.</p>
+<p>The architectural separation is not cosmetic: System 1 must run at 50Hz because humanoid control requires fast feedback. VLM inference at 50Hz is not feasible with current hardware (even small 3B VLMs take 50-200ms per forward pass). By separating the components, GR00T allows the VLM to run asynchronously at its own cadence while the DiT executes continuously at the required control frequency. This is architecturally identical to the human motor system: slow cortical planning + fast spinal cord execution.</p>
+<h2 id="n1-to-n15">N1 to N1.5 — three improvements</h2>
+<p>GR00T N1.5 (NVIDIA Research, June 11, 2025) made three specific improvements over N1. First, frozen Eagle 2.5 as the System 2 VLM: Eagle 2.5 provides better vision-language grounding than the N1 VLM, improving spatial understanding and instruction following. Freezing the VLM during post-training prevents catastrophic forgetting of language capabilities while allowing the DiT and adapter to specialize. Second, simplified MLP adapter with layer normalization: replaces N1's cross-attention adapter between System 2 and System 1 with a simpler MLP + LayerNorm, reducing the parameter count and stabilizing training. Third, FLARE loss: a trajectory-aware training objective that penalizes temporal inconsistency in the action sequence, encouraging smoother and more executable trajectories.</p>
+<p>The result: RoboCasa 30-demo task success from 17.4% (N1) to 47.5% (N1.5) — a 2.7x improvement from three architectural changes, not more data. RefCOCOg grounding IoU improved from below Qwen2.5-VL-3B (85.2) to 89.6, meaning N1.5 localizes referred objects more accurately than competitive VLMs. For the JHU humanoid capstone, this grounding improvement is directly useful: 'pick up the red mug on the left' requires precise spatial referencing, not just semantic object recognition.</p>
+<h2 id="full-stack">The full GR00T stack</h2>
+<p>The NVIDIA open stack for GR00T deployment: Isaac Sim (simulation environment, photorealistic) → Isaac Lab (robot learning framework, domain randomization, PPO training) → GR00T-Dreams (synthetic data generation from real seeds, Newton physics engine) → GR00T N1.5 post-training (LoRA fine-tuning of the DiT and adapter on task-specific data) → on-robot deployment. The GitHub repository (NVIDIA/Isaac-GR00T) provides all components. The 1X NEO Gamma deployment by 1X Technologies (NVIDIA-1X, March 18, 2025) is the closest published reference to a production humanoid using this stack.</p>
+<p>Post-training GR00T N1.5 follows the same recipe as SmolVLA fine-tuning but at higher capability and cost: 30 demonstrations, LoRA on the DiT and MLP adapter (VLM frozen), 5-10 epochs in Isaac Lab. The DreamGen pipeline can augment 30 real demos to hundreds of synthetic hours in the Newton physics engine, which is what drove the N1.5 benchmark numbers.</p>
+<h2 id="capstone">GR00T vs SmolVLA for the JHU capstone</h2>
+<p>GR00T N1.5 is the high-capability option for the JHU humanoid: better grounding (RefCOCOg IoU 89.6), higher benchmark performance (47.5% RoboCasa), and full integration with Isaac Lab for sim-to-real. SmolVLA-450M is the consumer-GPU option: smaller, faster inference, easier to fine-tune. The decision depends on hardware: GR00T N1.5 requires a 40GB+ GPU for inference (A100, H100), making it accessible on cloud but not consumer hardware. SmolVLA runs on a 12GB consumer GPU. For a capstone that must ship on a budget, start with SmolVLA; deploy GR00T N1.5 via cloud API for evaluation.</p>
+<div class="aside" data-tone="euv"><span class="aside__label">On the 17.4% → 47.5% jump</span><p>The 2.7x improvement from N1 to N1.5 came from three architectural changes, not more data or more compute. This is the kind of result that makes it worth reading architecture ablations carefully — the delta between 'good idea' and 'wrong connection point' is large in VLA systems.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="GR00T N1.5 dual-system architecture: System 2 VLM planner and System 1 DiT executor"><style>text{font-family:system-ui,sans-serif;font-size:12px;fill:var(--color-text)}.muted{fill:var(--color-text-muted);font-size:10px}.title{font-size:15px;font-weight:600;fill:var(--color-text)}.head{font-size:12px;font-weight:600}</style><text x="400" y="26" text-anchor="middle" class="title">GR00T N1.5 — Dual-System Architecture</text><rect x="20" y="55" width="340" height="200" rx="6" fill="none" stroke="var(--color-accent-euv)" stroke-width="1.5"/><text x="190" y="78" text-anchor="middle" class="head" fill="var(--color-text)">System 2 — VLM Planner (Slow)</text><rect x="40" y="90" width="130" height="45" rx="4" fill="none" stroke="var(--color-accent-euv)" stroke-width="1"/><text x="105" y="110" text-anchor="middle" class="muted">Eagle 2.5 VLM</text><text x="105" y="126" text-anchor="middle" class="muted">Frozen in N1.5</text><rect x="195" y="90" width="145" height="45" rx="4" fill="none" stroke="var(--color-accent-euv)" stroke-width="1"/><text x="267" y="110" text-anchor="middle" class="muted">Multi-view RGB</text><text x="267" y="126" text-anchor="middle" class="muted">+ Language instruction</text><text x="190" y="160" text-anchor="middle" class="muted">→ Context embedding (1–5 Hz)</text><text x="190" y="178" text-anchor="middle" class="muted">RefCOCOg IoU: 89.6 (vs Qwen 85.2)</text><text x="190" y="200" text-anchor="middle" class="muted">Deliberative: interprets task, localizes objects</text><text x="190" y="220" text-anchor="middle" class="muted">MLP adapter + LayerNorm → System 1</text><rect x="440" y="55" width="340" height="200" rx="6" fill="none" stroke="var(--color-primary)" stroke-width="1.8"/><text x="610" y="78" text-anchor="middle" class="head" fill="var(--color-text)">System 1 — DiT Executor (Fast)</text><rect x="460" y="90" width="140" height="45" rx="4" fill="none" stroke="var(--color-primary)" stroke-width="1"/><text x="530" y="110" text-anchor="middle" class="muted">Diffusion Transformer</text><text x="530" y="126" text-anchor="middle" class="muted">(DiT) action model</text><rect x="620" y="90" width="140" height="45" rx="4" fill="none" stroke="var(--color-primary)" stroke-width="1"/><text x="690" y="110" text-anchor="middle" class="muted">Proprioceptive state</text><text x="690" y="126" text-anchor="middle" class="muted">+ System 2 context</text><text x="610" y="160" text-anchor="middle" class="muted">→ Action chunk (50 Hz)</text><text x="610" y="178" text-anchor="middle" class="muted">FLARE loss: temporal consistency</text><text x="610" y="200" text-anchor="middle" class="muted">Reflexive: executes motor commands</text><text x="610" y="220" text-anchor="middle" class="muted">LoRA fine-tunable on 30 demos</text><line x1="360" y1="155" x2="438" y2="155" stroke="var(--color-primary)" stroke-width="1.8" marker-end="url(#a6)"/><text x="399" y="145" text-anchor="middle" class="muted">context</text><rect x="200" y="295" width="400" height="40" rx="5" fill="none" stroke="var(--color-accent-copper)" stroke-width="1"/><text x="400" y="316" text-anchor="middle" class="muted">N1 → N1.5: Eagle 2.5 frozen + MLP adapter + FLARE loss = 17.4% → 47.5% (RoboCasa 30-demo)</text><defs><marker id="a6" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><polygon points="0 0,7 3.5,0 7" fill="var(--color-text-muted)"/></marker></defs></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 33.1</span><span class="text">GR00T N1.5 dual-system architecture. System 2 (frozen Eagle 2.5 VLM) processes observations and instructions at 1-5Hz, producing a context embedding via MLP adapter. System 1 (DiT) executes action chunks at 50Hz using that context. Three N1.5 improvements (Eagle 2.5, simplified adapter, FLARE loss) drove RoboCasa success from 17.4% to 47.5%.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">GR00T's System 2 VLM thinks about what to do; System 1 DiT executes at 50Hz; N1.5 froze the VLM, simplified the adapter, added FLARE loss — and RoboCasa success jumped from 17.4% to 47.5%.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://research.nvidia.com/labs/gear/gr00t-n1_5/">GR00T N1.5: An Improved Open Foundation Model for Generalist Humanoid Robots, NVIDIA Research, June 11, 2025</a></p>
+  <p><strong>Build.</strong> Clone NVIDIA/Isaac-GR00T. Run GR00T N1.5 inference on the Sim GR-1 benchmark in Isaac Lab. Report success rate on the default task set. Then post-train on 30 demonstrations of a custom task (pick apple, place on plate): LoRA on the DiT and MLP adapter, VLM frozen, 5 epochs. Compare post-trained vs pretrained success rate.</p>
+  <p><strong>Capstone ladder.</strong> GR00T N1.5 is the high-capability option for the JHU humanoid — better grounding (RefCOCOg 89.6), higher benchmark performance (47.5%), and full Isaac Lab integration. Requires 40GB+ GPU. Pair with SmolVLA as the consumer-GPU baseline. The DreamGen pipeline augments your 200-episode LeRobot dataset to thousands of synthetic hours for GR00T post-training.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="33-groot">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What are the three architectural changes in GR00T N1.5 vs N1?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">1. Frozen Eagle 2.5 as System 2 VLM (better grounding, prevents catastrophic forgetting). 2. Simplified MLP adapter with layer normalization replacing cross-attention (fewer parameters, more stable). 3. FLARE loss (trajectory-aware training objective encouraging temporal consistency in action sequences).</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does GR00T run System 1 (DiT) at 50Hz and System 2 (VLM) at a lower frequency?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Humanoid joint control requires 50Hz feedback for stable, safe motion. VLM inference (even at 3B parameters) takes 50-200ms per forward pass — physically impossible at 50Hz. The architectural separation allows the VLM to plan asynchronously at 1-5Hz while the DiT executes continuously at 50Hz using the most recent VLM context. This mirrors the human motor system: slow cortical planning + fast spinal cord execution.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">For the JHU humanoid capstone, when would you choose GR00T N1.5 over SmolVLA, and what is the minimum hardware requirement?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Choose GR00T N1.5 when: (1) the task requires precise spatial grounding (RefCOCOg IoU 89.6 vs SmolVLA's weaker baseline), (2) you have access to 40GB+ GPU (A100/H100) for inference, or (3) you want full Isaac Lab integration for sim-to-real post-training. Minimum hardware: 40GB GPU for inference; 80GB for post-training without LoRA. With LoRA on the DiT + adapter (VLM frozen), 40GB is sufficient for post-training on 30 demos.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="33-groot-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="32-pi0-smolvla.html"><span class="ch-nav-link__label">← Chapter 32</span><span class="ch-nav-link__title">π0, π0.5, and SmolVLA</span></a>
+      <a class="ch-nav-link" data-dir="next" href="34-lerobot.html"><span class="ch-nav-link__label">Chapter 34 →</span><span class="ch-nav-link__title">Hugging Face LeRobot and the open robotics stack</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

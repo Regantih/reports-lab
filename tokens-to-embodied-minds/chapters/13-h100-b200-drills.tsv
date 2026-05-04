@@ -1,0 +1,10 @@
+What is the H100 SXM5 peak BF16 dense compute throughput?	989 TFLOPS BF16 dense.
+What is the H100 SXM5 HBM3 memory bandwidth?	3.35 TB/s.
+Define arithmetic intensity.	FLOPs executed divided by bytes of memory traffic — the x-axis of the roofline model.
+What is the roofline ridge point on H100 in FLOPs per byte?	Approximately 295 FLOPs/byte (989 TFLOPS / 3.35 TB/s).
+Why is LLM decode memory-bandwidth-bound at small batch sizes?	Each token generation reads all model weights for O(1) FLOPs per byte, giving arithmetic intensity near 2 — far below H100's ridge point of 295.
+How many SMs does the H100 SXM5 have?	132 streaming multiprocessors.
+What is the per-SM shared memory size on H100?	228 KB configurable L1/shared memory.
+What NVLink bandwidth does the H100 DGX fabric provide?	900 GB/s bidirectional between GPUs on the same NVSwitch fabric.
+Why is tensor parallelism typically restricted to within-node?	NVLink (900 GB/s) makes all-reduce fast enough; cross-node InfiniBand (~400 Gb/s) is too slow for tight TP synchronization.
+What tool gives you measured arithmetic intensity per kernel on NVIDIA GPUs?	Nsight Compute (ncu).

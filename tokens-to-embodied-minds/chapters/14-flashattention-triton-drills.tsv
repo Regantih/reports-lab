@@ -1,0 +1,10 @@
+Why does naive attention require O(N²) HBM memory?	It writes the full N×N attention score matrix to HBM between the QK and softmax-AV matmuls.
+What two scalars does online softmax track per row?	m (running max of logits) and l (running sum of exp(logit - m)).
+How does FlashAttention-2 reduce HBM traffic to O(N)?	It tiles Q, K, V within SRAM, runs online softmax tile-by-tile, and writes only the output O and logsumexp back to HBM — never the N×N intermediate.
+What SRAM size is available per SM on H100?	228 KB configurable L1/shared memory.
+What is the Triton @triton.jit decorator's primary role?	It JIT-compiles a tile-parallel Python function into warp-level GPU instructions for the target architecture.
+What are the two Hopper features FlashAttention-3 exploits that FA2 cannot use?	Tensor Memory Accelerator (TMA) for async SRAM loads, and warp-group specialization that pipelines async memory transfers with MMA computation.
+What speedup does FlashAttention-2 provide over PyTorch naive attention at long sequences?	Roughly 2–4× wall-clock, depending on sequence length and hardware.
+What FlashAttention backward-pass trick avoids storing the N×N matrix?	Recomputing attention scores from the saved logsumexp scalar rather than storing the materialized softmax matrix.
+Can FlashAttention-3 run on Ampere (A100) GPUs?	No — FA3 requires Hopper-specific hardware (H100 or later).
+What does torch.nn.functional.scaled_dot_product_attention use on Ampere+ with CUDA >= 11.6?	It automatically dispatches to FlashAttention-2 when available.

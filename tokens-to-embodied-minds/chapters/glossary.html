@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Glossary — From Tokens to Embodied Minds</title>
+<meta name="description" content="A 84-term reference of the LLM, systems, robotics, and VLA vocabulary used in the book.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body>
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link nav-link--active" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page">
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Reference</div>
+    <div class="ch-header__num">Reference</div>
+    <h1 class="ch-header__title">Glossary</h1>
+    <p class="ch-header__dek">84 terms — KL, FlashAttention, MoE, FSDP, vLLM, MCP, NeRF, OpenVLA, GR00T. Each entry links to the chapter where the idea first appears.</p>
+  </header>
+  <nav class="glossary__index reveal"><a href="#letter-A" class="glossary__jump">A</a><a href="#letter-B" class="glossary__jump">B</a><a href="#letter-C" class="glossary__jump">C</a><a href="#letter-D" class="glossary__jump">D</a><a href="#letter-E" class="glossary__jump">E</a><a href="#letter-F" class="glossary__jump">F</a><a href="#letter-G" class="glossary__jump">G</a><a href="#letter-H" class="glossary__jump">H</a><a href="#letter-I" class="glossary__jump">I</a><a href="#letter-J" class="glossary__jump">J</a><a href="#letter-K" class="glossary__jump">K</a><a href="#letter-L" class="glossary__jump">L</a><a href="#letter-M" class="glossary__jump">M</a><a href="#letter-N" class="glossary__jump">N</a><a href="#letter-O" class="glossary__jump">O</a><a href="#letter-P" class="glossary__jump">P</a><a href="#letter-Q" class="glossary__jump">Q</a><a href="#letter-R" class="glossary__jump">R</a><a href="#letter-S" class="glossary__jump">S</a><a href="#letter-T" class="glossary__jump">T</a><a href="#letter-V" class="glossary__jump">V</a><a href="#letter-W" class="glossary__jump">W</a><a href="#letter-Y" class="glossary__jump">Y</a><a href="#letter-Z" class="glossary__jump">Z</a><a href="#letter-Π" class="glossary__jump">Π</a></nav>
+  <div class="glossary">
+<section class="glossary__section reveal" id="letter-A"><h2 class="glossary__letter">A</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>A2A</span><a class="glossary__chref" href="21-mcp-a2a.html">Ch 21</a></dt>
+<dd class="glossary__defn">Open protocol announced by Google on April 9, 2025 for letting agents from different vendors discover and call each other. Complements MCP (which exposes tools) by exposing whole agents as collaborators.</dd>
+<dt class="glossary__term"><span>Activation</span><a class="glossary__chref" href="03-autograd.html">Ch 03</a></dt>
+<dd class="glossary__defn">The output value(s) of a neural network layer after a non-linear transform (e.g. SwiGLU, GELU). Activations dominate memory during training because they must be cached for the backward pass.</dd>
+<dt class="glossary__term"><span>Adam / AdamW</span><a class="glossary__chref" href="07-pretraining-at-scale.html">Ch 07</a></dt>
+<dd class="glossary__defn">Adaptive moment estimation. AdamW decouples weight decay from the gradient update and is the de-facto optimizer for transformer pretraining. Stores two extra state tensors per parameter (m, v), which dominates optimizer-state memory.</dd>
+<dt class="glossary__term"><span>Adapter</span><a class="glossary__chref" href="07-pretraining-at-scale.html">Ch 07</a></dt>
+<dd class="glossary__defn">Parameter-efficient fine-tuning approach where small bottleneck layers are inserted between frozen transformer blocks. LoRA is the most common modern adapter.</dd>
+<dt class="glossary__term"><span>Attention</span><a class="glossary__chref" href="04-attention-from-scratch.html">Ch 04</a></dt>
+<dd class="glossary__defn">The QKV operation: each token attends to a weighted sum of all other tokens' value vectors, with weights coming from softmax(QKᵀ/√d). The single most expensive operation in transformer inference for long contexts.</dd>
+<dt class="glossary__term"><span>Autograd</span><a class="glossary__chref" href="03-autograd.html">Ch 03</a></dt>
+<dd class="glossary__defn">PyTorch's tape-based reverse-mode autodiff. Builds a dynamic computation graph during the forward pass and replays it backward to compute gradients via VJPs.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-B"><h2 class="glossary__letter">B</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>B200</span><a class="glossary__chref" href="13-h100-b200.html">Ch 13</a></dt>
+<dd class="glossary__defn">NVIDIA's Blackwell-generation flagship. Roughly 2.5× H100 for FP8 training and ships in 8-GPU NVL72 racks linked by 5th-gen NVLink. The reference platform for 2025-era frontier training.</dd>
+<dt class="glossary__term"><span>BF16</span><a class="glossary__chref" href="01-linear-algebra.html">Ch 01</a></dt>
+<dd class="glossary__defn">16-bit format with the same exponent range as FP32. Dominant numeric type for transformer training because it preserves dynamic range and avoids most loss-scaling complications.</dd>
+<dt class="glossary__term"><span>BPE</span><a class="glossary__chref" href="06-tokenization.html">Ch 06</a></dt>
+<dd class="glossary__defn">Greedy merge algorithm that builds a subword vocabulary from frequency statistics. Modern variants are byte-level (GPT-2/Llama style), giving any-byte coverage at the cost of long sequences for non-Latin scripts.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-C"><h2 class="glossary__letter">C</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>Chinchilla scaling</span><a class="glossary__chref" href="09-scaling-laws.html">Ch 09</a></dt>
+<dd class="glossary__defn">DeepMind's 2022 finding that, for a fixed FLOP budget, model size and training tokens should scale roughly equally — about 20 tokens per parameter. Corrected the over-large/under-trained Kaplan recipe.</dd>
+<dt class="glossary__term"><span>Cross-entropy</span><a class="glossary__chref" href="02-probability-entropy-kl.html">Ch 02</a></dt>
+<dd class="glossary__defn">−Σ p log q. Equivalent to compression: the average number of bits a model spends to predict the next token. Pretraining loss is exactly cross-entropy on the next-token distribution.</dd>
+<dt class="glossary__term"><span>CUDA</span><a class="glossary__chref" href="13-h100-b200.html">Ch 13</a></dt>
+<dd class="glossary__defn">C++ extension and runtime for programming NVIDIA GPUs. Modern ML rarely writes CUDA directly — Triton, CUTLASS, or compiler stacks (torch.compile, cuDNN) generate kernels — but reading CUDA is essential for systems work.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-D"><h2 class="glossary__letter">D</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>Diffusion policy</span><a class="glossary__chref" href="30-diffusion-policies.html">Ch 30</a></dt>
+<dd class="glossary__defn">Class of imitation-learning policies (Chi et al. 2023) that model the action distribution as the reverse of a noising process. Strong on multimodal demonstrations; foundation for π0/π0.5 and many VLA action heads.</dd>
+<dt class="glossary__term"><span>Distillation</span><a class="glossary__chref" href="11-quantization.html">Ch 11</a></dt>
+<dd class="glossary__defn">Knowledge transfer technique where a smaller model is trained on the soft probability distribution (or hidden states) of a larger one. KL divergence is the canonical objective. Used in Llama 3 8B/70B and most production small models.</dd>
+<dt class="glossary__term"><span>DPO</span><a class="glossary__chref" href="16-rlhf-dpo-grpo.html">Ch 16</a></dt>
+<dd class="glossary__defn">Rafailov et al. 2023. RLHF reformulated as a closed-form classification loss over preference pairs, eliminating the explicit reward model and PPO loop. Far simpler to train; dominant alignment recipe through 2024.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-E"><h2 class="glossary__letter">E</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>Embodied AI</span><a class="glossary__chref" href="25-classical-robotics.html">Ch 25</a></dt>
+<dd class="glossary__defn">Subfield studying agents whose policies must close the perception-action loop in physical or simulated environments. Combines vision, control, planning, and increasingly large pretrained models.</dd>
+<dt class="glossary__term"><span>Eval</span><a class="glossary__chref" href="20-advanced-rag-evals.html">Ch 20</a></dt>
+<dd class="glossary__defn">Any quantitative measurement of model quality. Modern evals span capability (MMLU, GSM8K), agentic (SWE-bench, GAIA), safety (HarmBench), and embodied (LIBERO, RoboArena). Building good evals is half of LLM engineering.</dd>
+<dt class="glossary__term"><span>Expert Parallelism (EP)</span><a class="glossary__chref" href="08-mixture-of-experts.html">Ch 08</a></dt>
+<dd class="glossary__defn">Parallelism strategy unique to mixture-of-experts: each GPU holds a subset of experts and routes tokens to whichever device owns the expert they need. Required for DeepSeek-V3-scale MoE training.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-F"><h2 class="glossary__letter">F</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>FlashAttention</span><a class="glossary__chref" href="14-flashattention-triton.html">Ch 14</a></dt>
+<dd class="glossary__defn">Dao et al. 2022/2023. Tiles the QKV computation in SRAM to avoid materializing the N² attention matrix in HBM. Makes long-context training and inference feasible. FlashAttention-3 is the current frontier on Hopper/Blackwell.</dd>
+<dt class="glossary__term"><span>FP8</span><a class="glossary__chref" href="11-quantization.html">Ch 11</a></dt>
+<dd class="glossary__defn">Hopper-and-newer numeric format. E4M3 for weights/activations, E5M2 for gradients. Used in DeepSeek-V3 training and most 2025 frontier runs to roughly halve compute and memory versus BF16.</dd>
+<dt class="glossary__term"><span>FSDP</span><a class="glossary__chref" href="15-distributed-training.html">Ch 15</a></dt>
+<dd class="glossary__defn">PyTorch's sharded data parallelism. Each rank holds a slice of every parameter, gradient, and optimizer state, all-gathering on demand. The default for non-3D-parallel training up to ~70B parameters.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-G"><h2 class="glossary__letter">G</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>Gaussian Splatting (3DGS)</span><a class="glossary__chref" href="27-3d-perception.html">Ch 27</a></dt>
+<dd class="glossary__defn">Kerbl et al. SIGGRAPH 2023 (Aug 8, 2023). Replaces NeRF's volumetric MLP with explicit 3D Gaussians, enabling real-time rendering at >100 fps and faster training. Now the dominant 3D scene format for robotics.</dd>
+<dt class="glossary__term"><span>GQA</span><a class="glossary__chref" href="04-attention-from-scratch.html">Ch 04</a></dt>
+<dd class="glossary__defn">Compromise between multi-head and multi-query attention. Several query heads share one K/V head. Cuts KV-cache memory by 4–8× with negligible quality loss. Used in Llama 2 70B onward and most modern LLMs.</dd>
+<dt class="glossary__term"><span>GR00T</span><a class="glossary__chref" href="33-groot.html">Ch 33</a></dt>
+<dd class="glossary__defn">Project unveiled at GTC 2024. GR00T N1.5 (June 11, 2025) is the open VLA backbone for humanoid manipulation, trained on a mix of real, synthetic, and human-video data. Designed to run on Jetson Thor.</dd>
+<dt class="glossary__term"><span>Gradient Checkpointing</span><a class="glossary__chref" href="03-autograd.html">Ch 03</a></dt>
+<dd class="glossary__defn">Recompute selected forward activations during the backward pass instead of caching them all. Cuts activation memory by ~√N for N layers at the cost of one extra forward pass. Standard for large-context training.</dd>
+<dt class="glossary__term"><span>GRPO</span><a class="glossary__chref" href="16-rlhf-dpo-grpo.html">Ch 16</a></dt>
+<dd class="glossary__defn">DeepSeek-Math 2024. Replaces PPO's value function with the mean reward of a group of sampled completions, dramatically reducing memory. Used in DeepSeek-R1 and most reasoning-RL recipes.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-H"><h2 class="glossary__letter">H</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>H100</span><a class="glossary__chref" href="13-h100-b200.html">Ch 13</a></dt>
+<dd class="glossary__defn">Hopper-generation GPU with 80 GB HBM3, FP8 Transformer Engine, and 4th-gen NVLink. The workhorse of 2023–24 frontier training; superseded by B200 but still the global majority of installed capacity.</dd>
+<dt class="glossary__term"><span>HBM</span><a class="glossary__chref" href="13-h100-b200.html">Ch 13</a></dt>
+<dd class="glossary__defn">Stacked DRAM connected to the GPU through a silicon interposer. H100 ships HBM3 (~3 TB/s); B200 ships HBM3e (~8 TB/s). Memory bandwidth — not FLOPs — is the binding constraint for inference.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-I"><h2 class="glossary__letter">I</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>Imitation learning</span><a class="glossary__chref" href="30-diffusion-policies.html">Ch 30</a></dt>
+<dd class="glossary__defn">Supervised learning on (state, expert action) pairs. Modern variants — diffusion policies, ACT, VLAs — are the dominant recipe for manipulation because RL in the real world is too slow.</dd>
+<dt class="glossary__term"><span>Inference</span><a class="glossary__chref" href="17-vllm-trtllm-sglang.html">Ch 17</a></dt>
+<dd class="glossary__defn">The forward-pass-only deployment phase. Modern LLM inference is bandwidth-bound during decode and FLOP-bound during prefill, which motivates KV-caches, paged attention, and disaggregated serving.</dd>
+<dt class="glossary__term"><span>Isaac Lab</span><a class="glossary__chref" href="29-sim-to-real.html">Ch 29</a></dt>
+<dd class="glossary__defn">Open-source RL framework on top of Isaac Sim, replacing IsaacGym. Runs thousands of parallel envs on a single GPU; used for sim-to-real RL on Unitree, Boston Dynamics, and Figure humanoids.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-J"><h2 class="glossary__letter">J</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>JIT compilation</span><a class="glossary__chref" href="14-flashattention-triton.html">Ch 14</a></dt>
+<dd class="glossary__defn">Compiling code at runtime once shapes/dtypes are known. Triton, torch.compile, and JAX all use JIT to specialize kernels for the actual problem size, often beating hand-tuned CUDA.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-K"><h2 class="glossary__letter">K</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>KL divergence</span><a class="glossary__chref" href="02-probability-entropy-kl.html">Ch 02</a></dt>
+<dd class="glossary__defn">Σ p log(p/q). Asymmetric measure of how much information is lost when q approximates p. Appears in RLHF (KL-to-reference penalty), DPO, distillation, and variational inference.</dd>
+<dt class="glossary__term"><span>KV-cache</span><a class="glossary__chref" href="19-kv-cache-spec-decoding.html">Ch 19</a></dt>
+<dd class="glossary__defn">During autoregressive decoding, K and V for each prior token are reused unchanged, so they are cached. KV-cache size — quadratic in sequence length, linear in batch — dominates inference memory for long contexts.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-L"><h2 class="glossary__letter">L</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>LangGraph</span><a class="glossary__chref" href="22-langgraph-orchestration.html">Ch 22</a></dt>
+<dd class="glossary__defn">LangChain's stateful, graph-structured runtime for multi-step agents. Each node is a function or LLM call; edges are conditional routes. Better than chains for cyclic, retry-heavy, or human-in-the-loop flows.</dd>
+<dt class="glossary__term"><span>LeRobot</span><a class="glossary__chref" href="34-lerobot.html">Ch 34</a></dt>
+<dd class="glossary__defn">Open-source library and dataset hub for real-world robot learning. SmolVLA-450M (June 3, 2025) is its flagship VLA, designed to run on a laptop. Hardware: SO-100/101 arms.</dd>
+<dt class="glossary__term"><span>LLM-d</span><a class="glossary__chref" href="18-llm-d.html">Ch 18</a></dt>
+<dd class="glossary__defn">Red Hat / Google / IBM project (introduced Nov 21, 2025). Kubernetes-native, vLLM-based disaggregated serving with prefix-aware routing and prefill/decode separation across pods.</dd>
+<dt class="glossary__term"><span>LoRA / QLoRA</span><a class="glossary__chref" href="07-pretraining-at-scale.html">Ch 07</a></dt>
+<dd class="glossary__defn">Hu et al. 2021. Trains two small low-rank matrices ΔW = BA instead of full weights. QLoRA adds 4-bit base weights so 65B models fine-tune on a single 48 GB GPU.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-M"><h2 class="glossary__letter">M</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>MCP</span><a class="glossary__chref" href="21-mcp-a2a.html">Ch 21</a></dt>
+<dd class="glossary__defn">Anthropic's open protocol (released Nov 25, 2024) for exposing tools and data sources to LLMs in a uniform way. The closest thing to USB-C for AI agents; adopted across Claude, OpenAI, and the wider ecosystem.</dd>
+<dt class="glossary__term"><span>Memory Wall</span><a class="glossary__chref" href="10-long-context.html">Ch 10</a></dt>
+<dd class="glossary__defn">Decode-time inference bottleneck: GPU FLOPs grow ~3× per generation, HBM bandwidth grows <2×. Most decode steps are now bandwidth-bound, which is why batching, GQA, MQA, and quantization matter so much.</dd>
+<dt class="glossary__term"><span>MoE</span><a class="glossary__chref" href="08-mixture-of-experts.html">Ch 08</a></dt>
+<dd class="glossary__defn">Sparse architecture where a router selects k of N expert FFNs per token. Active parameters ≪ total parameters, decoupling capacity from inference cost. Dominant frontier architecture (DeepSeek-V3, Mixtral, GPT-4-class).</dd>
+<dt class="glossary__term"><span>MuJoCo</span><a class="glossary__chref" href="29-sim-to-real.html">Ch 29</a></dt>
+<dd class="glossary__defn">Fast contact-rich rigid-body simulator originally by Emo Todorov; now open-source under DeepMind. Standard for RL research and many sim-to-real pipelines, alongside Isaac Sim and PyBullet.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-N"><h2 class="glossary__letter">N</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>NeRF</span><a class="glossary__chref" href="27-3d-perception.html">Ch 27</a></dt>
+<dd class="glossary__defn">Mildenhall et al. 2020. Represents a 3D scene as an MLP from (x,y,z,θ,φ) to (RGB,density), rendered by ray marching. Largely superseded by 3D Gaussian Splatting for real-time use cases.</dd>
+<dt class="glossary__term"><span>NVLink</span><a class="glossary__chref" href="13-h100-b200.html">Ch 13</a></dt>
+<dd class="glossary__defn">Direct GPU↔GPU links; 900 GB/s on H100, 1.8 TB/s on B200. NVLink Switch fabrics scale this to 72-GPU domains (NVL72), enabling tensor parallelism across many GPUs without crossing PCIe.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-O"><h2 class="glossary__letter">O</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>OpenVLA</span><a class="glossary__chref" href="31-rt2-openvla.html">Ch 31</a></dt>
+<dd class="glossary__defn">Kim et al. June 2024. 7B Llama-2 backbone with SigLIP+DINOv2 vision encoder, fine-tuned on 970k Open X-Embodiment trajectories. The reference open VLA before π0 / GR00T.</dd>
+<dt class="glossary__term"><span>Optimizer state</span><a class="glossary__chref" href="15-distributed-training.html">Ch 15</a></dt>
+<dd class="glossary__defn">For AdamW, two FP32 buffers (m, v) per parameter — 8 bytes each, plus the master FP32 weights. Optimizer state is the largest single contributor to training memory after activations.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-P"><h2 class="glossary__letter">P</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>Paged Attention</span><a class="glossary__chref" href="17-vllm-trtllm-sglang.html">Ch 17</a></dt>
+<dd class="glossary__defn">vLLM's contribution. Stores KV-cache in fixed-size blocks instead of contiguously, enabling near-zero memory fragmentation, prefix sharing, and continuous batching. The biggest single win in 2023-era LLM serving.</dd>
+<dt class="glossary__term"><span>Pipeline Parallelism</span><a class="glossary__chref" href="15-distributed-training.html">Ch 15</a></dt>
+<dd class="glossary__defn">Different layer ranges live on different GPUs; micro-batches flow through the pipeline. Used together with tensor parallelism in 3D-parallel training. GPipe and 1F1B are the canonical schedules.</dd>
+<dt class="glossary__term"><span>PPO</span><a class="glossary__chref" href="16-rlhf-dpo-grpo.html">Ch 16</a></dt>
+<dd class="glossary__defn">Schulman et al. 2017. Clipped policy-gradient algorithm; the original RLHF workhorse. Still used in some labs but largely supplanted by DPO (offline) and GRPO (reasoning) for LLM alignment.</dd>
+<dt class="glossary__term"><span>Prefill / Decode</span><a class="glossary__chref" href="18-llm-d.html">Ch 18</a></dt>
+<dd class="glossary__defn">Prefill processes the prompt in parallel (FLOP-bound); decode emits one token at a time (bandwidth-bound). Disaggregated serving (llm-d, Mooncake) splits these across separate GPU pools.</dd>
+<dt class="glossary__term"><span>Pretraining</span><a class="glossary__chref" href="07-pretraining-at-scale.html">Ch 07</a></dt>
+<dd class="glossary__defn">The bulk of compute cost in an LLM's life. Modern pipeline: FineWeb-Edu / DCLM / The Stack v2 → BPE tokenization → 1–10T tokens → BF16 + FP8 mixed-precision training over thousands of GPUs.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-Q"><h2 class="glossary__letter">Q</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>Quantization</span><a class="glossary__chref" href="11-quantization.html">Ch 11</a></dt>
+<dd class="glossary__defn">Mapping FP16/BF16 tensors to lower-bit representations (INT8, INT4, FP8). GPTQ, AWQ, and SmoothQuant are the standard post-training methods; W4A16 (4-bit weights, 16-bit activations) is the inference default.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-R"><h2 class="glossary__letter">R</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>RAG</span><a class="glossary__chref" href="20-advanced-rag-evals.html">Ch 20</a></dt>
+<dd class="glossary__defn">Pattern where retrieval over an external corpus precedes generation. Modern advanced RAG includes hybrid search, rerankers, query rewriting, and graph-traversal — and is increasingly replaced by long-context + tool use.</dd>
+<dt class="glossary__term"><span>Reasoning model</span><a class="glossary__chref" href="09-scaling-laws.html">Ch 09</a></dt>
+<dd class="glossary__defn">Inference-time-scaling regime kicked off by OpenAI o1 (Sept 2024) and DeepSeek-R1 (Jan 2025). Trained with RL on verifiable rewards; pays more tokens for harder problems.</dd>
+<dt class="glossary__term"><span>Red teaming</span><a class="glossary__chref" href="24-red-teaming.html">Ch 24</a></dt>
+<dd class="glossary__defn">Structured probing for jailbreaks, prompt injection, harmful outputs, and bias. Modern programs combine human red teamers, automated attacks (PAIR, GCG), and benchmark suites (HarmBench, AgentDojo).</dd>
+<dt class="glossary__term"><span>Ring Attention</span><a class="glossary__chref" href="10-long-context.html">Ch 10</a></dt>
+<dd class="glossary__defn">Liu, Zaharia, Abbeel 2023. KV blocks rotate around a ring of GPUs so each device only ever holds a slice of the sequence. Enables million-token context training without per-GPU memory blowup.</dd>
+<dt class="glossary__term"><span>RLHF</span><a class="glossary__chref" href="16-rlhf-dpo-grpo.html">Ch 16</a></dt>
+<dd class="glossary__defn">Original alignment recipe (Ouyang et al. 2022): SFT → reward model from preference pairs → PPO against that reward. Largely replaced by DPO/GRPO but still the conceptual frame.</dd>
+<dt class="glossary__term"><span>RMSNorm</span><a class="glossary__chref" href="05-transformer-block.html">Ch 05</a></dt>
+<dd class="glossary__defn">Zhang & Sennrich 2019. Drops the mean-subtraction step from LayerNorm, leaving only RMS scaling. Cheaper and equally effective; standard in Llama, Mistral, and most modern transformer blocks.</dd>
+<dt class="glossary__term"><span>RoPE</span><a class="glossary__chref" href="05-transformer-block.html">Ch 05</a></dt>
+<dd class="glossary__defn">Su et al. 2021. Encodes position by rotating Q and K vectors in pairs by an angle proportional to position. Generalizes better to longer contexts than learned absolute embeddings; YaRN extends it further.</dd>
+<dt class="glossary__term"><span>RT-2</span><a class="glossary__chref" href="31-rt2-openvla.html">Ch 31</a></dt>
+<dd class="glossary__defn">First major VLA: a PaLI-X / PaLM-E backbone fine-tuned to emit discretized action tokens. Established the recipe — co-train on web VQA + robot trajectories — that OpenVLA, π0, and GR00T all follow.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-S"><h2 class="glossary__letter">S</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>SAM 2</span><a class="glossary__chref" href="26-cs231n-redux.html">Ch 26</a></dt>
+<dd class="glossary__defn">Meta FAIR (Aug 1, 2024). Extends SAM to video by adding a memory-conditioned mask decoder. Universal segmentation/tracker that has rapidly become the default front-end for robot perception.</dd>
+<dt class="glossary__term"><span>Scaling laws</span><a class="glossary__chref" href="09-scaling-laws.html">Ch 09</a></dt>
+<dd class="glossary__defn">Empirical observation that loss falls predictably with parameters, data, and compute. Kaplan 2020 and Chinchilla 2022 are the canonical references; inference-time scaling (o1) is the 2024 extension.</dd>
+<dt class="glossary__term"><span>Self-attention</span><a class="glossary__chref" href="04-attention-from-scratch.html">Ch 04</a></dt>
+<dd class="glossary__defn">The transformer's core operation: each token computes Q, K, V from its own embedding and attends across the whole sequence. Distinct from cross-attention (decoder attending to encoder).</dd>
+<dt class="glossary__term"><span>SFT</span><a class="glossary__chref" href="16-rlhf-dpo-grpo.html">Ch 16</a></dt>
+<dd class="glossary__defn">Phase that follows pretraining: train on curated instruction/response pairs with cross-entropy. Cheap, fast, and the foundation for everything alignment does on top.</dd>
+<dt class="glossary__term"><span>Sim-to-Real</span><a class="glossary__chref" href="29-sim-to-real.html">Ch 29</a></dt>
+<dd class="glossary__defn">Closing the reality gap with domain randomization, system identification, real-data fine-tuning, or learned actuator models. Now the dominant recipe for humanoid locomotion and dexterous manipulation.</dd>
+<dt class="glossary__term"><span>SmolVLA</span><a class="glossary__chref" href="32-pi0-smolvla.html">Ch 32</a></dt>
+<dd class="glossary__defn">SmolVLA-450M (June 3, 2025). Built on SmolLM2 + SigLIP, trained on community LeRobot data. Designed to run on a single consumer GPU; the most accessible entry point to VLA research.</dd>
+<dt class="glossary__term"><span>Speculative decoding</span><a class="glossary__chref" href="19-kv-cache-spec-decoding.html">Ch 19</a></dt>
+<dd class="glossary__defn">A small draft model proposes k tokens; the big model verifies them in one parallel forward pass. 2–3× speedup on most workloads with no quality loss. Medusa, EAGLE, and lookahead decoding are common variants.</dd>
+<dt class="glossary__term"><span>SwiGLU</span><a class="glossary__chref" href="05-transformer-block.html">Ch 05</a></dt>
+<dd class="glossary__defn">Shazeer 2020. Replaces FFN GELU with a gated variant; ~+0.5% MMLU at the same compute. Used in Llama, Mistral, Qwen, and effectively every modern open transformer.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-T"><h2 class="glossary__letter">T</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>Tensor Parallelism (TP)</span><a class="glossary__chref" href="15-distributed-training.html">Ch 15</a></dt>
+<dd class="glossary__defn">Megatron-LM 1D split: each GPU holds part of W and computes its slice of XW, then all-reduces. Standard inside an 8-GPU node; combined with PP and DP for 3D parallelism.</dd>
+<dt class="glossary__term"><span>Tokenization</span><a class="glossary__chref" href="06-tokenization.html">Ch 06</a></dt>
+<dd class="glossary__defn">Subword segmentation (BPE, Unigram, byte-level). Choice of tokenizer determines sequence lengths, vocabulary size, and the model's behavior on numbers, code, and non-Latin scripts.</dd>
+<dt class="glossary__term"><span>Transformer block</span><a class="glossary__chref" href="05-transformer-block.html">Ch 05</a></dt>
+<dd class="glossary__defn">Pre-norm RMSNorm → multi-head attention with RoPE+GQA → residual → RMSNorm → SwiGLU FFN → residual. Effectively unchanged since 2022 across all open frontier models; almost all progress is in scale, data, and post-training.</dd>
+<dt class="glossary__term"><span>Triton</span><a class="glossary__chref" href="14-flashattention-triton.html">Ch 14</a></dt>
+<dd class="glossary__defn">OpenAI's tile-based language for writing CUDA-class kernels in Python. Used for FlashAttention, fused MoE, and custom quantization kernels. Compiled JIT through MLIR; the practical alternative to writing CUDA.</dd>
+<dt class="glossary__term"><span>TRT-LLM</span><a class="glossary__chref" href="17-vllm-trtllm-sglang.html">Ch 17</a></dt>
+<dd class="glossary__defn">NVIDIA's highly tuned C++/CUDA inference engine. Faster than vLLM on NVIDIA-only deployments, at the cost of compile times and less flexibility. Often paired with Triton Inference Server.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-V"><h2 class="glossary__letter">V</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>VAE</span><a class="glossary__chref" href="30-diffusion-policies.html">Ch 30</a></dt>
+<dd class="glossary__defn">Kingma & Welling 2013. Probabilistic encoder/decoder pair trained with reconstruction + KL regularization. Backbone of latent diffusion (Stable Diffusion) and many robot world models.</dd>
+<dt class="glossary__term"><span>Vector database</span><a class="glossary__chref" href="20-advanced-rag-evals.html">Ch 20</a></dt>
+<dd class="glossary__defn">Stores high-dimensional embeddings and serves approximate nearest-neighbor queries (HNSW, IVF-PQ). Used as the retrieval back-end of RAG. Examples: Pinecone, Weaviate, pgvector, Qdrant.</dd>
+<dt class="glossary__term"><span>VJP</span><a class="glossary__chref" href="03-autograd.html">Ch 03</a></dt>
+<dd class="glossary__defn">Reverse-mode AD computes ∂L/∂x = vᵀ J for each op without ever materializing J. Every PyTorch operation registers a VJP rule (its `backward`).</dd>
+<dt class="glossary__term"><span>VLA</span><a class="glossary__chref" href="31-rt2-openvla.html">Ch 31</a></dt>
+<dd class="glossary__defn">Class of robot foundation models that map (image, language instruction) → action tokens. Started with RT-2 (2023); current open frontier is OpenVLA, π0/π0.5, GR00T N1.5, and SmolVLA.</dd>
+<dt class="glossary__term"><span>vLLM</span><a class="glossary__chref" href="17-vllm-trtllm-sglang.html">Ch 17</a></dt>
+<dd class="glossary__defn">UC Berkeley project that introduced paged attention, continuous batching, and prefix caching. The de-facto open-source LLM server; the substrate of llm-d and most cloud inference.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-W"><h2 class="glossary__letter">W</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>Weight Decay</span><a class="glossary__chref" href="07-pretraining-at-scale.html">Ch 07</a></dt>
+<dd class="glossary__defn">Adds a λ‖θ‖² term to the loss (or equivalently shrinks θ each step). AdamW decouples this from the gradient update. Standard λ for transformers: ~0.1.</dd>
+<dt class="glossary__term"><span>World Model</span><a class="glossary__chref" href="33-groot.html">Ch 33</a></dt>
+<dd class="glossary__defn">Neural simulator that predicts future states given actions. DreamerV3, Genie, GAIA-2, and NVIDIA Cosmos are recent examples. Increasingly central to embodied learning as scarce real data is augmented with imagined rollouts.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-Y"><h2 class="glossary__letter">Y</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>YaRN</span><a class="glossary__chref" href="10-long-context.html">Ch 10</a></dt>
+<dd class="glossary__defn">Peng et al. 2023. NTK-aware RoPE rescaling that extends a model's context window past its training length with a short fine-tune. Used in Mistral, Qwen, and many long-context Llama derivatives.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-Z"><h2 class="glossary__letter">Z</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>ZeRO</span><a class="glossary__chref" href="15-distributed-training.html">Ch 15</a></dt>
+<dd class="glossary__defn">DeepSpeed's three-stage memory partitioning scheme: shard optimizer states (Z1), gradients (Z2), parameters (Z3). FSDP is essentially ZeRO-3 in PyTorch. Foundational for training models that don't fit on one GPU.</dd>
+<dt class="glossary__term"><span>Zero-shot</span><a class="glossary__chref" href="12-paper-reading.html">Ch 12</a></dt>
+<dd class="glossary__defn">Asking a model to do a task purely from instructions, without demonstrations. Distinct from few-shot (k examples in the prompt) and fine-tuned. The standard mode for instruction-tuned LLMs.</dd>
+</dl></section>
+<section class="glossary__section reveal" id="letter-Π"><h2 class="glossary__letter">Π</h2><dl class="glossary__list">
+<dt class="glossary__term"><span>π0 / π0.5</span><a class="glossary__chref" href="32-pi0-smolvla.html">Ch 32</a></dt>
+<dd class="glossary__defn">Pi-zero (Oct 2024) and π0.5 (April 22, 2025, arXiv:2504.16054). Flow-matching action heads on top of a PaliGemma-style VLM; π0.5 generalizes to unseen homes and long-horizon mobile manipulation.</dd>
+</dl></section>
+  </div>
+  <footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="36-capstone.html"><span class="ch-nav-link__label">← Chapter 36</span><span class="ch-nav-link__title">Capstone — a humanoid home assistant, end to end</span></a>
+      <a class="ch-nav-link" data-dir="next" href="references.html"><span class="ch-nav-link__label">References →</span><span class="ch-nav-link__title">Source list</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

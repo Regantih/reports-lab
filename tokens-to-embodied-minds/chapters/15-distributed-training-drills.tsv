@@ -1,0 +1,10 @@
+What does ZeRO Stage 1 shard vs Stage 3?	Stage 1 shards optimizer states only. Stage 3 shards parameters, gradients, and optimizer states.
+Why is TP restricted to within a NVLink node?	TP requires synchronous all-reduce per layer — ~0.5ms on NVLink (900 GB/s) but ~160ms on 100 Gb/s InfiniBand. Cross-node TP latency destroys throughput.
+What does FSDP all-gather before each layer's forward pass?	The full parameter shard for that layer from all GPUs in the DP group, reconstructing the layer's weights locally.
+What is the total memory cost (bytes per parameter) of AdamW training in BF16 with FP32 optimizer states?	Roughly 16 bytes/parameter: 2 (BF16 weights) + 4 (FP32 master) + 4 (Adam m) + 4 (Adam v) + 2 (BF16 gradient) = 16.
+What does the 1F1B pipeline schedule minimize?	The pipeline bubble (fraction of time GPUs are idle), reducing it to approximately 1/num_microbatches.
+What is 3D parallelism?	Tensor parallelism (within node) × Pipeline parallelism (across nodes) × Data parallelism (across replicas).
+What is expert parallelism (EP) and when is it needed?	EP assigns MoE experts to specific GPUs and routes tokens accordingly. Needed for large MoE models (DeepSeek-V3, Qwen3-MoE) where expert count exceeds per-node GPU memory.
+How does gradient checkpointing trade compute for memory?	It discards intermediate activations during the forward pass and recomputes them during backward, reducing activation memory ~3× at ~30% extra compute cost.
+What is the communication pattern in standard DDP vs FSDP?	DDP: all-reduce gradients after each backward (one communication round). FSDP: all-gather parameters before forward, reduce-scatter gradients after backward (two communication rounds per layer, but smaller per-device memory).
+Which PyTorch class implements ZeRO-3?	torch.distributed.fsdp.FullyShardedDataParallel (FSDP).

@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 15 · Distributed training — From Tokens to Embodied Minds</title>
+<meta name="description" content="Training a 70B model on 8 GPUs requires four distinct parallelism strategies applied simultaneously. Get the sharding wrong and you waste 40% of your compute to communication.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="15-distributed-training" data-chapter-title="Distributed training">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="15-distributed-training">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">data parallelism</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">tensor parallelism</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">pipeline parallelism</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">FSDP / ZeRO-3</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">gradient checkpointing</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">expert parallelism</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="15-distributed-training" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">Before you read — what is the primary advantage of ZeRO-3 (FSDP) over standard Data Parallel (DDP)?</h2>
+  <p class="learn__hint">Think about what DDP keeps duplicated on every GPU.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-15-distributed-training" value="a"><span>ZeRO-3 reduces the number of gradient synchronization all-reduces compared to DDP</span></label><label class="predict__choice"><input type="radio" name="predict-15-distributed-training" value="b"><span>ZeRO-3 shards model parameters, gradients, and optimizer states across GPUs — eliminating full copies on each</span></label><label class="predict__choice"><input type="radio" name="predict-15-distributed-training" value="c"><span>ZeRO-3 replaces the backward pass with a cheaper approximation to reduce GPU memory</span></label><label class="predict__choice"><input type="radio" name="predict-15-distributed-training" value="d"><span>ZeRO-3 pipelines computation across GPUs to eliminate idle time from pipeline bubbles</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">DDP replicates the full model, gradients, and optimizer states (parameters, gradients, FP32 master weights, Adam m and v: 16 bytes per parameter total) on every GPU. ZeRO-3 shards all three across GPUs. A 70B model in BF16 with AdamW requires roughly 1.12 TB aggregate; ZeRO-3 across 16 GPUs reduces per-GPU footprint to ~70 GB — fitting on a single H100. The cost is all-gather communication before each forward/backward pass.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 15 of 36</div>
+    <div class="ch-header__num">Chapter 15</div>
+    <h1 class="ch-header__title">Distributed training</h1>
+    <p class="ch-header__dek">DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Derive the per-GPU memory savings of ZeRO-3 vs DDP for a 70B model with AdamW optimizer states</li><li>Explain why tensor parallelism is restricted to within-node NVLink and pipeline parallelism spans nodes</li><li>Design a 3D parallelism configuration for fine-tuning Llama 3.1 70B on 32 H100s at budget cost</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">4×</div><div class="stat__label">parallelism axes: data, tensor, pipeline, and sequence</div></div><div class="stat"><div class="stat__num">ZeRO-3</div><div class="stat__label">shards parameters + gradients + optimizer state — eliminates optimizer memory duplication</div></div><div class="stat"><div class="stat__num">3D</div><div class="stat__label">parallelism = TP within node × PP across nodes × DP across replicas</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="15-distributed-training">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">Read the chapter. State what is sharded in ZeRO stage 1, 2, and 3 respectively.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Train a 1B-parameter model with torch FSDP across 4 GPUs using ZeRO-3 sharding, profile the all-gather communication overhead with nsys, and compare training throughput to DDP on the same hardware.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">Design a 3D parallelism strategy for fine-tuning Llama 3.1 70B on a 4-node × 8-GPU H100 cluster. Choose TP degree, PP degree, and DP degree, and justify the all-reduce communication budget.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">Read the Megatron-LM 3D parallelism paper (Narayanan et al., 2021, arXiv:2104.04473). Identify what assumption about micro-batch size the 1F1B pipeline schedule makes, and when it breaks.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#four-axes">The four parallelism axes</a></li><li><a href="#zero-fsdp">ZeRO-3 and FSDP in practice</a></li><li><a href="#3d-parallelism">3D parallelism and expert parallelism</a></li><li><a href="#capstone-training">Practical choices for fine-tuning at scale</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">A 70B model in BF16 requires 140 GB just for weights. Add AdamW optimizer states (FP32 master weights, m, v: 12 bytes/parameter), gradients (2 bytes/parameter BF16), and activations — and you need roughly 700 GB for a training step at batch size 1. No single GPU has 700 GB. Distributed training is not a performance optimization for large models; it is a correctness requirement. The question is not whether to parallelize but which combination of four axes — data, tensor, pipeline, sequence — produces the highest throughput for your cluster topology.
+
+The answer for most teams in 2026 is: ZeRO-3 (PyTorch FSDP) for data parallelism as the outer axis, because it eliminates optimizer state duplication and requires no model surgery. Tensor parallelism within each node (NVLink bandwidth makes it cheap), pipeline parallelism across nodes only when the model is too large even for TP, and sequence parallelism for ultra-long context. This is not a universal answer — DeepSeek-V3 trained with expert parallelism as a fifth axis — but it is the right starting point for a team without a 1,024-GPU cluster and a Megatron-LM specialist.</p>
+<h2 id="four-axes">The four parallelism axes</h2>
+<p>Data parallelism (DP): replicate the full model on each GPU, partition the minibatch across replicas, all-reduce gradients after each backward pass. DDP (PyTorch's standard DP implementation) keeps full parameter/gradient/optimizer copies on every GPU — the memory wall for large models. FSDP (Fully Sharded Data Parallel, the ZeRO-3 equivalent) shards parameters, gradients, and optimizer states across the DP group. Before each layer's forward, each GPU all-gathers the shard it needs; after the backward, it discards it. The result: per-GPU memory scales with 1/num_dp_gpus instead of full-model.</p>
+<p>Tensor parallelism (TP, Megatron-style): shard each matmul across GPUs within a layer. For a linear Y = XW, partition W column-wise across TP GPUs and reduce the outputs. Each TP communication is a small, synchronous all-reduce. At TP=8 with NVLink (900 GB/s), this adds ~0.5 ms per layer — acceptable. At TP=8 across PCIe or InfiniBand, the communication dwarfs the compute. This is why TP degree is always set to fit within a single NVLink domain (typically 8 GPUs on a DGX H100).</p>
+<p>Pipeline parallelism (PP): shard layers across GPU groups. GPU 0 runs layers 0–9, GPU 1 runs layers 10–19, etc. The 1F1B (one-forward-one-backward) schedule from Megatron-LM (Narayanan et al., arXiv:2104.04473, 2021) minimizes the pipeline bubble to roughly 1/(num_microbatches) fraction of idle time. PP is the axis you reach for when the model is too large even after TP — typically for models above 100B parameters on a fixed cluster.</p>
+<h2 id="zero-fsdp">ZeRO-3 and FSDP in practice</h2>
+<p>ZeRO stages 1/2/3 (Rajbhandari et al., arXiv:1910.02054) progressively shard more: Stage 1 shards optimizer states only (4× memory reduction), Stage 2 adds gradient sharding (8× reduction), Stage 3 adds parameter sharding (64× reduction for large models with AdamW). PyTorch FSDP implements ZeRO-3. Zhao et al. (arXiv:2304.11277, April 2023) document the engineering that made FSDP production-ready — specifically, the mixed-precision policy (BF16 compute, FP32 master weights held in the all-reduce buffer) and the prefetching that overlaps all-gathers with compute.</p>
+<p>For a 70B model with AdamW: parameters (BF16) 140 GB, FP32 master weights 280 GB, Adam m+v 560 GB, gradients (BF16) 140 GB = 1,120 GB total. ZeRO-3 across 16 H100 GPUs: 1,120 / 16 = 70 GB per GPU — exactly fitting one H100 80GB with 10 GB left for activations. Gradient checkpointing (recomputing activations during backward) gives another ~3× activation memory reduction at the cost of ~30% extra compute. CMU 11-868 Assignment 4 works through this arithmetic explicitly.</p>
+<p>The all-gather communication cost of ZeRO-3 is the tradeoff. At DP=16 with 100 Gb/s InfiniBand, the all-gather for one transformer layer's weights (e.g., 1B parameters = 2 GB BF16) takes ~160 ms — unacceptable. In practice, ZeRO-3 is combined with NVLink for TP within nodes (sub-ms communication) and InfiniBand only for the ZeRO gradient all-reduce, which is overlapped with the backward pass. The effective communication overhead in a well-tuned setup is 10–20% of step time.</p>
+<h2 id="3d-parallelism">3D parallelism and expert parallelism</h2>
+<p>3D parallelism = TP × PP × DP. For a 4-node × 8-GPU H100 cluster (32 GPUs) training Llama 3.1 70B: TP=8 (within node, NVLink), PP=2 (across the two halves of each node pair), DP=2 (two replicas of the TP×PP world). This gives roughly 70 GB per GPU before activations, which is feasible with gradient checkpointing. The Llama 3 herd paper (Meta, arXiv:2407.21783, July 2024) trained 405B with TP=8, PP=16, DP=many — expert parallelism for MoE was not needed since Llama 3 is dense.</p>
+<p>For MoE models (DeepSeek-V3, Qwen3-MoE), expert parallelism (EP) is a fifth axis: each expert is assigned to specific GPUs, and routing logic sends each token's computation to the right GPU. DeepSeek-V3 uses EP=64 in a 256-GPU training run. llm-d (Red Hat, Nov 21, 2025) treats EP as a first-class concept in inference as well — prefill pods and decode pods can each have different EP configurations, because the expert utilization pattern differs between the two phases.</p>
+<h2 id="capstone-training">Practical choices for fine-tuning at scale</h2>
+<p>For the JHU capstone — fine-tuning GR00T N1.5 or SmolVLA on custom demonstration data — you are not pretraining. Gradient checkpointing + FSDP on a single 4-GPU A100 node is sufficient for SmolVLA-450M. For GR00T N1.5 (the exact size is not public, but the DiT component appears to be in the 1–3B range), FSDP across 8 GPUs with TP=1 (small enough that TP overhead is not justified) is the right setup. You do not need 3D parallelism unless you are training from scratch.</p>
+<p>For DealLens, the relevant training scenario is fine-tuning a Llama 3.1 8B or 70B scoring model on proprietary deal data. 8B fits on a single H100 with QLoRA; 70B requires FSDP across 4 H100s or QLoRA with 4-bit quantization on 2 H100s. The distributed training chapter is thus an indirect dependency for DealLens — understanding it tells you when you need an H100 cluster vs when a single GPU suffices.</p>
+<div class="aside" data-tone="copper"><span class="aside__label">Sequence parallelism</span><p>Sequence parallelism (Korthikanti et al., 2022) shards the sequence dimension across TP GPUs, distributing LayerNorm and Dropout across devices. At seq=1M tokens, it is the fifth required axis. For anything under 128K, it adds communication overhead without benefit — skip it unless you are training ring-attention-style long-context models.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="3D parallelism: DP, TP, PP partitioning diagram"><title>3D Parallelism: DP × TP × PP Sharding</title><style>text{font-family:system-ui,sans-serif;font-size:11px;fill:var(--color-text)}.muted{fill:var(--color-text-muted)}.h{font-weight:700;font-size:13px}</style><text x="400" y="24" text-anchor="middle" class="h" fill="var(--color-primary)">3D Parallelism: Tensor × Pipeline × Data</text><rect x="30" y="40" width="340" height="140" rx="4" fill="none" stroke="var(--color-accent-euv)" stroke-width="1.5"/><text x="200" y="58" text-anchor="middle" fill="var(--color-accent-euv)" font-weight="600" font-size="12">Node 0 (NVLink — TP=4)</text><rect x="45" y="68" width="70" height="50" rx="3" fill="var(--color-accent-euv)" fill-opacity="0.15" stroke="var(--color-accent-euv)"/><text x="80" y="97" text-anchor="middle">GPU 0</text><text x="80" y="111" text-anchor="middle" class="muted">Layers 0–19</text><rect x="125" y="68" width="70" height="50" rx="3" fill="var(--color-accent-euv)" fill-opacity="0.15" stroke="var(--color-accent-euv)"/><text x="160" y="97" text-anchor="middle">GPU 1</text><text x="160" y="111" text-anchor="middle" class="muted">Layers 0–19</text><rect x="205" y="68" width="70" height="50" rx="3" fill="var(--color-accent-euv)" fill-opacity="0.15" stroke="var(--color-accent-euv)"/><text x="240" y="97" text-anchor="middle">GPU 2</text><text x="240" y="111" text-anchor="middle" class="muted">Layers 0–19</text><rect x="285" y="68" width="70" height="50" rx="3" fill="var(--color-accent-euv)" fill-opacity="0.15" stroke="var(--color-accent-euv)"/><text x="320" y="97" text-anchor="middle">GPU 3</text><text x="320" y="111" text-anchor="middle" class="muted">Layers 0–19</text><text x="200" y="148" text-anchor="middle" class="muted">← Tensor Parallel (column/row matmul shards) →</text><rect x="30" y="200" width="340" height="140" rx="4" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.5"/><text x="200" y="218" text-anchor="middle" fill="var(--color-accent-copper)" font-weight="600" font-size="12">Node 1 (NVLink — TP=4)</text><rect x="45" y="228" width="70" height="50" rx="3" fill="var(--color-accent-copper)" fill-opacity="0.15" stroke="var(--color-accent-copper)"/><text x="80" y="257" text-anchor="middle">GPU 4</text><text x="80" y="271" text-anchor="middle" class="muted">Layers 20–39</text><rect x="125" y="228" width="70" height="50" rx="3" fill="var(--color-accent-copper)" fill-opacity="0.15" stroke="var(--color-accent-copper)"/><text x="160" y="257" text-anchor="middle">GPU 5</text><text x="160" y="271" text-anchor="middle" class="muted">Layers 20–39</text><rect x="205" y="228" width="70" height="50" rx="3" fill="var(--color-accent-copper)" fill-opacity="0.15" stroke="var(--color-accent-copper)"/><text x="240" y="257" text-anchor="middle">GPU 6</text><text x="240" y="271" text-anchor="middle" class="muted">Layers 20–39</text><rect x="285" y="228" width="70" height="50" rx="3" fill="var(--color-accent-copper)" fill-opacity="0.15" stroke="var(--color-accent-copper)"/><text x="320" y="257" text-anchor="middle">GPU 7</text><text x="320" y="271" text-anchor="middle" class="muted">Layers 20–39</text><text x="200" y="308" text-anchor="middle" class="muted">← Tensor Parallel →</text><line x1="200" y1="180" x2="200" y2="200" stroke="var(--color-text-muted)" stroke-width="1.5" stroke-dasharray="4,3"/><text x="215" y="192" font-size="10" class="muted">PP (activations)</text><rect x="440" y="40" width="340" height="300" rx="4" fill="none" stroke="var(--color-text-muted)" stroke-width="1"/><text x="610" y="58" text-anchor="middle" fill="var(--color-primary)" font-weight="600" font-size="12">Data Parallel (ZeRO-3 / FSDP)</text><text x="610" y="80" text-anchor="middle" class="muted">Each node pair = one DP replica</text><text x="610" y="100" text-anchor="middle" class="muted">Gradients all-reduced across replicas</text><rect x="460" y="115" width="280" height="40" rx="3" fill="var(--color-primary)" fill-opacity="0.08" stroke="var(--color-primary)"/><text x="600" y="140" text-anchor="middle">Params sharded 1/DP_size per GPU</text><rect x="460" y="165" width="280" height="40" rx="3" fill="var(--color-accent-quartz)" fill-opacity="0.10" stroke="var(--color-accent-quartz)"/><text x="600" y="190" text-anchor="middle">Gradients sharded + reduce-scatter</text><rect x="460" y="215" width="280" height="40" rx="3" fill="var(--color-accent-copper)" fill-opacity="0.10" stroke="var(--color-accent-copper)"/><text x="600" y="240" text-anchor="middle">Optimizer states sharded (FP32 m, v)</text><text x="610" y="285" text-anchor="middle" font-size="12" fill="var(--color-accent-copper)">70B AdamW: 1120 GB total</text><text x="610" y="303" text-anchor="middle" font-size="12" fill="var(--color-accent-copper)">ZeRO-3 across 16 GPUs: 70 GB/GPU</text><text x="610" y="325" text-anchor="middle" class="muted">Communication: all-gather before fwd,</text><text x="610" y="341" text-anchor="middle" class="muted">reduce-scatter after bwd</text></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 15.1</span><span class="text">3D parallelism for a 70B model on 2 nodes × 4 GPUs. Tensor parallelism (blue) shards matmuls within each NVLink node. Pipeline parallelism (orange) partitions layers across nodes with 1F1B scheduling. ZeRO-3 (right) shards parameters, gradients, and optimizer states across the DP dimension — reducing per-GPU memory from 1,120 GB to 70 GB at DP=16.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">ZeRO-3 (FSDP) shards parameters, gradients, and optimizer states across GPUs — making 70B training feasible on 16 H100s — while tensor parallelism (within node) and pipeline parallelism (across nodes) complete the 3D recipe for 1,000+ GPU runs.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://arxiv.org/abs/2304.11277">PyTorch FSDP: Experiences on Scaling Fully Sharded Data Parallel, Zhao et al., arXiv:2304.11277 (April 21, 2023). CMU 11-868 LLM Systems course.</a></p>
+  <p><strong>Build.</strong> Train a 1B-parameter Llama-style model with FSDP across 4 GPUs (or 4 simulated devices) using ZeRO-3 sharding. Profile all-gather communication overhead with nsys. Compare training throughput and peak per-GPU memory against DDP on the same hardware.</p>
+  <p><strong>Capstone ladder.</strong> Fine-tuning GR00T N1.5 for the JHU humanoid requires FSDP on 4–8 GPUs. DealLens fine-tuning of Llama 3.1 70B requires either 4-GPU FSDP or QLoRA — knowing the tradeoffs tells you which is cheaper for which batch size.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="15-distributed-training">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">What does ZeRO-3 shard across GPUs, and what is the approximate per-GPU memory footprint for a 70B model with AdamW across 16 H100s?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">ZeRO-3 shards parameters, gradients, and optimizer states (FP32 master weights, Adam m and v). Total footprint for 70B with AdamW: ~1,120 GB. Across 16 GPUs: ~70 GB per GPU — fitting on a single H100 80GB.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why is tensor parallelism constrained to within a single NVLink domain, and why does pipeline parallelism span nodes?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">TP requires synchronous all-reduces per layer (sub-ms on NVLink at 900 GB/s, but ~160 ms on 100 Gb/s InfiniBand — unacceptable). PP communication is point-to-point activation transfers once per pipeline stage, which are fewer and larger — tolerable over InfiniBand, and overlappable with micro-batch computation.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">For fine-tuning SmolVLA-450M for the JHU humanoid capstone on a single 4-GPU A100 node, what is the simplest sufficient distributed strategy and why?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">FSDP (ZeRO-3) with gradient checkpointing across 4 GPUs. At 450M parameters, the total memory including optimizer is ~7.2 GB — fits easily on one GPU in most cases, making FSDP optional. But with a large demonstration batch and full activations, 4-GPU FSDP with 2× gradient checkpointing is the safe setup. TP and PP are overkill at this scale.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="15-distributed-training-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="14-flashattention-triton.html"><span class="ch-nav-link__label">← Chapter 14</span><span class="ch-nav-link__title">FlashAttention and Triton</span></a>
+      <a class="ch-nav-link" data-dir="next" href="16-rlhf-dpo-grpo.html"><span class="ch-nav-link__label">Chapter 16 →</span><span class="ch-nav-link__title">RLHF, DPO, GRPO, and reasoning RL</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

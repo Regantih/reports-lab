@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 02 · Probability, entropy, KL — From Tokens to Embodied Minds</title>
+<meta name="description" content="Cross-entropy is the only loss that survives at scale because next-token prediction is maximum-likelihood compression. KL divergence is the leash that shows up unchanged in RLHF, DPO, and distillation.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../css/base.css">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
+</head>
+<body data-chapter-slug="02-probability-entropy-kl" data-chapter-title="Probability, entropy, KL">
+<script>window.__CHAPTERS_META__ = [{"num": "01", "slug": "01-linear-algebra", "title": "Linear algebra you actually use", "subtitle": "The five operations every forward pass spends its time on"}, {"num": "02", "slug": "02-probability-entropy-kl", "title": "Probability, entropy, KL", "subtitle": "Why next-token prediction is just compression"}, {"num": "03", "slug": "03-autograd", "title": "Backprop, autograd, and the chain rule on GPUs", "subtitle": "Tape-based dynamic graphs, not static DAGs"}, {"num": "04", "slug": "04-attention-from-scratch", "title": "Attention from scratch", "subtitle": "Q, K, V — and why scaled dot-product is the right shape"}, {"num": "05", "slug": "05-transformer-block", "title": "The transformer block, end to end", "subtitle": "Pre-norm, RMSNorm, SwiGLU, RoPE — what survived"}, {"num": "06", "slug": "06-tokenization", "title": "Tokenization is a design decision", "subtitle": "BPE, SentencePiece, and why your tokenizer matters"}, {"num": "07", "slug": "07-pretraining-at-scale", "title": "Pretraining at scale", "subtitle": "The data, the recipe, the wall-clock"}, {"num": "08", "slug": "08-mixture-of-experts", "title": "Mixture of Experts", "subtitle": "Sparse compute, dense parameters"}, {"num": "09", "slug": "09-scaling-laws", "title": "Scaling laws — Kaplan, Chinchilla, and after", "subtitle": "Compute-optimal models and why the curves keep bending"}, {"num": "10", "slug": "10-long-context", "title": "Long context — beyond 128K", "subtitle": "RoPE scaling, ring attention, and the memory wall"}, {"num": "11", "slug": "11-quantization", "title": "Quantization, distillation, pruning", "subtitle": "The three knobs that ship a frontier model on a phone"}, {"num": "12", "slug": "12-paper-reading", "title": "How to read a frontier paper in 30 minutes", "subtitle": "A protocol for reading at frontier speed"}, {"num": "13", "slug": "13-h100-b200", "title": "Inside an H100/B200", "subtitle": "SMs, tensor cores, HBM, and the memory wall on Hopper/Blackwell"}, {"num": "14", "slug": "14-flashattention-triton", "title": "FlashAttention and Triton", "subtitle": "Tiling, online softmax, and writing GPU kernels in Python"}, {"num": "15", "slug": "15-distributed-training", "title": "Distributed training", "subtitle": "DP, TP, PP, FSDP, ZeRO — and why ZeRO-3 wins for most teams"}, {"num": "16", "slug": "16-rlhf-dpo-grpo", "title": "RLHF, DPO, GRPO, and reasoning RL", "subtitle": "The post-training stack, 2024–2026"}, {"num": "17", "slug": "17-vllm-trtllm-sglang", "title": "vLLM, TensorRT-LLM, SGLang", "subtitle": "The three serving stacks and what each is best at"}, {"num": "18", "slug": "18-llm-d", "title": "llm-d and disaggregated inference", "subtitle": "Prefill–decode separation goes mainstream"}, {"num": "19", "slug": "19-kv-cache-spec-decoding", "title": "KV-cache, speculative decoding, Medusa", "subtitle": "Latency tricks that actually work"}, {"num": "20", "slug": "20-advanced-rag-evals", "title": "Advanced RAG and evals", "subtitle": "Hybrid search, rerankers, and why your RAG is broken"}, {"num": "21", "slug": "21-mcp-a2a", "title": "MCP and A2A — the agent protocols", "subtitle": "The standards that let agents talk to tools and to each other"}, {"num": "22", "slug": "22-langgraph-orchestration", "title": "LangGraph and orchestration that survives", "subtitle": "Graph state, checkpointing, and human-in-the-loop"}, {"num": "23", "slug": "23-observability", "title": "Observability — traces, evals, regression", "subtitle": "LangSmith, Phoenix, and the discipline of LLM ops"}, {"num": "24", "slug": "24-red-teaming", "title": "Red-teaming, jailbreaks, prompt injection", "subtitle": "The adversarial layer of every production stack"}, {"num": "25", "slug": "25-classical-robotics", "title": "Classical robotics in one chapter", "subtitle": "Forward/inverse kinematics, Jacobians, PD, MPC"}, {"num": "26", "slug": "26-cs231n-redux", "title": "Computer vision foundations — CS231n, redux", "subtitle": "ResNet, ViT, CLIP, SigLIP, DINOv2"}, {"num": "27", "slug": "27-3d-perception", "title": "3D perception — NeRF, Gaussian Splatting, SAM 2", "subtitle": "The perception substrate for home-assistant robots"}, {"num": "28", "slug": "28-rl-refresher", "title": "Reinforcement learning, refreshed", "subtitle": "MDPs, PPO, SAC, and what 2025 robot RL papers actually changed"}, {"num": "29", "slug": "29-sim-to-real", "title": "Sim-to-real and the Isaac stack", "subtitle": "Domain randomization, system ID, and Newton on Warp"}, {"num": "30", "slug": "30-diffusion-policies", "title": "Diffusion policies and action chunking", "subtitle": "Why diffusion beat behavioral cloning for manipulation"}, {"num": "31", "slug": "31-rt2-openvla", "title": "Vision-Language-Action models — RT-2 and OpenVLA", "subtitle": "The architectures that turn VLMs into policies"}, {"num": "32", "slug": "32-pi0-smolvla", "title": "π0, π0.5, and SmolVLA", "subtitle": "The 2025 open-source VLA family"}, {"num": "33", "slug": "33-groot", "title": "NVIDIA GR00T N1 and N1.5 with Isaac Lab", "subtitle": "The dual-system humanoid foundation model"}, {"num": "34", "slug": "34-lerobot", "title": "Hugging Face LeRobot and the open robotics stack", "subtitle": "The community-grade equivalent of Isaac Lab"}, {"num": "35", "slug": "35-embodied-safety", "title": "Safety and alignment for embodied AI", "subtitle": "Action safety, contact safety, and the alignment problem with arms"}, {"num": "36", "slug": "36-capstone", "title": "Capstone — a humanoid home assistant, end to end", "subtitle": "The full stack, from perception to π0.5 to PD controller"}]; window.__SIDENOTES__ = {"activation": "Output of a neuron after applying a non-linearity.", "adam / adamw": "First-order optimizer with decoupled weight decay.", "adapter": "Small trainable module inserted into a frozen model.", "a2a": "Agent-to-Agent protocol for cross-system agent collaboration.", "attention": "Mechanism that mixes information across token positions.", "autograd": "Automatic differentiation by recording operations.", "b200": "NVIDIA Blackwell datacenter GPU, 2024.", "bf16": "Brain floating point: 8-bit exponent, 7-bit mantissa.", "bpe": "Byte-Pair Encoding tokenizer.", "chinchilla scaling": "Compute-optimal token-to-parameter ratio.", "cross-entropy": "Loss measuring distance between predicted and true distributions.", "cuda": "NVIDIA's parallel compute platform.", "diffusion policy": "Robot policy that denoises action trajectories.", "distillation": "Training a small student to match a large teacher.", "dpo": "Direct Preference Optimization.", "embodied ai": "AI agents with physical bodies that act in the world.", "eval": "Benchmark or test that scores model behavior.", "expert parallelism (ep)": "Distributing MoE experts across GPUs.", "flashattention": "IO-aware exact attention kernel.", "fp8": "8-bit floating point (E4M3 / E5M2 variants).", "fsdp": "Fully Sharded Data Parallel.", "gaussian splatting (3dgs)": "3D scene representation as anisotropic Gaussians.", "gqa": "Grouped-Query Attention.", "gr00t": "NVIDIA's generalist humanoid foundation model.", "gradient checkpointing": "Trade compute for activation memory.", "grpo": "Group Relative Policy Optimization.", "h100": "NVIDIA Hopper datacenter GPU, 2022.", "hbm": "High-Bandwidth Memory stacked next to the GPU die.", "imitation learning": "Learning a policy from expert demonstrations.", "inference": "Generating outputs from a trained model.", "isaac lab": "NVIDIA's GPU-accelerated robotics simulator.", "jit compilation": "Just-in-time compilation of a kernel or graph.", "kl divergence": "Relative entropy between two distributions.", "kv-cache": "Stored key and value tensors from past tokens.", "langgraph": "Graph-based agent orchestration framework.", "lerobot": "HuggingFace's open robotics framework.", "llm-d": "Open distributed inference stack for LLMs.", "lora / qlora": "Low-rank adapter for parameter-efficient fine-tuning.", "mcp": "Model Context Protocol.", "memory wall": "When compute outruns the bandwidth to feed it.", "moe": "Mixture of Experts.", "mujoco": "Multi-joint physics engine.", "nerf": "Neural Radiance Field.", "nvlink": "NVIDIA's high-bandwidth GPU-to-GPU interconnect.", "openvla": "Open vision-language-action model, Stanford 2024.", "optimizer state": "Per-parameter buffers used by the optimizer.", "π0 / π0.5": "Physical Intelligence's flagship VLA models.", "paged attention": "OS-style paging applied to the KV-cache.", "pipeline parallelism": "Splitting a model's layers across devices.", "ppo": "Proximal Policy Optimization.", "pretraining": "Self-supervised next-token training on web-scale data.", "prefill / decode": "Two phases of LLM inference.", "quantization": "Reducing precision of weights or activations.", "rag": "Retrieval-Augmented Generation.", "red teaming": "Adversarial testing of model safety.", "reasoning model": "LLM trained to think in long chains before answering.", "ring attention": "Sequence-parallel attention across devices.", "rlhf": "Reinforcement Learning from Human Feedback.", "rmsnorm": "Root-mean-square layer normalization.", "rope": "Rotary Positional Embeddings.", "rt-2": "Robotics Transformer 2, Google DeepMind 2023.", "sam 2": "Segment Anything Model 2 with video tracking.", "scaling laws": "Power-law relationships between scale and loss.", "self-attention": "Attention where Q, K, V come from the same sequence.", "sft": "Supervised Fine-Tuning.", "sim-to-real": "Transferring policies trained in simulation to physical robots.", "smolvla": "HuggingFace's compact open VLA, 2025.", "speculative decoding": "Draft-and-verify inference with a small model.", "swiglu": "Gated linear activation: Swish(xW) ⊙ (xV).", "tensor parallelism (tp)": "Splitting a single matmul across devices.", "tokenization": "Mapping text to a sequence of integer IDs.", "transformer block": "The repeating unit of a transformer.", "triton": "Python DSL for GPU kernels.", "trt-llm": "TensorRT-LLM, NVIDIA's optimized inference runtime.", "vae": "Variational Auto-Encoder.", "vector database": "Index over embedding vectors with ANN search.", "vjp": "Vector-Jacobian Product — the autodiff primitive.", "vla": "Vision-Language-Action model.", "vllm": "High-throughput LLM serving engine.", "weight decay": "L2 regularization on model parameters.", "world model": "Learned model of environment dynamics.", "yarn": "Yet another RoPE extension method.", "zero-shot": "Performing a task with no examples in the prompt.", "zero": "Zero Redundancy Optimizer."};</script>
+<div class="progress-bar"><div class="progress-bar__fill" data-progress-fill></div></div>
+<header class="site-header" data-header>
+  <div class="site-header__inner">
+    <a class="brand" href="../index.html">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+  <circle cx="12" cy="12" r="9" />
+  <circle cx="12" cy="12" r="3" fill="currentColor" />
+  <path d="M12 3 L12 6 M12 18 L12 21 M3 12 L6 12 M18 12 L21 12" stroke-width="1" />
+</svg>
+      <span>From Tokens to Embodied Minds<span class="brand__sub"> — a study path</span></span>
+    </a>
+    <span class="nav-spacer"></span>
+    <a class="nav-link" href="../../index.html">Reports Lab</a>
+    <a class="nav-link" href="../index.html#chapters">Chapters</a>
+    <a class="nav-link" href="../chapters/glossary.html">Reference</a>
+    <a class="nav-link" href="../chapters/me.html">My study</a>
+    <button class="icon-btn" data-search-open aria-label="Search the book (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
+    <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+  </div>
+</header>
+<main class="page" data-learn-root="02-probability-entropy-kl">
+<aside class="learn memory-map reveal" data-memory-map>
+  <div class="memory-map__eyebrow">Memory map</div>
+  <div class="memory-map__spine"><span class="memory-map__node">cross-entropy loss</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">KL divergence</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">maximum likelihood</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">RLHF KL penalty</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">DPO closed form</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">distillation soft targets</span><span class="memory-map__arrow" aria-hidden="true">→</span><span class="memory-map__node">entropy and compression</span></div>
+</aside>
+<section class="learn predict reveal" data-predict data-slug="02-probability-entropy-kl" data-answer-key="b">
+  <div class="learn__eyebrow">Predict before you read</div>
+  <h2 class="learn__title">In DPO (Rafailov et al., 2023), which quantity replaces the explicit reward model that RLHF requires?</h2>
+  <p class="learn__hint">DPO derives a closed-form solution — think about what mathematical object it optimizes directly.</p>
+  <form class="predict__choices" data-predict-form><label class="predict__choice"><input type="radio" name="predict-02-probability-entropy-kl" value="a"><span>A value network trained via temporal-difference learning</span></label><label class="predict__choice"><input type="radio" name="predict-02-probability-entropy-kl" value="b"><span>The implicit reward defined by the policy ratio log(pi/pi_ref)</span></label><label class="predict__choice"><input type="radio" name="predict-02-probability-entropy-kl" value="c"><span>A Monte Carlo rollout estimator of expected return</span></label><label class="predict__choice"><input type="radio" name="predict-02-probability-entropy-kl" value="d"><span>The KL divergence between successive policy checkpoints</span></label></form>
+  <div class="learn__actions">
+    <button type="button" class="learn__btn learn__btn--primary" data-predict-reveal disabled>Reveal answer</button>
+    <span class="learn__status" data-predict-status></span>
+  </div>
+  <div class="learn__answer" data-predict-answer hidden>
+    <div class="learn__answer-body">DPO's key insight (Rafailov et al., arXiv:2305.18290, May 2023) is that the RLHF objective has a closed-form optimal policy: pi*(y|x) proportional to pi_ref(y|x) * exp(r(y,x)/beta). Rearranging, the reward is implicit in the log ratio of policy to reference: r(y,x) = beta * log(pi(y|x)/pi_ref(y|x)) + log Z(x). DPO directly optimizes this ratio on preference pairs, eliminating the reward model entirely.</div>
+    <div class="learn__rate">
+      <span class="learn__rate-label">How close were you?</span>
+      <button type="button" class="learn__rate-btn" data-rate="within">Got it</button>
+      <button type="button" class="learn__rate-btn" data-rate="off">Off</button>
+      <button type="button" class="learn__rate-btn" data-rate="way">Way off</button>
+    </div>
+  </div>
+</section>
+  <header class="ch-header reveal">
+    <div class="ch-header__crumb"><a href="../index.html">From Tokens to Embodied Minds</a> &nbsp;·&nbsp; Chapter 02 of 36</div>
+    <div class="ch-header__num">Chapter 02</div>
+    <h1 class="ch-header__title">Probability, entropy, KL</h1>
+    <p class="ch-header__dek">Why next-token prediction is just compression</p>
+    <aside class="learn objectives reveal" data-objectives>
+  <div class="objectives__eyebrow">After this chapter, you can:</div>
+  <ul class="objectives__list"><li>Derive cross-entropy loss as the negative log-likelihood under the maximum-likelihood view of next-token prediction.</li><li>Show algebraically where KL divergence appears in RLHF, DPO, and knowledge distillation — and why it is the same object in all three.</li><li>Implement DPO loss from scratch in 50 lines and verify the implicit reward function matches the analytical form.</li></ul>
+</aside>
+    <div class="stat-row"><div class="stat"><div class="stat__num">3</div><div class="stat__label">places KL divergence reappears after pretraining</div></div><div class="stat"><div class="stat__num">H(p,q)</div><div class="stat__label">cross-entropy — the only loss that survives</div></div><div class="stat"><div class="stat__num">50<em>lines</em></div><div class="stat__label">to implement DPO from scratch and verify the implicit reward</div></div></div>
+    <section class="learn ladder reveal" data-ladder data-slug="02-probability-entropy-kl">
+  <div class="ladder__bar">
+    <div class="ladder__bar-head">
+      <span class="ladder__bar-label">Maturity ladder</span>
+      <button type="button" class="ladder__bar-toggle" data-ladder-toggle aria-expanded="false">
+        <span>Show checks</span><span class="ladder__bar-caret">▾</span>
+      </button>
+    </div>
+    <div class="ladder__dots"><button type="button" class="ladder__dot" data-ladder-set="1" aria-label="Set self-rating to level 1: Curious"><span class="ladder__dot-num">1</span><span class="ladder__dot-name">Curious</span></button><button type="button" class="ladder__dot" data-ladder-set="2" aria-label="Set self-rating to level 2: Practitioner"><span class="ladder__dot-num">2</span><span class="ladder__dot-name">Practitioner</span></button><button type="button" class="ladder__dot" data-ladder-set="3" aria-label="Set self-rating to level 3: Expert"><span class="ladder__dot-num">3</span><span class="ladder__dot-name">Expert</span></button><button type="button" class="ladder__dot" data-ladder-set="4" aria-label="Set self-rating to level 4: Research-grade"><span class="ladder__dot-num">4</span><span class="ladder__dot-name">Research-grade</span></button></div>
+  </div>
+  <div class="ladder__panel" data-ladder-panel hidden>
+    <p class="ladder__panel-hint">Tick a check only when you can do it on demand. Self-rating is anchored in behavior, not feeling.</p>
+    <div class="ladder__rows"><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="1"><span class="ladder__row-num">L1 · Curious</span><span class="ladder__row-text">State in one sentence why cross-entropy and negative log-likelihood are the same thing in the context of language modeling.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="2"><span class="ladder__row-num">L2 · Practitioner</span><span class="ladder__row-text">Write the DPO loss function from memory and identify which term corresponds to the KL penalty in the original RLHF objective.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="3"><span class="ladder__row-num">L3 · Expert</span><span class="ladder__row-text">Given a training run where the distillation student's loss plateaus, diagnose whether the problem is temperature scaling, mode collapse on soft targets, or a mismatch between teacher and student vocabulary.</span></label><label class="ladder__row" data-passed="false"><input type="checkbox" data-ladder-check="4"><span class="ladder__row-num">L4 · Research-grade</span><span class="ladder__row-text">KL divergence is not symmetric — explain whether forward or reverse KL is more appropriate for distillation and why the answer changes depending on whether you want mode-seeking or mean-seeking behavior.</span></label></div>
+  </div>
+</section>
+    <div class="toolbar reveal">
+      <div class="toolbar__audio" data-audio-wrap>
+        <button class="toolbar__btn" data-audio-toggle type="button" aria-haspopup="dialog" aria-expanded="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 5v14l12-7z"/></svg> <span>Listen</span></button>
+        <div class="audio-popover" data-audio-popover hidden role="dialog" aria-label="Choose narration voice">
+          <div class="audio-popover__head">
+            <div class="audio-popover__title">Pick a voice</div>
+            <button class="audio-popover__close" data-audio-close type="button" aria-label="Close">×</button>
+          </div>
+          <div class="audio-popover__group" data-audio-voices role="radiogroup" aria-label="Voice"></div>
+          <div class="audio-popover__row">
+            <label class="audio-popover__label" for="audio-rate">Speed</label>
+            <input class="audio-popover__rate" id="audio-rate" data-audio-rate type="range" min="0.7" max="1.3" step="0.05" value="1">
+            <span class="audio-popover__rate-val" data-audio-rate-val>1.00×</span>
+          </div>
+          <div class="audio-popover__actions">
+            <button class="audio-popover__sample" data-audio-sample type="button">Hear a sample</button>
+            <button class="audio-popover__start" data-audio-start type="button">Start listening</button>
+          </div>
+          <div class="audio-popover__hint" data-audio-hint></div>
+        </div>
+      </div>
+      <button class="toolbar__btn" data-bookmark type="button" aria-pressed="false"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v18l-6-4-6 4z"/></svg> <span>Bookmark</span></button>
+      <button class="toolbar__btn" data-tutor-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg> <span>Ask tutor</span></button>
+      <button class="toolbar__btn toolbar__btn--accent" data-quiz-open type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> <span>Quiz me</span></button>
+      <button class="toolbar__btn" onclick="window.print()" type="button"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 3h12v6H6zM6 14h12v7H6zM4 9h16v6H4z"/></svg> <span>Save PDF</span></button>
+    </div>
+  </header>
+  <div class="ch-layout">
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#compression">Next-token prediction as compression</a></li><li><a href="#kl-triple">The three places KL reappears</a></li><li><a href="#entropy-calibration">Entropy and calibration as operational signals</a></li><li><a href="#capstone-link">Direct post-training dependency</a></li></ul></aside>
+    <article class="prose">
+<p class="lede">Next-token prediction is compression. The model learns a distribution over the next token given context, and minimizing cross-entropy is identical to maximizing the likelihood of the training data under that distribution. This is not a metaphor — Shannon's source coding theorem directly connects bits-per-character to cross-entropy, and perplexity is literally the exponentiated average cross-entropy. If you understand this once, the loss function never needs explaining again.
+
+KL divergence is then the leash that appears three times after pretraining. In RLHF it penalizes the policy from drifting too far from the reference model. In DPO (Rafailov et al., arXiv:2305.18290, May 2023) it becomes the closed-form solution that removes the reward model entirely. In distillation it is the objective that forces the student to match the teacher's full output distribution rather than just its argmax. Understanding KL once collapses three seemingly separate topics into one.</p>
+<h2 id="compression">Next-token prediction as compression</h2>
+<p>The cross-entropy loss L = -sum_t log p_theta(x_t | x_{<t}) is the negative log-likelihood of the token sequence under the model's conditional distribution. By the maximum likelihood principle, minimizing this is equivalent to finding parameters that assign the highest probability to the training corpus. Shannon's source coding theorem bounds how many bits are needed to encode a message from distribution p — the average is H(p) bits. If the model uses distribution q to encode data from distribution p, the average code length is H(p, q) = H(p) + KL(p || q). Minimizing cross-entropy on training data is therefore minimizing the excess description length of that data under the model.</p>
+<p>Perplexity — exp(H(p, q)) — is cross-entropy in a unit that makes the scale intuitive: a perplexity of 10 means the model is on average as confused as if it had to choose uniformly among 10 equally likely tokens at every step. A perplexity of 2 would be near-optimal English. The reason perplexity is still reported in 2025 despite better downstream benchmarks is that it is directly tied to the information-theoretic loss and does not require a benchmark designer's choices about tasks.</p>
+<p>For DealLens, perplexity has a direct operational reading: if you use a language model as a scoring function over investment memos — assigning a log-probability to a memo under a domain-adapted model — you are computing a cross-entropy relative to the model's learned distribution over good VC prose. Calibrating this against human scores gives you a signal that does not require hand-crafted features.</p>
+<h2 id="kl-triple">The three places KL reappears</h2>
+<p>RLHF (Ouyang et al., arXiv:1706.03741, InstructGPT, March 2022) maximizes expected reward while penalizing KL divergence from the reference policy: J = E[r(y|x)] - beta * KL(pi || pi_ref). The beta parameter controls the trade-off — too small and the policy drifts into reward hacking; too large and the policy never improves. The KL term is not a regularizer added for stability; it is fundamental to ensuring the policy remains a useful language model rather than a degenerate reward-maximizer.</p>
+<p>DPO (Rafailov et al., arXiv:2305.18290, May 2023) observes that the optimal policy for the RLHF objective has a closed form: pi*(y|x) = pi_ref(y|x) * exp(r(y,x)/beta) / Z(x). Rearranging, the reward is recoverable from the policy ratio: r(y,x) = beta * log(pi(y|x)/pi_ref(y|x)) + log Z(x). The DPO loss directly maximizes the likelihood of preferred over dispreferred completions using this ratio, bypassing the reward model. GRPO (DeepSeek-R1-Zero, January 2025) later brought RL back for verifiable reward tasks — math and code — where a scalar correctness signal is available.</p>
+<p>Knowledge distillation (Hinton et al., arXiv:1503.02531, March 2015) minimizes KL(p_teacher || p_student) — note the direction, which is forward KL. Forward KL is mean-seeking: the student spreads mass wherever the teacher has mass. Reverse KL (p_student || p_teacher) is mode-seeking: the student collapses to one mode of the teacher. For language model distillation you want forward KL because collapsing to one mode produces a student that ignores valid continuations the teacher assigns probability to. The practical implementation uses soft targets at temperature T > 1 to spread the teacher's distribution before computing the KL.</p>
+<h2 id="entropy-calibration">Entropy and calibration as operational signals</h2>
+<p>A model that assigns near-uniform probability to every token has high entropy and is poorly calibrated. A model that assigns probability 1.0 to one token at every step has zero entropy and is overfit. The output entropy of a language model is a practical diagnostic: if your DealLens scoring model consistently assigns very low entropy to its outputs, it is likely mode-collapsed or temperature-scaled incorrectly, and the variance of scores across different memos will be artificially compressed.</p>
+<p>Temperature scaling at inference — dividing logits by T before softmax — is the simplest calibration intervention. T > 1 increases entropy (softer distribution), T < 1 sharpens it. For DealLens ensemble scoring, running multiple model variants at different temperatures and taking a weighted vote is a calibration strategy that consistently outperforms single-model argmax in low-data settings.</p>
+<h2 id="capstone-link">Direct post-training dependency</h2>
+<p>For the JHU humanoid capstone, this chapter is a direct prerequisite for any post-training you run on GR00T N1.5 or SmolVLA. The FLARE loss used in GR00T N1.5 training (NVIDIA Research, June 2025) is a variant of behavior cloning that minimizes cross-entropy over action tokens — the same loss function, applied to a different output space. If you want to fine-tune with online RL in Isaac Lab, the KL penalty from this chapter reappears as the beta parameter in the GRPO objective used for robot skill learning.</p>
+<p>For DealLens, the distillation framing is directly applicable: if you run a large frontier model (GPT-4o or Claude Sonnet) as a teacher scorer on a labeled memo dataset, you can distill a smaller domain-adapted model that matches the teacher's output distribution. The student is cheaper to run at inference time and can be further fine-tuned on your own deal data without catastrophic forgetting if you maintain the KL constraint.</p>
+<div class="aside" data-tone="quartz"><span class="aside__label">DPO vs GRPO in 2025</span><p>DPO dominated 2023-2024 for instruction-following tasks. GRPO (DeepSeek-R1-Zero, January 2025) brought RL back for math and code where a verifiable scalar reward is available. The field has not converged — choose based on whether your reward is verifiable or preference-based.</p></div>
+<figure class="figure figure--wide reveal" id="figure">
+  <div class="figure__frame"><svg class="diagram" viewBox="0 0 800 360" role="img" aria-label="KL divergence in RLHF, DPO, and distillation" fill="none" xmlns="http://www.w3.org/2000/svg"><text x="400" y="28" text-anchor="middle" font-size="14" font-weight="600" fill="var(--color-text)">KL Divergence — One Object, Three Contexts</text><rect x="50" y="60" width="200" height="90" rx="8" stroke="var(--color-primary)" stroke-width="1.5" fill="var(--color-bg)"/><text x="150" y="85" text-anchor="middle" font-size="13" font-weight="600" fill="var(--color-primary)">RLHF</text><text x="150" y="105" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">J = E[r(y)] - β·KL(π||π_ref)</text><text x="150" y="123" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">KL = leash on policy drift</text><rect x="300" y="60" width="200" height="90" rx="8" stroke="var(--color-accent-copper)" stroke-width="1.5" fill="var(--color-bg)"/><text x="400" y="85" text-anchor="middle" font-size="13" font-weight="600" fill="var(--color-accent-copper)">DPO</text><text x="400" y="105" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">r(y) = β·log(π/π_ref) + log Z</text><text x="400" y="123" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">KL = implicit in policy ratio</text><rect x="550" y="60" width="200" height="90" rx="8" stroke="var(--color-accent-euv)" stroke-width="1.5" fill="var(--color-bg)"/><text x="650" y="85" text-anchor="middle" font-size="13" font-weight="600" fill="var(--color-accent-euv)">Distillation</text><text x="650" y="105" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">min KL(p_teacher || p_student)</text><text x="650" y="123" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">Forward KL = mean-seeking</text><rect x="200" y="210" width="400" height="70" rx="8" stroke="var(--color-accent-quartz)" stroke-width="1.5" stroke-dasharray="5 3" fill="var(--color-bg)"/><text x="400" y="237" text-anchor="middle" font-size="13" font-weight="600" fill="var(--color-accent-quartz)">Cross-Entropy = Compression</text><text x="400" y="257" text-anchor="middle" font-size="11" fill="var(--color-text-muted)">H(p,q) = H(p) + KL(p||q) · Minimize CE = minimize excess description length</text><line x1="150" y1="150" x2="300" y2="225" stroke="var(--color-text-muted)" stroke-width="1" stroke-dasharray="4 2"/><line x1="400" y1="150" x2="400" y2="210" stroke="var(--color-text-muted)" stroke-width="1" stroke-dasharray="4 2"/><line x1="650" y1="150" x2="500" y2="225" stroke="var(--color-text-muted)" stroke-width="1" stroke-dasharray="4 2"/></svg></div>
+  <figcaption class="figure__caption"><span class="label">Figure 2.1</span><span class="text">KL divergence appears as the leash in RLHF, the implicit signal in DPO, and the training objective in distillation — all three reduce to the same information-theoretic object.</span></figcaption>
+</figure>
+<aside class="learn one-sentence reveal" data-one-sentence>
+  <div class="one-sentence__eyebrow">In one sentence</div>
+  <p class="one-sentence__body">Cross-entropy is next-token prediction is maximum-likelihood compression — and KL divergence is the same mathematical object whether it appears in RLHF, DPO, or distillation.</p>
+</aside>
+<aside class="aside" data-tone="quartz">
+  <span class="aside__label">Primary source · Build · Capstone ladder</span>
+  <p><strong>Primary source.</strong> <a href="https://www.deeplearningbook.org/contents/prob.html">Deep Learning (Goodfellow, Bengio, Courville, MIT Press, 2016), Chapter 3</a></p>
+  <p><strong>Build.</strong> Implement DPO loss from scratch in 50 lines, train on a toy preference dataset (Anthropic HH-RLHF subset), and visualize the implicit reward function against the gold reward.</p>
+  <p><strong>Capstone ladder.</strong> Direct prerequisite for any post-training on GR00T N1.5 or SmolVLA (FLARE loss is cross-entropy over action tokens). For DealLens, distillation framing lets you train a small domain-adapted scorer from a large teacher model at a fraction of inference cost.</p>
+</aside>
+<section class="learn retrieval reveal" data-retrieval data-slug="02-probability-entropy-kl">
+  <div class="learn__eyebrow">Retrieve before you continue</div>
+  <h2 class="learn__title">Three questions on what you just read</h2>
+  <div class="retrieval__list"><details class="retrieval__item" data-retrieval-item data-id="q1">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q1</span>
+        <span class="retrieval__kind">Factual</span>
+        <span class="retrieval__q">Why is cross-entropy loss equivalent to maximum-likelihood estimation for language models?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Minimizing cross-entropy L = -sum log p_theta(x_t | x_{<t}) is identical to maximizing log-likelihood of the training corpus. By Shannon's source coding theorem, this minimizes the expected code length under the model's distribution — compression and likelihood are dual views of the same optimization.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q2">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q2</span>
+        <span class="retrieval__kind">Conceptual</span>
+        <span class="retrieval__q">Why does DPO not require a reward model, and what does it optimize instead?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">DPO observes that the RLHF optimal policy has a closed form: pi*(y|x) proportional to pi_ref * exp(r/beta). Rearranging, reward is implicit in the log policy ratio. DPO directly maximizes the likelihood of preferred over dispreferred completions using this ratio, bypassing the reward model entirely.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details><details class="retrieval__item" data-retrieval-item data-id="q3">
+      <summary class="retrieval__summary">
+        <span class="retrieval__num">Q3</span>
+        <span class="retrieval__kind">Synthetic</span>
+        <span class="retrieval__q">How would you use KL divergence operationally in DealLens to detect when a fine-tuned scoring model has drifted from the base model?</span>
+      </summary>
+      <div class="retrieval__body">
+        <button type="button" class="learn__btn learn__btn--ghost" data-retrieval-reveal>Reveal answer</button>
+        <div class="learn__answer" data-retrieval-answer hidden>
+          <div class="learn__answer-body">Compute the forward KL between the fine-tuned model's output distribution and the base model's distribution on a held-out validation set of memos. A KL above a threshold (e.g., beta=0.1 in nats per token) signals the model has drifted into a different scoring regime and may be unreliable on out-of-distribution deal types.</div>
+          <div class="learn__rate">
+            <span class="learn__rate-label">Self-rate</span>
+            <button type="button" class="learn__rate-btn" data-rate="got-it">I had it</button>
+            <button type="button" class="learn__rate-btn" data-rate="partial">Partial</button>
+            <button type="button" class="learn__rate-btn" data-rate="missed">Missed</button>
+          </div>
+        </div>
+      </div>
+    </details></div>
+  <div class="learn__footer-strip">
+    <a class="learn__link" href="02-probability-entropy-kl-drills.html">Drill cards →</a>
+  </div>
+</section>
+    </article>
+  </div>
+<footer class="ch-footer">
+    <div class="ch-nav-links">
+      <a class="ch-nav-link" data-dir="prev" href="01-linear-algebra.html"><span class="ch-nav-link__label">← Chapter 01</span><span class="ch-nav-link__title">Linear algebra you actually use</span></a>
+      <a class="ch-nav-link" data-dir="next" href="03-autograd.html"><span class="ch-nav-link__label">Chapter 03 →</span><span class="ch-nav-link__title">Backprop, autograd, and the chain rule on GPUs</span></a>
+    </div>
+  </footer>
+</main>
+<div class="search-modal" data-search aria-hidden="true" data-base="../">
+  <div class="search__panel" role="dialog" aria-label="Search">
+    <div class="search__head">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--color-text-muted)"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input class="search__input" data-search-input type="search" placeholder="Search the book…" aria-label="Search">
+      <button class="search__close" data-search-close type="button">Esc</button>
+    </div>
+    <div class="search__results" data-search-results>
+      <div class="search__hint">Type to search across all 36 chapters, the glossary, and the references. Try <em>FlashAttention</em>, <em>GR00T</em>, <em>DPO</em>, or <em>diffusion policy</em>.</div>
+    </div>
+  </div>
+</div>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask me anything about the study path</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does GR00T N1.5 differ from N1?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div>
+      <strong style="color:var(--color-text);font-family:var(--font-display);font-style:italic;font-weight:500;">From Tokens to Embodied Minds</strong><br>
+      A graduate-level study path through modern AI and embodied intelligence.
+    </div>
+    <div style="font-family:var(--font-mono);font-size:var(--text-xs);letter-spacing:0.08em;text-transform:uppercase;">
+      <a href="../index.html" style="color:var(--color-text-muted);text-decoration:none;">Return to cover →</a>
+    </div>
+  </div>
+</footer>
+<script src="../js/app.js" defer></script>
+<script src="../js/srs.js" defer></script>
+<script src="../js/notes.js" defer></script>
+</body></html>

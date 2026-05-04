@@ -1,0 +1,10 @@
+What is π0's action generation mechanism?	A flow-matching action expert (small DiT) conditioned on the VLM backbone's context embedding. Denoises Gaussian noise to an action chunk (K=16) in 10-25 ODE steps.
+What VLM backbone does π0 use?	PaliGemma 3B (Physical Intelligence, February 4, 2025).
+What percentage of π0.5's pretraining data is robot manipulation?	2.4%. The remaining 97.6% is web data, verbal instructions, semantic scene prediction, and text-image pairs (π0.5, arXiv:2504.16054, April 22, 2025).
+What is SmolVLA's parameter count?	450M total: SmolVLM-256M vision-language backbone + flow-matching action expert.
+What GPU is required to train SmolVLA?	A single 12GB consumer GPU (RTX 3080 / 4070 class). Deployable on a MacBook for inference.
+What is SmolVLA's reported real-world task success rate after pretraining?	78.3% on real-world tasks, pretrained on community LeRobot datasets (Hugging Face blog, June 3, 2025).
+How does SmolVLA's async inference work?	VLM backbone runs in one thread producing context embeddings; flow-matching action expert runs in a parallel thread denoising action chunks. The robot executes the current chunk while the VLM processes the next observation — overlapping latencies.
+What throughput improvement does SmolVLA async inference provide?	30% faster response time and 2x task throughput vs synchronous inference (Hugging Face blog, June 3, 2025).
+What is the primary source for SmolVLA?	SmolVLA: Efficient Vision-Language-Action Model trained on Lerobot Community Data, Hugging Face blog, June 3, 2025. Model: lerobot/smolvla_base.
+For the JHU capstone with a consumer GPU, which VLA is the recommended starting point?	SmolVLA-450M (lerobot/smolvla_base). Fine-tune on 50-200 LeRobot SO-101 episodes. Use async inference for real-time control. Reference GR00T N1.5 as the high-capability alternative if a 24GB+ GPU is available.

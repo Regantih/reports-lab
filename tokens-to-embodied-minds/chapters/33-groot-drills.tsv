@@ -1,0 +1,10 @@
+What is GR00T's System 1?	A Diffusion Transformer (DiT) action model that executes motor commands at 50Hz, conditioned on System 2's context embedding and current proprioceptive state.
+What is GR00T's System 2?	A Vision-Language Model (frozen Eagle 2.5 in N1.5) that processes camera observations and language instructions, generating a context embedding for System 1 at a slower deliberative rate.
+What is the FLARE loss?	A trajectory-aware training objective for GR00T N1.5 that penalizes temporal inconsistency in the action sequence, encouraging smoother and more executable trajectories.
+What is Eagle 2.5?	The VLM backbone used in GR00T N1.5 as the frozen System 2. Provides better vision-language grounding than N1's VLM — RefCOCOg IoU 89.6, above Qwen2.5-VL-3B's 85.2.
+What benchmark measures GR00T's improvement from N1 to N1.5?	RoboCasa 30-demo task success: 17.4% (N1) → 47.5% (N1.5). A 2.7x improvement from three architectural changes.
+What is DreamGen / GR00T-Dreams?	NVIDIA's synthetic data generation pipeline: retargets real demonstrations to Isaac Lab simulation using Newton physics, generates thousands of synthetic hours from small real-seed datasets. Produced 6,500 hours from 11 hours of compute.
+When was GR00T N1 announced?	NVIDIA GTC, March 18, 2025.
+When was GR00T N1.5 released?	NVIDIA Research, June 11, 2025. research.nvidia.com/labs/gear/gr00t-n1_5/
+What GPU is required for GR00T N1.5 inference?	40GB+ GPU (A100 or H100 class). Not feasible on consumer 12GB GPUs — use cloud for inference or evaluation.
+What is the closest reference deployment architecture to the JHU humanoid capstone using GR00T?	1X Technologies NEO Gamma deployment of GR00T N1 (NVIDIA-1X partnership, March 18, 2025). Full Isaac Lab stack: sim training → GR00T post-training → on-robot deployment.

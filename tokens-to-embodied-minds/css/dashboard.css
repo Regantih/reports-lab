@@ -1,0 +1,344 @@
+/* Personal study dashboard
+   Scoped styles only — does not modify style.css. */
+
+.dash {
+  max-width: var(--content-wide);
+  margin: 0 auto;
+  padding: var(--space-10) var(--space-6) var(--space-24);
+}
+
+@media (min-width: 720px) {
+  .dash { padding-inline: var(--space-10); }
+}
+
+.dash__eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-4);
+  display: flex; align-items: center; gap: var(--space-3);
+}
+.dash__eyebrow::before {
+  content: ''; width: 32px; height: 1px; background: var(--color-text-muted);
+}
+
+.dash__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--text-2xl);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin: 0 0 var(--space-3);
+  color: var(--color-text);
+}
+
+.dash__dek {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--text-lg);
+  color: var(--color-text-muted);
+  margin: 0 0 var(--space-10);
+  max-width: 56ch;
+}
+
+/* Next-step nudge */
+.dash-nudge {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  border: 1px solid var(--color-accent-copper);
+  background: color-mix(in oklab, var(--color-accent-copper) 8%, var(--color-surface));
+  border-left-width: 4px;
+  padding: var(--space-5) var(--space-6);
+  border-radius: 4px;
+  margin-bottom: var(--space-12);
+}
+.dash-nudge__label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-accent-copper);
+}
+.dash-nudge__body {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  color: var(--color-text);
+  line-height: 1.35;
+}
+.dash-nudge__body a {
+  color: var(--color-accent-copper);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* KPI tiles */
+.dash-kpis {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+  margin-bottom: var(--space-12);
+}
+@media (min-width: 720px) {
+  .dash-kpis { grid-template-columns: repeat(4, 1fr); }
+}
+.dash-kpi {
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-divider);
+  border-radius: 4px;
+  padding: var(--space-5) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.dash-kpi__num {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--text-xl);
+  color: var(--color-text);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.dash-kpi__num em {
+  font-family: var(--font-mono);
+  font-style: normal;
+  font-size: 0.6em;
+  font-weight: 400;
+  color: var(--color-text-muted);
+  margin-left: 0.2em;
+}
+.dash-kpi__label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+/* Section heading shared */
+.dash-section { margin-bottom: var(--space-12); }
+.dash-section__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+.dash-section__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--text-lg);
+  margin: 0;
+  color: var(--color-text);
+}
+.dash-section__hint {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  letter-spacing: 0.06em;
+}
+
+/* Heatmap */
+.dash-heatmap {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 6px;
+}
+@media (max-width: 640px) {
+  .dash-heatmap { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+@media (max-width: 420px) {
+  .dash-heatmap { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+.dash-cell {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: var(--color-surface);
+  border: 1px solid var(--color-divider);
+  border-radius: 4px;
+  padding: 8px 8px 6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-decoration: none;
+  color: var(--color-text);
+  overflow: hidden;
+  transition: transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease;
+}
+.dash-cell:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border-color: var(--color-accent-copper);
+  z-index: 2;
+}
+.dash-cell--stale { opacity: 0.85; }
+.dash-cell__num {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--text-lg);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.dash-cell__title {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.2;
+  color: var(--color-text-muted);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.dash-cell__pip {
+  position: absolute;
+  top: 6px; right: 6px;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+/* Ladder level palette — copper ramp */
+.dash-cell[data-level="0"] {
+  background: var(--color-surface);
+}
+.dash-cell[data-level="1"] {
+  background: color-mix(in oklab, var(--color-accent-copper) 12%, var(--color-surface));
+  border-color: color-mix(in oklab, var(--color-accent-copper) 22%, var(--color-divider));
+}
+.dash-cell[data-level="2"] {
+  background: color-mix(in oklab, var(--color-accent-copper) 28%, var(--color-surface));
+  border-color: color-mix(in oklab, var(--color-accent-copper) 40%, var(--color-divider));
+  color: var(--color-text);
+}
+.dash-cell[data-level="3"] {
+  background: color-mix(in oklab, var(--color-accent-copper) 55%, var(--color-surface));
+  border-color: color-mix(in oklab, var(--color-accent-copper) 70%, var(--color-divider));
+  color: var(--color-text-inverse);
+}
+.dash-cell[data-level="3"] .dash-cell__title,
+.dash-cell[data-level="3"] .dash-cell__pip {
+  color: color-mix(in oklab, var(--color-text-inverse) 80%, transparent);
+}
+.dash-cell[data-level="4"] {
+  background: var(--color-accent-copper);
+  border-color: var(--color-accent-copper);
+  color: var(--color-text-inverse);
+}
+.dash-cell[data-level="4"] .dash-cell__title,
+.dash-cell[data-level="4"] .dash-cell__pip {
+  color: color-mix(in oklab, var(--color-text-inverse) 80%, transparent);
+}
+
+/* Legend */
+.dash-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  letter-spacing: 0.04em;
+}
+.dash-legend__swatch {
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.dash-legend__chip {
+  width: 14px; height: 14px;
+  border: 1px solid var(--color-divider);
+  border-radius: 3px;
+  display: inline-block;
+}
+
+/* Lists (drills, stuck) */
+.dash-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--color-divider);
+  border: 1px solid var(--color-divider);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.dash-list__row {
+  background: var(--color-surface-2);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  text-decoration: none;
+  color: var(--color-text);
+  font-family: var(--font-body);
+  transition: background 120ms ease;
+}
+.dash-list__row:hover { background: var(--color-surface-offset); }
+.dash-list__main {
+  display: flex; flex-direction: column; gap: 2px; min-width: 0;
+}
+.dash-list__chap {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+.dash-list__title {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: var(--text-base);
+  color: var(--color-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dash-list__snippet {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 60ch;
+}
+.dash-list__meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.06em;
+  color: var(--color-accent-copper);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.dash-empty {
+  border: 1px dashed var(--color-divider);
+  border-radius: 4px;
+  padding: var(--space-6);
+  font-family: var(--font-body);
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  background: var(--color-surface);
+}
+
+/* Tooltip — pure CSS, uses title-like data attribute */
+.dash-cell[data-tip]:hover::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 6px);
+  transform: translateX(-50%);
+  background: var(--color-text);
+  color: var(--color-text-inverse);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  padding: 4px 8px;
+  border-radius: 3px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+}
