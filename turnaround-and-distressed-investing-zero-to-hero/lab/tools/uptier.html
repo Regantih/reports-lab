@@ -63,15 +63,34 @@
         <div class="output__big" id="ratioBig">—</div>
         <p class="muted" style="margin-top:-8px;font-size:13px;">exchange ratio — cents of new debt per dollar surrendered</p>
 
-        <table class="data" style="margin-top:16px;">
-          <thead><tr><th>Post-transaction stack</th><th class="num">Claim</th><th class="num">Recovery</th><th class="num">%</th></tr></thead>
-          <tbody id="stackBody"></tbody>
-        </table>
+
 
         <div class="output" style="margin-top:16px;" id="upOut"></div>
         <ul class="flag-list" id="flags2" style="margin-top:16px;"></ul>
       </div>
+
+      <div class="panel panel--full">
+        <h2 class="panel__title"><strong>05</strong> Recovery by tranche after the uptier</h2>
+        <svg class="chart" id="bars" role="img" aria-label="Recovery by tranche after the uptier"></svg>
+        <div class="chart-legend">
+          <span><i style="background:var(--color-accent-good)"></i> paid in full</span>
+          <span><i style="background:var(--color-accent-copper)"></i> partial</span>
+          <span><i style="background:var(--color-accent-plasma)"></i> wiped out</span>
+          <span><i style="background:var(--color-divider)"></i> full face claim</span>
+        </div>
+        <table class="data compact" style="margin-top:20px;width:100%;">
+          <thead><tr><th>Post-transaction stack</th><th class="num">Claim</th><th class="num">Recovery</th><th class="num">%</th></tr></thead>
+          <tbody id="stackBody"></tbody>
+        </table>
+        <p class="muted" style="font-size:12.5px;margin-top:12px;">Grey bar = full face claim. The new tranches are satisfied first; whatever remains reaches the excluded lenders holding the original instrument.</p>
+      </div>
     </form>
+
+
+    <div class="reading">
+      <h3>Reading this model</h3>
+      <dl><dt>Exchange ratio</dt><dd>New debt received per dollar of old debt surrendered. Serta's was about 73 cents. Read it as a revealed belief: nobody accepts a 27% principal haircut on a claim they expect to recover at par. The ratio is the participants' own valuation of their old position.</dd><dt>Post-transaction stack</dt><dd>The new priority order. New money sits first-out, the exchange tranche second-out, and the non-participants keep their original instrument now ranking behind both — the same paper they held the week before, subordinated by an amendment passed by majority vote.</dd><dt>Excluded recovery, as transacted</dt><dd>What the non-participants get after the new tranches are satisfied. This is the figure that determines whether anyone sues.</dd><dt>Excluded recovery, had it been pro rata</dt><dd>The counterfactual: enterprise value spread across the whole pre-transaction stack without the priority shift. The difference between these two lines is the value the transaction moved between creditors holding legally identical paper.</dd><dt>Value shifted</dt><dd>The quantity that gets litigated. In Serta the model returns roughly $375mm at a $1.4bn enterprise value; the Houston court awarded approximately $400mm on remand. That the two are close is not a coincidence — damages in these cases are essentially this arithmetic.</dd><dt>What to look for</dt><dd>Whether the transaction is permitted turns entirely on two provisions: the pro rata sharing clause and its exceptions (Serta: §2.18(c) and the §9.05(g) open market purchase carve-out), and the sacred rights in the amendment section. Mitel had almost the same economics and survived, because its agreement was drafted differently. Pull both from EDGAR before forming a view.</dd></dl>
+    </div>
 
     <div class="drill">
       <p class="drill__q">The exercise</p>
@@ -98,6 +117,24 @@
     even:       { fl: 1950, sl: 450, newmoney: 200, exchanged: 1200, newtranche: 1200, ev2: 1400 },
     aggressive: { fl: 1950, sl: 450, newmoney: 300, exchanged: 1600, newtranche: 900,  ev2: 1400 },
   };
+
+  function drawBars(id, items, maxV) {
+    const W = 1000, rowH = 34, padL = 320, padR = 72, padT = 8;
+    const H = padT * 2 + items.length * rowH;
+    const max = maxV || Math.max(1, ...items.map(i => i.total));
+    const w = (v) => (v / max) * (W - padL - padR);
+    const svg = items.map((it, i) => {
+      const y = padT + i * rowH;
+      const fill = it.pct > 0.9999 ? 'var(--color-accent-good)' : (it.pct <= 0.0001 ? 'var(--color-accent-plasma)' : 'var(--color-accent-copper)');
+      return `<text x="${padL - 12}" y="${y + 19}" text-anchor="end" font-family="Inter, sans-serif" font-size="12.5" fill="var(--color-text)">${it.label}</text>` +
+        `<rect x="${padL}" y="${y + 6}" width="${Math.max(1, w(it.total)).toFixed(1)}" height="18" rx="2" fill="var(--color-divider)"/>` +
+        `<rect x="${padL}" y="${y + 6}" width="${Math.max(0, w(it.value)).toFixed(1)}" height="18" rx="2" fill="${fill}"/>` +
+        `<text x="${W - padR + 8}" y="${y + 19}" font-family="JetBrains Mono, monospace" font-size="11.5" fill="var(--color-text-muted)">${(it.pct * 100).toFixed(0)}%</text>`;
+    }).join('');
+    const el = document.getElementById(id);
+    el.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    el.innerHTML = svg;
+  }
 
   function compute() {
     const fl = F.parse($('#fl').value), sl = F.parse($('#sl').value);
@@ -128,6 +165,8 @@
              `<td class="num">${m(t.rec )}</td>` +
              `<td class="num"><span class="output__value--${cls}">${F.pct(p, 1)}</span></td></tr>`;
     }).join('');
+
+    drawBars('bars', stack.map(t => ({ label: t.name, value: t.rec, total: t.claim, pct: t.claim > 0 ? t.rec / t.claim : 0 })));
 
     // Counterfactual: no transaction, pro rata across the whole pre-transaction stack.
     const proRata = totalPre > 0 ? Math.min(1, ev / totalPre) : 0;
@@ -165,6 +204,24 @@
   compute();
 })();
 </script>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does an American waterfall differ from a European one?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<button class="tutor-launcher" data-tutor-open type="button" aria-label="Open AI Tutor"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg><span>Ask the tutor</span></button>
 <script src="../js/site.js"></script>
+<script src="../js/tutor.js"></script>
 </body>
 </html>

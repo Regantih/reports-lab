@@ -81,19 +81,40 @@
       </div>
 
       <div class="panel">
-        <h2 class="panel__title"><strong>04</strong> The forecast</h2>
+        <h2 class="panel__title"><strong>04</strong> Headline</h2>
         <div class="output__big" id="troughBig">—</div>
-        <p class="muted" style="margin-top:-8px;font-size:13px;">trough total liquidity</p>
-        <div style="overflow-x:auto;">
-          <table class="data" style="margin-top:16px;min-width:560px;">
-            <thead><tr><th>Wk</th><th class="num">Receipts</th><th class="num">Disb.</th><th class="num">Net</th><th class="num">Cash</th><th class="num">Liquidity</th></tr></thead>
-            <tbody id="twBody"></tbody>
-          </table>
-        </div>
+        <p class="muted" style="margin-top:-8px;font-size:13px;">trough total liquidity — the lowest point across the 13 weeks</p>
         <div class="output" style="margin-top:16px;" id="twOut"></div>
         <ul class="flag-list" id="flags3" style="margin-top:16px;"></ul>
       </div>
+
+      <div class="panel panel--full">
+        <h2 class="panel__title"><strong>05</strong> Liquidity path</h2>
+        <svg class="chart" id="chart" viewBox="0 0 900 260" preserveAspectRatio="none" role="img" aria-label="Weekly liquidity chart"></svg>
+        <div class="chart-legend">
+          <span><i style="background:var(--color-primary)"></i> total liquidity (cash + revolver)</span>
+          <span><i style="background:var(--color-accent-copper)"></i> cash only</span>
+          <span><i style="background:var(--color-accent-plasma)"></i> zero line</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="data compact" style="margin-top:20px;width:100%;">
+            <thead><tr>
+              <th>Wk</th><th class="num">Receipts</th><th class="num">Disburse</th>
+              <th class="num">Net</th><th class="num">Cash</th><th class="num">Revolver</th>
+              <th class="num">Liquidity</th><th class="num">Cum. var.</th>
+            </tr></thead>
+            <tbody id="twBody"></tbody>
+          </table>
+        </div>
+        <p class="muted" style="font-size:12.5px;margin-top:12px;">All figures $mm. The highlighted row is the trough week. Liquidity = cash + undrawn revolver; it is the number that governs how much time exists.</p>
+      </div>
     </form>
+
+
+    <div class="reading">
+      <h3>Reading this model</h3>
+      <dl><dt>Receipts</dt><dd>Cash actually arriving, not revenue recognised. Two components: the opening receivables ageing converting over the collection period, plus collections on new sales. When the ageing runs out — here after the collection period — receipts step down sharply. That step is the single most common surprise in a first forecast.</dd><dt>Disbursements</dt><dd>Cash leaving. Payroll is modelled separately because it lands on fixed dates and cannot be delayed; vendors can be stretched, payroll cannot. Professional fees are zero out of court and become one of the largest lines once a case is filed.</dd><dt>Net</dt><dd>Receipts less disbursements for that week. Negative weeks are normal — a business with fortnightly payroll alternates. What matters is the cumulative direction, not any single week.</dd><dt>Cash / Revolver / Liquidity</dt><dd>Liquidity is cash plus genuinely available revolver. Watch the revolver: availability is set by a borrowing base tied to eligible receivables and inventory, so it shrinks exactly when the business deteriorates. A liquidity line that looks flat because of revolver capacity can fall away without warning.</dd><dt>Trough liquidity</dt><dd>The lowest point across the thirteen weeks, and the number that governs everything. It determines how much time exists, and therefore which outcomes are even reachable. A company with eleven weeks of runway cannot run a going-concern sale process that takes sixteen.</dd><dt>Cumulative variance</dt><dd>Actual cumulative receipts against budget. DIP facilities permit 10–15% deviation, tested weekly; breaching it is an event of default that hands control to the lenders. A persistent collections miss compounds — this is why the covenant is cumulative rather than weekly.</dd><dt>What to look for</dt><dd>Three things. Does the trough fall inside the forecast window, or beyond it? Does the variance line trend down rather than oscillate — a trend means the collection assumption is wrong, noise means timing. And how much of the liquidity is revolver rather than cash, because that portion can be withdrawn.</dd></dl>
+    </div>
 
     <div class="drill">
       <p class="drill__q">The exercise</p>
@@ -117,6 +138,27 @@
     crisis: { cash0:10, revAvail:8,  ar:70, collectWks:8, newSales:5.5, payroll:6, vendors:6.5, opex:2.5, profFees:1.0, debtSvc:0.8, variance:15, actualHit:92 },
   };
 
+  function drawChart(rows) {
+    const W = 900, H = 260, padL = 52, padR = 14, padT = 16, padB = 28;
+    const liq = rows.map(r => r.liq), cash = rows.map(r => r.cash);
+    const lo = Math.min(0, ...liq, ...cash), hi = Math.max(...liq, ...cash, 1);
+    const x = (i) => padL + (i / (rows.length - 1)) * (W - padL - padR);
+    const y = (v) => padT + (1 - (v - lo) / (hi - lo || 1)) * (H - padT - padB);
+    const path = (arr) => arr.map((v, i) => (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(v).toFixed(1)).join(' ');
+    const ticks = [hi, hi - (hi - lo) / 2, lo].map(v => `
+      <line x1="${padL}" y1="${y(v).toFixed(1)}" x2="${W - padR}" y2="${y(v).toFixed(1)}" stroke="var(--color-divider)" stroke-width="1"/>
+      <text x="${padL - 8}" y="${(y(v) + 4).toFixed(1)}" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="10" fill="var(--color-text-muted)">${v.toFixed(0)}</text>`).join('');
+    const zero = lo < 0 ? `<line x1="${padL}" y1="${y(0).toFixed(1)}" x2="${W - padR}" y2="${y(0).toFixed(1)}" stroke="var(--color-accent-plasma)" stroke-width="1.5" stroke-dasharray="4 3"/>` : '';
+    const labels = rows.map((r, i) => i % 2 === 0
+      ? `<text x="${x(i).toFixed(1)}" y="${H - 8}" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="var(--color-text-muted)">${r.w}</text>` : '').join('');
+    const tr = rows.findIndex(r => r.liq === Math.min(...liq));
+    document.getElementById('chart').innerHTML = ticks + zero +
+      `<path d="${path(cash)}" fill="none" stroke="var(--color-accent-copper)" stroke-width="1.6" stroke-dasharray="3 3"/>` +
+      `<path d="${path(liq)}" fill="none" stroke="var(--color-primary)" stroke-width="2.2"/>` +
+      `<circle cx="${x(tr).toFixed(1)}" cy="${y(liq[tr]).toFixed(1)}" r="4" fill="var(--color-primary)"/>` +
+      labels;
+  }
+
   function compute() {
     const g = (id) => F.parse($('#' + id).value);
     const cash0 = g('cash0'), revAvail = g('revAvail'), ar = g('ar');
@@ -139,19 +181,24 @@
       if (liq < trough) { trough = liq; troughWk = w; }
       const varPct = cumRF > 0.001 ? (cumRA - cumRF) / cumRF : 0;
       if (!breachWk && varPct < -variance) breachWk = w;
-      rows.push({ w, receiptsA, disb, net, cash, liq, varPct });
+      rows.push({ w, receiptsA, disb, net, cash, liq, varPct, rev: revAvail });
     }
 
     $('#troughBig').textContent = m(trough) + '  (wk ' + troughWk + ')';
     $('#twBody').innerHTML = rows.map((r) => {
-      const cls = r.liq < 0 ? 'bad' : (r.liq < 10 ? 'warn' : '');
+      const cls = r.liq < 0 ? 'bad' : (r.liq < 10 ? 'warn' : 'good');
+      const vcls = r.varPct < -variance ? 'bad' : (r.varPct < 0 ? 'warn' : 'good');
       const hl = r.w === troughWk ? ' class="highlight"' : '';
-      return `<tr${hl}><td>${r.w}</td><td class="num">${F.fmt(r.receiptsA,{decimals:1})}</td>` +
-        `<td class="num">${F.fmt(r.disb,{decimals:1})}</td>` +
-        `<td class="num">${F.fmt(r.net,{decimals:1})}</td>` +
-        `<td class="num">${F.fmt(r.cash,{decimals:1})}</td>` +
-        `<td class="num"><span class="output__value--${cls}">${F.fmt(r.liq,{decimals:1})}</span></td></tr>`;
+      const n = (v) => v.toFixed(1);
+      return `<tr${hl}><td>${r.w}</td><td class="num">${n(r.receiptsA)}</td>` +
+        `<td class="num">${n(r.disb)}</td>` +
+        `<td class="num">${r.net >= 0 ? '' : '\u2212'}${n(Math.abs(r.net))}</td>` +
+        `<td class="num">${n(r.cash)}</td>` +
+        `<td class="num">${n(r.rev)}</td>` +
+        `<td class="num"><span class="output__value--${cls}">${n(r.liq)}</span></td>` +
+        `<td class="num"><span class="output__value--${vcls}">${(r.varPct*100).toFixed(1)}%</span></td></tr>`;
     }).join('');
+    drawChart(rows);
 
     const totR = rows.reduce((a,r)=>a+r.receiptsA,0), totD = rows.reduce((a,r)=>a+r.disb,0);
     const endLiq = rows[12].liq;
@@ -188,6 +235,24 @@
   compute();
 })();
 </script>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does an American waterfall differ from a European one?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<button class="tutor-launcher" data-tutor-open type="button" aria-label="Open AI Tutor"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg><span>Ask the tutor</span></button>
 <script src="../js/site.js"></script>
+<script src="../js/tutor.js"></script>
 </body>
 </html>

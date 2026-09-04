@@ -51,6 +51,24 @@
 </main>
 
 <footer class="site-footer"><div class="wrap"><p class="muted">Turnaround and Distressed Investing &middot; the restructuring lab</p></div></footer>
+<div class="tutor-modal" data-tutor aria-hidden="true" data-api="https://text.pollinations.ai/openai">
+  <div class="tutor__panel" role="dialog" aria-label="AI Tutor">
+    <div class="tutor__head">
+      <div>
+        <div class="tutor__head-title">Tutor</div>
+        <div class="tutor__head-sub">Ask anything about the report</div>
+      </div>
+      <button class="tutor__close" data-tutor-close type="button">Close</button>
+    </div>
+    <div class="tutor__log" data-tutor-log></div>
+    <form class="tutor__form" data-tutor-form>
+      <input class="tutor__input" data-tutor-input type="text" placeholder="e.g. how does an American waterfall differ from a European one?" autocomplete="off">
+      <button class="tutor__send" type="submit">Ask</button>
+    </form>
+  </div>
+</div>
+<button class="tutor-launcher" data-tutor-open type="button" aria-label="Open AI Tutor"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 11.5a8.4 8.4 0 0 1-12.1 7.5L3 20l1-4.6A8.4 8.4 0 1 1 21 11.5z"/></svg><span>Ask the tutor</span></button>
 <script src="js/site.js"></script>
+<script src="js/tutor.js"></script>
 </body>
 </html>
