@@ -1,4 +1,4 @@
-/* Private Equity and Venture Capital — client app.
+/* Turnaround and Distressed Investing — client app.
    Theme, progress, reveals, sticky header, TOC, reading position,
    search, audio narration with voice picker, AI tutor, bookmarks. */
 (function () {
@@ -137,7 +137,7 @@
     const render = (query) => {
       if (!index) return;
       const q = query.trim().toLowerCase();
-      if (!q || q.length < 2) { results.innerHTML = '<div class="search__hint">Type at least 2 characters. Try “waterfall”, “term sheet”, “IRR”.</div>'; return; }
+      if (!q || q.length < 2) { results.innerHTML = '<div class="search__hint">Type at least 2 characters. Try “fulcrum”, “uptier”, “DIP”.</div>'; return; }
       const tokens = q.split(/\s+/);
       const scored = [];
       for (const r of index) {
@@ -405,16 +405,21 @@
       chapterTitle: document.body.getAttribute('data-chapter-title') || '',
       chapterSlug: document.body.getAttribute('data-chapter-slug') || '',
     };
-    const SYSTEM_PROMPT = "You are the in-book tutor for 'Private Equity and Venture Capital: A Complete Professional Guide' " +
-      "— a long-form report covering fund structure, LPAs, fund economics (management fees, carried interest, " +
-      "American/European waterfalls), GP/LP dynamics, fundraising, deal sourcing, commercial and financial due " +
-      "diligence (incl. quality of earnings), valuation (comparables, precedent, DCF, LBO, VC method), term sheets, " +
-      "preferred stock and liquidation preferences, anti-dilution, cap tables, governance, value creation, exits " +
-      "(strategic, S2S, IPO, dividend recap), secondaries and continuation vehicles, sector investing, market cycles, " +
-      "regulation (Investment Advisers Act, NVCA, ILPA), and IC memo craft. " +
-      "Answer questions clearly and concisely (3–6 sentences unless the user asks for depth). " +
-      "Use plain language first, then add precision. Prefer concrete examples — a $200M fund, a 2x preference, " +
-      "a 6% hurdle, a 20% carry. If a question is outside the book’s scope, still answer briefly but note the " +
+    const SYSTEM_PROMPT = "You are the in-book tutor for 'Turnaround and Distressed Investing: A Zero-to-Hero Professional Path' " +
+      "\u2014 a long-form report covering distress mechanics (operational vs balance-sheet vs liquidity distress), " +
+      "capital structure and priority, structural subordination, the fulcrum security, credit analysis, liquidity and " +
+      "runway, credit agreement covenants and baskets, unrestricted subsidiaries, distressed valuation and recovery " +
+      "analysis, out-of-court restructuring, the Chapter 11 process (automatic stay, first day motions, DIP financing " +
+      "and cash collateral, 363 sales, plan confirmation and cramdown, claims and avoidance actions), liability " +
+      "management exercises (dropdowns, uptiers, double-dips, cooperation agreements), the Serta and Mitel decisions, " +
+      "and operational turnaround (the CRO seat, the 13-week cash flow model, the 100-day plan). " +
+      "Answer questions clearly and concisely (3\u20136 sentences unless the user asks for depth). " +
+      "Use plain language first, then add precision. Prefer concrete examples \u2014 a $600mm enterprise value against " +
+      "$300mm first lien and $400mm second lien, a 90-day preference lookback, a 10\u201315% DIP budget variance covenant. " +
+      "On liability management, be accurate about current law: the Fifth Circuit held in Serta (31 Dec 2024) that the " +
+      "uptier was not an open market purchase, and the New York Appellate Division upheld a similar uptier in Mitel the " +
+      "same day on different contract language \u2014 outcomes turn on the specific words in the credit agreement, not on " +
+      "the shape of the transaction. If a question is outside the book\u2019s scope, still answer briefly but note the " +
       "connection back to the book. Never refuse a reasonable practitioner question. Do not use markdown headers; " +
       "short paragraphs are fine.";
     const open = () => { tutorEl.setAttribute('aria-hidden', 'false'); document.body.setAttribute('data-modal-open', 'true'); setTimeout(() => input && input.focus(), 50); };
@@ -446,7 +451,7 @@
       return body;
     };
     if (!log.children.length) {
-      append('assistant', 'Hi — I’m your tutor for this report. Ask me anything about fund structure, term sheets, waterfalls, LBOs, secondaries — anything PE/VC. I’ll keep it short and clear.');
+      append('assistant', 'Hi — I’m your tutor for this report. Ask me anything about capital structures, the fulcrum security, DIP financing, cramdown, uptiers and dropdowns, or the 13-week cash flow model. I’ll keep it short and clear.');
     }
     const history = [];
     const ENDPOINTS = [

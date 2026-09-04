@@ -51,50 +51,48 @@
     </div>
     <div class="hero__visual"><svg class="diagram" viewBox="0 0 600 700" role="img" aria-hidden="true" preserveAspectRatio="xMaxYMid meet">
       <defs>
-        <radialGradient id="rxGlow" cx="0.5" cy="0.5" r="0.55"><stop offset="0" stop-color="var(--color-primary)" stop-opacity="0.4"/><stop offset="1" stop-color="var(--color-primary)" stop-opacity="0"/></radialGradient>
-        <radialGradient id="rxBreak" cx="0.5" cy="0.5" r="0.6"><stop offset="0" stop-color="var(--color-accent-copper)" stop-opacity="0.45"/><stop offset="1" stop-color="var(--color-accent-copper)" stop-opacity="0"/></radialGradient>
+        <radialGradient id="rxGlow" cx="0.5" cy="0.5" r="0.6"><stop offset="0" stop-color="var(--color-primary)" stop-opacity="0.28"/><stop offset="1" stop-color="var(--color-primary)" stop-opacity="0"/></radialGradient>
+        <radialGradient id="rxBreak" cx="0.5" cy="0.5" r="0.6"><stop offset="0" stop-color="var(--color-accent-copper)" stop-opacity="0.32"/><stop offset="1" stop-color="var(--color-accent-copper)" stop-opacity="0"/></radialGradient>
       </defs>
 
-      <text x="300" y="42" text-anchor="middle" fill="var(--color-text-muted)" font-family="JetBrains Mono, monospace" font-size="11">enterprise value</text>
-      <line x1="90" y1="60" x2="510" y2="60" stroke="var(--color-text-muted)" stroke-width="1" stroke-dasharray="3 3"/>
+      <circle cx="415" cy="240" r="165" fill="url(#rxGlow)"/>
+      <circle cx="415" cy="360" r="150" fill="url(#rxBreak)"/>
 
-      <circle cx="300" cy="150" r="150" fill="url(#rxGlow)"/>
-      <g transform="translate(150 100)">
-        <rect x="0" y="0" width="300" height="52" rx="3" fill="var(--color-primary)" fill-opacity="0.22" stroke="var(--color-text)" stroke-width="1"/>
-        <text x="16" y="31" fill="var(--color-text)" font-family="JetBrains Mono, monospace" font-size="11">FIRST LIEN</text>
-        <text x="284" y="31" text-anchor="end" fill="var(--color-text-muted)" font-family="JetBrains Mono, monospace" font-size="10">recovers 100</text>
-      </g>
-      <g transform="translate(150 168)">
-        <rect x="0" y="0" width="300" height="52" rx="3" fill="var(--color-primary)" fill-opacity="0.12" stroke="var(--color-text)" stroke-width="1"/>
-        <text x="16" y="31" fill="var(--color-text)" font-family="JetBrains Mono, monospace" font-size="11">SECOND LIEN</text>
-        <text x="284" y="31" text-anchor="end" fill="var(--color-text-muted)" font-family="JetBrains Mono, monospace" font-size="10">impaired</text>
-      </g>
+      <text x="415" y="150" text-anchor="middle" fill="var(--color-text-muted)" font-family="JetBrains Mono, monospace" font-size="11" opacity="0.75">enterprise value</text>
+      <line x1="280" y1="166" x2="550" y2="166" stroke="var(--color-text-muted)" stroke-width="1" stroke-dasharray="3 3" opacity="0.55"/>
 
-      <circle cx="300" cy="246" r="140" fill="url(#rxBreak)"/>
-      <line x1="90" y1="246" x2="510" y2="246" stroke="var(--color-accent-copper)" stroke-width="2"/>
-      <text x="300" y="266" text-anchor="middle" fill="var(--color-accent-copper)" font-family="JetBrains Mono, monospace" font-size="11" font-weight="500">FULCRUM &mdash; value breaks here</text>
+      <g opacity="0.9">
+        <rect x="280" y="192" width="270" height="46" rx="3" fill="var(--color-primary)" fill-opacity="0.16" stroke="var(--color-text-muted)" stroke-width="1"/>
+        <text x="296" y="220" fill="var(--color-text-muted)" font-family="JetBrains Mono, monospace" font-size="10">FIRST LIEN</text>
+        <text x="534" y="220" text-anchor="end" fill="var(--color-text-muted)" font-family="JetBrains Mono, monospace" font-size="9" opacity="0.8">recovers 100</text>
 
-      <g transform="translate(150 288)">
-        <rect x="0" y="0" width="300" height="48" rx="3" fill="var(--color-surface-offset)" stroke="var(--color-text-muted)" stroke-width="1" stroke-dasharray="3 3"/>
-        <text x="16" y="29" fill="var(--color-text-muted)" font-family="JetBrains Mono, monospace" font-size="11">UNSECURED NOTES</text>
-        <text x="284" y="29" text-anchor="end" fill="var(--color-text-muted)" font-family="JetBrains Mono, monospace" font-size="10">nil</text>
-      </g>
-      <g transform="translate(150 348)">
-        <rect x="0" y="0" width="300" height="48" rx="3" fill="var(--color-surface-offset)" stroke="var(--color-text-muted)" stroke-width="1" stroke-dasharray="3 3"/>
-        <text x="16" y="29" fill="var(--color-text-muted)" font-family="JetBrains Mono, monospace" font-size="11">EQUITY</text>
-        <text x="284" y="29" text-anchor="end" fill="var(--color-text-muted)" font-family="JetBrains Mono, monospace" font-size="10">nil</text>
+        <rect x="280" y="248" width="270" height="46" rx="3" fill="var(--color-primary)" fill-opacity="0.09" stroke="var(--color-text-muted)" stroke-width="1"/>
+        <text x="296" y="276" fill="var(--color-text-muted)" font-family="JetBrains Mono, monospace" font-size="10">SECOND LIEN</text>
+        <text x="534" y="276" text-anchor="end" fill="var(--color-text-muted)" font-family="JetBrains Mono, monospace" font-size="9" opacity="0.8">impaired</text>
       </g>
 
-      <text x="300" y="452" text-anchor="middle" fill="var(--color-text-muted)" font-family="JetBrains Mono, monospace" font-size="11">the 13-week runway</text>
-      <g transform="translate(110 470)">
-        <path d="M0 90 L30 84 L60 92 L90 74 L120 78 L150 60 L180 66 L210 44 L240 50 L270 30 L300 38 L330 16 L380 22"
-              fill="none" stroke="var(--color-accent-copper)" stroke-width="2"/>
-        <line x1="0" y1="112" x2="380" y2="112" stroke="var(--color-text-muted)" stroke-width="1"/>
-        <line x1="0" y1="112" x2="0" y2="8" stroke="var(--color-text-muted)" stroke-width="1"/>
-        <circle cx="330" cy="16" r="4" fill="var(--color-accent-copper)"/>
+      <line x1="272" y1="312" x2="558" y2="312" stroke="var(--color-accent-copper)" stroke-width="1.6" opacity="0.85"/>
+      <text x="415" y="330" text-anchor="middle" fill="var(--color-accent-copper)" font-family="JetBrains Mono, monospace" font-size="10" opacity="0.9">FULCRUM &mdash; value breaks here</text>
+
+      <g opacity="0.5">
+        <rect x="280" y="346" width="270" height="40" rx="3" fill="none" stroke="var(--color-text-muted)" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="296" y="371" fill="var(--color-text-muted)" font-family="JetBrains Mono, monospace" font-size="10">UNSECURED NOTES</text>
+        <text x="534" y="371" text-anchor="end" fill="var(--color-text-muted)" font-family="JetBrains Mono, monospace" font-size="9">nil</text>
+
+        <rect x="280" y="394" width="270" height="40" rx="3" fill="none" stroke="var(--color-text-muted)" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="296" y="419" fill="var(--color-text-muted)" font-family="JetBrains Mono, monospace" font-size="10">EQUITY</text>
+        <text x="534" y="419" text-anchor="end" fill="var(--color-text-muted)" font-family="JetBrains Mono, monospace" font-size="9">nil</text>
       </g>
-      <text x="300" y="618" text-anchor="middle" fill="var(--color-text-muted)" font-family="JetBrains Mono, monospace" font-size="10">liquidity, week 1 &rarr; week 13</text>
-      <text x="300" y="662" text-anchor="middle" fill="var(--color-text-muted)" font-family="JetBrains Mono, monospace" font-size="11">the two models that govern every case</text>
+
+      <text x="415" y="486" text-anchor="middle" fill="var(--color-text-muted)" font-family="JetBrains Mono, monospace" font-size="11" opacity="0.75">the 13-week runway</text>
+      <g transform="translate(280 502)" opacity="0.85">
+        <path d="M0 74 L22 70 L44 76 L66 61 L88 64 L110 50 L132 55 L154 37 L176 42 L198 26 L220 31 L242 15 L270 19"
+              fill="none" stroke="var(--color-accent-copper)" stroke-width="1.8"/>
+        <line x1="0" y1="92" x2="270" y2="92" stroke="var(--color-text-muted)" stroke-width="1" opacity="0.6"/>
+        <line x1="0" y1="92" x2="0" y2="8" stroke="var(--color-text-muted)" stroke-width="1" opacity="0.6"/>
+        <circle cx="242" cy="15" r="3.5" fill="var(--color-accent-copper)"/>
+      </g>
+      <text x="415" y="620" text-anchor="middle" fill="var(--color-text-muted)" font-family="JetBrains Mono, monospace" font-size="9" opacity="0.7">liquidity, week 1 &rarr; week 13</text>
     </svg></div>
   </section>
 
