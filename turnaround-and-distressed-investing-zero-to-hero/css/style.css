@@ -1942,3 +1942,29 @@ body[data-print-mode="book"] .print-chapter { break-before: page; }
   .tutor__quiz-banner-top { flex-direction: column; align-items: flex-start; }
   .tutor__quiz-banner-actions { width: 100%; }
 }
+
+/* ---------- Hero layering fix (report-specific) ----------
+   The base rules give .hero__visual position:absolute over the right 50% with
+   no stacking context, and no .hero__text rule at all — so the graphic paints
+   on top of the title. This report's title is long enough to reach under it.
+   Fix: put the text above the visual, keep it clear of the right column, and
+   fade the graphic's inner edge so it reads as a background layer.          */
+.hero__text {
+  position: relative;
+  z-index: 2;
+}
+@media (min-width: 961px) {
+  .hero__text { max-width: 56%; }
+  .hero__title { max-width: 13ch; font-size: clamp(2.75rem, 0.5rem + 5vw, 5.5rem); }
+  .hero__lede { max-width: 46ch; }
+  .hero__visual {
+    width: 44%;
+    z-index: 1;
+    opacity: 0.6;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 22%, #000 100%);
+            mask-image: linear-gradient(to right, transparent 0%, #000 22%, #000 100%);
+  }
+}
+@media (min-width: 1600px) {
+  .hero__text { max-width: 52%; }
+}
