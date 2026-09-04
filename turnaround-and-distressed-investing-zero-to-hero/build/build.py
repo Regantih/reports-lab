@@ -111,8 +111,8 @@ def page_head(title, description, base_css="css/", base_js="js/"):
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(description)}">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="{base_css}base.css?v=20260904">
-<link rel="stylesheet" href="{base_css}style.css?v=20260904">
+<link rel="stylesheet" href="{base_css}base.css?v=20260904b">
+<link rel="stylesheet" href="{base_css}style.css?v=20260904b">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Ccircle cx='12' cy='12' r='9' fill='none' stroke='%231f4a6b' stroke-width='1.5'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23a04a1a'/%3E%3C/svg%3E">
 </head>
 <body{{body_attrs}}>
@@ -219,7 +219,7 @@ def render_chapter(num, slug, title, subtitle, part_idx):
         base="../",
         report_title=esc(REPORT["title"]),
         home="../index.html",
-        js="../js/app.js?v=20260904",
+        js="../js/app.js?v=20260904b",
     )
 
     out = f"""{head}
@@ -339,7 +339,7 @@ def render_index():
         base="",
         report_title=esc(REPORT["title"]),
         home="index.html",
-        js="js/app.js?v=20260904",
+        js="js/app.js?v=20260904b",
     )
 
     out = f"""{head}
@@ -497,7 +497,7 @@ def render_reference(kind):
         base="../",
         report_title=esc(REPORT["title"]),
         home="../index.html",
-        js="../js/app.js?v=20260904",
+        js="../js/app.js?v=20260904b",
     )
 
     cross = ""
