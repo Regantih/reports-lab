@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Waterfall &amp; Recovery Solver — Turnaround Lab</title>
+<meta name="description" content="Enter an enterprise value and a capital structure. Returns recoveries by tranche, identifies the fulcrum security, and shows the value at which the fulcrum moves.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"><link rel="stylesheet" href="../css/lab.css">
+</head>
+<body>
+
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../../index.html"><span class="brand__mark"></span><span>Turnaround<span class="brand__sub"> &middot; the restructuring lab</span></span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../../index.html">Report cover</a>
+  <a class="nav-link nav-link--active" href="../index.html">Lab</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap">
+  <section class="tool reveal">
+    <div class="tool__eyebrow">Tool 01 &middot; <a href="../index.html">the lab</a> &middot; <a href="../../chapters/03-the-fulcrum-security.html">Read: Ch. 03 — The Fulcrum Security</a> &middot; <a href="../../chapters/10-recovery-analysis.html">Ch. 10 — Recovery Analysis</a></div>
+    <h1 class="tool__title">Waterfall &amp; <em>Recovery</em> Solver</h1>
+    <p class="tool__lede">Enter enterprise value and the capital structure in priority order. The solver allocates value down the stack, splits any undersecured claim into its secured and deficiency components, identifies the fulcrum, and tells you the enterprise value at which the fulcrum moves up or down a tranche.</p>
+
+    <div class="chip-row">
+      <button class="chip" data-preset="generic" aria-pressed="true">Teaching example</button>
+      <button class="chip" data-preset="serta">Serta 2016 structure</button>
+      <button class="chip" data-preset="sertapost">Serta post-uptier</button>
+      <button class="chip" data-preset="joann">JOANN 2025</button>
+    </div>
+
+    <form class="solver" id="wf" autocomplete="off" onsubmit="return false;">
+      <div class="panel">
+        <h2 class="panel__title"><strong>01</strong> Value available</h2>
+        <div class="row">
+          <div class="field">
+            <label class="field__label" for="ev">Enterprise value ($M)</label>
+            <input type="number" id="ev" value="600" step="10" min="0">
+            <div class="field__hint">Going-concern value at emergence, or gross liquidation proceeds.</div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="admin">Admin &amp; priority claims ($M)</label>
+            <input type="number" id="admin" value="0" step="5" min="0">
+            <div class="field__hint">Professional fees, DIP, 503(b)(9), priority wages. Paid before every pre-petition class.</div>
+          </div>
+        </div>
+
+        <h2 class="panel__title" style="margin-top:24px;"><strong>02</strong> Capital structure, senior first</h2>
+        <p class="muted" style="font-size:13px;margin:0 0 12px;">Claim = face amount outstanding. Collateral = value of the specific collateral pool securing that tranche; leave blank or 0 for unsecured. A secured claim above its collateral value splits: secured to the collateral, deficiency ranks with unsecured.</p>
+        <div id="tranches"></div>
+        <button type="button" class="chip" id="addRow" style="margin-top:12px;">+ Add tranche</button>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>03</strong> Recoveries</h2>
+        <div class="output__big" id="fulcrumBig">—</div>
+        <p class="muted" style="margin-top:-8px;font-size:13px;">the fulcrum security</p>
+        <table class="data" style="margin-top:16px;">
+          <thead><tr><th>Tranche</th><th class="num">Claim</th><th class="num">Recovery</th><th class="num">%</th></tr></thead>
+          <tbody id="wfBody"></tbody>
+        </table>
+        <div class="output" style="margin-top:16px;" id="wfOut"></div>
+        <ul class="flag-list" id="flags" style="margin-top:16px;"></ul>
+      </div>
+    </form>
+
+    <div class="drill">
+      <p class="drill__q">The exercise</p>
+      <p>Run the same structure at three enterprise values — your low, base and high case. Note which tranche is the fulcrum in each. A tranche that is the fulcrum across the whole range is a very different investment from one that is the fulcrum only in the base case. That difference is the entire trade.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer"><div class="wrap"><p class="muted">Turnaround and Distressed Investing &middot; the restructuring lab</p></div></footer>
+
+<script src="../js/finance.js"></script>
+<script>
+(function () {
+  const F = window.Fin;
+  const $ = (s) => document.querySelector(s);
+  const m = (v) => { // $M in, readable out: 2dp for billions, 0dp for millions
+    if (!isFinite(v)) return '\u2014';
+    const s = v < 0 ? '-' : ''; const a = Math.abs(v);
+    return a >= 1000 ? s + '$' + (a/1000).toFixed(2) + 'bn' : s + '$' + a.toFixed(0) + 'mm';
+  };
+
+
+  const PRESETS = {
+    generic: { ev: 600, admin: 0, rows: [
+      ['First lien term loan', 300, 300],
+      ['Second lien term loan', 400, 300],
+      ['Senior unsecured notes', 250, 0],
+    ]},
+    serta: { ev: 1400, admin: 0, rows: [
+      ['2016 first lien term loan', 1950, 1400],
+      ['2016 second lien term loan', 450, 0],
+    ]},
+    sertapost: { ev: 1400, admin: 0, rows: [
+      ['New first-out (new money)', 200, 200],
+      ['New second-out (exchange tranche)', 875, 875],
+      ['Remaining 2016 first lien', 960, 325],
+      ['Remaining 2016 second lien', 240, 0],
+    ]},
+    joann: { ev: 420, admin: 60, rows: [
+      ['DIP / prepetition secured', 300, 300],
+      ['Prepetition term loan', 315, 120],
+      ['General unsecured claims', 400, 0],
+    ]},
+  };
+
+  function rowHTML(i, name, claim, collat) {
+    return `<div class="row" data-row>
+      <div class="field"><label class="field__label">Tranche ${i + 1}</label>
+        <input type="text" data-name value="${name}"></div>
+      <div class="field"><label class="field__label">Claim ($M)</label>
+        <input type="number" data-claim value="${claim}" step="10" min="0"></div>
+      <div class="field"><label class="field__label">Collateral ($M)</label>
+        <input type="number" data-collat value="${collat}" step="10" min="0"></div>
+    </div>`;
+  }
+
+  function load(key) {
+    const p = PRESETS[key];
+    $('#ev').value = p.ev; $('#admin').value = p.admin;
+    $('#tranches').innerHTML = p.rows.map((r, i) => rowHTML(i, r[0], r[1], r[2])).join('');
+    compute();
+  }
+
+  function compute() {
+    const ev = F.parse($('#ev').value);
+    const admin = F.parse($('#admin').value);
+    let pool = Math.max(0, ev - admin);
+
+    const rows = [...document.querySelectorAll('[data-row]')].map((el) => ({
+      name: el.querySelector('[data-name]').value || 'Tranche',
+      claim: F.parse(el.querySelector('[data-claim]').value),
+      collat: F.parse(el.querySelector('[data-collat]').value),
+    })).filter((r) => r.claim > 0);
+
+    // Pass 1: secured recoveries, capped at the lesser of claim and collateral.
+    const res = rows.map((r) => {
+      const secured = Math.min(r.claim, r.collat);
+      const take = Math.min(secured, pool);
+      pool -= take;
+      return { ...r, securedTake: take, deficiency: r.claim - take, recovery: take };
+    });
+
+    // Pass 2: residual value to deficiency + unsecured claims, pro rata.
+    const unsecTotal = res.reduce((a, r) => a + r.deficiency, 0);
+    if (unsecTotal > 0 && pool > 0) {
+      const ratio = Math.min(1, pool / unsecTotal);
+      res.forEach((r) => { const add = r.deficiency * ratio; r.recovery += add; });
+      pool -= Math.min(pool, unsecTotal);
+    }
+
+    // Fulcrum = first tranche that is impaired but receives something; else first fully impaired.
+    let fulcrum = null;
+    for (const r of res) {
+      const pctR = r.claim > 0 ? r.recovery / r.claim : 0;
+      if (pctR > 0.0001 && pctR < 0.9999) { fulcrum = r; break; }
+    }
+    if (!fulcrum) fulcrum = res.find((r) => r.recovery <= 0.0001) || null;
+
+    $('#fulcrumBig').textContent = fulcrum ? fulcrum.name : 'All claims paid in full';
+
+    $('#wfBody').innerHTML = res.map((r) => {
+      const pctR = r.claim > 0 ? r.recovery / r.claim : 0;
+      const cls = pctR > 0.9999 ? 'good' : (pctR <= 0.0001 ? 'bad' : 'warn');
+      const hl = fulcrum && r === fulcrum ? ' class="highlight"' : '';
+      return `<tr${hl}><td>${r.name}</td><td class="num">${m(r.claim )}</td>` +
+             `<td class="num">${m(r.recovery )}</td>` +
+             `<td class="num"><span class="output__value--${cls}">${F.pct(pctR, 1)}</span></td></tr>`;
+    }).join('');
+
+    const totalClaims = res.reduce((a, r) => a + r.claim, 0);
+    const totalRec = res.reduce((a, r) => a + r.recovery, 0);
+    const residual = Math.max(0, pool);
+
+    // Where does the fulcrum move? Cumulative claim boundaries.
+    let cum = admin; const bounds = [];
+    res.forEach((r) => { cum += r.claim; bounds.push({ name: r.name, ev: cum }); });
+
+    $('#wfOut').innerHTML = [
+      ['Value after admin/priority', m(Math.max(0, ev - admin) )],
+      ['Total claims', m(totalClaims )],
+      ['Total distributed', m(totalRec )],
+      ['Residual to equity', m(residual )],
+      ['Blended recovery', F.pct(totalClaims > 0 ? totalRec / totalClaims : 0, 1)],
+    ].map(([l, v]) => `<div class="output__row"><span class="output__label">${l}</span><span class="output__value">${v}</span></div>`).join('');
+
+    const flags = [];
+    bounds.forEach((b, i) => {
+      if (i < bounds.length - 1 && ev < b.ev) {
+        flags.push(['info', `At an enterprise value of ${m(b.ev )} the fulcrum moves down past ${b.name}. You are ${m(b.ev - ev)} below that boundary.`]);
+      }
+    });
+    res.forEach((r) => {
+      if (r.collat > 0 && r.claim > r.collat) {
+        flags.push(['warn', `${r.name} is undersecured: ${m(r.collat )} of collateral against a ${m(r.claim )} claim. The ${m(r.claim - r.collat)} deficiency ranks alongside general unsecured claims and dilutes their recovery.`]);
+      }
+    });
+    if (admin / Math.max(ev, 1) > 0.10) flags.push(['bad', `Admin and priority claims are ${F.pct(admin / ev, 0)} of enterprise value. In a long case these consume the fulcrum's recovery — which is why creditors expecting the equity push for speed.`]);
+    if (residual > 0) flags.push(['good', `Every class is paid in full with ${m(residual )} left over. Existing equity retains value — rare, and worth checking your valuation before believing it.`]);
+    if (!flags.length) flags.push(['info', 'Structure resolves cleanly at this value. Run your low and high cases before sizing anything.']);
+
+    $('#flags').innerHTML = flags.slice(0, 6).map(([k, t]) => `<li><span class="pill pill--${k}">${k.toUpperCase()}</span><span>${t}</span></li>`).join('');
+  }
+
+  document.querySelectorAll('[data-preset]').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('[data-preset]').forEach((x) => x.setAttribute('aria-pressed', 'false'));
+    b.setAttribute('aria-pressed', 'true');
+    load(b.dataset.preset);
+  }));
+  $('#addRow').addEventListener('click', () => {
+    const n = document.querySelectorAll('[data-row]').length;
+    $('#tranches').insertAdjacentHTML('beforeend', rowHTML(n, 'New tranche', 100, 0));
+    compute();
+  });
+  document.getElementById('wf').addEventListener('input', compute);
+  load('generic');
+})();
+</script>
+<script src="../js/site.js"></script>
+</body>
+</html>

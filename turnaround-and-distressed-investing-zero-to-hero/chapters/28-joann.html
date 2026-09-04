@@ -23,6 +23,7 @@
     <a class="nav-link" href="../index.html">Cover</a>
     <a class="nav-link nav-link--active" href="../index.html#chapters">Chapters</a>
     <a class="nav-link" href="../chapters/24-the-study-path.html">Study Path</a>
+    <a class="nav-link" href="../lab/index.html">Lab</a>
     <a class="nav-link" href="../chapters/glossary.html">Reference</a>
     <button class="icon-btn" data-search-open aria-label="Search the report (⌘K)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg></button>
     <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
@@ -63,7 +64,7 @@
   </header>
 
   <div class="ch-layout">
-    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#story">The story</a></li><li><a href="#why">Why the first case failed</a></li><li><a href="#outcome">The outcome</a></li><li><a href="#documents">The documents to pull</a></li></ul></aside>
+    <aside class="ch-toc"><div class="ch-toc__title">In this chapter</div><ul><li><a href="#story">The story</a></li><li><a href="#why">Why the first case failed</a></li><li><a href="#outcome">The outcome</a></li><li><a href="#numbers">The numbers</a></li><li><a href="#documents">The documents to pull</a></li></ul></aside>
     <article class="prose">
       <p class="lede">JOANN filed twice in fourteen months. The first case was a textbook balance-sheet restructuring, executed fast and clean, and by every financial measure it worked. Eight months after emerging, the company was back in court; five months after that, all 800-plus stores were closed. It is the most instructive pair of dockets in recent American bankruptcy, because the second case explains, in the company's own words, why the first one was not enough.</p><h2 id="story">The story</h2>
 <p>JOANN was the category leader in sewing and fabric retail, founded in Cleveland in 1943. The pandemic was a windfall — sales rose 23.5% from fiscal 2020 to fiscal 2021 as consumers took up home projects and made masks — and the company returned to the public market with a March 2021 IPO after years under private equity ownership. Then the hobby demand reverted, discretionary spending contracted, and a capital structure sized for the pandemic peak became untenable.</p>
@@ -76,6 +77,12 @@
 <h2 id="outcome">The outcome</h2>
 <p>The second case moved from petition to liquidation timetable quickly. The company announced 500 store closures in February 2025 and shifted to a full liquidation of all remaining locations within weeks. A sale motion in late May 2025 sought approval of a private sale, arguing no further auction was needed because the market had already been checked. The court approved an intellectual property sale to SVP Sewing Brands, an affiliate of Michaels, and confirmed the plan in July 2025.</p>
 <p>Recoveries: secured and priority claims expected at 100%; term loan claims sharing in proceeds; general unsecured creditors at 0–1%; shareholders cancelled. The plan established a wind-down with a plan administrator and a general unsecured creditor trust.</p>
+<h2 id="numbers">The numbers</h2>
+<p><strong>First case.</strong> Funded debt of about $1.06bn cut to $555.5mm — roughly $505mm eliminated, a 48% reduction, achieved in about five weeks with all 815 stores open and management in place. On any financial metric this was a success.</p>
+<p><strong>Second case.</strong> Filed 15 January 2025 with approximately $615.7mm of total debt against roughly $2bn of annual revenue and about 19,000 employees. So in the eight months between emergence and refiling, debt <em>rose</em> by roughly $60mm from the post-emergence level. That is the number that tells the story: the company did not re-lever through acquisitions or distributions, it drew liquidity to fund a working capital hole created by suppliers moving it to cash on delivery.</p>
+<p><strong>Recoveries in the second case.</strong> Secured and priority claims expected at 100%. Prepetition term loan claims sharing in liquidation proceeds up to the allowed amount. General unsecured claims at <strong>0–1%</strong>. Shareholders cancelled. Roughly 800 stores closed between February and 30 May 2025; the intellectual property went to SVP Sewing Brands, an affiliate of Michaels.</p>
+<p><strong>The arithmetic worth doing.</strong> A 48% debt reduction bought eight months. Model it: at $555.5mm of post-emergence debt, what EBITDA does the company need to service it, and what does inventory availability have to be to produce that EBITDA? The <a href="../lab/tools/thirteen-week.html">13-week model</a> has a preset that reproduces the mechanism — set vendors to COD terms and watch the trough week move forward. That is what happened here.</p>
+<p>Then use the <a href="../lab/tools/liquidation.html">liquidation builder</a> with the retail template. Note how low intangibles and fixtures clear in a full-chain GOB, and why general unsecured creditors ended at 0–1% rather than something recognisable.</p>
 <h2 id="documents">The documents to pull</h2>
 <p>Both dockets are free on Kroll: <strong>cases.ra.kroll.com/Joann</strong> for the 2024 case and <strong>cases.ra.kroll.com/JOANN2025</strong> for the 2025 case.</p>
 <p>From the 2024 case: the Transaction Support Agreement (also filed on EDGAR as an 8-K exhibit), the prepackaged plan, and the first day declaration. From the 2025 case: the first day declaration, the amended disclosure statement filed 5 May 2025 — which contains the post-mortem on the first restructuring — the store closing motions, the IP sale motion and order, and the confirmation order from July 2025.</p>

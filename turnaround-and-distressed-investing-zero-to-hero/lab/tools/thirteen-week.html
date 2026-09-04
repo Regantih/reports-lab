@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>13-Week Cash Flow Model — Turnaround Lab</title>
+<meta name="description" content="Build a 13-week receipts-and-disbursements forecast: collection curves on the receivables ageing, weekly disbursements, revolver availability, and the DIP variance covenant test.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"><link rel="stylesheet" href="../css/lab.css">
+</head>
+<body>
+
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../../index.html"><span class="brand__mark"></span><span>Turnaround<span class="brand__sub"> &middot; the restructuring lab</span></span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../../index.html">Report cover</a>
+  <a class="nav-link nav-link--active" href="../index.html">Lab</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap">
+  <section class="tool reveal">
+    <div class="tool__eyebrow">Tool 03 &middot; <a href="../index.html">the lab</a> &middot; <a href="../../chapters/22-thirteen-week-cash-flow.html">Read: Ch. 22 — The 13-Week Model</a> &middot; <a href="../../chapters/13-dip-financing.html">Ch. 13 — DIP Financing</a></div>
+    <h1 class="tool__title">13-Week <em>Cash Flow</em> Model</h1>
+    <p class="tool__lede">A direct receipts-and-disbursements forecast on a weekly grid. Receipts come from applying a collection curve to the receivables ageing plus new sales; disbursements are broken out by category. The output is the trough liquidity week — the number that governs how much time exists and therefore which outcomes are reachable.</p>
+
+    <div class="chip-row">
+      <button class="chip" data-preset="stable" aria-pressed="true">Manageable</button>
+      <button class="chip" data-preset="tight" aria-pressed="false">Tight — trough inside 13 weeks</button>
+      <button class="chip" data-preset="crisis" aria-pressed="false">Crisis — vendors on COD</button>
+    </div>
+
+    <form class="solver" id="tw" autocomplete="off" onsubmit="return false;">
+      <div class="panel">
+        <h2 class="panel__title"><strong>01</strong> Opening position</h2>
+        <div class="row">
+          <div class="field"><label class="field__label" for="cash0">Opening cash ($M)</label>
+            <input type="number" id="cash0" value="25" step="1"></div>
+          <div class="field"><label class="field__label" for="revAvail">Revolver availability ($M)</label>
+            <input type="number" id="revAvail" value="40" step="5" min="0">
+            <div class="field__hint">Undrawn and actually available under the borrowing base, net of LC reserves.</div></div>
+        </div>
+        <div class="row">
+          <div class="field"><label class="field__label" for="ar">Receivables balance ($M)</label>
+            <input type="number" id="ar" value="90" step="5" min="0"></div>
+          <div class="field"><label class="field__label" for="collectWks">Collection period (weeks)</label>
+            <input type="number" id="collectWks" value="6" step="1" min="1" max="13">
+            <div class="field__hint">Weeks over which the opening ageing converts to cash, straight-lined.</div></div>
+        </div>
+
+        <h2 class="panel__title" style="margin-top:24px;"><strong>02</strong> Weekly run-rate</h2>
+        <div class="row">
+          <div class="field"><label class="field__label" for="newSales">New sales collected weekly ($M)</label>
+            <input type="number" id="newSales" value="7" step="0.5" min="0"></div>
+          <div class="field"><label class="field__label" for="payroll">Payroll ($M per fortnight)</label>
+            <input type="number" id="payroll" value="6" step="0.5" min="0">
+            <div class="field__hint">Paid in even weeks. Payroll has hard dates; that is why it is modelled separately.</div></div>
+        </div>
+        <div class="row">
+          <div class="field"><label class="field__label" for="vendors">Vendor payments ($M weekly)</label>
+            <input type="number" id="vendors" value="5" step="0.5" min="0"></div>
+          <div class="field"><label class="field__label" for="opex">Other opex, rent, utilities ($M weekly)</label>
+            <input type="number" id="opex" value="2.5" step="0.25" min="0"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label class="field__label" for="profFees">Professional fees ($M weekly)</label>
+            <input type="number" id="profFees" value="0" step="0.25" min="0">
+            <div class="field__hint">In a filed case this becomes one of the largest lines. Set it to zero out of court.</div></div>
+          <div class="field"><label class="field__label" for="debtSvc">Cash interest &amp; amort ($M weekly)</label>
+            <input type="number" id="debtSvc" value="0.8" step="0.1" min="0"></div>
+        </div>
+
+        <h2 class="panel__title" style="margin-top:24px;"><strong>03</strong> DIP covenant</h2>
+        <div class="row">
+          <div class="field"><label class="field__label" for="variance">Permitted cumulative variance (%)</label>
+            <input type="number" id="variance" value="15" step="1" min="0" max="100">
+            <div class="field__hint">Tested here on cumulative receipts against budget. Typical DIP facilities permit 10–15%, tested weekly.</div></div>
+          <div class="field"><label class="field__label" for="actualHit">Actual receipts vs forecast (%)</label>
+            <input type="number" id="actualHit" value="100" step="1" min="0" max="150">
+            <div class="field__hint">Set below 100 to see when a persistent collections miss breaches the covenant.</div></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>04</strong> The forecast</h2>
+        <div class="output__big" id="troughBig">—</div>
+        <p class="muted" style="margin-top:-8px;font-size:13px;">trough total liquidity</p>
+        <div style="overflow-x:auto;">
+          <table class="data" style="margin-top:16px;min-width:560px;">
+            <thead><tr><th>Wk</th><th class="num">Receipts</th><th class="num">Disb.</th><th class="num">Net</th><th class="num">Cash</th><th class="num">Liquidity</th></tr></thead>
+            <tbody id="twBody"></tbody>
+          </table>
+        </div>
+        <div class="output" style="margin-top:16px;" id="twOut"></div>
+        <ul class="flag-list" id="flags3" style="margin-top:16px;"></ul>
+      </div>
+    </form>
+
+    <div class="drill">
+      <p class="drill__q">The exercise</p>
+      <p>Pull a real DIP budget exhibit from any Chapter 11 docket, enter its opening position and run-rates here, and see whether your trough matches theirs. Then set "actual receipts vs forecast" to 90% and find the week the variance covenant breaks. That week is the real deadline in the case — not the milestone dates in the DIP order.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer"><div class="wrap"><p class="muted">Turnaround and Distressed Investing &middot; the restructuring lab</p></div></footer>
+
+<script src="../js/finance.js"></script>
+<script>
+(function () {
+  const F = window.Fin;
+  const $ = (s) => document.querySelector(s);
+  const m = (v) => { if (!isFinite(v)) return '\u2014'; const g = v<0?'-':''; const a=Math.abs(v);
+    return a >= 1000 ? g+'$'+(a/1000).toFixed(2)+'bn' : g+'$'+a.toFixed(1)+'mm'; };
+  const PRESETS = {
+    stable: { cash0:25, revAvail:40, ar:90, collectWks:6, newSales:7, payroll:6, vendors:5, opex:2.5, profFees:0, debtSvc:0.8, variance:15, actualHit:100 },
+    tight:  { cash0:12, revAvail:15, ar:70, collectWks:8, newSales:5.5, payroll:6, vendors:6, opex:2.5, profFees:1.2, debtSvc:0.8, variance:15, actualHit:100 },
+    crisis: { cash0:10, revAvail:8,  ar:70, collectWks:8, newSales:5.5, payroll:6, vendors:6.5, opex:2.5, profFees:1.0, debtSvc:0.8, variance:15, actualHit:92 },
+  };
+
+  function compute() {
+    const g = (id) => F.parse($('#' + id).value);
+    const cash0 = g('cash0'), revAvail = g('revAvail'), ar = g('ar');
+    const cw = Math.max(1, Math.min(13, Math.round(g('collectWks'))));
+    const newSales = g('newSales'), payroll = g('payroll'), vendors = g('vendors');
+    const opex = g('opex'), prof = g('profFees'), ds = g('debtSvc');
+    const variance = g('variance') / 100, hit = g('actualHit') / 100;
+
+    let cash = cash0, cumRF = 0, cumRA = 0, trough = Infinity, troughWk = 0, breachWk = 0;
+    const rows = [];
+    for (let w = 1; w <= 13; w++) {
+      const arCollect = w <= cw ? ar / cw : 0;
+      const receiptsF = arCollect + newSales;
+      const receiptsA = receiptsF * hit;
+      const disb = (w % 2 === 0 ? payroll : 0) + vendors + opex + prof + ds;
+      const net = receiptsA - disb;
+      cash += net;
+      const liq = cash + revAvail;
+      cumRF += receiptsF; cumRA += receiptsA;
+      if (liq < trough) { trough = liq; troughWk = w; }
+      const varPct = cumRF > 0.001 ? (cumRA - cumRF) / cumRF : 0;
+      if (!breachWk && varPct < -variance) breachWk = w;
+      rows.push({ w, receiptsA, disb, net, cash, liq, varPct });
+    }
+
+    $('#troughBig').textContent = m(trough) + '  (wk ' + troughWk + ')';
+    $('#twBody').innerHTML = rows.map((r) => {
+      const cls = r.liq < 0 ? 'bad' : (r.liq < 10 ? 'warn' : '');
+      const hl = r.w === troughWk ? ' class="highlight"' : '';
+      return `<tr${hl}><td>${r.w}</td><td class="num">${F.fmt(r.receiptsA,{decimals:1})}</td>` +
+        `<td class="num">${F.fmt(r.disb,{decimals:1})}</td>` +
+        `<td class="num">${F.fmt(r.net,{decimals:1})}</td>` +
+        `<td class="num">${F.fmt(r.cash,{decimals:1})}</td>` +
+        `<td class="num"><span class="output__value--${cls}">${F.fmt(r.liq,{decimals:1})}</span></td></tr>`;
+    }).join('');
+
+    const totR = rows.reduce((a,r)=>a+r.receiptsA,0), totD = rows.reduce((a,r)=>a+r.disb,0);
+    const endLiq = rows[12].liq;
+    let runway = 13;
+    for (const r of rows) { if (r.liq < 0) { runway = r.w - 1; break; } }
+
+    $('#twOut').innerHTML = [
+      ['Total receipts (13 wks)', m(totR)],
+      ['Total disbursements', m(totD)],
+      ['Net cash flow', m(totR-totD)],
+      ['Ending liquidity', m(endLiq)],
+      ['Runway', runway >= 13 ? 'beyond 13 weeks' : runway + ' weeks'],
+      ['Cumulative receipts variance', F.pct(rows[12].varPct,1)],
+    ].map(([l,v])=>`<div class="output__row"><span class="output__label">${l}</span><span class="output__value">${v}</span></div>`).join('');
+
+    const flags = [];
+    if (runway < 13) flags.push(['bad', `Liquidity goes negative in week ${runway + 1}. That date, not any milestone in the DIP order, is the real constraint on what outcomes are reachable.`]);
+    if (breachWk) flags.push(['bad', `At ${F.pct(hit,0)} of forecast receipts, the cumulative variance covenant breaks in week ${breachWk}. An event of default under the DIP hands control to the lenders.`]);
+    if (trough < 10 && runway >= 13) flags.push(['warn', `Trough liquidity of ${m(trough)} in week ${troughWk} leaves almost no room for a single bad week. Model a payroll slip or one large vendor demanding COD.`]);
+    if (prof > 1.5) flags.push(['warn', `Professional fees of ${m(prof)}/week are ${F.pct(prof*13/Math.max(totD,1),0)} of total disbursements. Every week the case runs long consumes recovery that would otherwise reach the fulcrum.`]);
+    if (revAvail < 10) flags.push(['warn', 'Revolver availability is thin. Check whether the borrowing base shrinks as inventory is marked down — availability falls fastest exactly when it is needed most.']);
+    if (!flags.length) flags.push(['good', 'The forecast holds across 13 weeks with room. Stress the collection curve before relying on it: a persistent receipts miss is the most common way this model proves wrong.']);
+    $('#flags3').innerHTML = flags.slice(0,5).map(([k,t])=>`<li><span class="pill pill--${k}">${k.toUpperCase()}</span><span>${t}</span></li>`).join('');
+  }
+
+  document.querySelectorAll('[data-preset]').forEach((b)=>b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-preset]').forEach((x)=>x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true');
+    const p = PRESETS[b.dataset.preset];
+    Object.keys(p).forEach((k)=>{ $('#'+k).value = p[k]; });
+    compute();
+  }));
+  document.getElementById('tw').addEventListener('input', compute);
+  compute();
+})();
+</script>
+<script src="../js/site.js"></script>
+</body>
+</html>

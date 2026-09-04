@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Liquidation Analysis Builder — Turnaround Lab</title>
+<meta name="description" content="Build the liquidation analysis that sets the floor in the best-interests test: asset-by-asset recovery rates, wind-down costs, and the going-concern premium a plan must clear.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"><link rel="stylesheet" href="../css/lab.css">
+</head>
+<body>
+
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../../index.html"><span class="brand__mark"></span><span>Turnaround<span class="brand__sub"> &middot; the restructuring lab</span></span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../../index.html">Report cover</a>
+  <a class="nav-link nav-link--active" href="../index.html">Lab</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap">
+  <section class="tool reveal">
+    <div class="tool__eyebrow">Tool 04 &middot; <a href="../index.html">the lab</a> &middot; <a href="../../chapters/10-recovery-analysis.html">Read: Ch. 10 — Recovery Analysis</a> &middot; <a href="../../chapters/15-plan-confirmation.html">Ch. 15 — Confirmation</a></div>
+    <h1 class="tool__title">Liquidation <em>Analysis</em> Builder</h1>
+    <p class="tool__lede">Every disclosure statement contains one, because Section 1129(a)(7) requires that each dissenting creditor receive at least its Chapter 7 liquidation value. This builds that analysis: book value by asset class, a recovery rate on each, less wind-down costs. The result is the floor a plan must clear — and the gap to going-concern value is the premium the reorganisation must justify.</p>
+
+    <div class="chip-row">
+      <button class="chip" data-preset="retail" aria-pressed="true">Retailer</button>
+      <button class="chip" data-preset="industrial">Industrial</button>
+      <button class="chip" data-preset="services">Asset-light services</button>
+    </div>
+
+    <form class="solver" id="lq" autocomplete="off" onsubmit="return false;">
+      <div class="panel">
+        <h2 class="panel__title"><strong>01</strong> Assets, book value and recovery</h2>
+        <div id="assets"></div>
+
+        <h2 class="panel__title" style="margin-top:24px;"><strong>02</strong> Wind-down costs</h2>
+        <div class="row">
+          <div class="field"><label class="field__label" for="trustee">Trustee &amp; professional fees ($M)</label>
+            <input type="number" id="trustee" value="35" step="5" min="0"></div>
+          <div class="field"><label class="field__label" for="winddown">Operating wind-down costs ($M)</label>
+            <input type="number" id="winddown" value="45" step="5" min="0">
+            <div class="field__hint">Severance, lease cure and rejection costs, GOB expenses, run-off insurance.</div></div>
+        </div>
+
+        <h2 class="panel__title" style="margin-top:24px;"><strong>03</strong> Compare against the plan</h2>
+        <div class="row">
+          <div class="field"><label class="field__label" for="gcv">Going-concern value in the plan ($M)</label>
+            <input type="number" id="gcv" value="600" step="25" min="0"></div>
+          <div class="field"><label class="field__label" for="claims">Total claims against the estate ($M)</label>
+            <input type="number" id="claims" value="950" step="25" min="0"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>04</strong> The floor</h2>
+        <div class="output__big" id="netBig">—</div>
+        <p class="muted" style="margin-top:-8px;font-size:13px;">net liquidation proceeds</p>
+        <table class="data" style="margin-top:16px;">
+          <thead><tr><th>Asset</th><th class="num">Book</th><th class="num">Rate</th><th class="num">Proceeds</th></tr></thead>
+          <tbody id="lqBody"></tbody>
+        </table>
+        <div class="output" style="margin-top:16px;" id="lqOut"></div>
+        <ul class="flag-list" id="flags4" style="margin-top:16px;"></ul>
+      </div>
+    </form>
+
+    <div class="drill">
+      <p class="drill__q">The exercise</p>
+      <p>Open a real disclosure statement, find its liquidation analysis, and reproduce it here. Then ask which recovery rate you would contest. Inventory and intangibles are where the debtor has the most discretion and where a committee arguing for a higher floor will push hardest — because a higher liquidation value raises the bar the plan must clear.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer"><div class="wrap"><p class="muted">Turnaround and Distressed Investing &middot; the restructuring lab</p></div></footer>
+
+<script src="../js/finance.js"></script>
+<script>
+(function () {
+  const F = window.Fin;
+  const $ = (s) => document.querySelector(s);
+  const m = (v) => { // $M in, readable out: 2dp for billions, 0dp for millions
+    if (!isFinite(v)) return '\u2014';
+    const s = v < 0 ? '-' : ''; const a = Math.abs(v);
+    return a >= 1000 ? s + '$' + (a/1000).toFixed(2) + 'bn' : s + '$' + a.toFixed(0) + 'mm';
+  };
+
+  const PRESETS = {
+    retail: { trustee:35, winddown:45, gcv:600, claims:950, rows:[
+      ['Cash', 40, 100], ['Accounts receivable', 60, 80], ['Inventory', 420, 55],
+      ['Owned real estate', 150, 85], ['PP&E / fixtures', 120, 20],
+      ['Intangibles & brand', 300, 8], ['Avoidance actions', 0, 0] ]},
+    industrial: { trustee:30, winddown:60, gcv:520, claims:800, rows:[
+      ['Cash', 25, 100], ['Accounts receivable', 110, 82], ['Inventory', 180, 45],
+      ['Owned real estate', 220, 80], ['Machinery & equipment', 260, 35],
+      ['Intangibles & brand', 90, 5], ['Avoidance actions', 0, 0] ]},
+    services: { trustee:25, winddown:30, gcv:400, claims:600, rows:[
+      ['Cash', 30, 100], ['Accounts receivable', 140, 78], ['Inventory', 5, 30],
+      ['Owned real estate', 0, 0], ['PP&E / leasehold', 45, 12],
+      ['Intangibles & customer contracts', 260, 10], ['Avoidance actions', 20, 50] ]},
+  };
+
+  function rowHTML(name, book, rate) {
+    return `<div class="row" data-arow">
+      <div class="field"><label class="field__label">Asset</label><input type="text" data-name value="${name}"></div>
+      <div class="field"><label class="field__label">Book value ($M)</label><input type="number" data-book value="${book}" step="5" min="0"></div>
+      <div class="field"><label class="field__label">Recovery (%)</label><input type="number" data-rate value="${rate}" step="1" min="0" max="100"></div>
+    </div>`;
+  }
+
+  function load(k) {
+    const p = PRESETS[k];
+    $('#assets').innerHTML = p.rows.map(r => rowHTML(r[0], r[1], r[2])).join('');
+    $('#trustee').value = p.trustee; $('#winddown').value = p.winddown;
+    $('#gcv').value = p.gcv; $('#claims').value = p.claims;
+    compute();
+  }
+
+  function compute() {
+    const rows = [...document.querySelectorAll('#assets .row')].map(el => ({
+      name: el.querySelector('[data-name]').value || 'Asset',
+      book: F.parse(el.querySelector('[data-book]').value),
+      rate: F.parse(el.querySelector('[data-rate]').value) / 100,
+    }));
+    const gross = rows.reduce((a, r) => a + r.book * r.rate, 0);
+    const bookTot = rows.reduce((a, r) => a + r.book, 0);
+    const costs = F.parse($('#trustee').value) + F.parse($('#winddown').value);
+    const net = gross - costs;
+    const gcv = F.parse($('#gcv').value), claims = F.parse($('#claims').value);
+
+    $('#netBig').textContent = m(net );
+    $('#lqBody').innerHTML = rows.map(r =>
+      `<tr><td>${r.name}</td><td class="num">${m(r.book)}</td>` +
+      `<td class="num">${F.pct(r.rate,0)}</td>` +
+      `<td class="num">${m(r.book*r.rate)}</td></tr>`).join('');
+
+    const liqRec = claims > 0 ? net / claims : 0;
+    const gcRec  = claims > 0 ? gcv / claims : 0;
+    const premium = gcv - net;
+
+    $('#lqOut').innerHTML = [
+      ['Gross proceeds', m(gross)],
+      ['Blended recovery on book', F.pct(bookTot>0?gross/bookTot:0,1)],
+      ['Less wind-down costs', '(' + m(costs) + ')'],
+      ['Net liquidation proceeds', m(net)],
+      ['Liquidation recovery on claims', F.pct(liqRec,1)],
+      ['Plan recovery on claims', F.pct(gcRec,1)],
+      ['Going-concern premium', m(premium)],
+    ].map(([l,v])=>`<div class="output__row"><span class="output__label">${l}</span><span class="output__value">${v}</span></div>`).join('');
+
+    const flags = [];
+    if (premium <= 0) flags.push(['bad', 'The plan delivers no more than liquidation. It fails the best-interests test and a dissenting creditor should object \u2014 or the business genuinely has no going-concern value, which is the finding that converts a case to a wind-down.']);
+    else flags.push(['good', `The plan clears liquidation by ${m(premium)} (${F.pct(net>0?premium/net:0,0)}). That premium is what the reorganisation has to justify.`]);
+    const intang = rows.find(r => /intang|brand|contract/i.test(r.name));
+    if (intang && intang.rate > 0.25) flags.push(['warn', `Intangibles recovering at ${F.pct(intang.rate,0)} is aggressive in a forced sale. Bed Bath & Beyond's brand and digital assets \u2014 the whole of its intellectual property \u2014 cleared at $21.5mm against $4.4bn of book assets.`]);
+    const inv = rows.find(r => /invent/i.test(r.name));
+    if (inv && inv.rate > 0.7) flags.push(['warn', `Inventory at ${F.pct(inv.rate,0)} of book assumes an orderly process and a willing market. In a broad default wave, GOB recoveries compress because you are selling alongside everyone else.`]);
+    if (costs / Math.max(gross,1) > 0.2) flags.push(['warn', `Wind-down costs are ${F.pct(costs/gross,0)} of gross proceeds. Lease rejection damages and severance dominate this line in lease-heavy businesses.`]);
+    $('#flags4').innerHTML = flags.slice(0,4).map(([k,t])=>`<li><span class="pill pill--${k}">${k.toUpperCase()}</span><span>${t}</span></li>`).join('');
+  }
+
+  document.querySelectorAll('[data-preset]').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('[data-preset]').forEach(x => x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true'); load(b.dataset.preset);
+  }));
+  document.getElementById('lq').addEventListener('input', compute);
+  load('retail');
+})();
+</script>
+<script src="../js/site.js"></script>
+</body>
+</html>

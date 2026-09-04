@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Uptier Exchange Solver — Turnaround Lab</title>
+<meta name="description" content="Model an uptier liability management transaction: exchange ratios, the resulting priority stack, and the recovery gap between participating and excluded lenders. Preloaded with the Serta 2020 transaction.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"><link rel="stylesheet" href="../css/lab.css">
+</head>
+<body>
+
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../../index.html"><span class="brand__mark"></span><span>Turnaround<span class="brand__sub"> &middot; the restructuring lab</span></span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../../index.html">Report cover</a>
+  <a class="nav-link nav-link--active" href="../index.html">Lab</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap">
+  <section class="tool reveal">
+    <div class="tool__eyebrow">Tool 02 &middot; <a href="../index.html">the lab</a> &middot; <a href="../../chapters/19-uptiers.html">Read: Ch. 19 — Uptiers</a> &middot; <a href="../../chapters/31-serta.html">Ch. 31 — Serta</a></div>
+    <h1 class="tool__title">Uptier <em>Exchange</em> Solver</h1>
+    <p class="tool__lede">The arithmetic of an uptier. Participating lenders accept a principal haircut in exchange for priority; excluded lenders keep their full claim and lose their place in the queue. This solver computes the exchange ratio, rebuilds the post-transaction stack, and runs the waterfall so you can see the recovery gap the transaction creates.</p>
+
+    <div class="chip-row">
+      <button class="chip" data-preset="serta" aria-pressed="true">Serta, June 2020 (actual)</button>
+      <button class="chip" data-preset="even">Hypothetical: even split</button>
+      <button class="chip" data-preset="aggressive">Hypothetical: deep haircut</button>
+    </div>
+
+    <form class="solver" id="up" autocomplete="off" onsubmit="return false;">
+      <div class="panel">
+        <h2 class="panel__title"><strong>01</strong> Pre-transaction structure</h2>
+        <div class="row">
+          <div class="field"><label class="field__label" for="fl">First lien outstanding ($M)</label>
+            <input type="number" id="fl" value="1950" step="10" min="0">
+            <div class="field__hint">Serta's 2016 credit agreement provided $1.95bn of first lien loans.</div></div>
+          <div class="field"><label class="field__label" for="sl">Second lien outstanding ($M)</label>
+            <input type="number" id="sl" value="450" step="10" min="0">
+            <div class="field__hint">And $450mm of second lien, for $2.4bn total.</div></div>
+        </div>
+
+        <h2 class="panel__title" style="margin-top:24px;"><strong>02</strong> The transaction</h2>
+        <div class="row">
+          <div class="field"><label class="field__label" for="newmoney">New money, first-out ($M)</label>
+            <input type="number" id="newmoney" value="200" step="10" min="0"></div>
+          <div class="field"><label class="field__label" for="exchanged">Existing debt exchanged ($M)</label>
+            <input type="number" id="exchanged" value="1200" step="10" min="0">
+            <div class="field__hint">Face amount of first and second lien surrendered by participating lenders.</div></div>
+        </div>
+        <div class="row">
+          <div class="field"><label class="field__label" for="newtranche">New second-out issued ($M)</label>
+            <input type="number" id="newtranche" value="875" step="5" min="0">
+            <div class="field__hint">What they received back. The gap is the haircut they accepted for priority.</div></div>
+          <div class="field"><label class="field__label" for="ev2">Enterprise value at restructuring ($M)</label>
+            <input type="number" id="ev2" value="1400" step="25" min="0"></div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 class="panel__title"><strong>03</strong> The result</h2>
+        <div class="output__big" id="ratioBig">—</div>
+        <p class="muted" style="margin-top:-8px;font-size:13px;">exchange ratio — cents of new debt per dollar surrendered</p>
+
+        <table class="data" style="margin-top:16px;">
+          <thead><tr><th>Post-transaction stack</th><th class="num">Claim</th><th class="num">Recovery</th><th class="num">%</th></tr></thead>
+          <tbody id="stackBody"></tbody>
+        </table>
+
+        <div class="output" style="margin-top:16px;" id="upOut"></div>
+        <ul class="flag-list" id="flags2" style="margin-top:16px;"></ul>
+      </div>
+    </form>
+
+    <div class="drill">
+      <p class="drill__q">The exercise</p>
+      <p>With the Serta preset loaded, note the recovery on the excluded lenders' remaining claim. Then raise enterprise value until they recover par. That number is what the excluded lenders had to believe the business was worth for the transaction to be harmless — and the gap between it and any defensible valuation is what the litigation was about. The Houston court ultimately put damages at roughly $400mm.</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer"><div class="wrap"><p class="muted">Turnaround and Distressed Investing &middot; the restructuring lab</p></div></footer>
+
+<script src="../js/finance.js"></script>
+<script>
+(function () {
+  const F = window.Fin;
+  const $ = (s) => document.querySelector(s);
+  const m = (v) => { // $M in, readable out: 2dp for billions, 0dp for millions
+    if (!isFinite(v)) return '\u2014';
+    const s = v < 0 ? '-' : ''; const a = Math.abs(v);
+    return a >= 1000 ? s + '$' + (a/1000).toFixed(2) + 'bn' : s + '$' + a.toFixed(0) + 'mm';
+  };
+
+  const PRESETS = {
+    serta:      { fl: 1950, sl: 450, newmoney: 200, exchanged: 1200, newtranche: 875, ev2: 1400 },
+    even:       { fl: 1950, sl: 450, newmoney: 200, exchanged: 1200, newtranche: 1200, ev2: 1400 },
+    aggressive: { fl: 1950, sl: 450, newmoney: 300, exchanged: 1600, newtranche: 900,  ev2: 1400 },
+  };
+
+  function compute() {
+    const fl = F.parse($('#fl').value), sl = F.parse($('#sl').value);
+    const nm = F.parse($('#newmoney').value), ex = F.parse($('#exchanged').value);
+    const nt = F.parse($('#newtranche').value), ev = F.parse($('#ev2').value);
+
+    const ratio = ex > 0 ? nt / ex : 0;
+    const haircut = ex - nt;
+    const remaining = Math.max(0, (fl + sl) - ex);   // excluded lenders' surviving claim
+    const totalPre = fl + sl;
+    const totalPost = nm + nt + remaining;
+
+    $('#ratioBig').textContent = (ratio * 100).toFixed(1) + '\u00A2';
+
+    // Waterfall down the new priority order.
+    let pool = ev;
+    const stack = [
+      { name: 'New first-out (new money)', claim: nm },
+      { name: 'New second-out (exchange tranche)', claim: nt },
+      { name: 'Remaining 2016 claims (excluded lenders)', claim: remaining },
+    ];
+    stack.forEach((t) => { t.rec = Math.min(t.claim, pool); pool -= t.rec; });
+
+    $('#stackBody').innerHTML = stack.map((t) => {
+      const p = t.claim > 0 ? t.rec / t.claim : 0;
+      const cls = p > 0.9999 ? 'good' : (p <= 0.0001 ? 'bad' : 'warn');
+      return `<tr><td>${t.name}</td><td class="num">${m(t.claim )}</td>` +
+             `<td class="num">${m(t.rec )}</td>` +
+             `<td class="num"><span class="output__value--${cls}">${F.pct(p, 1)}</span></td></tr>`;
+    }).join('');
+
+    // Counterfactual: no transaction, pro rata across the whole pre-transaction stack.
+    const proRata = totalPre > 0 ? Math.min(1, ev / totalPre) : 0;
+    const excludedActual = remaining > 0 ? stack[2].rec / remaining : 0;
+    const gap = proRata - excludedActual;
+
+    $('#upOut').innerHTML = [
+      ['Principal haircut accepted', m(haircut ) + '  (' + F.pct(ex > 0 ? haircut / ex : 0, 1) + ')'],
+      ['Debt before / after', m(totalPre ) + ' \u2192 ' + m(totalPost )],
+      ['Excluded lenders subordinated to', m(nm + nt)],
+      ['Excluded recovery, as transacted', F.pct(excludedActual, 1)],
+      ['Excluded recovery, had it been pro rata', F.pct(proRata, 1)],
+      ['Value shifted away from excluded lenders', F.pct(gap, 1) + '  (' + m(gap * remaining ) + ')'],
+    ].map(([l, v]) => `<div class="output__row"><span class="output__label">${l}</span><span class="output__value">${v}</span></div>`).join('');
+
+    const flags = [];
+    if (ratio < 1) flags.push(['info', `Participating lenders gave up ${F.pct(1 - ratio, 1)} of principal to move ahead of everyone else. That trade only makes sense if they expected the recovery on their old position to be worse than ${F.pct(ratio, 1)} \u2014 which is itself a statement about what they thought the business was worth.`]);
+    if (gap > 0.15) flags.push(['bad', `The transaction moved roughly ${m(gap * remaining )} of value away from lenders holding identical paper. This is the quantity that gets litigated.`]);
+    if (excludedActual <= 0.0001) flags.push(['bad', 'Excluded lenders are wiped out entirely at this valuation while holding the same instrument they held before the amendment.']);
+    if (totalPost > totalPre) flags.push(['warn', `Total debt rose by ${m(totalPost - totalPre)}. New money solved liquidity; it did not deleverage.`]);
+    else flags.push(['good', `Total debt fell by ${m(totalPre - totalPost)} \u2014 the haircut net of new money.`]);
+    flags.push(['info', 'Whether any of this is permitted turns on two provisions: the pro rata sharing clause and its exceptions (Serta: \u00A72.18(c) and the \u00A79.05(g) open market purchase carve-out), and the sacred rights in the amendment section. Pull both from EDGAR before forming a view.']);
+
+    $('#flags2').innerHTML = flags.slice(0, 5).map(([k, t]) => `<li><span class="pill pill--${k}">${k.toUpperCase()}</span><span>${t}</span></li>`).join('');
+  }
+
+  document.querySelectorAll('[data-preset]').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('[data-preset]').forEach((x) => x.setAttribute('aria-pressed', 'false'));
+    b.setAttribute('aria-pressed', 'true');
+    const p = PRESETS[b.dataset.preset];
+    Object.keys(p).forEach((k) => { $('#' + k).value = p[k]; });
+    compute();
+  }));
+  document.getElementById('up').addEventListener('input', compute);
+  compute();
+})();
+</script>
+<script src="../js/site.js"></script>
+</body>
+</html>

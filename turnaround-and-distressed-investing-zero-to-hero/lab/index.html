@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Restructuring Lab — Turnaround and Distressed Investing</title>
+<meta name="description" content="Four working models: a waterfall and recovery solver, an uptier exchange solver preloaded with the Serta transaction, a 13-week cash flow model with DIP variance testing, and a liquidation analysis builder.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"><link rel="stylesheet" href="css/lab.css">
+</head>
+<body>
+
+<header class="topbar"><div class="topbar__inner">
+  <a class="brand" href="../index.html"><span class="brand__mark"></span><span>Turnaround<span class="brand__sub"> &middot; the restructuring lab</span></span></a>
+  <span class="nav-spacer"></span>
+  <a class="nav-link" href="../index.html">Report cover</a>
+  <a class="nav-link nav-link--active" href="index.html">Lab</a>
+  <button class="icon-btn" data-theme-toggle aria-label="Toggle dark mode"></button>
+</div></header>
+
+<main class="wrap">
+  <section class="tool reveal">
+    <div class="tool__eyebrow">Four working models &middot; <a href="../index.html">back to the report</a></div>
+    <h1 class="tool__title">The Restructuring <em>Lab</em></h1>
+    <p class="tool__lede">The chapters explain the mechanics; these run them. Each tool is a working model with real deal figures preloaded, so you can see the arithmetic behind the cases in Part VII and then replace the inputs with a docket of your own. Nothing is sent anywhere — the maths runs in your browser.</p>
+
+    <table class="data" style="margin-top:28px;">
+      <thead><tr><th>Tool</th><th>What it computes</th><th>Preloaded with</th></tr></thead>
+      <tbody>
+        <tr><td><a href="tools/waterfall.html"><strong>01 · Waterfall &amp; Recovery</strong></a></td>
+            <td>Allocates enterprise value down the priority stack, splits undersecured claims into secured and deficiency components, identifies the fulcrum and the value at which it moves.</td>
+            <td>Serta's 2016 structure, the post-uptier stack, and JOANN 2025</td></tr>
+        <tr><td><a href="tools/uptier.html"><strong>02 · Uptier Exchange</strong></a></td>
+            <td>Exchange ratio, the post-transaction priority stack, and the recovery gap between participating and excluded lenders against a pro rata counterfactual.</td>
+            <td>Serta, June 2020 — $200mm new money, $1.2bn exchanged for $875mm</td></tr>
+        <tr><td><a href="tools/thirteen-week.html"><strong>03 · 13-Week Cash Flow</strong></a></td>
+            <td>Weekly receipts and disbursements, collection curve on the receivables ageing, trough liquidity week, and the DIP cumulative variance covenant test.</td>
+            <td>Three scenarios, including vendors moving to cash on delivery</td></tr>
+        <tr><td><a href="tools/liquidation.html"><strong>04 · Liquidation Analysis</strong></a></td>
+            <td>Asset-by-asset recovery, wind-down costs, the net floor under the best-interests test, and the going-concern premium a plan must clear.</td>
+            <td>Retail, industrial and asset-light services templates</td></tr>
+      </tbody>
+    </table>
+
+    <div class="drill" style="margin-top:36px;">
+      <p class="drill__q">How to use these</p>
+      <p>Read the chapter, then open the tool and reproduce the numbers in it. Then go to a docket — Kroll, Stretto, Epiq — pull a DIP budget exhibit or a disclosure statement, and enter those figures instead. The gap between what you expected and what the model returns is where the learning is. The tools are deliberately simple: they do the arithmetic correctly and leave every judgment to you.</p>
+    </div>
+
+    <p class="muted" style="margin-top:28px;font-size:13px;">A note on the preloaded figures: transaction amounts for Serta are as reported in the Fifth Circuit's decision and contemporaneous law firm analyses. Enterprise values used in the waterfall presets are illustrative inputs chosen to show the mechanics, not findings of value — plan valuations are contested and you should take yours from the disclosure statement.</p>
+  </section>
+</main>
+
+<footer class="site-footer"><div class="wrap"><p class="muted">Turnaround and Distressed Investing &middot; the restructuring lab</p></div></footer>
+<script src="js/site.js"></script>
+</body>
+</html>
