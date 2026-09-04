@@ -344,14 +344,14 @@ def render_index():
 <main class="page">
   <section class="hero reveal">
     <div class="hero__text">
-      <div class="hero__eyebrow">A zero-to-hero professional path · 26 chapters · six parts · ~4.5 hour read</div>
+      <div class="hero__eyebrow">A zero-to-hero professional path · 32 chapters · seven parts · ~6 hour read</div>
       <h1 class="hero__title">Turnaround <em>and</em> Distressed Investing</h1>
-      <p class="hero__lede">A 26-chapter path from reading a capital structure to underwriting a restructuring — distress mechanics, credit analysis, distressed valuation, the machinery of Chapter&nbsp;11, the liability management transactions that reshaped the 2020s, and the operational work of an actual turnaround. Built around primary documents you can pull for free, and ending in a sequenced 12-week curriculum.</p>
+      <p class="hero__lede">A 32-chapter path from reading a capital structure to underwriting a restructuring — distress mechanics, credit analysis, distressed valuation, the machinery of Chapter&nbsp;11, the liability management transactions that reshaped the 2020s, and the operational work of an actual turnaround. Built around primary documents you can pull for free, a sequenced 12-week curriculum, and five real deals worked end to end from their public filings.</p>
       <div class="hero__meta">
-        <span><strong>26</strong> chapters</span>
-        <span><strong>6</strong> parts</span>
+        <span><strong>32</strong> chapters</span>
+        <span><strong>7</strong> parts</span>
         <span><strong>12 wk</strong> curriculum</span>
-        <span><strong>3</strong> integrated cases</span>
+        <span><strong>5</strong> real deals</span>
       </div>
       <div class="hero__cta">
         <a class="hero__cta-link" href="#chapters">Begin reading</a>
@@ -426,7 +426,7 @@ def render_index():
   <section class="section-head reveal" style="margin-top:var(--space-16);">
     <div class="section-head__num">¶</div>
     <h2 class="section-head__title">A note before you begin</h2>
-    <p style="max-width:62ch;">This is a long-form, primary-source-anchored path. Parts I and II build the vocabulary, the capital structure, and the analytical order of operations. Part III is the machinery of Chapter&nbsp;11. Part IV covers the liability management transactions that have defined the market since 2016 &mdash; the most time-sensitive material here, and the part most published guidance gets wrong. Part V is the operational work. Part VI is the 12-week curriculum, the verified source list, and three integrated cases.</p>
+    <p style="max-width:62ch;">This is a long-form, primary-source-anchored path. Parts I and II build the vocabulary, the capital structure, and the analytical order of operations. Part III is the machinery of Chapter&nbsp;11. Part IV covers the liability management transactions that have defined the market since 2016 &mdash; the most time-sensitive material here, and the part most published guidance gets wrong. Part V is the operational work. Part VI is the 12-week curriculum, the verified source list, and three composite cases for orientation. Part VII works five real deals — JOANN, Hertz, Bed Bath &amp; Beyond, Serta and Best Buy — end to end, telling you exactly which filings to pull for each.</p>
     <p style="max-width:62ch;margin-top:var(--space-4);">If you want the curriculum rather than the theory, go straight to <a href="chapters/24-the-study-path.html">Chapter&nbsp;24</a>. If you want to know which sources are actually free and which commonly circulated recommendations are wrong, <a href="chapters/25-verified-sources.html">Chapter&nbsp;25</a> records what was verified and what was not. Definitions live in the <a href="chapters/glossary.html">glossary</a>, organised by theme.</p>
     <p style="margin-top:var(--space-4);"><a href="chapters/01-what-distress-actually-is.html" style="color:var(--color-primary);text-decoration:none;font-family:var(--font-mono);font-size:var(--text-sm);text-transform:uppercase;letter-spacing:0.1em;">Begin Chapter 01 &mdash; What Distress Actually Is &rarr;</a></p>
   </section>

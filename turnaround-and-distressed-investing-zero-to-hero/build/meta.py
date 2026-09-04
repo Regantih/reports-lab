@@ -26,9 +26,12 @@ PARTS = [
     {"roman": "V", "label": "Part V", "title": "Operational Turnaround",
      "kicker": "The CRO's seat — stabilisation, cash control, and the 100-day plan",
      "first": 21, "last": 23},
-    {"roman": "VI", "label": "Part VI", "title": "The Study Path and Integrated Casework",
-     "kicker": "A sequenced 12-week curriculum, verified sources, and three worked cases",
+    {"roman": "VI", "label": "Part VI", "title": "The Study Path and Orientation Cases",
+     "kicker": "A sequenced 12-week curriculum, verified sources, and three composite cases",
      "first": 24, "last": 26},
+    {"roman": "VII", "label": "Part VII", "title": "Real Deals, End to End",
+     "kicker": "Five documented deals \u2014 story, data, effort, outcome, and why the value was there",
+     "first": 27, "last": 32},
 ]
 
 CHAPTERS = [
@@ -87,8 +90,21 @@ CHAPTERS = [
      "A sequenced curriculum with build exercises and competence checkpoints", 5),
     ("25", "25-verified-sources", "Verified Sources and Where to Find Documents",
      "What is actually free, what is not, and the corrections that matter", 5),
-    ("26", "26-integrated-casework", "Integrated Casework",
-     "A retail liquidation, a sponsor-led LME, and an operational turnaround", 5),
+    ("26", "26-integrated-casework", "Integrated Casework \u2014 Three Composites",
+     "An orientation exercise before the real deals in Part VII", 5),
+
+    ("27", "27-the-documentary-record", "The Documentary Record",
+     "Which filing answers which question \u2014 and the two everybody skips", 6),
+    ("28", "28-joann", "JOANN \u2014 The Balance-Sheet Fix That Wasn't Enough",
+     "Deleveraged in five weeks, liquidated fourteen months later", 6),
+    ("29", "29-hertz", "Hertz \u2014 When Creditors and Shareholders Both Get Paid",
+     "A fleet that appreciated mid-case, and a bidding war between two consortia", 6),
+    ("30", "30-bed-bath-and-beyond", "Bed Bath & Beyond \u2014 Effort That Failed",
+     "A buyback-hollowed balance sheet, a dual-path filing, and no going-concern bid", 6),
+    ("31", "31-serta", "Serta Simmons \u2014 The Full Arc of Creditor Conflict",
+     "Uptier to confirmation to reversal to a $400mm liability", 6),
+    ("32", "32-best-buy", "Best Buy \u2014 Operational Turnaround Without a Court",
+     "Renew Blue, and what effort looks like when it actually creates value", 6),
 ]
 
 CHAPTER_BY_NUM = {c[0]: c for c in CHAPTERS}
